@@ -143,6 +143,7 @@ return [
 		'App\Providers\BusServiceProvider',
 		'App\Providers\ConfigServiceProvider',
 		'App\Providers\EventServiceProvider',
+        'App\Providers\LocalizationServiceProvider',
 		'App\Providers\RouteServiceProvider',
 		'Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider',
 
@@ -178,6 +179,7 @@ return [
 		'Input'     => 'Illuminate\Support\Facades\Input',
 		'Inspiring' => 'Illuminate\Foundation\Inspiring',
 		'Lang'      => 'Illuminate\Support\Facades\Lang',
+        'Localization'  => 'Mcamara\LaravelLocalization\Facades\LaravelLocalization',
 		'Log'       => 'Illuminate\Support\Facades\Log',
 		'Mail'      => 'Illuminate\Support\Facades\Mail',
 		'Password'  => 'Illuminate\Support\Facades\Password',
