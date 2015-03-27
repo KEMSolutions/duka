@@ -1,6 +1,7 @@
 <?php namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Carbon\Carbon;
 
 /**
  * Class LocalizationServiceProvider
@@ -31,8 +32,21 @@ class LocalizationServiceProvider extends ServiceProvider {
 
     public function getSupportedLocales()
     {
-        // Make call to KEM API
-        // ...
+        // Retrieve the list of supported locales from the cache. If the list doesn't exist,
+        // retrieve it from KEM's API.
+//        $expiresAt  = Carbon::now()->addWeek();
+//        $locales    = $this->app['Cache']->remember('supportedlocales', $expiresAt, function()
+//        {
+//            return [
+//                'en'    => ['name' => 'English', 'script' => 'Latn', 'native' => 'English'],
+//                'en-CA' => ['name' => 'Canadian English', 'script' => 'Latn', 'native' => 'Canadian English'],
+//                'fr'    => ['name' => 'French', 'script' => 'Latn', 'native' => 'français'],
+//                'fr-CA' => ['name' => 'Canadian French', 'script' => 'Latn', 'native' => 'français canadien'],
+//            ];
+//        });
+//
+//        return $locales;
+
 
         return [
             'en'    => ['name' => 'English', 'script' => 'Latn', 'native' => 'English'],
