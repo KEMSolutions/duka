@@ -24,7 +24,8 @@ class RouteServiceProvider extends ServiceProvider {
 	{
 		parent::boot($router);
 
-		//
+		// Define global route patterns.
+        $router->pattern('lang', '[a-z]{2}');
 	}
 
 	/**
