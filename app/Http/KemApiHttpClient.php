@@ -10,6 +10,11 @@ class KemApiHttpClient
     public $client;
 
     /**
+     * API user ID.
+     */
+    private $user  = '';
+
+    /**
      * API user secret.
      */
     private $secret  = '';
