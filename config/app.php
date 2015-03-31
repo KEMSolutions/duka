@@ -143,6 +143,7 @@ return [
 		'App\Providers\BusServiceProvider',
 		'App\Providers\ConfigServiceProvider',
         'App\Providers\EventServiceProvider',
+        'App\Providers\KemApiServiceProvider',
         'App\Providers\LocalizationServiceProvider',
 		'App\Providers\RouteServiceProvider',
 		'Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider',
@@ -195,6 +196,8 @@ return [
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
+
+        'KemAPI'    => 'App\Facades\KemAPI'
 
 	],
 
