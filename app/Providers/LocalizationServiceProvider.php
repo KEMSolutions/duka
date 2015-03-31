@@ -1,6 +1,7 @@
 <?php namespace App\Providers;
 
 use Cache;
+use KemAPI;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 
@@ -40,17 +41,7 @@ class LocalizationServiceProvider extends ServiceProvider {
         $expiresAt  = Carbon::now()->addWeek();
         $locales    = Cache::remember('supportedlocales', $expiresAt, function()
         {
-            // TODO: move all Guzzle code to another class and use a facade or something...
-            $client = new \GuzzleHttp\Client();
-            $data   = '' . 'hLEQPVB9OduNPC5zd3ErIRs4e1wap0Dn9SEzUXeaMyovxJbowhC6TOSY4ySRel8';
-            $sig    = base64_encode(hash('sha512', $data, true));
-
-            $response = $client->get('https://kemsolutions.com/CloudServices/index.php/api/1/locales', [
-                'headers' => ['X-Kem-User' => '1', 'X-Kem-Signature' => $sig]
-            ]);
-
-            $locales = [];
-            $supportedLocales = json_decode($response->getBody()->getContents());
+            $supportedLocales = KemAPI::get('locales');
             foreach ($supportedLocales as $loc) {
                 $locales[$loc->language] = [
                     'name' => $loc->language_name,
@@ -60,13 +51,6 @@ class LocalizationServiceProvider extends ServiceProvider {
             }
             
             return $locales;
-            
-//            return [
-//                'en'    => ['name' => 'English', 'script' => 'Latn', 'native' => 'English'],
-//                'en-CA' => ['name' => 'Canadian English', 'script' => 'Latn', 'native' => 'Canadian English'],
-//                'fr'    => ['name' => 'French', 'script' => 'Latn', 'native' => 'français'],
-//                'fr-CA' => ['name' => 'Canadian French', 'script' => 'Latn', 'native' => 'français canadien'],
-//            ];
         });
 
         return $locales;
