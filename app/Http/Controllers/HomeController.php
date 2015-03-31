@@ -1,5 +1,8 @@
 <?php namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use GuzzleHttp\Client;
+
 class HomeController extends Controller {
 
 	/*
@@ -20,7 +23,7 @@ class HomeController extends Controller {
 	 */
 	public function __construct()
 	{
-		$this->middleware('auth');
+//		$this->middleware('auth');
 	}
 
 	/**
@@ -30,7 +33,26 @@ class HomeController extends Controller {
 	 */
 	public function index()
 	{
-		return view('home');
+//		return view('home');
+		$this->getLayouts();
+	}
+
+	/**
+	 * VERY TEMPORARY : guzzle request to https://kemsolutions.com/CloudServices/index.php/api/1/layouts
+	 */
+	private function getLayouts()
+	{
+		$expiresAt  = Carbon::now()->addWeek();
+		$client = new Client();
+		$data   = '' . 'hLEQPVB9OduNPC5zd3ErIRs4e1wap0Dn9SEzUXeaMyovxJbowhC6TOSY4ySRel8';
+		$sig    = base64_encode(hash('sha512', $data, true));
+
+		$response = $client->get('https://kemsolutions.com/CloudServices/index.php/api/1/layouts', [
+			'headers' => ['X-Kem-User' => '1', 'X-Kem-Signature' => $sig]
+		]);
+
+		$layouts = json_decode($response->getBody()->getContents());
+		dd($layouts);
 	}
 
 }
