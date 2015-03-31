@@ -43,21 +43,30 @@ class LocalizationServiceProvider extends ServiceProvider {
             // TODO: move all Guzzle code to another class and use a facade or something...
             $client = new \GuzzleHttp\Client();
             $data   = '' . 'hLEQPVB9OduNPC5zd3ErIRs4e1wap0Dn9SEzUXeaMyovxJbowhC6TOSY4ySRel8';
-            $sig    = base64_encode(hash('sha512', $data));
-            dd($sig);
+            $sig    = base64_encode(hash('sha512', $data, true));
 
             $response = $client->get('https://kemsolutions.com/CloudServices/index.php/api/1/locales', [
                 'headers' => ['X-Kem-User' => '1', 'X-Kem-Signature' => $sig]
             ]);
+
+            $locales = [];
+            $supportedLocales = json_decode($response->getBody()->getContents());
+            foreach ($supportedLocales as $loc) {
+                $locales[$loc->language] = [
+                    'name' => $loc->language_name,
+                    'native' => $loc->language_name,
+                    'script' => 'Latn'
+                ];
+            }
             
-            dd($response);
+            return $locales;
             
-            return [
-                'en'    => ['name' => 'English', 'script' => 'Latn', 'native' => 'English'],
-                'en-CA' => ['name' => 'Canadian English', 'script' => 'Latn', 'native' => 'Canadian English'],
-                'fr'    => ['name' => 'French', 'script' => 'Latn', 'native' => 'français'],
-                'fr-CA' => ['name' => 'Canadian French', 'script' => 'Latn', 'native' => 'français canadien'],
-            ];
+//            return [
+//                'en'    => ['name' => 'English', 'script' => 'Latn', 'native' => 'English'],
+//                'en-CA' => ['name' => 'Canadian English', 'script' => 'Latn', 'native' => 'Canadian English'],
+//                'fr'    => ['name' => 'French', 'script' => 'Latn', 'native' => 'français'],
+//                'fr-CA' => ['name' => 'Canadian French', 'script' => 'Latn', 'native' => 'français canadien'],
+//            ];
         });
 
         return $locales;
