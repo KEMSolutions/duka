@@ -15,6 +15,13 @@ Route::get('/', 'WelcomeController@index');
 
 Route::get('home', 'HomeController@index');
 
+/**
+ * Routes for testing the cart drawer and the cart checkout.
+ */
+Route::get("draw", "CheckoutController@draw");
+Route::get("check", "CheckoutController@check");
+
+
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
