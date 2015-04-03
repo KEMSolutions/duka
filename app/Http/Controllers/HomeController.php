@@ -33,26 +33,7 @@ class HomeController extends Controller {
 	 */
 	public function index()
 	{
-//		return view('home');
-		$this->getLayouts();
-	}
-
-	/**
-	 * VERY TEMPORARY : guzzle request to https://kemsolutions.com/CloudServices/index.php/api/1/layouts
-	 */
-	private function getLayouts()
-	{
-		$expiresAt  = Carbon::now()->addWeek();
-		$client = new Client();
-		$data   = '' . 'hLEQPVB9OduNPC5zd3ErIRs4e1wap0Dn9SEzUXeaMyovxJbowhC6TOSY4ySRel8';
-		$sig    = base64_encode(hash('sha512', $data, true));
-
-		$response = $client->get('https://kemsolutions.com/CloudServices/index.php/api/1/layouts', [
-			'headers' => ['X-Kem-User' => '1', 'X-Kem-Signature' => $sig]
-		]);
-
-		$layouts = json_decode($response->getBody()->getContents());
-		dd($layouts);
+		return view('home');
 	}
 
 }
