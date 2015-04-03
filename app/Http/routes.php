@@ -1,6 +1,6 @@
 <?php
 
-use Localization;
+use \Localization;
 
 // Set all localized routes here.
 Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSessionRedirect', 'localizationRedirect']], function()
