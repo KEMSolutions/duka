@@ -14,6 +14,11 @@ return [
 	|
 	*/
 
+    'kemapi' => [
+        'user' => '1',
+        'secret' => 'hLEQPVB9OduNPC5zd3ErIRs4e1wap0Dn9SEzUXeaMyovxJbowhC6TOSY4ySRel8'
+    ],
+
 	'mailgun' => [
 		'domain' => '',
 		'secret' => '',
