@@ -1,5 +1,6 @@
 <?php namespace App\Providers;
 
+use \Config;
 use Illuminate\Support\ServiceProvider;
 
 class KemApiServiceProvider extends ServiceProvider {
@@ -31,8 +32,8 @@ class KemApiServiceProvider extends ServiceProvider {
 		// Bind our KemApiHttpClient object to the service container.
         $this->app->bind('kemapihttpclient', function() {
 
-            $user = '1';
-            $secret = 'hLEQPVB9OduNPC5zd3ErIRs4e1wap0Dn9SEzUXeaMyovxJbowhC6TOSY4ySRel8';
+            $user = Config::get('services.kemapi.user', 0);
+            $secret = Config::get('services.kemapi.secret', '');
 
             return new \App\Http\KemApiHttpClient($user, $secret, []);
         });
