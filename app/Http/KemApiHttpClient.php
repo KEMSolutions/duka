@@ -1,13 +1,21 @@
 <?php namespace App\Http;
 
+use Log;
+use Localization;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 class KemApiHttpClient
 {
     /**
-     * Guzzle HTTP client.
+     * Instance of GuzzleHttp\Client.
      */
     public $client;
+
+    /**
+     * API endpoint.
+     */
+    private $endpoint = 'https://kemsolutions.com/CloudServices/index.php/api';
 
     /**
      * API user ID.
@@ -37,26 +45,68 @@ class KemApiHttpClient
     /**
      * Performs a GET request.
      *
-     * @param string $request       Request being made.
+     * @param string $request       Request being made, e.g. "products/1234".
      * @param bool $returnResponse  Whether to return the response object itself or the JSON-decoded object.
      * @return mixed                JSON-decoded response object.
      */
     public function get($request, $returnResponse = false)
     {
+        // Performance check.
+        $request = preg_replace('/[^a-z0-9\/_]/i', '', $request);
+        if (strlen($request) < 1) {
+            throw new \Exception('Invalid API request.');
+        }
+
         // Build endpoint URI.
-        // TODO: make sure URI makes sense...
-        $uri = 'https://kemsolutions.com/CloudServices/index.php/api/'. self::VERSION .'/'. $request;
+        $uri = $this->endpoint .'/'. self::VERSION .'/'. $request;
 
         // Make request.
-        $response = $this->client->get($uri, [
-            'headers' => [
-                'X-Kem-User' => $this->user,
-                'X-Kem-Signature' => $this->getSignature()
-            ]
-        ]);
+        try{
+            $response = $this->client->get($uri, [
+                'headers' => [
+                    'X-Kem-User' => $this->user,
+                    'X-Kem-Signature' => $this->getSignature(),
+                    'Accept-Language' => Localization::getCurrentLocale(),
+                    'Content-Type' => 'application/json'
+                ]
+            ]);
+        } catch (ClientException $e) {
 
-        //
+            // Log error and display an error page.
+            Log::error($e->getMessage());
+            abort($e->getCode(), $e->getMessage());
+        }
+
+        // Return response.
         return $returnResponse ? $response : json_decode($response->getBody()->getContents());
+    }
+
+    public function post($request, $returnResponse = false)
+    {
+
+
+        throw new \Exception('501: Method not implemented.');
+    }
+
+    public function put($request, $returnResponse = false)
+    {
+
+
+        throw new \Exception('501: Method not implemented.');
+    }
+
+    public function patch($request, $returnResponse = false)
+    {
+
+
+        throw new \Exception('501: Method not implemented.');
+    }
+
+    public function delete($request, $returnResponse = false)
+    {
+
+
+        throw new \Exception('501: Method not implemented.');
     }
 
     /**
@@ -64,7 +114,7 @@ class KemApiHttpClient
      *
      * @return string The signature for the current request.
      */
-    public function getSignature()
+    private function getSignature()
     {
         // Collect data for signature
         $data = '' . $this->secret;
