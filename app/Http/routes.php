@@ -1,29 +1,40 @@
 <?php
 
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization as Localization;
+use Localization;
 
 // Set all localized routes here.
-Route::group(['prefix' => Localization::setLocale()], function()
+Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSessionRedirect', 'localizationRedirect']], function()
 {
-    
-    
+    /**
+     * Routes for testing the cart drawer and the cart checkout.
+     */
+    Route::get("draw", "CheckoutController@draw");
+    Route::get("check", "CheckoutController@check");
+
+    // Authentication
+    Route::controllers([
+        'auth' => 'Auth\AuthController',
+        'password' => 'Auth\PasswordController',
+    ]);
+
     // Test routes
     Route::get('/', 'WelcomeController@index');
+    Route::get('/welcome', 'WelcomeController@index');
     Route::get('home', 'HomeController@index');
+    Route::group(['prefix' => 'dev'], function() {
+
+        // API.
+        Route::get('api/products/{id}', function($id) {
+            return KemAPI::get('products/'. $id);
+        });
+        Route::get('api/{request?}', function($request = '') {
+            return KemAPI::get($request);
+        });
+
+        // Localization.
+        Route::get('locale', function() {
+            return Localization::getCurrentLocale();
+        });
+    });
 });
 
-Route::get('/', 'WelcomeController@index');
-
-Route::get('home', 'HomeController@index');
-
-/**
- * Routes for testing the cart drawer and the cart checkout.
- */
-Route::get("draw", "CheckoutController@draw");
-Route::get("check", "CheckoutController@check");
-
-
-Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
-]);
