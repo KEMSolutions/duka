@@ -1,5 +1,8 @@
 <?php namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use GuzzleHttp\Client;
+
 class HomeController extends Controller {
 
 	/*
@@ -20,7 +23,7 @@ class HomeController extends Controller {
 	 */
 	public function __construct()
 	{
-		$this->middleware('auth');
+//		$this->middleware('auth');
 	}
 
 	/**

@@ -45,7 +45,7 @@
 	<body>
 		<div class="container">
 			<div class="content">
-				<div class="title">Laravel 5</div>
+				<div class="title">Boukem 2</div>
 				<div class="quote">{{ Inspiring::quote() }}</div>
 				<div class="locale">Current locale: {{ Localization::getCurrentLocaleName() }} ({{ Localization::getCurrentLocale() }})</div>
 			</div>
