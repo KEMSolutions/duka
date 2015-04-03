@@ -77,7 +77,7 @@ class KemApiHttpClient
             abort($e->getCode(), $e->getMessage());
         }
 
-        // Return response.
+        // Return JSON object or instance of GuzzleHttp\Message\Response.
         return $returnResponse ? $response : json_decode($response->getBody()->getContents());
     }
 
