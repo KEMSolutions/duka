@@ -47,6 +47,7 @@ class KemApiHttpClient
      *
      * @param string $request       Request being made, e.g. "products/1234".
      * @param bool $returnResponse  Whether to return the response object itself or the JSON-decoded object.
+     * @throws \Exception           On invalid requests.
      * @return mixed                JSON-decoded response object.
      */
     public function get($request, $returnResponse = false)
