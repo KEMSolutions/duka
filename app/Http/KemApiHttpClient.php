@@ -47,6 +47,7 @@ class KemApiHttpClient
      *
      * @param string $request       Request being made, e.g. "products/1234".
      * @param bool $returnResponse  Whether to return the response object itself or the JSON-decoded object.
+     * @throws \Exception           On invalid requests.
      * @return mixed                JSON-decoded response object.
      */
     public function get($request, $returnResponse = false)
@@ -77,7 +78,7 @@ class KemApiHttpClient
             abort($e->getCode(), $e->getMessage());
         }
 
-        // Return response.
+        // Return JSON object or instance of GuzzleHttp\Message\Response.
         return $returnResponse ? $response : json_decode($response->getBody()->getContents());
     }
 
