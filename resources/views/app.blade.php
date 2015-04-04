@@ -13,9 +13,8 @@
 
 	{{-- TODO: include page description if any--}}
 
-	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
 	<!-- Fonts -->
-	<link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+	<link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
 	<!-- Required -->
@@ -24,6 +23,7 @@
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="//cdn.kem.guru/boukem/spirit/css/fancybox-fraction-concat.css"/>
 	<link href="//cdn.kem.guru/css/outdatedBrowser.min.css" rel="stylesheet">
+	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
 
 	<!-- Custom Css -->
 	@yield("custom_css")
