@@ -5,12 +5,6 @@ use \Localization;
 // Set all localized routes here.
 Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSessionRedirect', 'localizationRedirect']], function()
 {
-    /**
-     * Routes for testing the cart drawer and the cart checkout.
-     */
-    Route::get("draw", "CheckoutController@draw");
-    Route::get("check", "CheckoutController@check");
-
     // Authentication
     Route::controllers([
         'auth' => 'Auth\AuthController',
@@ -34,6 +28,19 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
         // Localization.
         Route::get('locale', function() {
             return Localization::getCurrentLocale();
+        });
+
+        /**
+         * Routes for testing the cart drawer and the cart checkout.
+         */
+        Route::get("draw", "CheckoutController@draw");
+        Route::get("check", "CheckoutController@check");
+
+        /**
+         * Routes for testing the main layout elements (header, footer)
+         */
+        Route::get("layout/main", function() {
+            return  View("app");
         });
     });
 });
