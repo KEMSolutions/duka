@@ -40,7 +40,7 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
          * Routes for testing the main layout elements (header, footer)
          */
         Route::get("layout/main", function() {
-            return  View("app");
+            return View("app");
         });
     });
 });
