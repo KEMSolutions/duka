@@ -57,7 +57,7 @@
                         <ul class="dropdown-menu">
                             <li>
                                 {{--TODO : afficher le poste de la boutique Yii::app()->params['outbound_api_user']; --}}
-                                <a href="tel:18442763434" class="sign-up.html"><i class="fa fa-phone fa-fw"></i> 1-844-276-3434 ?></a>
+                                <a href="tel:18442763434" class="sign-up.html"><i class="fa fa-phone fa-fw"></i> 1-844-276-3434 </a>
                             </li>
                             <li>
                                 {{--TODO : afficher le courriel de la boutique Yii::app()->params['adminEmail']; --}}
@@ -70,6 +70,17 @@
                         <a href="{{ url("/cart/index") }}"><i class="fa fa-shopping-cart icon-cart"></i> {{ Lang::get("boukem.cart") }}<span class="badge" id="cart_badge"></span></a>
                     </li>
 
+                    @if (Auth::guest())
+                        <li><a href="{{ url('/auth/login') }}">Login</a></li>
+                        <li><a href="{{ url('/auth/register') }}">Register</a></li>
+                    @else
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>--}}
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ url('/auth/logout') }}">Logout</a></li>
+                            </ul>
+                        </li>
+                    @endif
                 </ul>
 
             </div>
