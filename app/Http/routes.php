@@ -25,6 +25,12 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
         Route::get('api/{request}', function($request) {
             return Collection::make(KemAPI::get($request));
         });
+        Route::get('home', function() {
+            return Collection::make(KemAPI::getHomePage());
+        });
+        Route::get('prod/{id}', function($id) {
+            return Collection::make(KemAPI::getProduct($id));
+        });
 
         // Localization.
         Route::get('locale', function() {
