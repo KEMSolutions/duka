@@ -1,6 +1,8 @@
 <?php namespace App\Http;
 
 use Log;
+use Cache;
+use Carbon\Carbon;
 use Localization;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -46,9 +48,11 @@ class KemApiHttpClient
      * Performs a GET request.
      *
      * @param string $request       Request being made, e.g. "products/1234".
-     * @param bool $returnResponse  Whether to return the response object itself or the JSON-decoded object.
+     * @param bool $returnResponse  Returns the response object if true, or the JSON-decoded object otherwise.
+     *
      * @throws \Exception           On invalid requests.
-     * @return mixed                JSON-decoded response object.
+     *
+     * @return mixed                JSON-decoded response object or instance of \GuzzleHttp\Http\Response.
      */
     public function get($request, $returnResponse = false)
     {
@@ -108,6 +112,51 @@ class KemApiHttpClient
 
 
         throw new \Exception('501: Method not implemented.');
+    }
+
+    /**
+     * Shortcut to retrieve layouts for home page and cache the product details at the same time.
+     *
+     * @return object   Layouts in JSON format.
+     */
+    public function getHomePage()
+    {
+        throw new \Exception('501: Method not implemented.');
+
+        // Retrieve layouts
+        $layouts = \Cache::remember('api.layouts', Carbon::now()->addMinutes(30), function() {
+            return KemAPI::get('layouts');
+        });
+
+        // Cache products
+        // ...
+
+        return $layouts;
+    }
+
+    /**
+     *
+     *
+     * @param $id
+     *
+     * @throws \Exception   On invalid product IDs.
+     */
+    public function getProduct($id)
+    {
+        throw new \Exception('501: Method not implemented.');
+
+        // Performance check.
+        $id = (int) $id;
+        if ($id < 1) {
+            throw new \Exception('Invalid product identifier.');
+        }
+
+        // Retrieve product details
+        $product = \Cache::remember('api.product.'. $id, Carbon::now()->addHours(2), function() {
+            return KemAPI::get('products/'. $id);
+        });
+
+        return $product;
     }
 
     /**
