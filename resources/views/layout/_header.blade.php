@@ -1,4 +1,4 @@
-{{--TODO : Include back link --}}
+{{-- TODO : Include back link --}}
 
 <header>
     <nav class="navbar navbar-default navbar-white" id="navbar">
@@ -34,24 +34,24 @@
                         <a href="{{ url("/") }}"> {{ Lang::get("boukem.home") }} </a>
                     </li>
 
-                    {{--TODO: display next categories? --}}
+                    {{-- TODO: display next categories? --}}
 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ Lang::get("boukem.contact") }}</a>
                         <ul class="dropdown-menu">
                             <li>
-                                {{--TODO : afficher le poste de la boutique Yii::app()->params['outbound_api_user']; --}}
+                                {{-- TODO : afficher le poste de la boutique Yii::app()->params['outbound_api_user']; --}}
                                 <a href="tel:18442763434" class="sign-up.html"><i class="fa fa-phone fa-fw"></i> 1-844-276-3434 </a>
                             </li>
                             <li>
-                                {{--TODO : afficher le courriel de la boutique Yii::app()->params['adminEmail']; --}}
+                                {{-- TODO : afficher le courriel de la boutique Yii::app()->params['adminEmail']; --}}
                                 <a href="mailto:#" class="sign-up.html"><i class="fa fa-envelope fa-fw"></i>Temporary Email </a>
                             </li>
                         </ul>
                     </li>
 
                     <li>
-                        {{--TODO : update the cart_badge with the right amount of products in cart--}}
+                        {{-- TODO : update the cart_badge with the right amount of products in cart--}}
                         <a href="{{ url("/cart/index") }}"><i class="fa fa-shopping-cart icon-cart"></i> {{ Lang::get("boukem.cart") }}<span class="badge" id="cart_badge">0</span></a>
                     </li>
 

@@ -34,7 +34,7 @@ class CheckoutController extends Controller {
         ]);
 	}
 
-    public function check()
+    public function cart()
     {
         return "hi";
     }

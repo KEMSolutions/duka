@@ -34,7 +34,7 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
          * Routes for testing the cart drawer and the cart checkout.
          */
         Route::get("draw", "CheckoutController@draw");
-        Route::get("check", "CheckoutController@check");
+        Route::get("cart", "CheckoutController@cart");
 
         /**
          * Routes for testing the main layout elements (header, footer)
