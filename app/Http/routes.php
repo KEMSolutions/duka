@@ -1,6 +1,7 @@
 <?php
 
 use \Localization;
+use Illuminate\Support\Collection;
 
 // Set all localized routes here.
 Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSessionRedirect', 'localizationRedirect']], function()
@@ -19,10 +20,10 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
 
         // API.
         Route::get('api/products/{id}', function($id) {
-            return KemAPI::get('products/'. $id);
+            return Collection::make(KemAPI::get('products/'. $id));
         });
-        Route::get('api/{request?}', function($request = '') {
-            return KemAPI::get($request);
+        Route::get('api/{request}', function($request) {
+            return Collection::make(KemAPI::get($request));
         });
 
         // Localization.
