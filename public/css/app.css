@@ -6290,3 +6290,13 @@ label,
 .checkbox label {
   font-weight: 300;
 }
+}
+
+/* SEARCH */
+.search-wr{width:100%; height:110px; background:#FFF; position:fixed; top:0; z-index:2200; display:none; -webkit-box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 1px 10px rgba(0,0,0,.1); box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);}
+.search-wr .close{display:block; width:22px; height:22px; position:relative; float:right; top:10px; right:10px;}
+.search-wr .close i{font-size:20px; color:#4c4c4c;}
+.search-wr .search-sign i{font-size:60px; line-height:110px; color:#DDD;}
+.global-search-input{padding:40px 0 0 0; font-size:20px; position:relative; width:740px; background:#fff; z-index: 10; border:none; outline:none;
+  color:#DDD;}
+.global-search-input:focus{color:#4c4c4c;}
