@@ -42,6 +42,11 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
         Route::get("layout/main", function() {
             return View("app");
         });
+
+        /**
+         * Routes for testing homepage creation
+         */
+        Route::get("layout/home", "LayoutController@home");
     });
 });
 

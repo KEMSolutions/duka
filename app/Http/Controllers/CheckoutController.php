@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\DataDummy;
+use App\Facades\KemAPI;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -36,7 +37,14 @@ class CheckoutController extends Controller {
 
     public function cart()
     {
-        return "hi";
+        $data = KemAPI::get("layouts");
+        $res = [];
+
+        for($i = 0; $i < count($data); $i++)
+        {
+            array_push($res, $data[$i]->type);
+        }
+        return $res;
     }
 
 }

@@ -39,7 +39,7 @@
 	@include('layout._header')
 	@include('layout._search')
 
-	@yield('content')
+	@yield("content")
 
 	@include('layout._footer')
 
