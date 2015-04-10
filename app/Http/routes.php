@@ -1,35 +1,34 @@
 <?php
 
 use \Localization;
-use Illuminate\Support\Collection;
 
 // Set all localized routes here.
 Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSessionRedirect', 'localizationRedirect']], function()
 {
-    // Authentication
+    // Authentication.
     Route::controllers([
         'auth' => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]);
 
-    // Test routes
+    // Test routes.
     Route::get('/', 'WelcomeController@index');
     Route::get('/welcome', 'WelcomeController@index');
     Route::get('home', 'HomeController@index');
     Route::group(['prefix' => 'dev'], function() {
 
         // API.
-        Route::get('api/products/{id}', function($id) {
-            return Collection::make(KemAPI::get('products/'. $id));
-        });
         Route::get('api/{request}', function($request) {
-            return Collection::make(KemAPI::get($request));
-        });
+            return Illuminate\Support\Collection::make(KemAPI::get($request, Input::all()));
+        })->where('request', '.+');
         Route::get('home', function() {
-            return Collection::make(KemAPI::getHomePage());
+            return KemAPI::getHomePage();
+        });
+        Route::get('cat/{id}', function($id) {
+            return Illuminate\Support\Collection::make(KemAPI::getCategory($id));
         });
         Route::get('prod/{id}', function($id) {
-            return Collection::make(KemAPI::getProduct($id));
+            return Illuminate\Support\Collection::make(KemAPI::getProduct($id));
         });
 
         // Localization.
@@ -51,7 +50,7 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
         });
 
         /**
-         * Routes for testing homepage creation
+         * Routes for testing homepage creation.
          */
         Route::get("layout/home", "LayoutController@home");
     });
