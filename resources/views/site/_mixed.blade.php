@@ -31,7 +31,12 @@
                                             <p>
                                                 {!! $product->localization->short_description !!}
 
-                                                <button class="btn btn-one btn-xs buybutton" data-product="{{ $product->id }}">
+                                                <button class="btn btn-one btn-xs buybutton"
+                                                        data-product="{{ $product->id }}"
+                                                        data-price="{{ $product->price }}"
+                                                        data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
+                                                        data-thumbnail_lg="//static.boutiquekem.com/productimg-120-160-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
+                                                        data-name="{{ $product->localization->name }}">
                                                     <i class="fa fa-shopping-cart">{{ $product->price }} $</i>
                                                 </button>
                                             </p>
