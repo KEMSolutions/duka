@@ -53,7 +53,7 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
         /**
          * Routes for testing homepage creation
          */
-        Route::get("layout/home", "LayoutController@home");
+        Route::get("layout/home", "LayoutController@init");
     });
 });
 
