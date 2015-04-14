@@ -24,12 +24,12 @@ class KemApiHttpClient
     /**
      * API user ID.
      */
-    private $user  = '';
+    private $user = '';
 
     /**
      * API user secret.
      */
-    private $secret  = '';
+    private $secret = '';
 
     /**
      * API version.
@@ -42,8 +42,8 @@ class KemApiHttpClient
         $this->client = new Client($config);
 
         // Save API details.
-        $this->user     = $apiUser;
-        $this->secret   = $apiSecret;
+        $this->user = $apiUser;
+        $this->secret = $apiSecret;
     }
 
     /**
