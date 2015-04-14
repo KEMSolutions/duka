@@ -27,6 +27,9 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
         Route::get('cat/{id}', function($id) {
             return Illuminate\Support\Collection::make(KemAPI::getCategory($id));
         });
+        Route::get('brand/{id}', function($id) {
+            return Illuminate\Support\Collection::make(KemAPI::getBrand($id));
+        });
         Route::get('prod/{id}', function($id) {
             return Illuminate\Support\Collection::make(KemAPI::getProduct($id));
         });

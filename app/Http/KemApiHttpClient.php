@@ -59,7 +59,7 @@ class KemApiHttpClient
         // Performance check.
         $request = preg_replace('/[^a-z0-9\/_-]/i', '', $request);
         if (strlen($request) < 1) {
-            return $returnResponse ? null : json_encode(['status' => 400, 'message' => 'Invalid API request.']);
+            return $returnResponse ? null : $this->badRequest('Invalid API request.');
         }
 
         // Build endpoint URI.
@@ -90,20 +90,6 @@ class KemApiHttpClient
 
         // Return an instance of GuzzleHttp\Message\Response or a JSON object.
         return $returnResponse ? $response : $response->json(['object' => true]);
-    }
-
-    /**
-     * Makes a HEAD request to KEM's API.
-     *
-     * @param string $request
-     * @param bool $returnResponse
-     * @throws \Exception
-     */
-    public function head($request, $returnResponse = false)
-    {
-
-
-        throw new \Exception('501: Method not implemented.');
     }
 
     /**
@@ -193,7 +179,7 @@ class KemApiHttpClient
      *
      * @param mixed $id     ID or slug of the category.
      * @param int $page     The page to start from (see: https://developer.github.com/v3/#pagination).
-     * @param null $perPage The number of products to display per page (see: https://developer.github.com/v3/#pagination).
+     * @param int $perPage  The number of products to display per page (see: https://developer.github.com/v3/#pagination).
      * @return object       JSON object for the specified category.
      */
     public function getCategory($id, $page = 1, $perPage = 40)
@@ -203,25 +189,42 @@ class KemApiHttpClient
             return $this->badRequest('Invalid category identifier.');
         }
 
-        $category = $this->getAndCache($id, 'api.categories.', 'categories/'. $id, [
+        // Retrieve category details
+        return $this->getAndCache($id, 'api.categories.', 'categories/'. $id, [
             'embed' => 'products',
             'page' => $page,
             'per_page' => $perPage
         ]);
+    }
 
-        // Cache products.
-        if (isset($category->products) && count($category->products)) {
-            $this->extractAndCache($category->products, 'api.products.');
+    /**
+     * Shortcut to retrieve the details for a brand and cache the product details at the same time.
+     *
+     * @param mixed $id     ID or slug of the brand.
+     * @param int $page     The page to start from (see: https://developer.github.com/v3/#pagination).
+     * @param int $perPage  The number of products to display per page (see: https://developer.github.com/v3/#pagination).
+     * @return mixed        JSON object for the specified brand.
+     */
+    public function getBrand($id, $page = 1, $perPage = 40)
+    {
+        // Performance check.
+        if ((is_numeric($id) && $id < 0) || preg_replace('/[^a-z0-9_-]/i', '', $id) != $id) {
+            return $this->badRequest('Invalid brand identifier.');
         }
 
-        return $category;
+        // Retrieve brand details.
+        return $this->getAndCache($id, 'api.brands.', 'brands/'. $id, [
+            'embed' => 'products',
+            'page' => $page,
+            'per_page' => $perPage
+        ]);
     }
 
     /**
      * Shortcut to retrieve the details for a given product.
      *
      * @param mixed $id ID or slug of requested product.
-     * @return object       JSON object for the specified product.
+     * @return object   JSON object for the specified product.
      */
     public function getProduct($id)
     {
@@ -230,16 +233,18 @@ class KemApiHttpClient
             return $this->badRequest('Invalid product identifier.');
         }
 
+        // Retrieve product details
         return $this->getAndCache($id, 'api.products.', 'products/'. $id);
     }
 
     /**
-     * Helper method to retrieve objects and cache them (e.g. products, categories, etc.)
+     * Helper method to retrieve objects and cache them (e.g. products, categories, etc.) If the object has products,
+     * attempt to cache those as well.
      *
      * @param string $id            Object's ID or slug.
      * @param $namespace            String to prepend to the cache key, e.g. "api.products.".
      * @param string $request       API request to make if object isn't in the cache.
-     * @param array $requestParams  Parameters to include with API requiest.
+     * @param array $requestParams  Parameters to include with API request.
      * @param string $expires       Time at which cached objects should expire. Defaults to "Carbon::now()->addHours(3)".
      * @return mixed                Requested object.
      */
@@ -256,20 +261,27 @@ class KemApiHttpClient
             }
 
             // Cache object.
-            $expires = $expires || Carbon::now()->addHours(3);
+            $expires = $expires ?: Carbon::now()->addHours(3);
             Cache::put($namespace . $object->id, $object, $expires);
             Cache::put($namespace . $object->slug, $object, $expires);
+            Log::info('Caching "'. $namespace . $object->id .'" until "'. $expires .'"');
+
+            // Look for products to cache.
+            if (isset($object->products) && count($object->products)) {
+                Log::info('Attempting to cache products...');
+                $this->extractAndCache($object->products, 'api.products.');
+            }
         }
 
         else {
-            Log::info('Retrieved "'. $object->id .'" from cache.');
+            Log::info('Retrieved "'. $namespace . $id .'" from cache.');
         }
 
         return $object;
     }
 
     /**
-     * Helper method to cache stuff
+     * Helper method to cache stuff.
      *
      * @param array $list       Array of objects to be cached.
      * @param string $prepend   String to prepend to the cache key, e.g. "api.products.".
@@ -284,21 +296,26 @@ class KemApiHttpClient
         }
 
         // Cache each item in the list.
-        $expires = $expires || Carbon::now()->addHours(3);
+        $expires = $expires ?: Carbon::now()->addHours(3);
         foreach ($list as $item) {
-            if (empty($item) || !isset($item->id) || empty($item->id)) {
+            if (empty($item) || !isset($item->id) || empty($item->id) || Cache::has($prepend . $item->id)) {
+                Log::info('Skipping object...');
                 continue;
             }
 
+            Log::info('Caching "'. $prepend . $item->id .'" until "'. $expires .'"');
             Cache::put($prepend . $item->id, $item, $expires);
-            Log::info('Caching object with ID "'. $item->id .'" under the namespace "'. $prepend .'"');
+            if (isset($item->slug) && strlen($item->slug)) {
+                Cache::put($prepend . $item->slug, $item, $expires);
+            }
         }
     }
 
     /**
      * Creates the signature string to be used for every request.
      *
-     * @return string   The signature for the current request.
+     * @param string $body  Body of the request.
+     * @return string       The signature for the current request.
      */
     private function getSignature($body = '')
     {
