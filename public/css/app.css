@@ -6406,6 +6406,10 @@ footer .copyright{color:#EEE;}
   user-select: none;
 }
 
+.btn i {
+  margin-right: 4px;
+}
+
 .btn-primary {
   color: #FFF;
   background-color: #999;
