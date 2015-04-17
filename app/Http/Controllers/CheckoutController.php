@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\View;
 class CheckoutController extends Controller {
 
     /**
-     *
+     *Testing routes
      *
      * @return string
      */

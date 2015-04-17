@@ -41,6 +41,7 @@
 
 	@yield("content")
 
+	@include("layout.drawer")
 	@include('layout._footer')
 
 	<!-- Scripts -->

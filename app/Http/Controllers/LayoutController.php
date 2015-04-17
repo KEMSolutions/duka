@@ -47,6 +47,7 @@ class LayoutController extends Controller {
 
             "showTab" => true,
             "color" => "color-two",
+            "locale" => $currentLocale,
 
             "layoutData" => $layoutData
         ]);
