@@ -90,9 +90,9 @@ var cartData = {
             cartData.$el.$list.append(sidebarElement);
         }
 
-        //The button is not disabled anymore because item is not a button but a set of Json.
-        //Plus now it allows people to rebuy things they have deleted on their cart.
-        //item.attr("disabled", "disabled");
+        //created a sessionStorage value for saving the number of elements in the cart.
+        //!sessionStorage.totalItem ? sessionStorage.totalItem = 1 : sessionStorage.totalItem = parseInt(sessionStorage.totalItem) + 1;
+
     },
 
     /**
@@ -122,6 +122,7 @@ var cartData = {
      * Delete an item from the cart drawer list.
      * Remove it from the DOM.
      * Delete the object on sessionStorage.
+     * Set Badge quantity accordingly.
      */
     deleteItem: function() {
         $(document).on('click', ".close-button", function() {
@@ -131,6 +132,8 @@ var cartData = {
             });
 
             sessionStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
+
+            cartData.setBadgeQuantity();
         });
     },
 
@@ -150,8 +153,29 @@ var cartData = {
             oldData.quantity = parseInt($(this).val());
             sessionStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
 
+            //update the badge quantity
+            cartData.setBadgeQuantity();
+
         });
     },
+
+    /**
+     * Update the value of #cart_badge when adding or deleting elements
+     */
+    setBadgeQuantity : function() {
+        var total = 0;
+
+        for(var i = 0; i<sessionStorage.length; i++)
+        {
+            if (sessionStorage.key(i).lastIndexOf("_", 0) === 0)
+            {
+                total += JSON.parse(sessionStorage.getItem(sessionStorage.key(i))).quantity;
+            }
+        }
+
+        $("#cart_badge").text(total);
+    },
+
 
     /**
      * parse the information form the button into a readable json format
@@ -171,6 +195,7 @@ var cartData = {
     },
 
     init : function() {
+        cartData.setBadgeQuantity();
         cartData.loadItem();
         cartData.deleteItem();
         cartData.modifyQuantity();
