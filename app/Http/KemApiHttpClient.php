@@ -24,12 +24,12 @@ class KemApiHttpClient
     /**
      * API user ID.
      */
-    private $user  = '';
+    private $user = '';
 
     /**
      * API user secret.
      */
-    private $secret  = '';
+    private $secret = '';
 
     /**
      * API version.
@@ -42,8 +42,8 @@ class KemApiHttpClient
         $this->client = new Client($config);
 
         // Save API details.
-        $this->user     = $apiUser;
-        $this->secret   = $apiSecret;
+        $this->user = $apiUser;
+        $this->secret = $apiSecret;
     }
 
     /**
@@ -235,6 +235,55 @@ class KemApiHttpClient
 
         // Retrieve product details
         return $this->getAndCache($id, 'api.products.', 'products/'. $id);
+    }
+
+    /**
+     * Shortcut to search database for products.
+     *
+     * @param string $query Search term.
+     * @param int $page     The page to start from (see: https://developer.github.com/v3/#pagination).
+     * @param int $perPage  The number of products to display per page (see: https://developer.github.com/v3/#pagination).
+     * @return mixed        Search results.
+     */
+    public function search($query, $page = 1, $perPage = 40)
+    {
+        // Performance check
+        $query = trim(strip_tags($query));
+        if (strlen($query) < 1) {
+            return $this->badRequest('Query too short.');
+        }
+
+        // Retrieve search results
+        if (!$results = Cache::get('api.search.'. $query)) {
+
+            $results = $this->get('products/search', [
+                'q' => $query,
+                'embed' => 'tags',
+                'page' => $page,
+                'per_page' => $perPage
+            ]);
+
+            // Check for errors.
+            if (!$results || isset($results->error)) {
+                return $results;
+            }
+
+            // Cache results and product details
+            Log::info('Caching results for "'. $query .'" until '. Carbon::now()->addMinutes(15));
+            Cache::put('api.search.'. $query, $results, Carbon::now()->addMinutes(15));
+
+            // Extract product details from results, and cache those too.
+            $this->extractAndCache($results->organic_results, 'api.products.');
+            foreach ($results->tags as $tag) {
+                $this->extractAndCache($tag->products, 'api.products.');
+            }
+        }
+
+        else {
+            Log::info('Retrieving results for "'. $query .'" from cache.');
+        }
+
+        return $results;
     }
 
     /**

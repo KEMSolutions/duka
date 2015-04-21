@@ -33,6 +33,9 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
         Route::get('prod/{id}', function($id) {
             return Illuminate\Support\Collection::make(KemAPI::getProduct($id));
         });
+        Route::get('search/{query}', function($query) {
+            return Illuminate\Support\Collection::make(KemAPI::search($query));
+        });
 
         // Localization.
         Route::get('locale', function() {

@@ -80,7 +80,7 @@ var cartData = {
             '<div class="col-xs-3 text-center"><img src=' + item.thumbnail_lg + ' class="img-responsive"></div>' +
             '<div class="col-xs-9 no-padding-left">' +
             '<div class="row"><div class="col-xs-10"><h3 class="product-name">' + item.name + '</h3></div><div class="col-xs-2"><h4 class="text-right"><i class="fa fa-trash fa-1 close-button"><span class="sr-only">Remove Item</span></i></h4></div></div>' +
-            '<div class="row"><div class="col-xs-8"><div class="input-group"><input type="number" value="1" class="quantity form-control input-sm" min="1" step="1">' +
+            '<div class="row"><div class="col-xs-8"><div class="input-group"><input type="number" class="quantity form-control input-sm" min="1" step="1" value="' + item.quantity + '">' +
             '<span class="input-group-addon update_quantity_indicator"><i class="fa" hidden><span class="sr-only">' + "Update quantity" + '</span></i></span></div></div>' +
             '<div class="col-xs-4 product-price text-right" data-price="' + item.price + '">$' + item.price  + '</div></div>' +
             '</div>' +
@@ -90,9 +90,6 @@ var cartData = {
             cartData.$el.$list.append(sidebarElement);
         }
 
-        //The button is not disabled anymore because item is not a button but a set of Json.
-        //Plus now it allows people to rebuy things they have deleted on their cart.
-        //item.attr("disabled", "disabled");
     },
 
     /**
@@ -122,6 +119,7 @@ var cartData = {
      * Delete an item from the cart drawer list.
      * Remove it from the DOM.
      * Delete the object on sessionStorage.
+     * Set Badge quantity accordingly.
      */
     deleteItem: function() {
         $(document).on('click', ".close-button", function() {
@@ -131,6 +129,8 @@ var cartData = {
             });
 
             sessionStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
+
+            cartData.setBadgeQuantity();
         });
     },
 
@@ -150,8 +150,29 @@ var cartData = {
             oldData.quantity = parseInt($(this).val());
             sessionStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
 
+            //update the badge quantity
+            cartData.setBadgeQuantity();
+
         });
     },
+
+    /**
+     * Update the value of #cart_badge when adding or deleting elements
+     */
+    setBadgeQuantity : function() {
+        var total = 0;
+
+        for(var i = 0; i<sessionStorage.length; i++)
+        {
+            if (sessionStorage.key(i).lastIndexOf("_", 0) === 0)
+            {
+                total += JSON.parse(sessionStorage.getItem(sessionStorage.key(i))).quantity;
+            }
+        }
+
+        $("#cart_badge").text(total);
+    },
+
 
     /**
      * parse the information form the button into a readable json format
@@ -171,6 +192,7 @@ var cartData = {
     },
 
     init : function() {
+        cartData.setBadgeQuantity();
         cartData.loadItem();
         cartData.deleteItem();
         cartData.modifyQuantity();
