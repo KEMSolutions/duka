@@ -7,7 +7,11 @@
         <div class="container">
             <div class="row">
 
+                {{--Include the appropriate layout (dense or regular cards) according to the layoutDense boolean--}}
                 @if($layoutData["featured"]["layoutDense"])
+                    @include("component._product_card_dense",
+                    ["products" => array_slice($layoutData["featured"]["products"], 0, $layoutData["featured"]["limit"])])
+                @elseif($layoutData["featured"]["layoutDense"])
                     @include("component._product_card",
                     ["products" => array_slice($layoutData["featured"]["products"], 0, $layoutData["featured"]["limit"])])
                 @endif
