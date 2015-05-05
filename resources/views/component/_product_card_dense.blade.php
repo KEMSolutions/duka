@@ -1,7 +1,7 @@
 @foreach($products as $product)
     {{--TODO: TEMPORARY FIX AS TO WHY THE $products array contains empty fields?--}}
     {{--      {{ var_dump($product) }}--}}
-    @if(is_object($product))
+    @if(is_object($product) && isset($product->brand->slug))
         <div class="col-xs-6 col-sm-4 col-md-3 text-center dense_product">
             <a href="/{{ $locale }}/prod/{{ $product->slug }}">
                 <img src="//static.boutiquekem.com/productimg-160-160-{{ $product->images[0]->id . "-h." . $product->images[0]->extension }}" class="img-responsive center-block hidden-xs hidden-sm"/>
