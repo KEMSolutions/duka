@@ -30,8 +30,9 @@
                                         </p>
 
                                         <p>
-                                            {!! $product->localization->short_description !!}
+                                            {{ str_limit(strip_tags($product->localization->short_description), 100, "...") }}
 
+                                            <br/>
                                             <button class="btn btn-one btn-xs buybutton"
                                                     data-product="{{ $product->id }}"
                                                     data-price="{{ $product->price }}"

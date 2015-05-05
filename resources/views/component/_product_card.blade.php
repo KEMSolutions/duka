@@ -9,13 +9,11 @@
                         <img src="//static.boutiquekem.com/productimg-300-280-{{ $product->images[0]->id . "." . $product->images[0]->extension }}" class="img-responsive center-block hidden-xs hidden-sm"/>
                         <img src="//static.boutiquekem.com/productimg-70-600-560-{{ $product->images[0]->id . "." . $product->images[0]->extension }}" class="img-responsive center-block visible-xs-block visible-sm-block"/>
                     </a>
-                    <span class="date-over"><strong><a href="{{ $locale }}/fr/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a></strong></span>
+                    {{--<span class="date-over"><strong><a href="{{ $locale }}/fr/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a></strong></span>--}}
                     <h2><a href="/{{ $locale }}/prod/{{ $product->slug }}">{{ $product->localization->name }}</a></h2>
 
                     <p>
-                        Soulagement des infections des voies urinaires (IVU)
-                        Contrôle des infections à levures
-                        Mets un terme aux brûlures dur...
+                        {{ str_limit(strip_tags($product->localization->short_description), 100, "...") }}
                     </p>
 
 
