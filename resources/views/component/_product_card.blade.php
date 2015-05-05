@@ -1,6 +1,6 @@
 @foreach($products as $product)
       {{--TODO: TEMPORARY FIX AS TO WHY THE $products array contains empty fields?--}}
-{{--      {{ var_dump($product) }}--}}
+      {{--{{ dd($products) }}--}}
     @if(is_object($product))
         <div class="item col-lg-3 col-md-4 col-sm-6">
             <div class="w-box">
@@ -21,7 +21,13 @@
 
                 <span class="w-footer">
                     <div class="pull-left"><strong class="pricetag">{{ $product->price }} $</strong></div>
-					<button class="btn btn-success pull-right buybutton" data-product="577" data-abid="v"><i class="fa fa-shopping-cart"></i> {{ Lang::get("boukem.buy") }}</button>
+					<button class="btn btn-success pull-right buybutton"
+                            data-product="{{ $product->id }}"
+                            data-price="{{ $product->price }}"
+                            data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
+                            data-thumbnail_lg="//static.boutiquekem.com/productimg-120-160-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
+                            data-name="{{ $product->localization->name }}">
+                        ><i class="fa fa-shopping-cart"></i> {{ Lang::get("boukem.buy") }}</button>
                     <span class="clearfix"></span>
 
                 </span>
