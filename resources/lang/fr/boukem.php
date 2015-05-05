@@ -73,7 +73,7 @@ return [
     "add_cart"      =>"Ajouter au panier",
     "secure_payment"=>"Transaction sécurisée",
     "categories"    =>"Catégories",
-    "buy"           =>"Achter",
+    "buy"           =>"Acheter",
     "about_us"      =>"À propos de la boutique",
     "information"   =>"Information",
     "privacy_policy"=>"Politique de confidentialité",

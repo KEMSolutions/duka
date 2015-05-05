@@ -69,7 +69,11 @@ class LayoutController extends Controller {
     {
         return [
             "tabTitle" => $locale === "fr" ? $source[$position]->content->tab->title_fr_CA : $source[$position]->content->tab->title_en_CA,
-            "products" => isset($source[$position]->content->products) ? $source[$position]->content->products : null
+            "products" => isset($source[$position]->content->products) ? $source[$position]->content->products : null,
+            "layoutDense" => isset($source[$position]->content->dense) ? $source[$position]->content->dense : false,
+            "limit" => isset($source[$position]->content->limit) ? $source[$position]->content->limit : null,
+            "product_limit" => isset($source[$position]->content->product_limit) ? $source[$position]->content->product_limit : null,
+            "category_limit" => isset($source[$position]->content->category_limit) ? $source[$position]->content->category_limit : null,
         ];
     }
 

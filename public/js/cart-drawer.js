@@ -93,12 +93,13 @@ var cartData = {
     },
 
     /**
-     * Store a product in sessionStorage
+     * Store a product in sessionStorage and update badge quantity
      *
      * @param item JSON format converted from attributes on the .buybutton
      */
     storeItem : function(item) {
         sessionStorage.setItem("_product " + item.product, JSON.stringify(item));
+        cartData.setBadgeQuantity();
     },
 
     /**
@@ -131,6 +132,7 @@ var cartData = {
             sessionStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
 
             cartData.setBadgeQuantity();
+
         });
     },
 
@@ -150,7 +152,6 @@ var cartData = {
             oldData.quantity = parseInt($(this).val());
             sessionStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
 
-            //update the badge quantity
             cartData.setBadgeQuantity();
 
         });

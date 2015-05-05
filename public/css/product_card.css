@@ -1,0 +1,42 @@
+.blog-grid .date-over {
+    background: #fff;
+    color: #999;
+    padding: 10px;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    text-align: center;
+    border-radius: 3px;
+}
+
+.w-box h2 {
+    font-size: 16px;
+    margin: 0;
+    padding: 10px 15px;
+    border-bottom: 1px solid #F1F1F1;
+    color: #9AB2CC;
+    font-weight: 500;
+}
+
+.w-box p {
+    margin: 0;
+    font-size: 14px;
+    padding: 15px;
+    color: #4C4C4C;
+}
+
+.w-footer .pricetag {
+    color: #4C4C4C;
+    font-size: 1.5em;
+}
+
+.w-box .w-footer {
+    display: block;
+    border-top: 1px solid #F1F1F1;
+    padding: 10px 15px;
+}
+
+.blog-grid .item {
+    height: 482px;
+    margin-bottom: 1%;
+}
