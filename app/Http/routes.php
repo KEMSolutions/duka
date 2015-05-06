@@ -43,22 +43,9 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
         });
 
         /**
-         * Routes for testing the cart drawer and the cart checkout.
-         */
-        Route::get("draw", "CheckoutController@draw");
-        Route::get("cart", "CheckoutController@cart");
-
-        /**
-         * Routes for testing the main layout elements (header, footer)
-         */
-        Route::get("layout/main", function() {
-            return View("app");
-        });
-
-        /**
          * Routes for testing homepage creation.
          */
-        Route::get("layout/home", "LayoutController@init");
+        Route::get("layout/home", "LayoutController@home");
     });
 });
 

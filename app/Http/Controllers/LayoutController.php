@@ -15,7 +15,7 @@ class LayoutController extends Controller {
      *
      * @return mixed
      */
-    public function init()
+    public function home()
     {
         $apiData = KemAPI::getHomePage();
         $currentLocale = LaravelLocalization::getCurrentLocale();
