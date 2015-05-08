@@ -14,7 +14,7 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
     // Test routes.
     Route::get('/', 'WelcomeController@index');
     Route::get('/welcome', 'WelcomeController@index');
-    Route::get('home', 'HomeController@index');
+    Route::get('home', 'LayoutController@home');
     Route::group(['prefix' => 'dev'], function() {
 
         // API.
@@ -43,9 +43,10 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
         });
 
         /**
-         * Routes for testing homepage creation.
+         * Routes for testing product page.
+         * TODO: Franck! Search product by slug not by id!
          */
-        Route::get("layout/home", "LayoutController@home");
+        Route::get("prod/{id}", "ProductController@show");
     });
 });
 

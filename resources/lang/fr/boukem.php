@@ -179,5 +179,8 @@ return [
     "paypal_error"      =>  "Certaines situations peuvent entrainer un rejet initial de votre commande par Paypal. Dans un tel cas, vous recevriez un courriel de Paypal et de notre magasin au cours des prochaines minutes. Si le problème persiste et aucune confirmation de commande ne vous parvient, contactez nous au <a href=mailto: :email>:email</a> ou au :phone.",
     "name_recommendation"=>"La suggestion de :name",
     "curated"           =>"Suggestions",
-    "all_results"       =>"Tous les résultats"
+    "all_results"       =>"Tous les résultats",
+    "world_shipping"    =>"Nous livrons à travers tout le Canada",
+    "shipping_estimate" =>"Expédition prévue dans les 3 à 7 jours.",
+    "brand"             =>"Marque"
 ];

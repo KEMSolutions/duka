@@ -179,8 +179,8 @@ return [
     "paypal_error"      =>"Some errors can be resolved automatically by Paypal in the next minutes. If that is the case, you'll receive an email from us and from Paypal acknowledging receipt of your order in a few minutes. If you don't receive those emails and this problem persists, please contact us at <a href=mailto: :email>:email</a> or :phone.",
     "name_recommendation"=>":name's recommendation",
     "curated"           =>"Curated results",
-    "all_results"       =>"All results"
-
-
-
+    "all_results"       =>"All results",
+    "world_shipping"    =>"We ship everywhere in Canada",
+    "shipping_estimate" =>"Usually ships within 3 to 7 days.",
+    "brand"             =>"Brand"
 ];

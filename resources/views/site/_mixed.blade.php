@@ -21,7 +21,8 @@
                                     </div>
                                     <div class="col-md-10">
                                         <p>
-                                            <a href="/{{ $locale }}/prod/{{ $product->slug }}" class="strong">
+                                            {{--TODO: SET $product->slug instead of ID when facade is ready. --}}
+                                            <a href="/{{ $locale }}/dev/prod/{{ $product->id }}" class="strong">
                                                 {{ $product->localization->name }}
                                             </a>
                                                 <span class="pull-right">

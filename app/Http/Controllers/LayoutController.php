@@ -42,7 +42,7 @@ class LayoutController extends Controller {
 
         //return the homepage view.
         //To access data on each section, do {{ $LayoutData["name_of_section"]["property"]  }}
-        return View::make("site._homepage")->with([
+        return View::make("site.homepage")->with([
             "sites" => $elementType,
 
             "showTab" => true,
