@@ -48,9 +48,6 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="//cdn.kem.guru/boukem/spirit/js/gcc_ressources.js.gz"></script>
 	<script src="/js_assets/mixitup/jquery.mixitup.init.js"></script>
-	<script src="/js_assets/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>
-	<script src="/js_assets/fraction/jquery.fractionslider.init.js"></script>
-	<script src="//cdn.kem.guru/boukem/spirit/js/jquery.ebright.custom.js.gz"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
 	{{-- TODO : incorporate other scripts too --}}
 	@yield("scripts")
