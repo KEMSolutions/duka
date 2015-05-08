@@ -3,9 +3,15 @@
     {{--      {{ var_dump($product) }}--}}
     @if(is_object($product) && isset($product->brand->slug))
         <div class="col-xs-6 col-sm-4 col-md-3 text-center dense_product">
-            <a href="/{{ $locale }}/prod/{{ $product->slug }}">
+
+            {{--TODO: SET $product->slug instead of ID when facade is ready. --}}
+            <a href="/{{ $locale }}/dev/prod/{{ $product->id }}" class="strong">
                 <img src="//static.boutiquekem.com/productimg-160-160-{{ $product->images[0]->id . "-h." . $product->images[0]->extension }}" class="img-responsive center-block hidden-xs hidden-sm"/>
             </a>
+
+            {{--<a href="/{{ $locale }}/prod/{{ $product->slug }}">--}}
+                {{--<img src="//static.boutiquekem.com/productimg-160-160-{{ $product->images[0]->id . "-h." . $product->images[0]->extension }}" class="img-responsive center-block hidden-xs hidden-sm"/>--}}
+            {{--</a>--}}
 
             <div class="text-uppercase brand">
                 <strong><a href="{{ $locale }}/fr/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a></strong>

@@ -5,10 +5,16 @@
         <div class="item col-lg-3 col-md-4 col-sm-6">
             <div class="w-box">
                 <figure>
-                    <a href="/{{ $locale }}/prod/{{ $product->slug }}">
+
+                    {{--TODO: SET $product->slug instead of ID when facade is ready. --}}
+                    <a href="/{{ $locale }}/dev/prod/{{ $product->id }}" class="strong">
                         <img src="//static.boutiquekem.com/productimg-300-280-{{ $product->images[0]->id . "." . $product->images[0]->extension }}" class="img-responsive center-block "/>
-                        {{--<img src="//static.boutiquekem.com/productimg-70-600-560-{{ $product->images[0]->id . "." . $product->images[0]->extension }}" class="img-responsive center-block visible-xs-block visible-sm-block"/>--}}
                     </a>
+
+                    {{--<a href="/{{ $locale }}/prod/{{ $product->slug }}">--}}
+                        {{--<img src="//static.boutiquekem.com/productimg-300-280-{{ $product->images[0]->id . "." . $product->images[0]->extension }}" class="img-responsive center-block "/>--}}
+                    {{--</a>--}}
+
                     <span class="date-over"><strong><a class="color-two" href="{{ $locale }}/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a></strong></span>
                     <h2><a href="/{{ $locale }}/prod/{{ $product->slug }}" class="color-two">{{ $product->localization->name }}</a></h2>
 
