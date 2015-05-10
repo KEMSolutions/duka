@@ -201,6 +201,7 @@ return [
         'Brands'    => 'App\Facades\Brands',
         'Categories'    => 'App\Facades\Categories',
         'Layouts'   => 'App\Facades\Layouts',
+        'Orders'    => 'App\Facades\Orders',
         'Products'  => 'App\Facades\Products',
 
 	],
