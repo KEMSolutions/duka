@@ -46,7 +46,9 @@ class KemApiServiceProvider extends ServiceProvider {
      */
     public function provides()
     {
-        return ['App\Http\KemApiHttpClient'];
+        return [
+            'App\Http\KemApiHttpClient',
+        ];
     }
 
 }
