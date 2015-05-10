@@ -24,14 +24,17 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
         Route::get('home', function() {
             return KemAPI::getHomePage();
         });
-        Route::get('cat/{id}', function($id) {
-            return Illuminate\Support\Collection::make(KemAPI::getCategory($id));
+        Route::get('brands/{id}', function($id) {
+            return Illuminate\Support\Collection::make(Brands::get($id));
         });
-        Route::get('brand/{id}', function($id) {
-            return Illuminate\Support\Collection::make(KemAPI::getBrand($id));
+        Route::get('categories/{id}', function($id) {
+            return Illuminate\Support\Collection::make(Categories::get($id));
         });
-        Route::get('prod/{id}', function($id) {
-            return Illuminate\Support\Collection::make(KemAPI::getProduct($id));
+        Route::get('layouts/{id?}', function($id = '') {
+            return Illuminate\Support\Collection::make(Layouts::get($id));
+        });
+        Route::get('products/{id}', function($id) {
+            return Illuminate\Support\Collection::make(Products::get($id));
         });
         Route::get('search/{query}', function($query) {
             return Illuminate\Support\Collection::make(KemAPI::search($query));
