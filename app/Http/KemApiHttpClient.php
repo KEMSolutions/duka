@@ -107,6 +107,13 @@ class KemApiHttpClient
         return $this->makeRequest('POST', $uri, $body, $returnResponse);
     }
 
+    /**
+     * @param string $method        Request method.
+     * @param string $endpoint      Full URI to API endpoint.
+     * @param string $body          Body of request.
+     * @param bool $returnResponse  Whether to return the response object itself instead of a JSON-decoded object.
+     * @return mixed                JSON-decoded response object or instance of \GuzzleHttp\Http\Response.
+     */
     protected function makeRequest($method, $endpoint, $body = '', $returnResponse = false)
     {
         // Build signature string.
