@@ -57,7 +57,7 @@
 
                                                     </p><div class="input-qty-detail form-inline text-center">
                                                         <div class="form-group">
-                                                            <div class="input-group bootstrap-touchspin" style=""><span class="input-group-btn"><button class="btn btn-default bootstrap-touchspin-down" type="button">-</button></span><span class="input-group-addon bootstrap-touchspin-prefix"></span><input type="text" class="form-control input-qty text-center" id="item_quantity" value="1"><span class="input-group-addon bootstrap-touchspin-postfix"></span><span class="input-group-btn"><button class="btn btn-default bootstrap-touchspin-up" type="button">+</button></span></div>
+                                                            <div class="input-group bootstrap-touchspin" style=""><span class="input-group-addon bootstrap-touchspin-prefix"></span><input type="text" class="form-control input-qty text-center" id="item_quantity" value="1"><span class="input-group-addon bootstrap-touchspin-postfix"></span></div>
                                                         </div>
 
                                                         <button class="btn btn-three buybutton visible-lg-inline"
@@ -66,13 +66,13 @@
                                                                 data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
                                                                 data-thumbnail_lg="//static.boutiquekem.com/productimg-120-160-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
                                                                 data-name="{{ $product->localization->name }}">
-                                                            ><i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.buy") }}</button>
+                                                            ><i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
                                                         <button class="btn btn-block btn-three center-block buybutton hidden-lg" data-product="{{ $product->id }}"
                                                                 data-price="{{ $product->price }}"
                                                                 data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
                                                                 data-thumbnail_lg="//static.boutiquekem.com/productimg-120-160-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
                                                                 data-name="{{ $product->localization->name }}">
-                                                            ><i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.buy") }}</button>
+                                                            ><i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
                                                     </div>
                                                     <br/>
                                                 </div>
