@@ -30,7 +30,7 @@ class KemApiServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		// Bind our KemApiHttpClient object to the service container.
-        $this->app->bind('kemapihttpclient', function() {
+        $this->app->singleton('kemapihttpclient', function() {
 
             $user = Config::get('services.kemapi.user', 0);
             $secret = Config::get('services.kemapi.secret', '');
