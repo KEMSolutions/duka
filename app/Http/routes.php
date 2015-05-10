@@ -17,12 +17,12 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
     Route::get('home', 'LayoutController@home');
     Route::group(['prefix' => 'dev'], function() {
 
-        // API.
-        Route::get('api/{request}', function($request) {
+        // API tests.
+        Route::get('get/{request}', function($request) {
             return Illuminate\Support\Collection::make(KemAPI::get($request, Input::all()));
         })->where('request', '.+');
         Route::get('home', function() {
-            return KemAPI::getHomePage();
+            return Layouts::get('');
         });
         Route::get('brands/{id}', function($id) {
             return Illuminate\Support\Collection::make(Brands::get($id));
@@ -37,12 +37,13 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
             return Illuminate\Support\Collection::make(Products::get($id));
         });
         Route::get('search/{query}', function($query) {
-            return Illuminate\Support\Collection::make(KemAPI::search($query));
+            return Illuminate\Support\Collection::make(Products::search($query));
         });
-
-        // Localization.
-        Route::get('locale', function() {
-            return Localization::getCurrentLocale();
+        Route::get('estimate', function() {
+            return Illuminate\Support\Collection::make(Orders::estimate([
+                ['id' => 616],
+                ['id' => 95, 'quantity' => 3],
+            ], 'CA', 'H2V 4G7'));
         });
 
         /**
