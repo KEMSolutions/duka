@@ -197,7 +197,11 @@ return [
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
 
-        'KemAPI'    => 'App\Facades\KemAPI'
+        'KemAPI'    => 'App\Facades\KemAPI',
+        'Brands'    => 'App\Facades\Brands',
+        'Categories'    => 'App\Facades\Categories',
+        'Layouts'   => 'App\Facades\Layouts',
+        'Products'  => 'App\Facades\Products',
 
 	],
 
