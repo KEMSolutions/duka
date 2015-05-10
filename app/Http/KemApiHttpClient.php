@@ -4,7 +4,6 @@ use Log;
 use Cache;
 use KemAPI;
 use Localization;
-use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\JsonResponse;
@@ -84,7 +83,7 @@ class KemApiHttpClient
      * Makes a POST request to KEM's API.
      *
      * @param string $request       Request being made, e.g. "orders/estimate".
-     * @param string $body          Body of the request.
+     * @param mixed $body           Body of the request.
      * @param bool $returnResponse  Whether to return the response object itself instead of a JSON-decoded object.
      * @return mixed                JSON-decoded response object or instance of \GuzzleHttp\Http\Response.
      */
@@ -99,6 +98,11 @@ class KemApiHttpClient
         // Build endpoint URI.
         $uri = $this->endpoint .'/'. self::VERSION .'/'. $request;
 
+        // Make sure $body is a string.
+        if (!is_string($body)) {
+            $body = json_encode($body);
+        }
+
         // Make API call and return results.
         return $this->makeRequest('POST', $uri, $body, $returnResponse);
     }
@@ -111,6 +115,7 @@ class KemApiHttpClient
 
         // Create request.
         $request = $this->client->createRequest($method, $endpoint, [
+            'body' => $body,
             'headers' => [
                 'X-Kem-User' => $this->user,
                 'X-Kem-Signature' => $sig,
@@ -182,135 +187,11 @@ class KemApiHttpClient
     /**
      * Shortcut to search database for products.
      *
-     * @param string $query Search term.
-     * @param int $page     The page to start from (see: https://developer.github.com/v3/#pagination).
-     * @param int $perPage  The number of products to display per page (see: https://developer.github.com/v3/#pagination).
-     * @return mixed        Search results.
+     * @deprecated
      */
     public function search($query, $page = 1, $perPage = 40)
     {
-        // Performance check
-        $query = trim(strip_tags($query));
-        if (strlen($query) < 1) {
-            return $this->badRequest('Query too short.');
-        }
-
-        // Retrieve search results
-        if (!$results = Cache::get($this->locale .'.api.search.'. $query)) {
-
-            $results = $this->get('products/search', [
-                'q' => $query,
-                'embed' => 'tags',
-                'page' => $page,
-                'per_page' => $perPage
-            ]);
-
-            // Check for errors.
-            if (!$results || isset($results->error)) {
-                return $results;
-            }
-
-            // Cache results and product details
-            Log::info('Caching results for "'. $query .'" until '. Carbon::now()->addMinutes(15));
-            Cache::put($this->locale .'.api.search.'. $query, $results, Carbon::now()->addMinutes(15));
-
-            // Extract product details from results, and cache those too.
-            $this->extractAndCache($results->organic_results);
-            foreach ($results->tags as $tag) {
-                $this->extractAndCache($tag->products);
-            }
-        }
-
-        else {
-            Log::info('Retrieving results for "'. $query .'" from cache.');
-        }
-
-        return $results;
-    }
-
-    /**
-     * Helper method to retrieve objects and cache them (e.g. products, categories, etc.) If the object has products,
-     * attempt to cache those as well.
-     *
-     * @param string $id            Object's ID or slug.
-     * @param $namespace            String to prepend to the cache key, e.g. "en.api.products.".
-     * @param string $request       API request to make if object isn't in the cache.
-     * @param array $requestParams  Parameters to include with API request.
-     * @param string $expires       Time at which cached objects should expire. Defaults to "Carbon::now()->addHours(3)".
-     * @return mixed                Requested object.
-     * @deprecated
-     */
-    public function getAndCache($id, $namespace, $request, $requestParams = [], $expires = null)
-    {
-        // Add common prefix to all namespaces.
-        $namespace = $this->locale .'.api.'. $namespace;
-
-        // Retrieve object from cache, or make an API call.
-        if (!$object = Cache::get($namespace . $id)) {
-
-            $object = $this->get($request, $requestParams);
-
-            // Check for errors.
-            if (!$object || isset($object->error)) {
-                return $object;
-            }
-
-            // Cache object.
-            $expires = $expires ?: Carbon::now()->addHours(3);
-            Cache::put($namespace . $object->id, $object, $expires);
-            Cache::put($namespace . $object->slug, $object, $expires);
-            Log::info('Caching "'. $namespace . $object->id .'" until "'. $expires .'"');
-
-            // Look for products to cache.
-            if (isset($object->products) && count($object->products)) {
-                Log::info('Attempting to cache products...');
-                $this->extractAndCache($object->products);
-            }
-        }
-
-        else {
-            Log::info('Retrieved "'. $namespace . $id .'" from cache.');
-        }
-
-        return $object;
-    }
-
-    /**
-     * Helper method to cache products from a list.
-     *
-     * @param array $list       Array of objects to be cached.
-     * @param string $namespace String to prepend to the cache key, e.g. "en.api.products.".
-     * @param string $expires   Time at which cached objects should expire. Defaults to "Carbon::now()->addHours(3)".
-     * @return void
-     * @deprecated
-     */
-    public function extractAndCache($list, $namespace = 'products.', $expires = null)
-    {
-        // Performance check.
-        if (gettype($list) != 'array' && !($list instanceof Iterator)) {
-            return;
-        }
-
-        // Add common prefix to all namespaces.
-        $namespace = $this->locale .'.api.'. $namespace;
-
-        // Cache each item in the list.
-        $expires = $expires ?: Carbon::now()->addHours(3);
-        foreach ($list as $item) {
-            if (empty($item) || !isset($item->id) || empty($item->id) || Cache::has($namespace . $item->id)) {
-                Log::info('Skipping object...');
-                Log::info('Is empty? '. (empty($item) ? 'yes' : 'no'));
-                Log::info('Is ID set? '. (isset($item->id) ? 'yes' : 'no'));
-                Log::info('Is ID empty? '. (empty($item->id) ? 'yes' : 'no'));
-                continue;
-            }
-
-            Log::info('Caching "'. $namespace . $item->id .'" until "'. $expires .'"');
-            Cache::put($namespace . $item->id, $item, $expires);
-            if (isset($item->slug) && strlen($item->slug)) {
-                Cache::put($namespace . $item->slug, $item, $expires);
-            }
-        }
+        return \Products::search($query, $page, $perPage);
     }
 
     /**

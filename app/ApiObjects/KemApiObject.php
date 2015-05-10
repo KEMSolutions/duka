@@ -7,7 +7,7 @@ use Localization;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 
-abstract class KemApiObject
+abstract class Base
 {
     /**
      * @var string Base API request for this object, e.g. "products" or "layouts".
