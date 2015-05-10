@@ -12,22 +12,22 @@ use Illuminate\Http\JsonResponse;
 class KemApiHttpClient
 {
     /**
-     * Instance of GuzzleHttp\Client.
+     * @var mixed Instance of GuzzleHttp\Client.
      */
     public $client;
 
     /**
-     * API endpoint.
+     * @var string API endpoint.
      */
     private $endpoint = 'https://kemsolutions.com/CloudServices/index.php/api';
 
     /**
-     * API user ID.
+     * @var string API user ID.
      */
     private $user = '';
 
     /**
-     * API user secret.
+     * @var string API user secret.
      */
     private $secret = '';
 
@@ -35,6 +35,11 @@ class KemApiHttpClient
      * API version.
      */
     const VERSION = 1;
+
+    /**
+     * @var string Current locale.
+     */
+    private $locale = 'en';
 
     public function __construct($apiUser, $apiSecret, $config = [])
     {
@@ -44,14 +49,17 @@ class KemApiHttpClient
         // Save API details.
         $this->user = $apiUser;
         $this->secret = $apiSecret;
+
+        // Set current locale.
+        $this->locale = Localization::getCurrentLocale();
     }
 
     /**
      * Makes a GET request to KEM's API.
      *
      * @param string $request       Request being made, e.g. "products/1234".
-     * @param array $params         Parameters to include in request.
-     * @param bool $returnResponse  Returns the response object if true, or the JSON-decoded object otherwise.
+     * @param array $params         Parameters to include with request.
+     * @param bool $returnResponse  Whether to return the response object itself instead of a JSON-decoded object.
      * @return mixed                JSON-decoded response object or instance of \GuzzleHttp\Http\Response.
      */
     public function get($request, $params = [], $returnResponse = false)
@@ -68,18 +76,57 @@ class KemApiHttpClient
             $uri .= '?'. http_build_query($params);
         }
 
-        // Make request.
-        try{
-            $response = $this->client->get($uri, [
-                'headers' => [
-                    'X-Kem-User' => $this->user,
-                    'X-Kem-Signature' => $this->getSignature(),
-                    'Accept-Language' => Localization::getCurrentLocale(),
-                    'Content-Type' => 'application/json'
-                ]
-            ]);
-        } catch (ClientException $e) {
+        // Make API call and return results.
+        return $this->makeRequest('GET', $uri, '', $returnResponse);
+    }
 
+    /**
+     * Makes a POST request to KEM's API.
+     *
+     * @param string $request       Request being made, e.g. "orders/estimate".
+     * @param string $body          Body of the request.
+     * @param bool $returnResponse  Whether to return the response object itself instead of a JSON-decoded object.
+     * @return mixed                JSON-decoded response object or instance of \GuzzleHttp\Http\Response.
+     */
+    public function post($request, $body = '', $returnResponse = false)
+    {
+        // Performance check.
+        $request = preg_replace('/[^a-z0-9\/_-]/i', '', $request);
+        if (strlen($request) < 1) {
+            return $returnResponse ? null : $this->badRequest('Invalid API request.');
+        }
+
+        // Build endpoint URI.
+        $uri = $this->endpoint .'/'. self::VERSION .'/'. $request;
+
+        // Make API call and return results.
+        return $this->makeRequest('POST', $uri, $body, $returnResponse);
+    }
+
+    protected function makeRequest($method, $endpoint, $body = '', $returnResponse = false)
+    {
+        // Build signature string.
+        $sig = $body . $this->secret;
+        $sig = base64_encode(hash('sha512', $sig, true));
+
+        // Create request.
+        $request = $this->client->createRequest($method, $endpoint, [
+            'headers' => [
+                'X-Kem-User' => $this->user,
+                'X-Kem-Signature' => $sig,
+                'Accept-Language' => $this->locale,
+                'Content-Type' => 'application/json'
+            ]
+        ]);
+
+        // Attempt to send request.
+        try {
+            $response = $this->client->send($request);
+        }
+
+        // And catch any errors.
+        catch (ClientException $e)
+        {
             // Log error.
             Log::error($e->getMessage());
             return $returnResponse ? null : JsonResponse::create([
@@ -93,148 +140,43 @@ class KemApiHttpClient
     }
 
     /**
-     * Makes a DELETE request to KEM's API.
-     *
-     * @param string $request
-     * @param bool $returnResponse
-     * @throws \Exception
-     */
-    public function delete($request, $returnResponse = false)
-    {
-
-
-        throw new \Exception('501: Method not implemented.');
-    }
-
-    /**
-     * Makes a PUT request to KEM's API.
-     *
-     * @param string $request
-     * @param bool $returnResponse
-     * @throws \Exception
-     */
-    public function put($request, $returnResponse = false)
-    {
-
-
-        throw new \Exception('501: Method not implemented.');
-    }
-
-    /**
-     * Makes a PATCH request to KEM's API.
-     *
-     * @param string $request
-     * @param bool $returnResponse
-     * @throws \Exception
-     */
-    public function patch($request, $returnResponse = false)
-    {
-
-
-        throw new \Exception('501: Method not implemented.');
-    }
-
-    /**
-     * Makes a POST request to KEM's API.
-     *
-     * @param string $request
-     * @param bool $returnResponse
-     * @throws \Exception
-     */
-    public function post($request, $returnResponse = false)
-    {
-
-
-        throw new \Exception('501: Method not implemented.');
-    }
-
-    /**
      * Shortcut to retrieve layouts for home page and cache the product details at the same time.
      *
-     * @return mixed    JSON array with the home page's layouts.
+     * @deprecated
      */
     public function getHomePage()
     {
-        // Retrieve layouts.
-        $layouts = Cache::remember('api.layouts', Carbon::now()->addMinutes(30), function() {
-            return KemAPI::get('layouts');
-        });
-
-        if (!is_array($layouts) || isset($layouts->error)) {
-            return $layouts;
-        }
-
-        // Cache products.
-        foreach ($layouts as $layout) {
-            if (in_array($layout->type, ['mixed', 'featured'])) {
-                $this->extractAndCache($layout->content->products, 'api.products.');
-            }
-        }
-
-        return $layouts;
+        return \Layouts::get('');
     }
 
     /**
      * Shortcut to retrieve the details for a category and cache the product details at the same time.
      *
-     * @param mixed $id     ID or slug of the category.
-     * @param int $page     The page to start from (see: https://developer.github.com/v3/#pagination).
-     * @param int $perPage  The number of products to display per page (see: https://developer.github.com/v3/#pagination).
-     * @return object       JSON object for the specified category.
+     * @deprecated
      */
     public function getCategory($id, $page = 1, $perPage = 40)
     {
-        // Performance check.
-        if ((is_numeric($id) && $id < 0) || preg_replace('/[^a-z0-9_-]/i', '', $id) != $id) {
-            return $this->badRequest('Invalid category identifier.');
-        }
-
-        // Retrieve category details
-        return $this->getAndCache($id, 'api.categories.', 'categories/'. $id, [
-            'embed' => 'products',
-            'page' => $page,
-            'per_page' => $perPage
-        ]);
+        return \Categories::get($id, $page, $perPage);
     }
 
     /**
      * Shortcut to retrieve the details for a brand and cache the product details at the same time.
      *
-     * @param mixed $id     ID or slug of the brand.
-     * @param int $page     The page to start from (see: https://developer.github.com/v3/#pagination).
-     * @param int $perPage  The number of products to display per page (see: https://developer.github.com/v3/#pagination).
-     * @return mixed        JSON object for the specified brand.
+     * @deprecated
      */
     public function getBrand($id, $page = 1, $perPage = 40)
     {
-        // Performance check.
-        if ((is_numeric($id) && $id < 0) || preg_replace('/[^a-z0-9_-]/i', '', $id) != $id) {
-            return $this->badRequest('Invalid brand identifier.');
-        }
-
-        // Retrieve brand details.
-        return $this->getAndCache($id, 'api.brands.', 'brands/'. $id, [
-            'embed' => 'products',
-            'page' => $page,
-            'per_page' => $perPage
-        ]);
+        return \Brands::get($id, $page, $perPage);
     }
 
     /**
      * Shortcut to retrieve the details for a given product.
      *
-     * @param mixed $id ID or slug of requested product.
-     * @return object   JSON object for the specified product.
+     * @deprecated
      */
     public function getProduct($id)
     {
-        // Performance check.
-        if ((is_numeric($id) && $id < 0) || preg_replace('/[^a-z0-9_-]/i', '', $id) != $id) {
-            return $this->badRequest('Invalid product identifier.');
-        }
-
-        // Retrieve product details
-        return $this->getAndCache($id, 'api.products.', 'products/'. $id);
+        return \Products::get($id);
     }
 
     /**
@@ -254,7 +196,7 @@ class KemApiHttpClient
         }
 
         // Retrieve search results
-        if (!$results = Cache::get('api.search.'. $query)) {
+        if (!$results = Cache::get($this->locale .'.api.search.'. $query)) {
 
             $results = $this->get('products/search', [
                 'q' => $query,
@@ -270,12 +212,12 @@ class KemApiHttpClient
 
             // Cache results and product details
             Log::info('Caching results for "'. $query .'" until '. Carbon::now()->addMinutes(15));
-            Cache::put('api.search.'. $query, $results, Carbon::now()->addMinutes(15));
+            Cache::put($this->locale .'.api.search.'. $query, $results, Carbon::now()->addMinutes(15));
 
             // Extract product details from results, and cache those too.
-            $this->extractAndCache($results->organic_results, 'api.products.');
+            $this->extractAndCache($results->organic_results);
             foreach ($results->tags as $tag) {
-                $this->extractAndCache($tag->products, 'api.products.');
+                $this->extractAndCache($tag->products);
             }
         }
 
@@ -291,14 +233,18 @@ class KemApiHttpClient
      * attempt to cache those as well.
      *
      * @param string $id            Object's ID or slug.
-     * @param $namespace            String to prepend to the cache key, e.g. "api.products.".
+     * @param $namespace            String to prepend to the cache key, e.g. "en.api.products.".
      * @param string $request       API request to make if object isn't in the cache.
      * @param array $requestParams  Parameters to include with API request.
      * @param string $expires       Time at which cached objects should expire. Defaults to "Carbon::now()->addHours(3)".
      * @return mixed                Requested object.
+     * @deprecated
      */
     public function getAndCache($id, $namespace, $request, $requestParams = [], $expires = null)
     {
+        // Add common prefix to all namespaces.
+        $namespace = $this->locale .'.api.'. $namespace;
+
         // Retrieve object from cache, or make an API call.
         if (!$object = Cache::get($namespace . $id)) {
 
@@ -318,7 +264,7 @@ class KemApiHttpClient
             // Look for products to cache.
             if (isset($object->products) && count($object->products)) {
                 Log::info('Attempting to cache products...');
-                $this->extractAndCache($object->products, 'api.products.');
+                $this->extractAndCache($object->products);
             }
         }
 
@@ -330,51 +276,41 @@ class KemApiHttpClient
     }
 
     /**
-     * Helper method to cache stuff.
+     * Helper method to cache products from a list.
      *
      * @param array $list       Array of objects to be cached.
-     * @param string $prepend   String to prepend to the cache key, e.g. "api.products.".
+     * @param string $namespace String to prepend to the cache key, e.g. "en.api.products.".
      * @param string $expires   Time at which cached objects should expire. Defaults to "Carbon::now()->addHours(3)".
      * @return void
+     * @deprecated
      */
-    public function extractAndCache($list, $prepend = '', $expires = null)
+    public function extractAndCache($list, $namespace = 'products.', $expires = null)
     {
         // Performance check.
         if (gettype($list) != 'array' && !($list instanceof Iterator)) {
             return;
         }
 
+        // Add common prefix to all namespaces.
+        $namespace = $this->locale .'.api.'. $namespace;
+
         // Cache each item in the list.
         $expires = $expires ?: Carbon::now()->addHours(3);
         foreach ($list as $item) {
-            if (empty($item) || !isset($item->id) || empty($item->id) || Cache::has($prepend . $item->id)) {
+            if (empty($item) || !isset($item->id) || empty($item->id) || Cache::has($namespace . $item->id)) {
                 Log::info('Skipping object...');
+                Log::info('Is empty? '. (empty($item) ? 'yes' : 'no'));
+                Log::info('Is ID set? '. (isset($item->id) ? 'yes' : 'no'));
+                Log::info('Is ID empty? '. (empty($item->id) ? 'yes' : 'no'));
                 continue;
             }
 
-            Log::info('Caching "'. $prepend . $item->id .'" until "'. $expires .'"');
-            Cache::put($prepend . $item->id, $item, $expires);
+            Log::info('Caching "'. $namespace . $item->id .'" until "'. $expires .'"');
+            Cache::put($namespace . $item->id, $item, $expires);
             if (isset($item->slug) && strlen($item->slug)) {
-                Cache::put($prepend . $item->slug, $item, $expires);
+                Cache::put($namespace . $item->slug, $item, $expires);
             }
         }
-    }
-
-    /**
-     * Creates the signature string to be used for every request.
-     *
-     * @param string $body  Body of the request.
-     * @return string       The signature for the current request.
-     */
-    private function getSignature($body = '')
-    {
-        // Collect data for signature
-        $data = $body . $this->secret;
-
-        // Create signature
-        $sig = base64_encode(hash('sha512', $data, true));
-
-        return $sig;
     }
 
     /**
