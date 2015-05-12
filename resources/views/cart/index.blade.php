@@ -11,6 +11,7 @@
             @include("cart._empty")
         @else
             @include("cart._checkout_form")
+        @endif
     @endsection
 
     @section("scripts")
