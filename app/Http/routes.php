@@ -45,6 +45,9 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
                 ['id' => 95, 'quantity' => 3],
             ], 'CA', 'H2V 4G7'));
         });
+        Route::get('countries', function() {
+            return Utilities::getCountryList();
+        });
 
         /**
          * Routes for testing product page.
