@@ -1,5 +1,6 @@
 <?php namespace App\ApiObjects;
 
+use App\Facades\Utilities;
 use Log;
 use Cache;
 use KemAPI;
@@ -24,12 +25,12 @@ class Orders extends KemApiObject
             return $this->badRequest('Invalid parameters [req: orders/estimate].');
         }
 
-        // ...
+        // Prepare API request body.
         $body = new \stdClass;
         $body->products = [];
         $body->shipping_address = new \stdClass;
-        $body->shipping_address->country = $country;
-        $body->shipping_address->postcode = $postalCode;
+        $body->shipping_address->country = strtoupper($country);
+        $body->shipping_address->postcode = strtoupper(preg_replace('/\s+/', '', $postalCode));
 
         // Format product list.
         foreach ($products as $product)
@@ -40,7 +41,18 @@ class Orders extends KemApiObject
             $body->products[] = $std;
         }
 
-        return KemAPI::post($this->baseRequest .'/estimate', $body);
+        // Retrieve estimate from cache.
+        $key = json_encode([$products, $country, $postalCode]);
+        if (Cache::has($key)) {
+            Log::info('Retrieving order estimate from cache...');
+            return Cache::get($key);
+        }
+
+        // Or cache new estimate.
+        $estimate = KemAPI::post($this->baseRequest .'/estimate', $body);
+        Cache::put($key, $estimate, Carbon::now()->addHour());
+
+        return $estimate;
     }
 
 }
