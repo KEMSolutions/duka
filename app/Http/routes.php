@@ -48,9 +48,13 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
 
         /**
          * Routes for testing product page.
-         * TODO: Franck! Search product by slug not by id!
          */
         Route::get("prod/{slug}", "ProductController@show");
+
+        /**
+         * Route for testing checkout
+         */
+        Route::get("cart", "CheckoutController@index");
     });
 });
 
