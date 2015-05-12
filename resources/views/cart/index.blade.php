@@ -7,10 +7,10 @@
     @endsection
 
     @section("content")
-        {{-- If cart is empty --}}
-        @include("cart._empty")
-        {{-- else include the cart--}}
-
+        @if (!isset($_COOKIE["quantityCart"]) || $_COOKIE["quantityCart"] == 0)
+            @include("cart._empty")
+        @else
+            @include("cart._checkout_form")
     @endsection
 
     @section("scripts")
