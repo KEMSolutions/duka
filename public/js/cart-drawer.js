@@ -93,13 +93,16 @@ var cartData = {
     },
 
     /**
-     * Store a product in sessionStorage and update badge quantity
+     * Store a product in sessionStorage
+     * Update badge quantity
+     * Create/update a quantity cookie
      *
      * @param item JSON format converted from attributes on the .buybutton
      */
     storeItem : function(item) {
         sessionStorage.setItem("_product " + item.product, JSON.stringify(item));
         cartData.setBadgeQuantity();
+        cartData.setQuantityCookie();
     },
 
     /**
@@ -121,6 +124,7 @@ var cartData = {
      * Remove it from the DOM.
      * Delete the object on sessionStorage.
      * Set Badge quantity accordingly.
+     * Update Cookie quantity accordingly.
      */
     deleteItem: function() {
         $(document).on('click', ".close-button", function() {
@@ -132,12 +136,17 @@ var cartData = {
             sessionStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
 
             cartData.setBadgeQuantity();
+            cartData.setQuantityCookie();
 
         });
     },
 
     /**
-     * Modify the quantity of a product, update its price label accordingly and update the cookie (sessionStorage)
+     * Modify the quantity of a product
+     * Update its price label accordingly
+     * Update the sessionStorage
+     * Set badge quantity
+     * Update Cookie quantity
      */
     modifyQuantity : function() {
         $("#cart-items").on("change", ".quantity", function() {
@@ -153,14 +162,12 @@ var cartData = {
             sessionStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
 
             cartData.setBadgeQuantity();
+            cartData.setQuantityCookie();
 
         });
     },
 
-    /**
-     * Update the value of #cart_badge when adding or deleting elements
-     */
-    setBadgeQuantity : function() {
+    getNumberOfProducts : function() {
         var total = 0;
 
         for(var i = 0; i<sessionStorage.length; i++)
@@ -171,9 +178,29 @@ var cartData = {
             }
         }
 
+        return total;
+    },
+
+    /**
+     * Update the value of #cart_badge when adding or deleting elements
+     */
+    setBadgeQuantity : function() {
+        var total = cartData.getNumberOfProducts();
+
         $("#cart_badge").text(total);
     },
 
+    setQuantityCookie : function () {
+        var number = cartData.getNumberOfProducts();
+
+        if (Cookies.get("quantityCart") == undefined || number === 0)
+        {
+            Cookies.set("quantityCart", 0);
+        }
+        else {
+            Cookies.set("quantityCart", number);
+        }
+    },
 
     /**
      * parse the information form the button into a readable json format
@@ -197,6 +224,7 @@ var cartData = {
         cartData.loadItem();
         cartData.deleteItem();
         cartData.modifyQuantity();
+        cartData.setQuantityCookie();
     }
 };
 

@@ -182,5 +182,7 @@ return [
     "all_results"       =>"Tous les résultats",
     "world_shipping"    =>"Nous livrons à travers tout le Canada",
     "shipping_estimate" =>"Expédition prévue dans les 3 à 7 jours.",
-    "brand"             =>"Marque"
+    "brand"             =>"Marque",
+    "continue"          =>"Continuer",
+    "secure_payment"    =>"Paiement sécurisé"
 ];

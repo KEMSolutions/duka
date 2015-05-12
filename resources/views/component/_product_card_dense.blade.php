@@ -14,11 +14,11 @@
             {{--</a>--}}
 
             <div class="text-uppercase brand">
-                <strong><a href="{{ $locale }}/fr/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a></strong>
+                <strong><a href="/{{ $locale }}/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a></strong>
             </div>
 
             <div class="name">
-                <a href="/{{ $locale }}/prod/{{ $product->slug }}">{{ $product->localization->name }}</a>
+                <a href="/{{ $locale }}/dev/prod/{{ $product->slug }}">{{ $product->localization->name }}</a>
             </div>
 
             <div class="price">

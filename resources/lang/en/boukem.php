@@ -182,5 +182,7 @@ return [
     "all_results"       =>"All results",
     "world_shipping"    =>"We ship everywhere in Canada",
     "shipping_estimate" =>"Usually ships within 3 to 7 days.",
-    "brand"             =>"Brand"
+    "brand"             =>"Brand",
+    "continue"          =>"Continue",
+    "secure_payment"    =>"Secure payment"
 ];
