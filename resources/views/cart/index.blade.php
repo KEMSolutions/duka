@@ -9,7 +9,13 @@
     @section("content")
         {{-- If cart is empty --}}
         @include("cart._empty")
+        {{-- else include the cart--}}
 
     @endsection
 
+    @section("scripts")
+        <script src="/js/cart-drawer.js"></script>
+    @endsection
+
 @stop
+
