@@ -203,6 +203,7 @@ return [
         'Layouts'   => 'App\Facades\Layouts',
         'Orders'    => 'App\Facades\Orders',
         'Products'  => 'App\Facades\Products',
+        'Utilities' => 'App\Facades\Utilities',
 
 	],
 
