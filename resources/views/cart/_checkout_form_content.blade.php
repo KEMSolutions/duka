@@ -22,5 +22,7 @@
         </div>
     </div>
 
+    @include("cart._checkout_form_process")
+
 
 </section>

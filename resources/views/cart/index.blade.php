@@ -10,7 +10,7 @@
         @if (!isset($_COOKIE["quantityCart"]) || $_COOKIE["quantityCart"] == 0)
             @include("cart._empty")
         @else
-            @include("cart._checkout_form")
+            @include("cart._checkout_form_content")
         @endif
     @endsection
 
