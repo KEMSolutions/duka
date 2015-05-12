@@ -21,4 +21,8 @@
 
 @section("scripts")
     <script src="/js/cart-drawer.js"></script>
+
+    <script>
+        $(".indicator-down:first").hide();
+    </script>
 @endsection
