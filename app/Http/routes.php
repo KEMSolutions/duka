@@ -50,7 +50,7 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
          * Routes for testing product page.
          * TODO: Franck! Search product by slug not by id!
          */
-        Route::get("prod/{id}", "ProductController@show");
+        Route::get("prod/{slug}", "ProductController@show");
     });
 });
 

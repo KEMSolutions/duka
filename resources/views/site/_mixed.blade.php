@@ -14,15 +14,14 @@
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="img-feature">
-                                            <a href="/{{ $locale }}/prod/{{ $product->slug }}">
+                                            <a href="/{{ $locale }}/dev/prod/{{ $product->slug }}">
                                                 <img src="//static.boutiquekem.com/productimg-120-120-{{ $product->images[0]->id . "." . $product->images[0]->extension }}" class="img-thumbnail center-block"/>
                                             </a>
                                         </div>
                                     </div>
                                     <div class="col-md-10">
                                         <p>
-                                            {{--TODO: SET $product->slug instead of ID when facade is ready. --}}
-                                            <a href="/{{ $locale }}/dev/prod/{{ $product->id }}" class="strong">
+                                            <a href="/{{ $locale }}/dev/prod/{{ $product->slug }}" class="strong">
                                                 {{ $product->localization->name }}
                                             </a>
                                                 <span class="pull-right">
