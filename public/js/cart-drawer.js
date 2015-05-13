@@ -167,6 +167,11 @@ var cartData = {
         });
     },
 
+    /**
+     * Utility function returning the number of products present in the cart.
+     *
+     * @returns {number}
+     */
     getNumberOfProducts : function() {
         var total = 0;
 
@@ -190,15 +195,19 @@ var cartData = {
         $("#cart_badge").text(total);
     },
 
+    /**
+     * Create or Update a cookie with the quantity present in the cart.
+     * The value of the cookie is encoded in base64 (btoa)
+     */
     setQuantityCookie : function () {
         var number = cartData.getNumberOfProducts();
 
         if (Cookies.get("quantityCart") == undefined || number === 0)
         {
-            Cookies.set("quantityCart", 0);
+            Cookies.set("quantityCart", btoa("0"));
         }
         else {
-            Cookies.set("quantityCart", number);
+            Cookies.set("quantityCart", btoa(number));
         }
     },
 

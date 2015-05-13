@@ -1,5 +1,5 @@
 <div class="col-md-7 cart-content-checkout-process">
-    <form method="post" id="cart_form" class="{{ $_COOKIE["quantityCart"] == 0 ? "hidden" : "" }}">
+    <form method="post" id="cart_form" class="{{ base64_decode($_COOKIE["quantityCart"]) == "0" ? "hidden" : "" }}">
 
         <div class="panel panel-default">
             <!-- Default panel contents -->
