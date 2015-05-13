@@ -2,8 +2,9 @@
 
     @section("custom_css")
         <link href="{{ asset('/css/cartdrawer.css') }}" rel="stylesheet">
-        <link rel="stylesheet" href="{{asset('/css/animate.css')}}"/>
+        <link rel="stylesheet" href="{{ asset('/css/animate.css')}}"/>
         <link rel="stylesheet" href="{{ asset('/css/product_card.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/css/chosen.min.css') }}"/>
     @endsection
 
     @section("content")
@@ -16,6 +17,7 @@
 
     @section("scripts")
         <script src="/js/cart-drawer.js"></script>
+        <script src="/js_assets/chosen.jquery.min.js"></script>
     @endsection
 
 @stop

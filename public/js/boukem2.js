@@ -3,8 +3,10 @@ $(document).ready(function () {
         initval: 1
     });
 
-
-    //Populate country list
+    /*
+        Function to populate country list
+        Activates the chosen plugin on the country select list.
+     */
     $.getJSON("/js/data/country-list.en.json", function(data) {
         var listItems = '',
             $country = $("#country");
@@ -13,40 +15,37 @@ $(document).ready(function () {
             listItems += "<option value='" + key + "'>" + val + "</option>";
         });
         $country.append(listItems);
+    }).done(function() {
+        $("#country").chosen();
     });
 
-    //Populate CA provinces list
-    $.getJSON("/js/data/ca-provinces.json", function(data) {
-        var listItems = '',
-            $provinces = $("#province").find("[data-country='CA']");
+    /*
+        Function to populate provinces and states
+        Activates the chosen plugin on the province select list.
+     */
+    function populateProvincesAndStates(country, callback) {
+        $.getJSON("/js/data/world-states.json", function(data) {
+            for(var i=0; i<country.length; i++) {
+                var listItems = '',
+                    $provinces = $("#province").find("[data-country='" + country[i] +"']");
 
-        $.each(data, function(key, val) {
-            listItems += "<option value='" + key + "'>" + val + "</option>";
-        });
-        $provinces.append(listItems);
-    });
-
-    //Populate US states list
-    $.getJSON("/js/data/us-states.json", function(data) {
-        var listItems = '',
-            $provinces = $("#province").find("[data-country='US']");
-
-        $.each(data, function(key, val) {
-            listItems += "<option value='" + key + "'>" + val + "</option>";
-        });
-        $provinces.append(listItems);
-    });
-
-    //Populate MX states list
-    $.getJSON("/js/data/world-states.json", function(data) {
-        var listItems = '',
-            $provinces = $("#province").find("[data-country='MX']");
-
-        $.each(data, function(key, val) {
-            if (data[key].country === "MX"){
-                listItems += "<option value='" + data[key].short + "'>" + data[key].name + "</option>";
+                $.each(data, function(key, val) {
+                    if (data[key].country === country[i]){
+                        listItems += "<option value='" + data[key].short + "'>" + data[key].name + "</option>";
+                    }
+                });
+                $provinces.append(listItems);
             }
+            callback();
         });
-        $provinces.append(listItems);
-    });
+    }
+
+    /*
+        Call the populateProvincesAndStates function with an array of countries.
+        Callback to activate the chosen plugin.
+     */
+    populateProvincesAndStates(["CA", "US", "MX"], function() {
+        $("#province").chosen();
+    })
+
 });
