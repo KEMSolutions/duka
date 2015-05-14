@@ -6,7 +6,7 @@
 
             {{--TODO: SET $product->slug instead of ID when facade is ready. --}}
             <a href="/{{ $locale }}/dev/prod/{{ $product->id }}" class="strong">
-                <img src="//static.boutiquekem.com/productimg-160-160-{{ $product->images[0]->id . "-h." . $product->images[0]->extension }}" class="img-responsive center-block hidden-xs hidden-sm"/>
+                <img src="//static.boutiquekem.com/productimg-160-160-{{ $product->images[0]->id . "-h." . $product->images[0]->extension }}" class="img-responsive center-block"/>
             </a>
 
             {{--<a href="/{{ $locale }}/prod/{{ $product->slug }}">--}}
