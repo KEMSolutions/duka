@@ -169,6 +169,14 @@ var cartData = {
         });
     },
 
+    /**
+     * Modify the quantity in a product page before buying
+     * Only used in a product page.
+     * Assuming the DOM has (and will keep) this structure:
+     *      .form-group
+     *          #item-quantity
+     *      .buybutton
+     */
     modifyQuantityBeforeBuying : function() {
         $("#item_quantity").on("change", function() {
             $(this).closest(".form-group").next().data("quantity", parseInt($(this).val()));
