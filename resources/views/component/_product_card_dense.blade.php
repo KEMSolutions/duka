@@ -5,7 +5,7 @@
         <div class="col-xs-6 col-sm-4 col-md-3 text-center dense_product">
 
             {{--TODO: SET $product->slug instead of ID when facade is ready. --}}
-            <a href="/{{ $locale }}/dev/prod/{{ $product->id }}" class="strong">
+            <a href="/{{ $locale }}/dev/prod/{{ $product->slug }}" class="strong">
                 <img src="//static.boutiquekem.com/productimg-160-160-{{ $product->images[0]->id . "-h." . $product->images[0]->extension }}" class="img-responsive center-block"/>
             </a>
 
