@@ -21,7 +21,7 @@
 
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/') }}">Home</a></li>
+                    <li><a href="{{ action("LayoutController@home") }}">Home</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -31,7 +31,7 @@
 
                     <li>
                         {{-- TODO : Put alternative link for B2B--}}
-                        <a href="{{ url("/") }}"> {{ Lang::get("boukem.home") }} </a>
+                        <a href="{{ action("LayoutController@home") }}"> {{ Lang::get("boukem.home") }} </a>
                     </li>
 
                     {{-- TODO: display next categories? --}}
