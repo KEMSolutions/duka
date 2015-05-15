@@ -55,7 +55,7 @@ $(document).ready(function() {
             $('#province').trigger('chosen:updated');
         } else {
             $('#province').attr('disabled','disabled');
-            $('#postcode').attr('disabled');
+            $('#postcode').attr('disabled', 'disabled');
         }
 
         $('#province optgroup').attr('disabled','disabled');
