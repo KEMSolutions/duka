@@ -27,7 +27,8 @@
                         data-price="{{ $product->price }}"
                         data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
                         data-thumbnail_lg="//static.boutiquekem.com/productimg-120-160-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
-                        data-name="{{ $product->localization->name }}">
+                        data-name="{{ $product->localization->name }}"
+                        data-quantity="1">
                     <i class="fa fa-shopping-cart"></i>
                     $ {{ $product->price }}
                 </button>

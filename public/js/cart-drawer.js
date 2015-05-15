@@ -76,13 +76,15 @@ var cartData = {
      * @param item JSON format converted from attributes on the .buybutton
      */
     addItem : function(item) {
+        var price = parseInt(item.quantity) * parseFloat(item.price);
+
         var sidebarElement = '<li class="w-box animated bounceInDown" data-product="' + item.product + '" data-quantity=1>' +
             '<div class="col-xs-3 text-center"><img src=' + item.thumbnail_lg + ' class="img-responsive"></div>' +
             '<div class="col-xs-9 no-padding-left">' +
             '<div class="row"><div class="col-xs-10"><h3 class="product-name">' + item.name + '</h3></div><div class="col-xs-2"><h4 class="text-right"><i class="fa fa-trash fa-1 close-button"><span class="sr-only">Remove Item</span></i></h4></div></div>' +
             '<div class="row"><div class="col-xs-8"><div class="input-group"><input type="number" class="quantity form-control input-sm" min="1" step="1" value="' + item.quantity + '">' +
             '<span class="input-group-addon update_quantity_indicator"><i class="fa" hidden><span class="sr-only">' + "Update quantity" + '</span></i></span></div></div>' +
-            '<div class="col-xs-4 product-price text-right" data-price="' + item.price + '">$' + item.price  + '</div></div>' +
+            '<div class="col-xs-4 product-price text-right" data-price="' + item.price + '">$' + price  + '</div></div>' +
             '</div>' +
             '</li>';
 
@@ -142,7 +144,7 @@ var cartData = {
     },
 
     /**
-     * Modify the quantity of a product
+     * Modify the quantity of a product in the cart
      * Update its price label accordingly
      * Update the sessionStorage
      * Set badge quantity
@@ -164,6 +166,12 @@ var cartData = {
             cartData.setBadgeQuantity();
             cartData.setQuantityCookie();
 
+        });
+    },
+
+    modifyQuantityBeforeBuying : function() {
+        $("#item_quantity").on("change", function() {
+            $(this).closest(".form-group").next().data("quantity", parseInt($(this).val()));
         });
     },
 
@@ -224,7 +232,7 @@ var cartData = {
             "price" : item.data("price"),
             "thumbnail" : item.data("thumbnail"),
             "thumbnail_lg" : item.data("thumbnail_lg"),
-            "quantity" : 1
+            "quantity" : parseInt(item.data("quantity"))
         }
     },
 
@@ -233,6 +241,7 @@ var cartData = {
         cartData.loadItem();
         cartData.deleteItem();
         cartData.modifyQuantity();
+        cartData.modifyQuantityBeforeBuying();
         cartData.setQuantityCookie();
     }
 };
