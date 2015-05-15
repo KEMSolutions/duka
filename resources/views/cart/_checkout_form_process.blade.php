@@ -1,5 +1,6 @@
 <div class="col-md-7 cart-content-checkout-process">
     <form method="post" id="cart_form" class="{{ base64_decode($_COOKIE["quantityCart"]) == "0" ? "hidden" : "" }}">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
         <div class="panel panel-default">
             <!-- Default panel contents -->
