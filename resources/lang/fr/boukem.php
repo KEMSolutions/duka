@@ -185,4 +185,5 @@ return [
     "brand"             =>"Marque",
     "continue"          =>"Continuer",
     "secure_payment"    =>"Paiement sécurisé",
+    "video"             =>"Vidéo"
 ];

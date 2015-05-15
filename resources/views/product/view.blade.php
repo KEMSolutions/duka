@@ -68,31 +68,52 @@
 
 
                                                     <p class="plan-info" id="product_short_description" itemprop="description">{{ str_limit(strip_tags($product->localization->short_description), 200, "...") }}</p>
-                                                    <p class="plan-select text-center">
 
+                                                    @if(!$product->discontinued)
+                                                        <p class="plan-select text-center">
+                                                        <div class="input-qty-detail form-inline text-center">
+                                                            <div class="form-group">
+                                                                <div class="input-group bootstrap-touchspin" style=""><span class="input-group-addon bootstrap-touchspin-prefix"></span><input type="text" class="form-control input-qty text-center" id="item_quantity" value="1"><span class="input-group-addon bootstrap-touchspin-postfix"></span></div>
+                                                            </div>
 
-                                                    </p><div class="input-qty-detail form-inline text-center">
-                                                        <div class="form-group">
-                                                            <div class="input-group bootstrap-touchspin" style=""><span class="input-group-addon bootstrap-touchspin-prefix"></span><input type="text" class="form-control input-qty text-center" id="item_quantity" value="1"><span class="input-group-addon bootstrap-touchspin-postfix"></span></div>
+                                                            <button class="btn btn-three buybutton visible-lg-inline"
+                                                                    data-product="{{ $product->id }}"
+                                                                    data-price="{{ $product->price }}"
+                                                                    data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
+                                                                    data-thumbnail_lg="//static.boutiquekem.com/productimg-120-160-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
+                                                                    data-name="{{ $product->localization->name }}">
+                                                                ><i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
+                                                            <button class="btn btn-block btn-three center-block buybutton hidden-lg" data-product="{{ $product->id }}"
+                                                                    data-price="{{ $product->price }}"
+                                                                    data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
+                                                                    data-thumbnail_lg="//static.boutiquekem.com/productimg-120-160-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
+                                                                    data-name="{{ $product->localization->name }}">
+                                                                ><i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
                                                         </div>
-
-                                                        <button class="btn btn-three buybutton visible-lg-inline"
-                                                                data-product="{{ $product->id }}"
-                                                                data-price="{{ $product->price }}"
-                                                                data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
-                                                                data-thumbnail_lg="//static.boutiquekem.com/productimg-120-160-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
-                                                                data-name="{{ $product->localization->name }}">
-                                                            ><i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
-                                                        <button class="btn btn-block btn-three center-block buybutton hidden-lg" data-product="{{ $product->id }}"
-                                                                data-price="{{ $product->price }}"
-                                                                data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
-                                                                data-thumbnail_lg="//static.boutiquekem.com/productimg-120-160-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
-                                                                data-name="{{ $product->localization->name }}">
-                                                            ><i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
-                                                    </div>
-                                                    <br/>
+                                                        </p>
+                                                    @endif
                                                 </div>
                                             </div>
+
+                                            {{--VIDEOS--}}
+                                            @if(count($product->videos) > 0)
+                                                @section("custom_css")
+                                                    <link rel="stylesheet" href="//vjs.zencdn.net/4.8/video-js.css"/>
+                                                @endsection
+
+                                                @section("scripts")
+                                                    <script src="//vjs.zencdn.net/4.8/video.js"></script>
+                                                    <script>
+                                                        //store_video
+											            document.createElement('video');
+											            document.createElement('audio');
+											            document.createElement('track');
+                                                    </script>
+                                                @endsection
+
+                                                @include("product._product_video", ["videos" => $product->videos ])
+                                            @endif
+
 
                                             <div class="widget">
                                                 <h4 class="widget-heading">{{ \Illuminate\Support\Facades\Lang::get("boukem.share") }}</h4>

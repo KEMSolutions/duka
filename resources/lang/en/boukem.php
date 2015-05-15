@@ -185,4 +185,5 @@ return [
     "brand"             =>"Brand",
     "continue"          =>"Continue",
     "secure_payment"    =>"Secure payment",
+    "video"             =>"Video"
 ];
