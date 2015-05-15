@@ -16,7 +16,7 @@
                     <div class="col-xs-12">
 
                         {{-- Product description begins here. --}}
-                        <section class="slice product-slice animate-hover-slide" itemscope="" itemtype="http://schema.org/Product">
+                        <section class="slice product-slice animate-hover-slide" itemscope itemtype="http://schema.org/Product">
                             <div class="w-section inverse blog-grid">
                                 <div class="container">
                                     <div class="row">
@@ -30,25 +30,41 @@
                                                         {{ $product->localization->name }}
                                                     </h2>
 
-                                                    <span itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                                                    @if($product->discontinued)
+                                                        <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                                                            <link itemprop="availability" href="http://schema.org/Discontinued">
+                                                            <p class="text-center text-danger">
+                                                                {{ Lang::get("boukem.product_unavailable") }}
+                                                            </p>
+                                                        </span>
+                                                    @else
+                                                        <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 
-                                                        <h3 class="price-tag color-one">
-                                                            <meta itemprop="price" content="{{ $product->price }}"><span itemprop="priceCurrency" content="CAD">$</span>{{ $product->price }}
-                                                        </h3>
+                                                            <h3 class="price-tag color-one">
+                                                                <meta itemprop="price" content="{{ $product->price }}"><span itemprop="priceCurrency" content="CAD">$</span>{{ $product->price }}
+                                                            </h3>
 
-                                                        <ul>
-                                                            <li> <i class="fa fa-fw"><img src="https://cdn.kem.guru/boukem/spirit/flags/CA.png" width="17" alt="CA"></i>
-                                                                {{ \Illuminate\Support\Facades\Lang::get("boukem.world_shipping") }}
-                                                            </li>
+                                                            <ul>
+                                                                <li> <i class="fa fa-fw"><img src="https://cdn.kem.guru/boukem/spirit/flags/CA.png" width="17" alt="CA"></i>
+                                                                    {{ \Illuminate\Support\Facades\Lang::get("boukem.world_shipping") }}
+                                                                </li>
 
-                                                            <link itemprop="availability" href="http://schema.org/LimitedAvailability">
+                                                                @if($product->inventory->count > 5)
+                                                                    <link itemprop="availability" href="http://schema.org/LimitedAvailability">
+                                                                    <li class="text-success"><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.express_shipping") }}</li>
+                                                                @elseif($product->inventory->count > 0)
+                                                                    <link itemprop="availability" href="http://schema.org/InStock" >
+                                                                    <li class="text-warning"><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.stock_left", $product->inventory->count) }}</li>
+                                                                @else
+                                                                    <link itemprop="availability" href="http://schema.org/LimitedAvailability" >
+                                                                    <li><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.shipping_time") }}</li>
+                                                                @endif
 
-                                                            <li><i class="fa fa-truck fa-fw"></i> {{ \Illuminate\Support\Facades\Lang::get("boukem.shipping_estimate") }}</li>
+                                                                <li><i class="fa fa-lock fa-fw"></i>{{ \Illuminate\Support\Facades\Lang::get("boukem.secure_payment") }}</li>
 
-                                                            <li><i class="fa fa-lock fa-fw"></i>{{ \Illuminate\Support\Facades\Lang::get("boukem.secure_payment") }}</li>
-
-                                                        </ul>
-											</span>
+                                                            </ul>
+                                                        </span>
+                                                    @endif
 
 
                                                     <p class="plan-info" id="product_short_description" itemprop="description">{{ str_limit(strip_tags($product->localization->short_description), 200, "...") }}</p>

@@ -169,7 +169,7 @@ return [
     "conditions"        =>"En cliquant sur le bouton acheter, continuer ou commander et/ou en visitant ce site, vous reconnaissez avoir lu et compris les conditions d'utilisation du site incluant, sans s'y limiter, la politique de confidentialité en vigueur. Si vous n'acceptez pas ces conditions, vous ne pouvez pas continuer à accéder à ce site.",
     "previous"          =>"Précédent",
     "product_unavailable"=>"Ce produit n'est pas disponible.",
-    "in_stock_express_ship"=>"En stock : Expédition express",
+    "express_shipping"  =>"En stock : Expédition express",
     "stock_left"        =>"Seulement :n restant en expédition express|:n restants en expédition express.",
     "shipping_time"     =>"Expédition prévue dans les 3 à 7 jours.",
     "back_to_main"      =>"Retour au site principal",
@@ -184,5 +184,5 @@ return [
     "shipping_estimate" =>"Expédition prévue dans les 3 à 7 jours.",
     "brand"             =>"Marque",
     "continue"          =>"Continuer",
-    "secure_payment"    =>"Paiement sécurisé"
+    "secure_payment"    =>"Paiement sécurisé",
 ];

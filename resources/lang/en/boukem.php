@@ -169,7 +169,7 @@ return [
     "conditions"        =>"By clicking on 'Next', 'Buy', 'Order' or 'Checkout' and/or by accessing or using the site in any manner, you acknowledge that you have read and agree to be bound by these terms and conditions. If you do not agree to all of the terms, you are not authorized to access or otherwise use this site (the 'site').",
     "previous"          =>"Previous",
     "product_unavailable"=>"This product is not available.",
-    "in_stock_express_ship"=>"In stock : Express Shipping",
+    "express_shipping"  =>"In stock : Express Shipping",
     "stock_left"        =>"Only :n left in stock (more on the way).",
     "shipping_time"     =>"Usually ships within 3 to 7 days.",
     "back_to_main"      =>"Back to main site",
@@ -184,5 +184,5 @@ return [
     "shipping_estimate" =>"Usually ships within 3 to 7 days.",
     "brand"             =>"Brand",
     "continue"          =>"Continue",
-    "secure_payment"    =>"Secure payment"
+    "secure_payment"    =>"Secure payment",
 ];
