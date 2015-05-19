@@ -2,12 +2,13 @@
 
 use Brands;
 use Categories;
+use Illuminate\Support\Collection;
 use Layouts;
 use Products;
-use App\Http\Requests;
+use Request;
+use Orders;
 use App\Http\Controllers\Controller;
 
-use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
@@ -17,7 +18,7 @@ class ApiController extends Controller
      */
     public function getBrand($id)
     {
-        return \Illuminate\Support\Collection::make(Brands::get($id));
+        return Collection::make(Brands::get($id));
     }
 
     /**
@@ -26,7 +27,7 @@ class ApiController extends Controller
      */
     public function getCategory($id)
     {
-        return \Illuminate\Support\Collection::make(Categories::get($id));
+        return Collection::make(Categories::get($id));
     }
 
     /**
@@ -35,7 +36,7 @@ class ApiController extends Controller
      */
     public function getLayout($id = '')
     {
-        return \Illuminate\Support\Collection::make(Layouts::get($id));
+        return Collection::make(Layouts::get($id));
     }
 
     /**
@@ -44,7 +45,7 @@ class ApiController extends Controller
      */
     public function getProduct($id)
     {
-        return \Illuminate\Support\Collection::make(Products::get($id));
+        return Collection::make(Products::get($id));
     }
 
     /**
@@ -53,15 +54,15 @@ class ApiController extends Controller
      */
     public function searchProducts($query)
     {
-        return \Illuminate\Support\Collection::make(Products::search($query));
+        return Collection::make(Products::search($query));
     }
 
     public function getOrderEstimate()
     {
         $country = Request::input('country');
         $postalCode = Request::input('postcode');
-        $products = Request::input('products');
+        $products = (array) Request::input('products');
 
-        return \Illuminate\Support\Collection::make(Orders::estimate($products, $country, $postalCode));
+        return Collection::make(Orders::estimate($products, $country, $postalCode));
     }
 }

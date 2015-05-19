@@ -70,4 +70,40 @@ $(document).ready(function() {
     $("#country").on("change", function() {
         updateChosenSelects($(this).val());
     });
+
+
+    /**
+     * AJAX TEST FOR CHECKOUT
+     */
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $("#estimateButton").on("click", function(e) {
+        e.preventDefault();
+        
+        $.ajax({
+            type: "POST",
+            url: "/api/estimate",
+            data: {
+                country: "CA",
+                postcode: "A5A 5A5",
+                products: [
+                    { id: "616", quantity: 500},
+                    { id: "95"}
+                ]
+            },
+            success: function(e) {
+                console.log(e);
+            },
+            error: function(e, status, msg) {
+                console.log(status + " : " +  msg);
+            }
+         })
+    })
+
+
+
 });
