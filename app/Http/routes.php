@@ -62,14 +62,14 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
 });
 
 // API endpoints.
-Route::group(['prefix' => 'api'], function()
+Route::group(['prefix' => 'api', 'middleware' => 'csrf.any'], function()
 {
-    Route::post('brands/{id}',     'ApiController@getBrand');
-    Route::post('categories/{id}', 'ApiController@getCategory');
-    Route::post('layouts/{id?}',   'ApiController@getLayout');
-    Route::post('products/{id}',   'ApiController@getProduct');
-    Route::post('search/{query}',  'ApiController@searchProducts');
-    Route::post('estimate',        'ApiController@getOrderEstimate');
+    Route::get('brands/{id}',     'ApiController@getBrand');
+    Route::get('categories/{id}', 'ApiController@getCategory');
+    Route::get('layouts/{id?}',   'ApiController@getLayout');
+    Route::get('products/{id}',   'ApiController@getProduct');
+    Route::get('search/{query}',  'ApiController@searchProducts');
+    Route::post('estimate',       'ApiController@getOrderEstimate');
 
     Route::any('/{catchAll}', function($catchAll) {
         return Illuminate\Http\JsonResponse::create(['status' => 400, 'error' => 'Bad request.'], 400);
