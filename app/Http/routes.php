@@ -61,36 +61,19 @@ Route::group(['prefix' => Localization::setLocale(), 'middleware' => ['localeSes
     });
 });
 
-//
+// API endpoints.
 Route::group(['prefix' => 'api'], function()
 {
-    // Brands.
-    Route::get('brands/{id}', function($id) {
-        return Illuminate\Support\Collection::make(Brands::get($id));
-    });
-
-    // Categories.
-    Route::get('categories/{id}', function($id) {
-        return Illuminate\Support\Collection::make(Categories::get($id));
-    });
-
-    // Layouts.
-    Route::get('layouts/{id?}', function($id = '') {
-        return Illuminate\Support\Collection::make(Layouts::get($id));
-    });
-
-    // Products.
-    Route::get('products/{id}', function($id) {
-        return Illuminate\Support\Collection::make(Products::get($id));
-    });
-
-    // Product search.
-    Route::get('search/{query}', function($query) {
-        return Illuminate\Support\Collection::make(Products::search($query));
-    });
+    Route::get('brands/{id}',     'ApiController@getBrand');
+    Route::get('categories/{id}', 'ApiController@getCategory');
+    Route::get('layouts/{id?}',   'ApiController@getLayout');
+    Route::get('products/{id}',   'ApiController@getProduct');
+    Route::get('search/{query}',  'ApiController@searchProducts');
+    Route::post('estimate',       'ApiController@getOrderEstimate');
 
     // Temporary catch-all
     Route::get('/{catchAll}', function($catchAll) {
         return $catchAll;
     });
 });
+
