@@ -33,6 +33,7 @@ class Orders extends KemApiObject
         $body->shipping_address->postcode = strtoupper(preg_replace('/\s+/', '', $postalCode));
 
         // Format product list.
+        $products = (array) $products;
         foreach ($products as $product)
         {
             $std = new \stdClass;
