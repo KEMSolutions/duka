@@ -71,9 +71,8 @@ Route::group(['prefix' => 'api'], function()
     Route::post('search/{query}',  'ApiController@searchProducts');
     Route::post('estimate',        'ApiController@getOrderEstimate');
 
-    // Temporary catch-all
     Route::any('/{catchAll}', function($catchAll) {
-        return $catchAll;
+        return Illuminate\Http\JsonResponse::create(['status' => 400, 'error' => 'Bad request.'], 400);
     });
 });
 
