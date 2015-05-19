@@ -73,7 +73,34 @@ $(document).ready(function() {
 
 
     /**
-     * AJAX TEST FOR CHECKOUT
+     * Utility function for getting all the products in sessionStorage.
+     * Returns an array containing their id and their quantity.
+     *
+     * @returns {Array}
+     */
+    function getProductsFromSessionStorage() {
+        var res = [];
+
+        for(var i =0; i<sessionStorage.length; i++)
+        {
+            if (sessionStorage.key(i).lastIndexOf("_", 0) === 0)
+            {
+                var product = JSON.parse(sessionStorage.getItem(sessionStorage.key(i))),
+                    productId = product.product,
+                    productQuantity = product.quantity;
+
+                res.push({
+                    id: productId,
+                    quantity: productQuantity
+                });
+            }
+        }
+
+        return res;
+    }
+
+    /**
+     * Sets up the ajax token for all ajax requests
      */
     $.ajaxSetup({
         headers: {
@@ -81,19 +108,20 @@ $(document).ready(function() {
         }
     });
 
+    /**
+     * Event triggered when the "Continue" button is hit.
+     * Makes an ajax POST call to boukem (/api/estimate) with the products present in the cart.
+     */
     $("#estimateButton").on("click", function(e) {
         e.preventDefault();
-        
+
         $.ajax({
             type: "POST",
             url: "/api/estimate",
             data: {
                 country: "CA",
                 postcode: "A5A 5A5",
-                products: [
-                    { id: "616", quantity: 500},
-                    { id: "95"}
-                ]
+                products: getProductsFromSessionStorage()
             },
             success: function(e) {
                 console.log(e);
@@ -101,9 +129,8 @@ $(document).ready(function() {
             error: function(e, status, msg) {
                 console.log(status + " : " +  msg);
             }
-         })
-    })
-
+        });
+    });
 
 
 });
