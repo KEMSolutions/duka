@@ -141,10 +141,14 @@ class KemApiHttpClient
         {
             // Log error.
             Log::error($e->getMessage());
-            return $returnResponse ? null : JsonResponse::create([
+//            return $returnResponse ? null : JsonResponse::create([
+//                'status' => $e->getCode(),
+//                'error' => $e->getMessage()
+//            ])->getData();
+            return $returnResponse ? null : (object) [
                 'status' => $e->getCode(),
                 'error' => $e->getMessage()
-            ])->getData();
+            ];
         }
 
         // Return an instance of GuzzleHttp\Message\Response or a JSON object.
@@ -208,6 +212,7 @@ class KemApiHttpClient
      * @return mixed        JSON object to be returned to response.
      */
     private function badRequest($msg = 'Bad Request.') {
-        return JsonResponse::create(['status' => 400, 'error' => $msg], 400)->getData();
+//        return JsonResponse::create(['status' => 400, 'error' => $msg], 400)->getData();
+        return ['status' => 400, 'error' => $msg];
     }
 }

@@ -61,7 +61,9 @@ abstract class KemApiObject
             $object = KemAPI::get($this->baseRequest .'/'. $id, $requestParams);
 
             // Check for errors.
-            if (!$object || isset($object->error)) {
+            if (!$object ||
+                (is_object($object) && property_exists($object, 'error')) ||
+                (!is_object($object) && !is_array($object))) {
                 return $object;
             }
 
