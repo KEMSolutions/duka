@@ -1,68 +1,76 @@
 <?php namespace App\Http\Controllers;
 
+// Import facades & other dependencies.
 use Brands;
 use Categories;
-use Illuminate\Support\Collection;
 use Layouts;
+use Orders;
 use Products;
 use Request;
-use Orders;
-use App\Http\Controllers\Controller;
 
+use Illuminate\Http\JsonResponse;
 
+/**
+ * Class ApiController. CSRF token is checked automatically.
+ *
+ * @package App\Http\Controllers
+ */
 class ApiController extends Controller
 {
     /**
      * @param $id
      * @return mixed
      */
-    public function getBrand($id)
-    {
-        return Collection::make(Brands::get($id));
+    public function getBrand($id) {
+        return $this->send(Brands::get($id));
     }
 
     /**
      * @param $id
      * @return mixed
      */
-    public function getCategory($id)
-    {
-        return Collection::make(Categories::get($id));
+    public function getCategory($id) {
+        return $this->send(Categories::get($id));
     }
 
     /**
      * @param string $id
      * @return mixed
      */
-    public function getLayout($id = '')
-    {
-        return Collection::make(Layouts::get($id));
+    public function getLayout($id = '') {
+        return $this->send(Layouts::get($id));
     }
 
     /**
      * @param $id
      * @return static
      */
-    public function getProduct($id)
-    {
-        return Collection::make(Products::get($id));
+    public function getProduct($id) {
+        return $this->send(Products::get($id));
     }
 
     /**
      * @param $query
      * @return static
      */
-    public function searchProducts($query)
-    {
-        return Collection::make(Products::search($query));
+    public function searchProducts($query) {
+        return $this->send(Products::search($query));
     }
 
     public function getOrderEstimate()
     {
-        $country = Request::input('country');
-        $postalCode = Request::input('postcode');
-        $products = (array) Request::input('products');
+        return $this->send(Orders::estimate(
+            Request::input('products'),
+            Request::input('country'),
+            Request::input('postcode')
+        ));
+    }
 
-        return Collection::make(Orders::estimate($products, $country, $postalCode));
+    protected function send($data) {
+        return JsonResponse::create($data, 200);
+    }
+
+    public function badRequest($msg = 'Bad Request.') {
+        return JsonResponse::create(['status' => 400, 'error' => $msg], 400);
     }
 }
