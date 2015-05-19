@@ -55,7 +55,6 @@ $(document).ready(function() {
             $('#province').trigger('chosen:updated');
         } else {
             $('#province').attr('disabled','disabled');
-            $('#postcode').attr('disabled', 'disabled');
         }
 
         $('#province optgroup').attr('disabled','disabled');
@@ -100,6 +99,20 @@ $(document).ready(function() {
     }
 
     /**
+     * Utility function fo getting the country and the postal code of the user.
+     * "Sanitize" user's postcode??
+     *
+     * @returns {{country: (*|jQuery), postcode: (*|jQuery)}}
+     */
+    function getCountriesFromForm() {
+        return res = {
+            "country" : $("#country").val(),
+            "postcode" : $("#postcode").val()
+        };
+
+    }
+
+    /**
      * Sets up the ajax token for all ajax requests
      */
     $.ajaxSetup({
@@ -119,18 +132,91 @@ $(document).ready(function() {
             type: "POST",
             url: "/api/estimate",
             data: {
-                country: "CA",
-                postcode: "A5A 5A5",
-                products: getProductsFromSessionStorage()
+                products: getProductsFromSessionStorage(),
+                postcode: getCountriesFromForm().postcode,
+                country: getCountriesFromForm().country
             },
-            success: function(e) {
-                console.log(e);
+            success: function(data) {
+                initEstimate(data);
             },
-            error: function(e, status, msg) {
-                console.log(status + " : " +  msg);
+            error: function(e, status) {
+                if (xhr.status == 403){
+                    window.location.replace(login_url);
+                    return;
+                }
+                $('#estimate').html('<div class="alert alert-danger">Une erreur est survenue. Veuillez vérifier les informations fournies.</div>');
             }
         });
     });
+
+    /**
+     * TODO: Put the following in a Estimate Object.
+     * TODO: validate customer's email and postal code
+     */
+    function initEstimate(data) {
+        if($("#customer_email").val() === "")
+        {
+            $("#customer_email").parent().addClass("has-error animated shake");
+            $("#why_email").removeClass("hidden").addClass("animated bounceInRight");
+            $('#customer_email').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                $(this).removeClass("animated");
+                $(this).removeClass("shake");
+                $(this).unbind();
+            });
+        }
+        else if($("#postcode").val() === "")
+        {
+            $("#postcode").parent().addClass("has-error animated shake");
+            $('#postcode').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                $(this).removeClass("animated");
+                $(this).removeClass("shake");
+                $(this).unbind();
+            });
+        }
+        else
+        {
+            displayEstimatePanel();
+            fetchEstimate(data);
+        }
+    }
+
+    function displayEstimatePanel() {
+        $("#estimate").removeClass("hidden").addClass("animated fadeInDown");
+    }
+
+    /**
+     * TODO: append only once!
+     *
+     * @param data
+     */
+    function fetchEstimate(data) {
+        $(".has-error").removeClass("has-error");
+
+        var email_value = $("#customer_email").val();
+        var postcode_value = $("#postcode").val();
+        var country_value = $("#country").val();
+        var estimateButtonText = $('#estimateButton').text();
+
+        $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
+
+        for(var i = 0; i<data.services.length; i++)
+        {
+            var serviceDOM = "<tr data-service='" + data.services[i].service_code + "'>" +
+                    "<td>" + data.services[i].service_name + "</td>" +
+                    "<td>" + data.services[i].service_standard_expected_transit_time + "</td>" +
+                    "<td>" + data.services[i].service_standard_expected_delivery + "</td>" +
+                    "<td>" + data.services[i].price_due + "</td>" +
+                    "<td><input type='radio' name='shipment' class='shipping_method' data-cost='" + data.services[i].price_due + "' value='" + data.services[i].service_code + "' checked=''></td>";
+
+            $("#estimate .table-striped").append(serviceDOM);
+        }
+
+        $("#estimateButton").removeClass("btn-three");
+        $("#estimateButton").addClass("btn-one");
+        $('#estimateButton').text(estimateButtonText);
+
+    }
+
 
 
 });

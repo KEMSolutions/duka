@@ -31,7 +31,7 @@
 
                 <div class="form-group">
                     <label for="country" class="control-label">{{ Lang::get("boukem.postal_code") }}</label>
-                    <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="postcode" class="form-control" disabled>
+                    <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="postcode" class="form-control">
                 </div>
 
                 {{--TODO: Display only if user is a guest--}}
@@ -47,6 +47,22 @@
         </div>  <!-- first panel -->
 
         <div class="panel panel-default hidden" id="estimate">
+            <div class="panel-heading">
+                <span class="badge pull-right">2</span>{{ Lang::get("boukem.shipping_methods") }}
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>{{ Lang::get("boukem.service_name") }}</th>
+                    <th>{{ Lang::get("boukem.estimated_transit_time") }}</th>
+                    <th>{{ Lang::get("boukem.expected_delivery") }}</th>
+                    <th>{{ Lang::get("boukem.cost") }}</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div><!-- second panel -->
 
         <div class="panel panel-default hidden" id="payment">
