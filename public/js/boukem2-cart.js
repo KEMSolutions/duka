@@ -42,5 +42,68 @@ $(document).ready(function() {
      */
     populateProvincesAndStates(["CA", "US", "MX"], function() {
         $("#province").chosen();
+    });
+
+
+    /*
+    Function to enable or disable fields according to the chosen country.
+     */
+    function updateChosenSelects(chosenCountry) {
+        if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == "MX"){
+            $('#postcode').removeAttr('disabled');
+            $('#province').removeAttr('disabled');
+            $('#province').trigger('chosen:updated');
+        } else {
+            $('#province').attr('disabled','disabled');
+            $('#postcode').attr('disabled', 'disabled');
+        }
+
+        $('#province optgroup').attr('disabled','disabled');
+
+        if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == 'MX'){
+            $('#province [data-country="' + chosenCountry + '"]').removeAttr('disabled');
+        }
+
+        $('#province').trigger('chosen:updated');
+    }
+
+    $("#country").on("change", function() {
+        updateChosenSelects($(this).val());
+    });
+
+
+    /**
+     * AJAX TEST FOR CHECKOUT
+     */
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $("#estimateButton").on("click", function(e) {
+        e.preventDefault();
+        
+        $.ajax({
+            type: "POST",
+            url: "/api/estimate",
+            data: {
+                country: "CA",
+                postcode: "A5A 5A5",
+                products: [
+                    { id: "616", quantity: 500},
+                    { id: "95"}
+                ]
+            },
+            success: function(e) {
+                console.log(e);
+            },
+            error: function(e, status, msg) {
+                console.log(status + " : " +  msg);
+            }
+         })
     })
+
+
+
 });
