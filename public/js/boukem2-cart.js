@@ -42,5 +42,32 @@ $(document).ready(function() {
      */
     populateProvincesAndStates(["CA", "US", "MX"], function() {
         $("#province").chosen();
-    })
+    });
+
+
+    /*
+    Function to enable or disable fields according to the chosen country.
+     */
+    function updateChosenSelects(chosenCountry) {
+        if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == "MX"){
+            $('#postcode').removeAttr('disabled');
+            $('#province').removeAttr('disabled');
+            $('#province').trigger('chosen:updated');
+        } else {
+            $('#province').attr('disabled','disabled');
+            $('#postcode').attr('disabled', 'disabled');
+        }
+
+        $('#province optgroup').attr('disabled','disabled');
+
+        if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == 'MX'){
+            $('#province [data-country="' + chosenCountry + '"]').removeAttr('disabled');
+        }
+
+        $('#province').trigger('chosen:updated');
+    }
+
+    $("#country").on("change", function() {
+        updateChosenSelects($(this).val());
+    });
 });
