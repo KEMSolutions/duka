@@ -190,7 +190,6 @@ $(document).ready(function() {
      */
     function sanitizeEmail(email) {
         var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-        console.log(re.test(email));
         return re.test(email);
     }
 
