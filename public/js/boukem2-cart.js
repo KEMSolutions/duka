@@ -133,14 +133,13 @@ $(document).ready(function() {
             url: "/api/estimate",
             data: {
                 products: getProductsFromSessionStorage(),
-                postcode: getCountriesFromForm().postcode,
-                country: getCountriesFromForm().country
+                shipping_address: getCountriesFromForm(),
             },
             success: function(data) {
                 initEstimate(data);
             },
             error: function(e, status) {
-                if (xhr.status == 403){
+                if (e.status == 403){
                     window.location.replace(login_url);
                     return;
                 }
