@@ -1,25 +1,36 @@
-$(document).ready(function() {
-    /*
-     Function to populate country list
-     Activates the chosen plugin on the country select list.
-     */
-    $.getJSON("/js/data/country-list.en.json", function(data) {
-        var listItems = '',
-            $country = $("#country");
+/**
+ * Object responsible for building the select list populating countries, provinces and states.
+ *
+ * @type {{populateCountry: Function, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, init: Function}}
+ */
+var LocationContainer = {
 
-        $.each(data, function(key, val) {
-            listItems += "<option value='" + key + "'>" + val + "</option>";
+    /**
+     * Function to populate country list
+     * Activates the chosen plugin on the country select list.
+     */
+    populateCountry : function() {
+        $.getJSON("/js/data/country-list.en.json", function(data) {
+            var listItems = '',
+                $country = $("#country");
+
+            $.each(data, function(key, val) {
+                listItems += "<option value='" + key + "'>" + val + "</option>";
+            });
+            $country.append(listItems);
+        }).done(function() {
+            $("#country").chosen();
         });
-        $country.append(listItems);
-    }).done(function() {
-        $("#country").chosen();
-    });
+    },
 
-    /*
-     Function to populate provinces and states
-     Activates the chosen plugin on the province select list.
+    /**
+     * Function to populate provinces and states
+     * Activates the chosen plugin on the province select list.
+     *
+     * @param country
+     * @param callback
      */
-    function populateProvincesAndStates(country, callback) {
+    populateProvincesAndStates : function (country, callback) {
         $.getJSON("/js/data/world-states.json", function(data) {
             for(var i=0; i<country.length; i++) {
                 var listItems = '',
@@ -34,23 +45,15 @@ $(document).ready(function() {
             }
             callback();
         });
-    }
+    },
 
-    /*
-     Call the populateProvincesAndStates function with an array of countries.
-     Callback to activate the chosen plugin.
+    /**
+     * Event function enabling or disabling postcode and province fields according to the chosen country
+     *
+     * @param chosenCountry
      */
-    populateProvincesAndStates(["CA", "US", "MX"], function() {
-        $("#province").chosen();
-    });
-
-
-    /*
-    Function to enable or disable fields according to the chosen country.
-     */
-    function updateChosenSelects(chosenCountry) {
+    updateChosenSelects: function(chosenCountry) {
         if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == "MX"){
-            $('#postcode').removeAttr('disabled');
             $('#province').removeAttr('disabled');
             $('#province').trigger('chosen:updated');
         } else {
@@ -64,20 +67,40 @@ $(document).ready(function() {
         }
 
         $('#province').trigger('chosen:updated');
+    },
+
+    /**
+     * Triggers updateChosenSelects($country)
+     * This function will be registered in init().
+     *
+     */
+    callUpdateChosenSelects: function() {
+        $("#country").on("change", function() {
+            LocationContainer.updateChosenSelects($(this).val());
+        });
+    },
+
+    /**
+     * Registering functions to be called outside of this object.
+     */
+    init : function() {
+        LocationContainer.populateCountry();
+        LocationContainer.populateProvincesAndStates(["CA", "US", "MX"], function() {
+            $("#province").chosen();
+        });
+        LocationContainer.callUpdateChosenSelects();
     }
-
-    $("#country").on("change", function() {
-        updateChosenSelects($(this).val());
-    });
+}
 
 
+var UtilityContainer = {
     /**
      * Utility function for getting all the products in sessionStorage.
      * Returns an array containing their id and their quantity.
      *
      * @returns {Array}
      */
-    function getProductsFromSessionStorage() {
+    getProductsFromSessionStorage : function() {
         var res = [];
 
         for(var i =0; i<sessionStorage.length; i++)
@@ -96,22 +119,52 @@ $(document).ready(function() {
         }
 
         return res;
-    }
+    },
 
     /**
      * Utility function fo getting the country and the postal code of the user.
-     * "Sanitize" user's postcode??
+     * TODO : "Sanitize" user's postcode??
      *
      * @returns {{country: (*|jQuery), postcode: (*|jQuery)}}
      */
-    function getCountriesFromForm() {
+    getCountriesFromForm : function() {
         return res = {
             "country" : $("#country").val(),
             "postcode" : $("#postcode").val()
         };
+    },
 
+    /**
+     * Utility function to check if the user has really entered an email address.
+     * From http://stackoverflow.com/a/46181
+     *
+     * @param email
+     * @returns {boolean}
+     */
+    sanitizeEmail : function(email) {
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        return re.test(email);
+    },
+
+    /**
+     * Utility function to check if the user has entered a valid postcode.
+     * Unfortunately there is no way on earth to know if the postcode is a valid one or not.
+     * We only check if the postcode is not empty here.
+     *
+     * @param postcode
+     * @returns {boolean}
+     */
+    sanitizePostCode : function(postcode) {
+        return postcode == "" ? false : true;
     }
+}
 
+var estimateContainer = {
+
+}
+
+
+$(document).ready(function() {
     /**
      * Sets up the ajax token for all ajax requests
      */
@@ -121,12 +174,20 @@ $(document).ready(function() {
         }
     });
 
+
+    LocationContainer.init();
+
+
+
     /**
      * Event triggered when the "Continue" button is hit.
      * Makes an ajax POST call to boukem (/api/estimate) with the products present in the cart.
      */
     $("#estimateButton").on("click", function(e) {
-        if (sanitizeEmail($("#customer_email").val()) && ($("#postcode").val()))
+        var email = $("#customer_email").val(),
+            postcode = $("#postcode").val();
+
+        if (UtilityContainer.sanitizeEmail(email) && (UtilityContainer.sanitizePostCode(postcode)))
         {
             e.preventDefault();
 
@@ -134,8 +195,8 @@ $(document).ready(function() {
                 type: "POST",
                 url: "/api/estimate",
                 data: {
-                    products: getProductsFromSessionStorage(),
-                    shipping_address: getCountriesFromForm()
+                    products: UtilityContainer.getProductsFromSessionStorage(),
+                    shipping_address: UtilityContainer.getCountriesFromForm()
                 },
                 success: function(data) {
                     initEstimate(data);
@@ -154,7 +215,7 @@ $(document).ready(function() {
         {
             e.preventDefault();
 
-            if (!sanitizeEmail($("#customer_email").val()))
+            if (!UtilityContainer.sanitizeEmail(email))
             {
                 $("#customer_email").parent().addClass("has-error");
                 $('#customer_email').addClass('animated shake');
@@ -166,7 +227,7 @@ $(document).ready(function() {
 
                 $("#why_email").removeClass("hidden").addClass("animated bounceInRight");
             }
-            if (!sanitizePostCode($("#postcode").val()))
+            if (!UtilityContainer.sanitizePostCode(postcode))
             {
                 $("#postcode").parent().addClass("has-error");
                 $('#postcode').addClass('animated shake');
@@ -175,6 +236,14 @@ $(document).ready(function() {
                     $(this).removeClass("shake");
                     $(this).unbind();
                 });
+            }
+            if (UtilityContainer.sanitizeEmail(email) && $("#customer_email").parent().hasClass("has-error"))
+            {
+                $("#customer_email").parent().removeClass("has-error");
+            }
+            if (UtilityContainer.sanitizePostCode(postcode) && $("#postcode").parent().hasClass("has-error"))
+            {
+                $("#postcode").parent().removeClass("has-error");
             }
         }
 
