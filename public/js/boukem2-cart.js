@@ -174,10 +174,10 @@ $(document).ready(function() {
         }
     });
 
-
+    /**
+     * Populate select lists.
+     */
     LocationContainer.init();
-
-
 
     /**
      * Event triggered when the "Continue" button is hit.
@@ -251,7 +251,6 @@ $(document).ready(function() {
 
 
 
-
     /**
      * TODO: Put the following in a Estimate Object.
      * TODO: validate customer's email and postal code
@@ -266,11 +265,11 @@ $(document).ready(function() {
     }
 
     /**
-     * TODO: append only once!
      *
      * @param data
      */
     function fetchEstimate(data) {
+
         $(".has-error").removeClass("has-error");
 
         var email_value = $("#customer_email").val();
@@ -289,7 +288,7 @@ $(document).ready(function() {
                     "<td>" + data.services[i].price_due + "</td>" +
                     "<td><input type='radio' name='shipment' class='shipping_method' data-cost='" + data.services[i].price_due + "' value='" + data.services[i].service_code + "' checked=''></td>";
 
-            $("#estimate .table-striped").append(serviceDOM);
+            $("#estimate .table-striped").empty().append(serviceDOM);
         }
 
         $("#estimateButton").removeClass("btn-three");
@@ -297,7 +296,4 @@ $(document).ready(function() {
         $('#estimateButton').text(estimateButtonText);
 
     }
-
-
-
 });
