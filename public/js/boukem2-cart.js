@@ -126,57 +126,94 @@ $(document).ready(function() {
      * Makes an ajax POST call to boukem (/api/estimate) with the products present in the cart.
      */
     $("#estimateButton").on("click", function(e) {
-        e.preventDefault();
+        if (sanitizeEmail($("#customer_email").val()) && ($("#postcode").val()))
+        {
+            e.preventDefault();
 
-        $.ajax({
-            type: "POST",
-            url: "/api/estimate",
-            data: {
-                products: getProductsFromSessionStorage(),
-                shipping_address: getCountriesFromForm(),
-            },
-            success: function(data) {
-                initEstimate(data);
-            },
-            error: function(e, status) {
-                if (e.status == 403){
-                    window.location.replace(login_url);
-                    return;
+            $.ajax({
+                type: "POST",
+                url: "/api/estimate",
+                data: {
+                    products: getProductsFromSessionStorage(),
+                    shipping_address: getCountriesFromForm()
+                },
+                success: function(data) {
+                    initEstimate(data);
+                },
+                error: function(e, status) {
+                    if (e.status == 403){
+                        window.location.replace(login_url);
+                        return;
+                    }
+                    $('#estimate').html('<div class="alert alert-danger">Une erreur est survenue. Veuillez vérifier les informations fournies.</div>');
                 }
-                $('#estimate').html('<div class="alert alert-danger">Une erreur est survenue. Veuillez vérifier les informations fournies.</div>');
+            });
+
+        }
+        else
+        {
+            e.preventDefault();
+
+            if (!sanitizeEmail($("#customer_email").val()))
+            {
+                $("#customer_email").parent().addClass("has-error");
+                $('#customer_email').addClass('animated shake');
+                $('#customer_email').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                    $(this).removeClass("animated");
+                    $(this).removeClass("shake");
+                    $(this).unbind();
+                });
+
+                $("#why_email").removeClass("hidden").addClass("animated bounceInRight");
             }
-        });
+            if (!sanitizePostCode($("#postcode").val()))
+            {
+                $("#postcode").parent().addClass("has-error");
+                $('#postcode').addClass('animated shake');
+                $('#postcode').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                    $(this).removeClass("animated");
+                    $(this).removeClass("shake");
+                    $(this).unbind();
+                });
+            }
+        }
+
+
     });
+
+    /**
+     * Utility function to check if the user has really entered an email address.
+     * from http://stackoverflow.com/a/46181
+     *
+     * @param email
+     * @returns {boolean}
+     */
+    function sanitizeEmail(email) {
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        console.log(re.test(email));
+        return re.test(email);
+    }
+
+    /**
+     * Utility function to check if the user has entered a valid postcode.
+     * Unfortunately there is no way on earth to know if the postcode is a valid one or not.
+     * We only check if the postcode is not empty here.
+     *
+     * @param postcode
+     * @returns {boolean}
+     */
+    function sanitizePostCode(postcode) {
+        return postcode == "" ? false : true;
+    }
+
 
     /**
      * TODO: Put the following in a Estimate Object.
      * TODO: validate customer's email and postal code
      */
     function initEstimate(data) {
-        if($("#customer_email").val() === "")
-        {
-            $("#customer_email").parent().addClass("has-error animated shake");
-            $("#why_email").removeClass("hidden").addClass("animated bounceInRight");
-            $('#customer_email').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-                $(this).removeClass("animated");
-                $(this).removeClass("shake");
-                $(this).unbind();
-            });
-        }
-        else if($("#postcode").val() === "")
-        {
-            $("#postcode").parent().addClass("has-error animated shake");
-            $('#postcode').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-                $(this).removeClass("animated");
-                $(this).removeClass("shake");
-                $(this).unbind();
-            });
-        }
-        else
-        {
-            displayEstimatePanel();
-            fetchEstimate(data);
-        }
+        displayEstimatePanel();
+        fetchEstimate(data);
     }
 
     function displayEstimatePanel() {
