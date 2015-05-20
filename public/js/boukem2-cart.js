@@ -247,32 +247,9 @@ $(document).ready(function() {
             }
         }
 
-
     });
 
-    /**
-     * Utility function to check if the user has really entered an email address.
-     * from http://stackoverflow.com/a/46181
-     *
-     * @param email
-     * @returns {boolean}
-     */
-    function sanitizeEmail(email) {
-        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-        return re.test(email);
-    }
 
-    /**
-     * Utility function to check if the user has entered a valid postcode.
-     * Unfortunately there is no way on earth to know if the postcode is a valid one or not.
-     * We only check if the postcode is not empty here.
-     *
-     * @param postcode
-     * @returns {boolean}
-     */
-    function sanitizePostCode(postcode) {
-        return postcode == "" ? false : true;
-    }
 
 
     /**
