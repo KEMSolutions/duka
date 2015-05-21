@@ -168,7 +168,6 @@ var estimateContainer = {
      */
     fetchEstimate : function(data) {
         $(".has-error").removeClass("has-error");
-        console.log(data);
 
         var email_value = $("#customer_email").val();
         var postcode_value = $("#postcode").val();
