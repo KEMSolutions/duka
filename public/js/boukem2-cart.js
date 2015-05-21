@@ -55,8 +55,7 @@ var LocationContainer = {
      */
     updateChosenSelects: function(chosenCountry) {
         if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == "MX"){
-            $('#province').removeAttr('disabled');
-            $('#province').trigger('chosen:updated');
+            $('#province').removeAttr('disabled').trigger("chosen:updated");
         } else {
             $('#province').attr('disabled','disabled');
         }
@@ -106,8 +105,7 @@ var estimateContainer = {
      */
     emailVerificationFailed : function() {
         $("#customer_email").parent().addClass("has-error");
-        $('#customer_email').addClass('animated shake');
-        $('#customer_email').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+        $('#customer_email').addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
             $(this).removeClass("animated");
             $(this).removeClass("shake");
             $(this).unbind();
@@ -122,8 +120,7 @@ var estimateContainer = {
      */
     postcodeVerificationFailed : function() {
         $("#postcode").parent().addClass("has-error");
-        $('#postcode').addClass('animated shake');
-        $('#postcode').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+        $('#postcode').addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
             $(this).removeClass("animated");
             $(this).removeClass("shake");
             $(this).unbind();
@@ -188,9 +185,7 @@ var estimateContainer = {
             $("#estimate .table-striped").empty().append(serviceDOM);
         }
 
-        $("#estimateButton").removeClass("btn-three");
-        $("#estimateButton").addClass("btn-one");
-        $('#estimateButton').text(localizationContainer.estimateButton.val);
+        $("#estimateButton").removeClass("btn-three").addClass("btn-one").text(localizationContainer.estimateButton.val);
 
         UtilityContainer.scrollTopToEstimate();
     },
