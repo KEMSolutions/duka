@@ -168,6 +168,7 @@ var estimateContainer = {
      */
     fetchEstimate : function(data) {
         $(".has-error").removeClass("has-error");
+        console.log(data);
 
         var email_value = $("#customer_email").val();
         var postcode_value = $("#postcode").val();
@@ -182,7 +183,7 @@ var estimateContainer = {
                 "<td>" + data.services[i].price_due + "</td>" +
                 "<td><input type='radio' name='shipment' class='shipping_method' data-cost='" + data.services[i].price_due + "' value='" + data.services[i].service_code + "' checked=''></td>";
 
-            $("#estimate .table-striped").empty().append(serviceDOM);
+            $("#estimate .table-striped").append(serviceDOM);
         }
 
         $("#estimateButton").removeClass("btn-three").addClass("btn-one").text(localizationContainer.estimateButton.val);
@@ -327,6 +328,9 @@ $(document).ready(function() {
         {
             $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
 
+            if($("#estimate .table-striped").children().length > 0) {
+                $("#estimate .table-striped tbody").empty();
+            }
             estimateContainer.ajaxCall();
         }
         else
