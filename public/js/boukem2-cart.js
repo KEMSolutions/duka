@@ -8,6 +8,7 @@ var LocationContainer = {
     /**
      * Function to populate country list
      * Activates the chosen plugin on the country select list.
+     *
      */
     populateCountry : function() {
         $.getJSON("/js/data/country-list.en.json", function(data) {
@@ -82,6 +83,7 @@ var LocationContainer = {
 
     /**
      * Registering functions to be called outside of this object.
+     *
      */
     init : function() {
         LocationContainer.populateCountry();
@@ -92,7 +94,136 @@ var LocationContainer = {
     }
 }
 
+/**
+ * Object responsible for handling the estimation of user's purchase.
+ *
+ * @type {{passedVerification: Function, emailVerificationFailed: Function, postcodeVerificationFailed: Function, ajaxCall: Function, displayEstimatePanel: Function, fetchEstimate: Function, init: Function}}
+ */
+var estimateContainer = {
+    /**
+     * The email entered is not a valid one. Triggers appropriate class and animation (.has-error / .animated / .shake)
+     *
+     */
+    emailVerificationFailed : function() {
+        $("#customer_email").parent().addClass("has-error");
+        $('#customer_email').addClass('animated shake');
+        $('#customer_email').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+            $(this).removeClass("animated");
+            $(this).removeClass("shake");
+            $(this).unbind();
+        });
 
+        $("#why_email").removeClass("hidden").addClass("animated bounceInRight").tooltip();
+    },
+
+    /**
+     * The postcode entered is not a valid one. Triggers appropriate class and animation (.has-error / .animated / .shake)
+     *
+     */
+    postcodeVerificationFailed : function() {
+        $("#postcode").parent().addClass("has-error");
+        $('#postcode').addClass('animated shake');
+        $('#postcode').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+            $(this).removeClass("animated");
+            $(this).removeClass("shake");
+            $(this).unbind();
+        });
+    },
+
+    /**
+     * Ajax call to /api/estimate after all verifications have passed.
+     *
+     */
+    ajaxCall : function() {
+        $.ajax({
+            type: "POST",
+            url: "/api/estimate",
+            data: {
+                products: UtilityContainer.getProductsFromSessionStorage(),
+                shipping_address: UtilityContainer.getCountriesFromForm()
+            },
+            success: function(data) {
+                estimateContainer.init(data);
+            },
+            error: function(e, status) {
+                if (e.status == 403){
+                    // TODO: replace with an actual link
+                    window.location.replace("/auth/login");
+                    return;
+                }
+                $('#estimate').html('<div class="alert alert-danger">Une erreur est survenue. Veuillez vérifier les informations fournies.</div>');
+            }
+        });
+    },
+
+    /**
+     * Display the estimate panel
+     *
+     */
+    displayEstimatePanel : function() {
+        $("#estimate").removeClass("hidden").addClass("animated fadeInDown");
+    },
+
+    /**
+     * Populate the shipping methods table with the data received after the api call.
+     *
+     * @param data
+     */
+    fetchEstimate : function(data) {
+        $(".has-error").removeClass("has-error");
+
+        var email_value = $("#customer_email").val();
+        var postcode_value = $("#postcode").val();
+        var country_value = $("#country").val();
+
+        for(var i = 0; i<data.services.length; i++)
+        {
+            var serviceDOM = "<tr data-service='" + data.services[i].service_code + "'>" +
+                "<td>" + data.services[i].service_name + "</td>" +
+                "<td>" + data.services[i].service_standard_expected_transit_time + "</td>" +
+                "<td>" + data.services[i].service_standard_expected_delivery + "</td>" +
+                "<td>" + data.services[i].price_due + "</td>" +
+                "<td><input type='radio' name='shipment' class='shipping_method' data-cost='" + data.services[i].price_due + "' value='" + data.services[i].service_code + "' checked=''></td>";
+
+            $("#estimate .table-striped").empty().append(serviceDOM);
+        }
+
+        $("#estimateButton").removeClass("btn-three");
+        $("#estimateButton").addClass("btn-one");
+        $('#estimateButton').text(localizationContainer.estimateButton.val);
+
+        UtilityContainer.scrollTopToEstimate();
+    },
+
+    /**
+     * Registers functions to be called outside of this object.
+     *
+     * @param data
+     */
+    init : function(data) {
+        estimateContainer.displayEstimatePanel();
+        estimateContainer.fetchEstimate(data);
+    }
+
+}
+
+/**
+ * Utility container storing relevant locales to be manipulated in javascript.
+ *
+ * @type {{estimateButton: {val: (*|jQuery)}}}
+ */
+var localizationContainer = {
+    estimateButton : {
+        val : $("#estimateButton").text()
+    }
+}
+
+/**
+ * Utility object containing various utility functions...
+ * Self Explanatory duh.
+ *
+ * @type {{getProductsFromSessionStorage: Function, getCountriesFromForm: Function, sanitizeEmail: Function, sanitizePostCode: Function, scrollTopToEstimate: Function}}
+ */
 var UtilityContainer = {
     /**
      * Utility function for getting all the products in sessionStorage.
@@ -123,7 +254,6 @@ var UtilityContainer = {
 
     /**
      * Utility function fo getting the country and the postal code of the user.
-     * TODO : "Sanitize" user's postcode??
      *
      * @returns {{country: (*|jQuery), postcode: (*|jQuery)}}
      */
@@ -156,23 +286,23 @@ var UtilityContainer = {
      */
     sanitizePostCode : function(postcode) {
         return postcode == "" ? false : true;
+    },
+
+    /**
+     * Utility function to scroll the body to the estimate table
+     *
+     */
+    scrollTopToEstimate : function() {
+        $('html, body').animate({
+            scrollTop: $("#estimate").offset().top
+        }, 1000);
     }
 }
-
-var estimateContainer = {
-
-}
-
-var localizationContainer = {
-    estimateButton : {
-        val : $("#estimateButton").text()
-    }
-}
-
 
 $(document).ready(function() {
     /**
      * Sets up the ajax token for all ajax requests
+     *
      */
     $.ajaxSetup({
         headers: {
@@ -182,69 +312,37 @@ $(document).ready(function() {
 
     /**
      * Populate select lists.
+     *
      */
     LocationContainer.init();
 
     /**
      * Event triggered when the "Continue" button is hit.
-     * Makes an ajax POST call to boukem (/api/estimate) with the products present in the cart.
+     * If the email and the postcode entered are appropriate, make the ajax call to "/api/estimate".
+     * If they are not, display the relevant error message(s)
+     *
      */
     $("#estimateButton").on("click", function(e) {
         var email = $("#customer_email").val(),
             postcode = $("#postcode").val();
 
+        e.preventDefault();
+
         if (UtilityContainer.sanitizeEmail(email) && (UtilityContainer.sanitizePostCode(postcode)))
         {
-            e.preventDefault();
             $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
 
-            $.ajax({
-                type: "POST",
-                url: "/api/estimate",
-                data: {
-                    products: UtilityContainer.getProductsFromSessionStorage(),
-                    shipping_address: UtilityContainer.getCountriesFromForm()
-                },
-                success: function(data) {
-                    initEstimate(data);
-                },
-                error: function(e, status) {
-                    if (e.status == 403){
-                        window.location.replace(login_url);
-                        return;
-                    }
-                    $('#estimate').html('<div class="alert alert-danger">Une erreur est survenue. Veuillez vérifier les informations fournies.</div>');
-                }
-            });
-
+            estimateContainer.ajaxCall();
         }
         else
         {
-            e.preventDefault();
-
             if (!UtilityContainer.sanitizeEmail(email))
             {
-                $("#customer_email").parent().addClass("has-error");
-                $('#customer_email').addClass('animated shake');
-                $('#customer_email').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-                    $(this).removeClass("animated");
-                    $(this).removeClass("shake");
-                    $(this).unbind();
-                });
-
-                $("#why_email").removeClass("hidden").addClass("animated bounceInRight");
-                $('#why_email').tooltip();
-
+                estimateContainer.emailVerificationFailed();
             }
             if (!UtilityContainer.sanitizePostCode(postcode))
             {
-                $("#postcode").parent().addClass("has-error");
-                $('#postcode').addClass('animated shake');
-                $('#postcode').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-                    $(this).removeClass("animated");
-                    $(this).removeClass("shake");
-                    $(this).unbind();
-                });
+                estimateContainer.postcodeVerificationFailed();
             }
             if (UtilityContainer.sanitizeEmail(email) && $("#customer_email").parent().hasClass("has-error"))
             {
@@ -255,55 +353,5 @@ $(document).ready(function() {
                 $("#postcode").parent().removeClass("has-error");
             }
         }
-
     });
-
-
-
-    /**
-     * TODO: Put the following in a Estimate Object.
-     * TODO: validate customer's email and postal code
-     */
-    function initEstimate(data) {
-        displayEstimatePanel();
-        fetchEstimate(data);
-    }
-
-    function displayEstimatePanel() {
-        $("#estimate").removeClass("hidden").addClass("animated fadeInDown");
-    }
-
-    /**
-     *
-     * @param data
-     */
-    function fetchEstimate(data) {
-
-        $(".has-error").removeClass("has-error");
-
-        var email_value = $("#customer_email").val();
-        var postcode_value = $("#postcode").val();
-        var country_value = $("#country").val();
-
-        for(var i = 0; i<data.services.length; i++)
-        {
-            var serviceDOM = "<tr data-service='" + data.services[i].service_code + "'>" +
-                    "<td>" + data.services[i].service_name + "</td>" +
-                    "<td>" + data.services[i].service_standard_expected_transit_time + "</td>" +
-                    "<td>" + data.services[i].service_standard_expected_delivery + "</td>" +
-                    "<td>" + data.services[i].price_due + "</td>" +
-                    "<td><input type='radio' name='shipment' class='shipping_method' data-cost='" + data.services[i].price_due + "' value='" + data.services[i].service_code + "' checked=''></td>";
-
-            $("#estimate .table-striped").empty().append(serviceDOM);
-        }
-
-        $("#estimateButton").removeClass("btn-three");
-        $("#estimateButton").addClass("btn-one");
-        $('#estimateButton').text(localizationContainer.estimateButton.val);
-
-        $('html, body').animate({
-            scrollTop: $("#estimate").offset().top
-        }, 1000);
-
-    }
 });
