@@ -163,6 +163,12 @@ var estimateContainer = {
 
 }
 
+var localizationContainer = {
+    estimateButton : {
+        val : $("#estimateButton").text()
+    }
+}
+
 
 $(document).ready(function() {
     /**
@@ -190,6 +196,7 @@ $(document).ready(function() {
         if (UtilityContainer.sanitizeEmail(email) && (UtilityContainer.sanitizePostCode(postcode)))
         {
             e.preventDefault();
+            $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
 
             $.ajax({
                 type: "POST",
@@ -277,9 +284,6 @@ $(document).ready(function() {
         var email_value = $("#customer_email").val();
         var postcode_value = $("#postcode").val();
         var country_value = $("#country").val();
-        var estimateButtonText = $('#estimateButton').text();
-
-        $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
 
         for(var i = 0; i<data.services.length; i++)
         {
@@ -295,7 +299,11 @@ $(document).ready(function() {
 
         $("#estimateButton").removeClass("btn-three");
         $("#estimateButton").addClass("btn-one");
-        $('#estimateButton').text(estimateButtonText);
+        $('#estimateButton').text(localizationContainer.estimateButton.val);
+
+        $('html, body').animate({
+            scrollTop: $("#estimate").offset().top
+        }, 1000);
 
     }
 });
