@@ -226,6 +226,8 @@ $(document).ready(function() {
                 });
 
                 $("#why_email").removeClass("hidden").addClass("animated bounceInRight");
+                $('#why_email').tooltip();
+
             }
             if (!UtilityContainer.sanitizePostCode(postcode))
             {
