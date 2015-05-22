@@ -120,6 +120,8 @@ class KemApiHttpClient
         $sig = $body . $this->secret;
         $sig = base64_encode(hash('sha512', $sig, true));
 
+        \Log::info("\n\n\tMaking API request...\n\tEndpoint: $endpoint\n\tBody: $body\n\tSignature: $sig\n\n");
+
         // Create request.
         $request = $this->client->createRequest($method, $endpoint, [
             'body' => $body,
@@ -150,6 +152,8 @@ class KemApiHttpClient
                 'error' => $e->getMessage()
             ];
         }
+
+        \Log::info("\n\n\tResponse:\n\n". var_export($response->json(['object' => true]), true) ."\n\n");
 
         // Return an instance of GuzzleHttp\Message\Response or a JSON object.
         return $returnResponse ? $response : $response->json(['object' => true]);

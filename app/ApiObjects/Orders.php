@@ -14,13 +14,13 @@ class Orders extends KemApiObject
      * Retrieves shipping costs and delivery time estimates.
      *
      * @param array $products   Products to include in order.
-     * @param string $address   Two-letter country code.
+     * @param array $address    Shipping address.
      * @return mixed
      */
-    public function estimate(array $products, $address)
+    public function estimate(array $products, array $address)
     {
         // Performance check.
-        if (count($products) < 1 || strlen($address->country) != 2 || strlen($address->postcode) < 5) {
+        if (count($products) < 1 || strlen($address['country']) != 2 || strlen($address['postcode']) < 5) {
             return $this->badRequest('Invalid parameters [req: orders/estimate].');
         }
 
@@ -28,8 +28,8 @@ class Orders extends KemApiObject
         $body = new \stdClass;
         $body->products = [];
         $body->shipping_address = new \stdClass;
-        $body->shipping_address->country = strtoupper($address->country);
-        $body->shipping_address->postcode = strtoupper(preg_replace('/\s+/', '', $address->postcode));
+        $body->shipping_address->country = strtoupper($address['country']);
+        $body->shipping_address->postcode = strtoupper(preg_replace('/\s+/', '', $address['postcode']));
 
         // Format product list.
         $products = (array) $products;

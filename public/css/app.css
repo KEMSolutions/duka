@@ -6477,6 +6477,11 @@ section.slice {
   height: 160px;
 }
 
+
+#why_email {
+  cursor: default ;
+}
+
 /*
 Breadcrumbs
 */
