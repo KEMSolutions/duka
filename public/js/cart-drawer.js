@@ -76,7 +76,7 @@ var cartData = {
      * @param item JSON format converted from attributes on the .buybutton
      */
     addItem : function(item) {
-        var price = parseInt(item.quantity) * parseFloat(item.price);
+        var price = (parseInt(item.quantity) * parseFloat(item.price)).toFixed(2);
 
         var sidebarElement = '<li class="w-box animated bounceInDown" data-product="' + item.product + '" data-quantity=1>' +
             '<div class="col-xs-3 text-center"><img src=' + item.thumbnail_lg + ' class="img-responsive"></div>' +

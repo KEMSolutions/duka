@@ -185,5 +185,6 @@ return [
     "brand"             =>"Marque",
     "continue"          =>"Continuer",
     "secure_payment"    =>"Paiement sécurisé",
-    "video"             =>"Vidéo"
+    "video"             =>"Vidéo",
+    "expected_delivery" =>"Date de livraison prévue"
 ];

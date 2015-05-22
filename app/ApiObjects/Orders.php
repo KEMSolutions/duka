@@ -14,25 +14,40 @@ class Orders extends KemApiObject
      * Retrieves shipping costs and delivery time estimates.
      *
      * @param array $products   Products to include in order.
-     * @param string $address   Two-letter country code.
+     * @param array $address    Shipping address.
      * @return mixed
      */
-    public function estimate(array $products, $address)
+    public function estimate(array $products, array $address, $email)
     {
         // Performance check.
-        if (count($products) < 1 || strlen($address->country) != 2 || strlen($address->postcode) < 5) {
-            return $this->badRequest('Invalid parameters [req: orders/estimate].');
+        if (count($products) < 1 || !isset($address['country']) || !isset($address['postcode'])) {
+            Log::info('Invalid parameters for order estimate.');
+            return $this->badRequest('Invalid parameters.');
+        }
+
+        // Validate some inputs, to avoid unnecessary strain on the main server.
+        $address['country'] = preg_replace('/[^A-Z]/', '', strtoupper($address['country']));
+        $address['province'] = preg_replace('/[^A-Z]/', '', strtoupper(@$address['province']));
+        $address['postcode'] = preg_replace('/[^A-Z0-9- ]/', '', strtoupper($address['postcode']));
+        if (strlen($address['country']) != 2 || strlen($address['postcode']) < 5) {
+            Log::info('Invalid address for order estimate.');
+            return $this->badRequest('Invalid parameters.');
+        } elseif ($address['country'] == 'CA' && strlen($address['province']) != 2) {
+            Log::info('Invalid province code for order estimate.');
+            return $this->badRequest('Invalid parameters.');
         }
 
         // Prepare API request body.
         $body = new \stdClass;
         $body->products = [];
         $body->shipping_address = new \stdClass;
-        $body->shipping_address->country = strtoupper($address->country);
-        $body->shipping_address->postcode = strtoupper(preg_replace('/\s+/', '', $address->postcode));
+        $body->shipping_address->country = $address['country'];
+        $body->shipping_address->postcode = $address['postcode'];
+        if ($address['country'] == 'CA') {
+            $body->shipping_address->province = $address['province'];
+        }
 
         // Format product list.
-        $products = (array) $products;
         foreach ($products as $product)
         {
             $std = new \stdClass;
