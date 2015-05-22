@@ -16,7 +16,12 @@ var LocationContainer = {
                 $country = $("#country");
 
             $.each(data, function(key, val) {
-                listItems += "<option value='" + key + "'>" + val + "</option>";
+                if (key == "CA") {
+                    listItems += "<option value='" + key + "' selected>" + val + "</option>";
+                }
+                else {
+                    listItems += "<option value='" + key + "'>" + val + "</option>";
+                }
             });
             $country.append(listItems);
         }).done(function() {
@@ -38,7 +43,10 @@ var LocationContainer = {
                     $provinces = $("#province").find("[data-country='" + country[i] +"']");
 
                 $.each(data, function(key, val) {
-                    if (data[key].country === country[i]){
+                    if (data[key].country === country[i] && data[key].short == "QC" ){
+                        listItems += "<option value='" + data[key].short + "' selected>" + data[key].name + "</option>";
+                    }
+                    else if (data[key].country === country[i]){
                         listItems += "<option value='" + data[key].short + "'>" + data[key].name + "</option>";
                     }
                 });
@@ -72,12 +80,15 @@ var LocationContainer = {
     /**
      * Triggers updateChosenSelects($country)
      * This function will be registered in init().
+     * TODO: Display appropriate provinces at the beginning of the process
      *
      */
     callUpdateChosenSelects: function() {
         $("#country").on("change", function() {
             LocationContainer.updateChosenSelects($(this).val());
         });
+
+        //$("#country").trigger("change");
     },
 
     /**
@@ -248,14 +259,15 @@ var UtilityContainer = {
     },
 
     /**
-     * Utility function fo getting the country and the postal code of the user.
+     * Utility function fo getting the country, the postal code and the province (if any) of the user.
      *
-     * @returns {{country: (*|jQuery), postcode: (*|jQuery)}}
+     * @returns {{country: (*|jQuery), postcode: (*|jQuery), province: (*|jQuery)}}
      */
     getCountriesFromForm : function() {
         return res = {
             "country" : $("#country").val(),
-            "postcode" : $("#postcode").val()
+            "postcode" : $("#postcode").val(),
+            "province" : $("#province").val()
         };
     },
 

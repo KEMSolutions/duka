@@ -21,7 +21,7 @@
                 {{-- CA PROVINCE / US STATES / MEX STATES--}}
                 <div class="form-group">
                     <label for="province">{{ Lang::get("boukem.province_state_reg") }}</label>
-                    <select name="province" id="province" class="form-control" disabled>
+                    <select name="province" id="province" class="form-control">
                         <optgroup data-country="CA" label="{{ Lang::get("boukem.ca_province") }}"></optgroup>
                         <optgroup data-country="US" label="{{ Lang::get("boukem.us_states") }}"></optgroup>
                         <optgroup data-country="MX" label="{{ Lang::get("boukem.mex_states") }}"></optgroup>
