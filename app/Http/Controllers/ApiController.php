@@ -61,7 +61,8 @@ class ApiController extends Controller
     {
         return $this->send(Orders::estimate(
             (array) Request::input('products'),
-            (array) Request::input('shipping_address')
+            (array) Request::input('shipping_address'),
+            Request::input('email')
         ));
     }
 
