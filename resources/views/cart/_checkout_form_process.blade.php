@@ -56,7 +56,6 @@
                 <tr>
                     <th>{{ Lang::get("boukem.service_name") }}</th>
                     <th>{{ Lang::get("boukem.estimated_transit_time") }}</th>
-                    <th>{{ Lang::get("boukem.expected_delivery") }}</th>
                     <th>{{ Lang::get("boukem.cost") }}</th>
                     <th></th>
                 </tr>

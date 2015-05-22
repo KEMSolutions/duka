@@ -164,6 +164,25 @@ var estimateContainer = {
         });
     },
 
+    getShipmentTaxes : function(serviceCode, data) {
+        var taxes = 0;
+
+        for(var i=0; i<data.shipping.services.length; i++)
+        {
+            if(data.shipping.services[i].service_code == serviceCode)
+            {
+                if (data.shipping.services[i].taxes.length != 0)
+                {
+                    for(var j=0; j<data.shipping.services[i].taxes.length; j++)
+                    {
+                        taxes += data.shipping.services[i].taxes[j].amount;
+                    }
+                }
+            }
+        }
+        return taxes.toFixed(2);
+    },
+
     /**
      * Display the estimate panel
      *
@@ -184,14 +203,15 @@ var estimateContainer = {
         var postcode_value = $("#postcode").val();
         var country_value = $("#country").val();
 
-        for(var i = 0; i<data.services.length; i++)
+        console.log(data);
+
+        for(var i = 0; i<data.shipping.services.length; i++)
         {
-            var serviceDOM = "<tr data-service='" + data.services[i].service_code + "'>" +
-                "<td>" + data.services[i].service_name + "</td>" +
-                "<td>" + data.services[i].service_standard_expected_transit_time + "</td>" +
-                "<td>" + data.services[i].service_standard_expected_delivery + "</td>" +
-                "<td>" + data.services[i].price_due + "</td>" +
-                "<td><input type='radio' name='shipment' class='shipping_method' data-cost='" + data.services[i].price_due + "' value='" + data.services[i].service_code + "' checked=''></td>";
+            var serviceDOM = "<tr data-service='" + data.shipping.services[i].service_code + "'>" +
+                "<td>" + data.shipping.services[i].service_name + "</td>" +
+                "<td>" + data.shipping.services[i].service_standard_expected_transit_time + "</td>" +
+                "<td>" + data.shipping.services[i].price_due + "</td>" +
+                "<td><input type='radio' name='shipment' class='shipping_method' data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].service_code, data) + "' data-cost='" + data.shipping.services[i].price_due + "' value='" + data.shipping.services[i].service_code + "'></td>";
 
             $("#estimate .table-striped").append(serviceDOM);
         }
@@ -199,6 +219,8 @@ var estimateContainer = {
         $("#estimateButton").removeClass("btn-three").addClass("btn-one").text(localizationContainer.estimateButton.val);
 
         UtilityContainer.scrollTopToEstimate();
+
+        paymentContainer.init(data);
     },
 
     /**
@@ -212,6 +234,50 @@ var estimateContainer = {
     }
 
 }
+
+var paymentContainer = {
+    displayPaymentPanel : function() {
+        $("#payment").removeClass("hidden").addClass("animated fadeInDown");
+        $("#checkoutButton").addClass("animated rubberBand");
+    },
+
+    updatePaymentPanel : function(data) {
+        var subtotal = parseFloat(UtilityContainer.getProductsPriceFromSessionStorage()).toFixed(2),
+            priceTransport, taxes;
+
+        $(".shipping_method").on("change", function() {
+            priceTransport = parseFloat($(this).data("cost").toFixed(2));
+            taxes = paymentContainer.getTaxes(data) + parseFloat($(this).data("taxes"));
+            total = parseFloat(subtotal) + parseFloat(priceTransport) + parseFloat(taxes);
+
+            $("#price_subtotal").text(subtotal);
+            $("#price_transport").text(priceTransport);
+            $("#price_taxes").text(taxes);
+            $("#price_total").text(total);
+        });
+
+    },
+
+    getTaxes : function(data) {
+        var taxes = 0;
+
+        if (data.taxes.length != 0)
+        {
+           for(var i=0; i<data.taxes.length; i++)
+           {
+               taxes += data.taxes[i].amount;
+           }
+        }
+
+        return taxes;
+    },
+
+    init : function(data) {
+        paymentContainer.displayPaymentPanel();
+        paymentContainer.updatePaymentPanel(data);
+    }
+}
+
 
 /**
  * Utility container storing relevant locales to be manipulated in javascript.
@@ -246,16 +312,35 @@ var UtilityContainer = {
             {
                 var product = JSON.parse(sessionStorage.getItem(sessionStorage.key(i))),
                     productId = product.product,
-                    productQuantity = product.quantity;
+                    productQuantity = product.quantity,
+                    productPrice = product.price;
 
                 res.push({
                     id: productId,
-                    quantity: productQuantity
+                    quantity: productQuantity,
+                    price : productPrice
                 });
             }
         }
 
         return res;
+    },
+
+    /**
+     * Utility function to get the total price from all products present in sessionStorage
+     *
+     * @returns {number}
+     */
+    getProductsPriceFromSessionStorage : function() {
+        var total = 0,
+            products = UtilityContainer.getProductsFromSessionStorage();
+
+        for(var i=0; i<products.length; i++)
+        {
+            total += products[i].price;
+        }
+
+        return total;
     },
 
     /**
