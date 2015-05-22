@@ -268,8 +268,8 @@ var paymentContainer = {
 
         $("#price_subtotal").text(subtotal);
         $("#price_transport").text(priceTransport);
-        $("#price_taxes").text(taxes);
-        $("#price_total").text(total);
+        $("#price_taxes").text(taxes.toFixed(2));
+        $("#price_total").text(total.toFixed(2));
     },
 
     /**
@@ -289,7 +289,7 @@ var paymentContainer = {
             $("#price_subtotal").text(subtotal);
             $("#price_transport").text(priceTransport);
             $("#price_taxes").text(taxes.toFixed(2));
-            $("#price_total").text(total);
+            $("#price_total").text(total.toFixed(2));
         });
 
 
