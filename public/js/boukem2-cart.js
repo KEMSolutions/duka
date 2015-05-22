@@ -343,7 +343,7 @@ var localizationContainer = {
  * Utility object containing various utility functions...
  * Self Explanatory duh.
  *
- * @type {{getProductsFromSessionStorage: Function, getCountriesFromForm: Function, sanitizeEmail: Function, sanitizePostCode: Function, scrollTopToEstimate: Function}}
+ * @type {{getProductsFromSessionStorage: Function, getCountriesFromForm: Function, validateEmail: Function, sanitizePostCode: Function, scrollTopToEstimate: Function}}
  */
 var UtilityContainer = {
     /**
@@ -412,7 +412,7 @@ var UtilityContainer = {
      * @param email
      * @returns {boolean}
      */
-    sanitizeEmail : function(email) {
+    validateEmail : function(email) {
         var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
         return re.test(email);
     },
@@ -427,6 +427,14 @@ var UtilityContainer = {
      */
     sanitizePostCode : function(postcode) {
         return postcode == "" ? false : true;
+    },
+
+    validateCanadianPostalCode : function(postcode) {
+        return postcode.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
+    },
+
+    validateUSPostalCode : function(postcode) {
+        return postcode.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
     },
 
     /**
@@ -469,7 +477,7 @@ $(document).ready(function() {
 
         e.preventDefault();
 
-        if (UtilityContainer.sanitizeEmail(email) && (UtilityContainer.sanitizePostCode(postcode)))
+        if (UtilityContainer.validateEmail(email) && (UtilityContainer.sanitizePostCode(postcode)))
         {
             $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
 
@@ -480,7 +488,7 @@ $(document).ready(function() {
         }
         else
         {
-            if (!UtilityContainer.sanitizeEmail(email))
+            if (!UtilityContainer.validateEmail(email))
             {
                 estimateContainer.emailVerificationFailed();
             }
@@ -488,7 +496,7 @@ $(document).ready(function() {
             {
                 estimateContainer.postcodeVerificationFailed();
             }
-            if (UtilityContainer.sanitizeEmail(email) && $("#customer_email").parent().hasClass("has-error"))
+            if (UtilityContainer.validateEmail(email) && $("#customer_email").parent().hasClass("has-error"))
             {
                 $("#customer_email").parent().removeClass("has-error");
             }
