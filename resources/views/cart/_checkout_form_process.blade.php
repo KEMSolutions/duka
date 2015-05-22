@@ -21,7 +21,7 @@
                 {{-- CA PROVINCE / US STATES / MEX STATES--}}
                 <div class="form-group">
                     <label for="province">{{ Lang::get("boukem.province_state_reg") }}</label>
-                    <select name="province" id="province" class="form-control" disabled>
+                    <select name="province" id="province" class="form-control">
                         <optgroup data-country="CA" label="{{ Lang::get("boukem.ca_province") }}"></optgroup>
                         <optgroup data-country="US" label="{{ Lang::get("boukem.us_states") }}"></optgroup>
                         <optgroup data-country="MX" label="{{ Lang::get("boukem.mex_states") }}"></optgroup>
@@ -31,14 +31,14 @@
 
                 <div class="form-group">
                     <label for="country" class="control-label">{{ Lang::get("boukem.postal_code") }}</label>
-                    <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="postcode" class="form-control">
+                    <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="postcode" class="form-control" required>
                 </div>
 
                 {{--TODO: Display only if user is a guest--}}
                     <div class="form-group">
                         <span class="hidden label label-info pull-right" id="why_email" data-toggle="tooltip" data-placement="left" data-trigger="click" title="{{ Lang::get("boukem.keep_email") }}">{{ Lang::get("boukem.why") }}</span>
                         <label for="customer_email" class="control-label">{{ Lang::get("boukem.email_address") }}</label>
-                        <input type="email" name="email" id="customer_email" class="form-control" value="">
+                        <input type="email" name="email" id="customer_email" class="form-control" value="" required>
 
                     </div>
 
@@ -56,7 +56,6 @@
                 <tr>
                     <th>{{ Lang::get("boukem.service_name") }}</th>
                     <th>{{ Lang::get("boukem.estimated_transit_time") }}</th>
-                    <th>{{ Lang::get("boukem.expected_delivery") }}</th>
                     <th>{{ Lang::get("boukem.cost") }}</th>
                     <th></th>
                 </tr>

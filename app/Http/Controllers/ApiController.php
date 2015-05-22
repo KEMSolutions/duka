@@ -60,8 +60,9 @@ class ApiController extends Controller
     public function getOrderEstimate()
     {
         return $this->send(Orders::estimate(
-            Request::input('products'),
-            Request::input('shipping_address')
+            (array) Request::input('products'),
+            (array) Request::input('shipping_address'),
+            Request::input('email')
         ));
     }
 
