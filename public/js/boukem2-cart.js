@@ -211,7 +211,7 @@ var estimateContainer = {
                 "<td>" + data.shipping.services[i].service_name + "</td>" +
                 "<td>" + data.shipping.services[i].service_standard_expected_transit_time + "</td>" +
                 "<td>" + data.shipping.services[i].price_due + "</td>" +
-                "<td><input type='radio' name='shipment' class='shipping_method' data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].service_code, data) + "' data-cost='" + data.shipping.services[i].price_due + "' value='" + data.shipping.services[i].service_code + "'></td>";
+                "<td><input type='radio' name='shipment' class='shipping_method' data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].service_code, data) + "' data-cost='" + data.shipping.services[i].price_due + "' value='" + data.shipping.services[i].service_code + "' checked></td>";
 
             $("#estimate .table-striped").append(serviceDOM);
         }
@@ -241,6 +241,19 @@ var paymentContainer = {
         $("#checkoutButton").addClass("animated rubberBand");
     },
 
+    initPaymentPanel : function(data) {
+        var subtotal = parseFloat(UtilityContainer.getProductsPriceFromSessionStorage()).toFixed(2),
+            priceTransport = $("input:radio.shipping_method:checked").data("cost"),
+            taxes = paymentContainer.getTaxes(data) + parseFloat($("input:radio.shipping_method:checked").data("taxes")),
+            total = parseFloat(subtotal) + parseFloat(priceTransport) + parseFloat(taxes);
+
+        console.log(priceTransport);
+        $("#price_subtotal").text(subtotal);
+        $("#price_transport").text(priceTransport);
+        $("#price_taxes").text(taxes);
+        $("#price_total").text(total);
+    },
+
     updatePaymentPanel : function(data) {
         var subtotal = parseFloat(UtilityContainer.getProductsPriceFromSessionStorage()).toFixed(2),
             priceTransport, taxes;
@@ -255,6 +268,7 @@ var paymentContainer = {
             $("#price_taxes").text(taxes);
             $("#price_total").text(total);
         });
+
 
     },
 
@@ -274,6 +288,7 @@ var paymentContainer = {
 
     init : function(data) {
         paymentContainer.displayPaymentPanel();
+        paymentContainer.initPaymentPanel(data);
         paymentContainer.updatePaymentPanel(data);
     }
 }
@@ -299,7 +314,7 @@ var localizationContainer = {
 var UtilityContainer = {
     /**
      * Utility function for getting all the products in sessionStorage.
-     * Returns an array containing their id and their quantity.
+     * Returns an array containing their id, their quantity and their price.
      *
      * @returns {Array}
      */
