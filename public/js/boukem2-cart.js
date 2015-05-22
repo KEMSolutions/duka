@@ -386,7 +386,7 @@ var UtilityContainer = {
 
         for(var i=0; i<products.length; i++)
         {
-            total += products[i].price;
+            total += (products[i].price * products[i].quantity);
         }
 
         return total;
