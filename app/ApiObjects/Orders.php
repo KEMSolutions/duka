@@ -21,7 +21,7 @@ class Orders extends KemApiObject
     {
         // Performance check.
         if (count($products) < 1 || !isset($address['country']) || !isset($address['postcode'])) {
-            Log::info('Invalid parameters for /estimate API request.');
+            Log::info('Invalid parameters for order estimate.');
             return $this->badRequest('Invalid parameters.');
         }
 
@@ -30,10 +30,10 @@ class Orders extends KemApiObject
         $address['province'] = preg_replace('/[^A-Z]/', '', strtoupper(@$address['province']));
         $address['postcode'] = preg_replace('/[^A-Z0-9- ]/', '', strtoupper($address['postcode']));
         if (strlen($address['country']) != 2 || strlen($address['postcode']) < 5) {
-            Log::info('Invalid address for /estimate API request.');
+            Log::info('Invalid address for order estimate.');
             return $this->badRequest('Invalid parameters.');
         } elseif ($address['country'] == 'CA' && strlen($address['province']) != 2) {
-            Log::info('Invalid province code for /estimate API request.');
+            Log::info('Invalid province code for order estimate.');
             return $this->badRequest('Invalid parameters.');
         }
 
