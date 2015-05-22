@@ -288,7 +288,7 @@ var paymentContainer = {
 
             $("#price_subtotal").text(subtotal);
             $("#price_transport").text(priceTransport);
-            $("#price_taxes").text(taxes);
+            $("#price_taxes").text(taxes.toFixed(2));
             $("#price_total").text(total);
         });
 
