@@ -95,6 +95,15 @@ h4 {
     padding-bottom: 99999px;
 }
 
+.cart-checkout .one-half {
+    width: 50%;
+    position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+    float: left;
+}
+
 /* cart page styles */
 
 .credit-cart-trust{

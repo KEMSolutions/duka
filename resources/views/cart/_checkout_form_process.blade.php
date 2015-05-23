@@ -10,6 +10,34 @@
             </div>
             <div class="panel-body">
 
+                <div class="row">
+                    <div class="form-group one-half">
+                        <label for="shippingFirstname" class="form-label" >{{ Lang::get("boukem.first_name") }}</label>
+                        <input type="text" name="shippingFirstname" id="shippingFirstname" class="form-control" required/>
+                    </div>
+
+                    <div class="form-group one-half">
+                        <label for="shippingLastname" class="form-label" >{{ Lang::get("boukem.last_name") }}</label>
+                        <input type="text" name="shippingLastname" id="shippingLastname" class="form-control" required/>
+                    </div>
+            </div>Sa
+
+                <div class="form-group">
+                    <label for="shippingAddress1" class="form-label">{{ Lang::get("boukem.address_1") }}</label>
+                    <input type="text" name="shippingAddress1" id="shippingAddress1" class="form-control" required/>
+                </div>
+
+                <div class="form-group">
+                    <label for="shippingAddress2" class="form-label">{{ Lang::get("boukem.address_2") }}</label>
+                    <input type="text" name="shippingAddress2" id="shippingAddress2" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="shippingCity" class="form-label">{{ Lang::get("boukem.city") }}</label>
+                    <input type="text" name="shippingCity" id="shippingCity" class="form-control" required/>
+                </div>
+
+
                 {{-- COUNTRIES --}}
                 <div class="form-group">
                     <label for="country">{{ Lang::get("boukem.country") }}</label>
@@ -34,13 +62,16 @@
                     <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="postcode" class="form-control" required>
                 </div>
 
-                {{--TODO: Display only if user is a guest--}}
                     <div class="form-group">
                         <span class="hidden label label-info pull-right" id="why_email" data-toggle="tooltip" data-placement="left" data-trigger="click" title="{{ Lang::get("boukem.keep_email") }}">{{ Lang::get("boukem.why") }}</span>
                         <label for="customer_email" class="control-label">{{ Lang::get("boukem.email_address") }}</label>
                         <input type="email" name="email" id="customer_email" class="form-control" value="" required>
-
                     </div>
+
+                <div class="form-group">
+                    <label for="shippingTel" class="form-label">{{ Lang::get("boukem.phone") }}</label>
+                    <input type="tel" name="shippingTel" id="shippingTel" class="form-control" required/>
+                </div>
 
                 <button class="btn btn-three pull-right btn-lg" id="estimateButton">{{ Lang::get("boukem.continue") }}</button>
             </div> <!-- panel-body -->

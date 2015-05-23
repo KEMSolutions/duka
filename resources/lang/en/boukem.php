@@ -53,7 +53,8 @@ return [
     "step {step}"   => "Step {step}",
     "about"         => "About you",
     "first_name"    =>"First name",
-    "name"          =>"Last name",
+    "last_name"     =>"Last name",
+    "name"          =>"Nom",
     "phone"         =>"Phone",
     "billing_address"=>"Billing address",
     "address_1"     =>"Address line 1",
@@ -186,5 +187,6 @@ return [
     "continue"          =>"Continue",
     "secure_payment"    =>"Secure payment",
     "video"             =>"Video",
-    "expected_delivery" =>"Expected delivery (days)"
+    "expected_delivery" =>"Expected delivery (days)",
+    "optional"          =>"Optional"
 ];
