@@ -20,7 +20,7 @@
                         <label for="shippingLastname" class="form-label" >{{ Lang::get("boukem.last_name") }}</label>
                         <input type="text" name="shippingLastname" id="shippingLastname" class="form-control" required/>
                     </div>
-            </div>Sa
+            </div>
 
                 <div class="form-group">
                     <label for="shippingAddress1" class="form-label">{{ Lang::get("boukem.address_1") }}</label>
