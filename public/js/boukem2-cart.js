@@ -115,28 +115,20 @@ var estimateContainer = {
      *
      */
     emailVerificationFailed : function() {
-        $("#customer_email").parent().addClass("has-error");
-        $('#customer_email').addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-            $(this).removeClass("animated");
-            $(this).removeClass("shake");
-            $(this).unbind();
-        });
-
         $("#why_email").removeClass("hidden").addClass("animated bounceInRight").tooltip();
     },
 
-    /**
-     * The postcode entered is not a valid one. Triggers appropriate class and animation (.has-error / .animated / .shake)
-     *
-     */
-    postcodeVerificationFailed : function() {
-        $("#postcode").parent().addClass("has-error");
-        $('#postcode').addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+
+    inputVerificationFailed : function(input) {
+        input.parent().addClass("has-error");
+        input.addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
             $(this).removeClass("animated");
             $(this).removeClass("shake");
             $(this).unbind();
         });
+
     },
+
 
     /**
      * Ajax call to /api/estimate after all verifications have passed.
@@ -343,7 +335,7 @@ var localizationContainer = {
  * Utility object containing various utility functions...
  * Self Explanatory duh.
  *
- * @type {{getProductsFromSessionStorage: Function, getCountriesFromForm: Function, validateEmail: Function, sanitizePostCode: Function, scrollTopToEstimate: Function}}
+ * @type {{getProductsFromSessionStorage: Function, getCountriesFromForm: Function, validateEmail: Function, validatePostCode: Function, scrollTopToEstimate: Function}}
  */
 var UtilityContainer = {
     /**
@@ -405,37 +397,38 @@ var UtilityContainer = {
         };
     },
 
-    /**
-     * Utility function to check if the user has really entered an email address.
-     * From http://stackoverflow.com/a/46181
-     *
-     * @param email
-     * @returns {boolean}
-     */
-    validateEmail : function(email) {
-        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-        return re.test(email);
+    validationContainer : {
+
+        validateEmail : function(email) {
+            var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+            return re.test(email);
+        },
+
+        validateDefaultPostCode : function(postcode) {
+            return postcode == "" ? false : true;
+        },
+
+        validateCanadianPostCode : function(postcode) {
+            return postcode.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
+        },
+
+        validateUSPostCode : function(postcode) {
+            return postcode.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
+        },
+
+        validateAndReturnEmptyFields : function(fields) {
+            var empty = [];
+
+            for(var i=0; i<fields.length; i++)
+            {
+                fields[i].val() == "" ? empty.push(fields[i]) : "";
+            }
+
+            return empty;
+        }
+
     },
 
-    /**
-     * Utility function to check if the user has entered a valid postcode.
-     * Unfortunately there is no way on earth to know if the postcode is a valid one or not.
-     * We only check if the postcode is not empty here.
-     *
-     * @param postcode
-     * @returns {boolean}
-     */
-    sanitizePostCode : function(postcode) {
-        return postcode == "" ? false : true;
-    },
-
-    validateCanadianPostalCode : function(postcode) {
-        return postcode.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
-    },
-
-    validateUSPostalCode : function(postcode) {
-        return postcode.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
-    },
 
     /**
      * Utility function to scroll the body to the estimate table
@@ -467,40 +460,85 @@ $(document).ready(function() {
 
     /**
      * Event triggered when the "Continue" button is hit.
-     * If the email and the postcode entered are appropriate, make the ajax call to "/api/estimate".
+     * If the input fields entered are appropriate, make the ajax call to "/api/estimate".
      * If they are not, display the relevant error message(s)
      *
      */
     $("#estimateButton").on("click", function(e) {
         var email = $("#customer_email").val(),
-            postcode = $("#postcode").val();
+            postcode = $("#postcode").val(),
+            firstName = $("#shippingFirstname"),
+            lastName = $("#shippingLastname"),
+            address = $("#shippingAddress1"),
+            city = $("#shippingCity"),
+            phone = $("#shippingTel"),
+            country = $("#country").val(),
+            emptyFields = UtilityContainer.validationContainer.validateAndReturnEmptyFields([firstName, lastName, address, city, phone ]);
 
         e.preventDefault();
 
-        if (UtilityContainer.validateEmail(email) && (UtilityContainer.sanitizePostCode(postcode)))
+        if (UtilityContainer.validationContainer.validateEmail(email) && emptyFields.length == 0)
         {
-            $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
+            if((country == "CA" && UtilityContainer.validationContainer.validateCanadianPostCode(postcode)) ||
+               (country == "US" && UtilityContainer.validationContainer.validateUSPostCode(postcode)) ||
+                (country != "US" && country != "CA" && UtilityContainer.validationContainer.validateDefaultPostCode(postcode)))
+            {
+                $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
 
-            if($("#estimate .table-striped").children().length > 0) {
-                $("#estimate .table-striped tbody").empty();
+                if($("#estimate .table-striped").children().length > 0) {
+                    $("#estimate .table-striped tbody").empty();
+                }
+                //estimateContainer.ajaxCall();
+                alert("hi");
             }
-            estimateContainer.ajaxCall();
+            else
+            {
+                if (country == "CA" && !UtilityContainer.validationContainer.validateCanadianPostCode(postcode))
+                {
+                    estimateContainer.inputVerificationFailed($("#postcode"));
+                    console.log("a");
+                }
+                else if (country == "US" && !UtilityContainer.validationContainer.validateUSPostCode(postcode))
+                {
+                    estimateContainer.inputVerificationFailed($("#postcode"));
+                    console.log("b");
+
+                }
+                else if (!UtilityContainer.validationContainer.validateDefaultPostCode(postcode))
+                {
+                    estimateContainer.inputVerificationFailed($("#postcode"));
+                    console.log("c");
+
+                }
+            }
         }
         else
         {
-            if (!UtilityContainer.validateEmail(email))
+            if (!UtilityContainer.validationContainer.validateEmail(email))
             {
+                estimateContainer.inputVerificationFailed($("#customer_email"));
                 estimateContainer.emailVerificationFailed();
             }
-            if (!UtilityContainer.sanitizePostCode(postcode))
+
+            if (!UtilityContainer.validationContainer.validateDefaultPostCode(postcode))
             {
-                estimateContainer.postcodeVerificationFailed();
+                estimateContainer.inputVerificationFailed($("#postcode"));
             }
-            if (UtilityContainer.validateEmail(email) && $("#customer_email").parent().hasClass("has-error"))
+
+            if (emptyFields.length > 0)
+            {
+                for(var i=0; i<emptyFields.length; i++)
+                {
+                    estimateContainer.inputVerificationFailed(emptyFields[i]);
+                }
+            }
+
+            if (UtilityContainer.validationContainer.validateEmail(email) && $("#customer_email").parent().hasClass("has-error"))
             {
                 $("#customer_email").parent().removeClass("has-error");
             }
-            if (UtilityContainer.sanitizePostCode(postcode) && $("#postcode").parent().hasClass("has-error"))
+
+            if (UtilityContainer.validationContainer.validateDefaultPostCode(postcode) && $("#postcode").parent().hasClass("has-error"))
             {
                 $("#postcode").parent().removeClass("has-error");
             }

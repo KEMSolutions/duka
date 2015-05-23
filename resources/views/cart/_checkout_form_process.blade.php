@@ -64,11 +64,6 @@
                 </div>
 
 
-
-
-
-
-
                 <div class="row">
                     <div class="form-group one-half">
                         <span class="hidden label label-info pull-right" id="why_email" data-toggle="tooltip" data-placement="left" data-trigger="click" title="{{ Lang::get("boukem.keep_email") }}">{{ Lang::get("boukem.why") }}</span>
