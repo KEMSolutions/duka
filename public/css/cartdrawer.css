@@ -104,6 +104,15 @@ h4 {
     float: left;
 }
 
+.cart-checkout .one-fourth {
+    width: 25%;
+    position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+    float: left;
+}
+
 /* cart page styles */
 
 .credit-cart-trust{
