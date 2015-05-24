@@ -397,37 +397,6 @@ var UtilityContainer = {
         };
     },
 
-    validationContainer : {
-
-        validateEmail : function(email) {
-            var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-            return re.test(email);
-        },
-
-        validateDefaultPostCode : function(postcode) {
-            return postcode == "" ? false : true;
-        },
-
-        validateCanadianPostCode : function(postcode) {
-            return postcode.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
-        },
-
-        validateUSPostCode : function(postcode) {
-            return postcode.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
-        },
-
-        validateAndReturnEmptyFields : function(fields) {
-            var empty = [];
-
-            for(var i=0; i<fields.length; i++)
-            {
-                fields[i].val() == "" ? empty.push(fields[i]) : "";
-            }
-
-            return empty;
-        }
-    },
-
 
     /**
      * Utility function to scroll the body to the estimate table
@@ -463,79 +432,120 @@ $(document).ready(function() {
      * If they are not, display the relevant error message(s)
      *
      */
+
+
     $("#estimateButton").on("click", function(e) {
-        var email = $("#customer_email").val(),
-            postcode = $("#postcode").val(),
+        var email = $("#customer_email"),
+            postcode = $("#postcode"),
             firstName = $("#shippingFirstname"),
             lastName = $("#shippingLastname"),
             address = $("#shippingAddress1"),
             city = $("#shippingCity"),
             phone = $("#shippingTel"),
             country = $("#country").val(),
-            emptyFields = UtilityContainer.validationContainer.validateAndReturnEmptyFields([firstName, lastName, address, city, phone ]);
+            fields = [firstName, lastName, address, city, phone ];
 
         e.preventDefault();
 
-        if (UtilityContainer.validationContainer.validateEmail(email) && emptyFields.length == 0)
+        if (validateEmptyFields(fields) && validateEmail(email.val()) && validatePostCode(postcode.val(), country))
         {
-            if((country == "CA" && UtilityContainer.validationContainer.validateCanadianPostCode(postcode)) ||
-               (country == "US" && UtilityContainer.validationContainer.validateUSPostCode(postcode)) ||
-                (country != "US" && country != "CA" && UtilityContainer.validationContainer.validateDefaultPostCode(postcode)))
-            {
-                $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
-
-                if($("#estimate .table-striped").children().length > 0) {
-                    $("#estimate .table-striped tbody").empty();
-                }
-                estimateContainer.ajaxCall();
-            }
-            else
-            {
-                if (country == "CA" && !UtilityContainer.validationContainer.validateCanadianPostCode(postcode))
-                {
-                    estimateContainer.inputVerificationFailed($("#postcode"));
-                }
-                else if (country == "US" && !UtilityContainer.validationContainer.validateUSPostCode(postcode))
-                {
-                    estimateContainer.inputVerificationFailed($("#postcode"));
-                }
-                else if (!UtilityContainer.validationContainer.validateDefaultPostCode(postcode))
-                {
-                    estimateContainer.inputVerificationFailed($("#postcode"));
-                }
-            }
+            alert("hi");
         }
         else
         {
-            if (!UtilityContainer.validationContainer.validateEmail(email))
+            addErrorClassToFields(fields);
+
+            if(!validatePostCode(postcode.val(), country))
             {
-                estimateContainer.inputVerificationFailed($("#customer_email"));
-                estimateContainer.emailVerificationFailed();
+                addErrorClassToFieldsWithRules(postcode);
             }
 
-            if (!UtilityContainer.validationContainer.validateDefaultPostCode(postcode))
+            if(!validateEmail(email.val()))
             {
-                estimateContainer.inputVerificationFailed($("#postcode"));
+                addErrorClassToFieldsWithRules(email);
+                $("#why_email").removeClass("hidden").addClass("animated bounceInRight").tooltip();
             }
 
-            if (emptyFields.length > 0)
-            {
-                for(var i=0; i<emptyFields.length; i++)
-                {
-                    estimateContainer.inputVerificationFailed(emptyFields[i]);
-                }
-            }
+        }
+
+        removeErrorClassFromFields(fields);
+        removeErrorClassFromEmail(email);
+        removeErrorClassFromPostcode(postcode, country);
+
+    });
 
 
-            if (UtilityContainer.validationContainer.validateEmail(email) && $("#customer_email").parent().hasClass("has-error"))
-            {
-                $("#customer_email").parent().removeClass("has-error");
-            }
 
-            if (UtilityContainer.validationContainer.validateDefaultPostCode(postcode) && $("#postcode").parent().hasClass("has-error"))
+    function validateEmptyFields(emptyFields) {
+        var passed = true;
+        for(var i=0; i<emptyFields.length; i++) {
+            if (emptyFields[i].val() == "")
             {
-                $("#postcode").parent().removeClass("has-error");
+                passed = false;
+                break;
             }
         }
-    });
+        return passed;
+    }
+
+    function validateEmail(email) {
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        return re.test(email);
+    }
+
+    function validatePostCode(postcode, country) {
+        if (country == "CA")
+            return postcode.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
+        else if (country == "US")
+            return postcode.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
+        else
+            return true;
+    }
+
+    function addErrorClassToFields(fields) {
+        for(var i=0; i<fields.length; i++)
+        {
+            if (fields[i].val() == "")
+            {
+                fields[i].parent().addClass("has-error");
+                fields[i].addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                    $(this).removeClass("animated");
+                    $(this).removeClass("shake");
+                    $(this).unbind();
+                });
+            }
+        }
+    }
+
+        //AKA email and postcode
+    function addErrorClassToFieldsWithRules(input) {
+        input.parent().addClass("has-error");
+        input.addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+            $(this).removeClass("animated");
+            $(this).removeClass("shake");
+            $(this).unbind();
+        });
+    }
+
+    function removeErrorClassFromFields(fields) {
+        for(var i=0; i<fields.length; i++)
+        {
+            if (fields[i].val() != "" && fields[i].parent().hasClass("has-error"))
+            {
+                fields[i].parent().removeClass("has-error");
+            }
+        }
+    }
+
+    function removeErrorClassFromEmail(email) {
+        if (validateEmail(email.val()) && email.parent().hasClass("has-error"))
+            email.parent().removeClass("has-error");
+    }
+
+    function removeErrorClassFromPostcode(postcode, country) {
+        if (validatePostCode(postcode.val(), country) && postcode.parent().hasClass("has-error"))
+            postcode.parent().removeClass("has-error");
+    }
+
+
 });
