@@ -461,6 +461,15 @@ var validationContainer = {
             postcode.parent().removeClass("has-error");
     },
 
+    /**
+     * If all validation pass, trigger the ajax call.
+     * If there are errors, warn the users about which inputs is faulty.
+     *
+     * @param fields
+     * @param email
+     * @param postcode
+     * @param country
+     */
     init : function(fields, email, postcode, country) {
         if (validationContainer.validateEmptyFields(fields) && validationContainer.validateEmail(email.val()) && validationContainer.validatePostCode(postcode.val(), country))
         {
