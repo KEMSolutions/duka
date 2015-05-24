@@ -120,6 +120,8 @@ var estimateContainer = {
             type: "POST",
             url: "/api/estimate",
             data: {
+                email: $("#customer_email").val(),
+                shipping: {},
                 products: UtilityContainer.getProductsFromSessionStorage(),
                 shipping_address: UtilityContainer.getCountriesFromForm()
             },
@@ -534,9 +536,11 @@ $(document).ready(function() {
             country = $("#country").val(),
             fields = [firstName, lastName, address, city, phone ];
 
+        e.preventDefault();
+
         validationContainer.init(fields, email, postcode, country);
 
-        e.preventDefault();
+
     });
 
 });
