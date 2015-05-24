@@ -107,28 +107,9 @@ var LocationContainer = {
 /**
  * Object responsible for handling the estimation of user's purchase.
  *
- * @type {{passedVerification: Function, emailVerificationFailed: Function, postcodeVerificationFailed: Function, ajaxCall: Function, displayEstimatePanel: Function, fetchEstimate: Function, init: Function}}
+ * @type {{ajaxCall: Function, getShipmentTaxes: Function, displayEstimatePanel: Function, fetchEstimate: Function, init: Function}}
  */
 var estimateContainer = {
-    /**
-     * The email entered is not a valid one. Triggers appropriate class and animation (.has-error / .animated / .shake)
-     *
-     */
-    emailVerificationFailed : function() {
-        $("#why_email").removeClass("hidden").addClass("animated bounceInRight").tooltip();
-    },
-
-
-    inputVerificationFailed : function(input) {
-        input.parent().addClass("has-error");
-        input.addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-            $(this).removeClass("animated");
-            $(this).removeClass("shake");
-            $(this).unbind();
-        });
-
-    },
-
 
     /**
      * Ajax call to /api/estimate after all verifications have passed.
@@ -335,7 +316,7 @@ var localizationContainer = {
  * Utility object containing various utility functions...
  * Self Explanatory duh.
  *
- * @type {{getProductsFromSessionStorage: Function, getCountriesFromForm: Function, validateEmail: Function, validatePostCode: Function, scrollTopToEstimate: Function}}
+ * @type {{getProductsFromSessionStorage: Function, getProductsPriceFromSessionStorage: Function, getCountriesFromForm: Function, scrollTopToEstimate: Function}}
  */
 var UtilityContainer = {
     /**
