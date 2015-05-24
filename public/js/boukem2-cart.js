@@ -426,7 +426,6 @@ var UtilityContainer = {
 
             return empty;
         }
-
     },
 
 
@@ -488,27 +487,21 @@ $(document).ready(function() {
                 if($("#estimate .table-striped").children().length > 0) {
                     $("#estimate .table-striped tbody").empty();
                 }
-                //estimateContainer.ajaxCall();
-                alert("hi");
+                estimateContainer.ajaxCall();
             }
             else
             {
                 if (country == "CA" && !UtilityContainer.validationContainer.validateCanadianPostCode(postcode))
                 {
                     estimateContainer.inputVerificationFailed($("#postcode"));
-                    console.log("a");
                 }
                 else if (country == "US" && !UtilityContainer.validationContainer.validateUSPostCode(postcode))
                 {
                     estimateContainer.inputVerificationFailed($("#postcode"));
-                    console.log("b");
-
                 }
                 else if (!UtilityContainer.validationContainer.validateDefaultPostCode(postcode))
                 {
                     estimateContainer.inputVerificationFailed($("#postcode"));
-                    console.log("c");
-
                 }
             }
         }
@@ -532,6 +525,7 @@ $(document).ready(function() {
                     estimateContainer.inputVerificationFailed(emptyFields[i]);
                 }
             }
+
 
             if (UtilityContainer.validationContainer.validateEmail(email) && $("#customer_email").parent().hasClass("has-error"))
             {
