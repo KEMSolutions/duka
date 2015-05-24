@@ -123,7 +123,7 @@ var estimateContainer = {
                 email: $("#customer_email").val(),
                 shipping: {},
                 products: UtilityContainer.getProductsFromSessionStorage(),
-                shipping_address: UtilityContainer.getCountriesFromForm()
+                shipping_address: UtilityContainer.getCountryFromForm()
             },
             success: function(data) {
                 estimateContainer.init(data);
@@ -372,7 +372,7 @@ var UtilityContainer = {
      *
      * @returns {{country: (*|jQuery), postcode: (*|jQuery), province: (*|jQuery)}}
      */
-    getCountriesFromForm : function() {
+    getCountryFromForm : function() {
         return res = {
             "country" : $("#country").val(),
             "postcode" : $("#postcode").val(),
@@ -464,7 +464,7 @@ var validationContainer = {
     },
 
     /**
-     * If all validation pass, trigger the ajax call.
+     * If all validation pass, spin the button, clean the shipment table and trigger the ajax call.
      * If there are errors, warn the users about which inputs is faulty.
      *
      * @param fields
@@ -475,6 +475,12 @@ var validationContainer = {
     init : function(fields, email, postcode, country) {
         if (validationContainer.validateEmptyFields(fields) && validationContainer.validateEmail(email.val()) && validationContainer.validatePostCode(postcode.val(), country))
         {
+            $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
+
+            if($("#estimate .table-striped").children().length > 0) {
+                $("#estimate .table-striped tbody").empty();
+            }
+
             estimateContainer.ajaxCall();
         }
         else
