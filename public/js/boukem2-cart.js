@@ -151,7 +151,7 @@ var estimateContainer = {
 
         for(var i=0; i<data.shipping.services.length; i++)
         {
-            if(data.shipping.services[i].service_code == serviceCode)
+            if(data.shipping.services[i].method == serviceCode)
             {
                 if (data.shipping.services[i].taxes.length != 0)
                 {
@@ -187,11 +187,11 @@ var estimateContainer = {
 
         for(var i = 0; i<data.shipping.services.length; i++)
         {
-            var serviceDOM = "<tr data-service='" + data.shipping.services[i].service_code + "'>" +
-                "<td>" + data.shipping.services[i].service_name + "</td>" +
-                "<td>" + data.shipping.services[i].service_standard_expected_transit_time + "</td>" +
-                "<td>" + data.shipping.services[i].price_due + "</td>" +
-                "<td><input type='radio' name='shipment' class='shipping_method' data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].service_code, data) + "' data-cost='" + data.shipping.services[i].price_due + "' value='" + data.shipping.services[i].service_code + "' checked></td>";
+            var serviceDOM = "<tr data-service='" + data.shipping.services[i].method + "'>" +
+                "<td>" + data.shipping.services[i].name + "</td>" +
+                "<td>" + data.shipping.services[i].transit + "</td>" +
+                "<td>" + data.shipping.services[i].price + "</td>" +
+                "<td><input type='radio' name='shipment' class='shipping_method' data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].method, data) + "' data-cost='" + data.shipping.services[i].price + "' value='" + data.shipping.services[i].method + "' checked></td>";
 
             $("#estimate .table-striped").append(serviceDOM);
         }
@@ -529,8 +529,6 @@ $(document).ready(function() {
      * If they are not, display the relevant error message(s)
      *
      */
-
-
     $("#estimateButton").on("click", function(e) {
         var email = $("#customer_email"),
             postcode = $("#postcode"),
@@ -545,9 +543,6 @@ $(document).ready(function() {
         e.preventDefault();
 
         validationContainer.init(fields, email, postcode, country);
-
-
     });
-
 });
 
