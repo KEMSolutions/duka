@@ -210,8 +210,15 @@ var estimateContainer = {
      * @param data
      */
     init : function(data) {
-        estimateContainer.displayEstimatePanel();
-        estimateContainer.fetchEstimate(data);
+        if (UtilityContainer.getProductsFromSessionStorage().length == 0)
+        {
+            location.reload();
+        }
+        else
+        {
+            estimateContainer.displayEstimatePanel();
+            estimateContainer.fetchEstimate(data);
+        }
     }
 
 }
