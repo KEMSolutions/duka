@@ -6,7 +6,7 @@
 
             {{--TODO: SET $product->slug instead of ID when facade is ready. --}}
             <a href="/{{ $locale }}/dev/prod/{{ $product->slug }}" class="strong">
-                <img src="//static.boutiquekem.com/productimg-160-160-{{ $product->images[0]->id . "-h." . $product->images[0]->extension }}" class="img-responsive center-block"/>
+                <img src="//static.boutiquekem.com/productimg-160-160-{{ count($product->images) > 0 ? $product->images[0]->id . "-h." . $product->images[0]->extension : "0000.png" }}" class="img-responsive center-block"/>
             </a>
 
             {{--<a href="/{{ $locale }}/prod/{{ $product->slug }}">--}}
@@ -25,8 +25,8 @@
                 <button class="btn btn-default btn-xs buybutton"
                         data-product="{{ $product->id }}"
                         data-price="{{ $product->price }}"
-                        data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
-                        data-thumbnail_lg="//static.boutiquekem.com/productimg-120-160-{{ $product->images[0]->id . "." . $product->images[0]->extension }}"
+                        data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
+                        data-thumbnail_lg="//static.boutiquekem.com/productimg-120-160-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
                         data-name="{{ $product->localization->name }}"
                         data-quantity="1">
                     <i class="fa fa-shopping-cart"></i>
