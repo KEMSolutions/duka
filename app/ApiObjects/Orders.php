@@ -70,4 +70,9 @@ class Orders extends KemApiObject
         return $estimate;
     }
 
+    public function sendOrder()
+    {
+        return $this->badRequest('Method not implemented');
+    }
+
 }
