@@ -190,6 +190,7 @@ var estimateContainer = {
             var serviceDOM = "<tr data-service='" + data.shipping.services[i].method + "'>" +
                 "<td>" + data.shipping.services[i].name + "</td>" +
                 "<td>" + data.shipping.services[i].transit + "</td>" +
+                "<td>" + data.shipping.services[i].delivery + "</td>" +
                 "<td>" + data.shipping.services[i].price + "</td>" +
                 "<td><input type='radio' name='shipment' class='shipping_method' data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].method, data) + "' data-cost='" + data.shipping.services[i].price + "' value='" + data.shipping.services[i].method + "' checked></td>";
 
