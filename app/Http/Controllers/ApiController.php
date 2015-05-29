@@ -17,54 +17,58 @@ use Illuminate\Http\JsonResponse;
  */
 class ApiController extends Controller
 {
-    /**
-     * @param $id
-     * @return mixed
-     */
+    //
+    // Categories
+    //
+
     public function getBrand($id) {
         return $this->send(Brands::get($id));
     }
 
-    /**
-     * @param $id
-     * @return mixed
-     */
     public function getCategory($id) {
         return $this->send(Categories::get($id));
     }
 
-    /**
-     * @param string $id
-     * @return mixed
-     */
+    //
+    // Layouts
+    //
+
     public function getLayout($id = '') {
         return $this->send(Layouts::get($id));
     }
 
-    /**
-     * @param $id
-     * @return static
-     */
-    public function getProduct($id) {
-        return $this->send(Products::get($id));
-    }
-
-    /**
-     * @param $query
-     * @return static
-     */
-    public function searchProducts($query) {
-        return $this->send(Products::search($query));
-    }
+    //
+    // Orders
+    //
 
     public function getOrderEstimate()
     {
         return $this->send(Orders::estimate(
             (array) Request::input('products'),
-            (array) Request::input('shipping_address'),
-            Request::input('email')
+            (array) Request::input('shipping_address')
         ));
     }
+
+    public function placeOrder()
+    {
+
+    }
+
+    //
+    // Products
+    //
+
+    public function getProduct($id) {
+        return $this->send(Products::get($id));
+    }
+
+    public function searchProducts($query) {
+        return $this->send(Products::search($query));
+    }
+
+    //
+    // Helper methods
+    //
 
     protected function send($data) {
         return JsonResponse::create($data, 200);

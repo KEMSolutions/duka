@@ -17,7 +17,7 @@ class Orders extends KemApiObject
      * @param array $address    Shipping address.
      * @return mixed
      */
-    public function estimate(array $products, array $address, $email)
+    public function estimate(array $products, array $address)
     {
         // Performance check.
         if (count($products) < 1 || !isset($address['country']) || !isset($address['postcode'])) {
@@ -68,6 +68,11 @@ class Orders extends KemApiObject
         Cache::put($key, $estimate, Carbon::now()->addHour());
 
         return $estimate;
+    }
+
+    public function placeOrder()
+    {
+
     }
 
 }
