@@ -70,8 +70,17 @@ class Orders extends KemApiObject
         return $estimate;
     }
 
-    public function placeOrder()
+    public function placeOrder($shipping, $products, $address, $email)
     {
+        $data = new \stdClass;
+        $data->success_url = 'example.com';
+        $data->failure_url = 'example.com';
+        $data->cancel_url = 'example.com';
+        $data->email = $email;
+        $data->shipping = $shipping;
+        $data->products = $products;
+        $data->shipping_address = $address;
+
         return $this->badRequest('Method not implemented');
     }
 }

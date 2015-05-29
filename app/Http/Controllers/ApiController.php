@@ -22,12 +22,20 @@ class ApiController extends Controller
     // Categories
     //
 
-    public function getBrand($id) {
-        return $this->send(Brands::get($id));
+    public function getBrand($id)
+    {
+        return $this->send(Brands::get($id,
+            Request::input('page', 1),
+            Request::input('perPage', 40)
+        ));
     }
 
-    public function getCategory($id) {
-        return $this->send(Categories::get($id));
+    public function getCategory($id)
+    {
+        return $this->send(Categories::get($id,
+            Request::input('page', 1),
+            Request::input('perPage', 40)
+        ));
     }
 
     //
@@ -52,7 +60,12 @@ class ApiController extends Controller
 
     public function placeOrder()
     {
-
+        return $this->send(Orders::placeOrder(
+            Request::input('shipping'),
+            Request::input('products'),
+            Request::input('shipping_address'),
+            Request::input('email')
+        ));
     }
 
     //
