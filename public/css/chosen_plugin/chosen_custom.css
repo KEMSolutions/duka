@@ -3,7 +3,6 @@
     box-shadow: none;
     height: 40px;
     line-height: 40px;
-
 }
 
 /*
@@ -18,4 +17,9 @@
 */
 .chosen-container-active.chosen-with-drop .chosen-single {
     background: #fff;
+}
+
+.chosen-container .chosen-results {
+    z-index: 100;
+    max-height: 200px !important;
 }
