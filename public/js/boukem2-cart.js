@@ -201,19 +201,33 @@ var estimateContainer = {
         {
             var serviceDOM = "<tr data-service='" + data.shipping.services[i].method + "'>" +
                 "<td>" + data.shipping.services[i].name + "</td>" +
-                "<td>" + data.shipping.services[i].transit + "</td>" +
-                "<td>" + data.shipping.services[i].delivery + "</td>" +
-                "<td>" + data.shipping.services[i].price + "</td>" +
-                "<td><input type='radio' name='shipment' class='shipping_method' data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].method, data) + "' data-cost='" + data.shipping.services[i].price + "' value='" + data.shipping.services[i].method + "' checked></td>";
+            "<td>" + data.shipping.services[i].transit + "</td>" +
+            "<td>" + data.shipping.services[i].delivery + "</td>" +
+            "<td>" + data.shipping.services[i].price + "</td>" +
+            "<td><input type='radio' name='shipment' class='shipping_method' data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].method, data) + "' data-cost='" + data.shipping.services[i].price + "' value='" + data.shipping.services[i].method + "'></td>";
 
             $("#estimate .table-striped").append(serviceDOM);
         }
 
         $("#estimateButton").removeClass("btn-three").addClass("btn-one").text(localizationContainer.estimateButton.val);
+        estimateContainer.selectDefaultShipmentMethod();
 
         UtilityContainer.scrollTopToEstimate();
 
         paymentContainer.init(data);
+    },
+
+    selectDefaultShipmentMethod : function() {
+        var defaultShipment = ["DOM.EP", "USA.TP", "INT.TP"],
+            availableShipment = $("input[name=shipment]");
+
+        for(var i=0; i<availableShipment.length; i++)
+        {
+            if (defaultShipment.indexOf(availableShipment[i].value) != -1)
+            {
+                availableShipment[i].checked = true;
+            }
+        }
     },
 
     /**
