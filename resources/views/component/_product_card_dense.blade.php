@@ -30,7 +30,7 @@
                         data-name="{{ $product->localization->name }}"
                         data-quantity="1">
                     <i class="fa fa-shopping-cart"></i>
-                    $ {{ $product->price }}
+                    $ {{ number_format((float)$product->price, 2, '.', '') }}
                 </button>
             </div>
         </div>
