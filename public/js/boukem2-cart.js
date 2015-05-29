@@ -120,10 +120,13 @@ var estimateContainer = {
             type: "POST",
             url: "/api/estimate",
             data: {
+                success_url: "example.com",
+                failure_url: "example.com",
+                cancel_url: "example.com",
                 email: $("#customer_email").val(),
                 shipping: {},
                 products: UtilityContainer.getProductsFromSessionStorage(),
-                shipping_address: UtilityContainer.getCountryFromForm()
+                shipping_address: UtilityContainer.getShippingFromForm()
             },
             success: function(data) {
                 estimateContainer.init(data);
@@ -380,11 +383,15 @@ var UtilityContainer = {
      *
      * @returns {{country: (*|jQuery), postcode: (*|jQuery), province: (*|jQuery)}}
      */
-    getCountryFromForm : function() {
+    getShippingFromForm : function() {
         return res = {
             "country" : $("#country").val(),
             "postcode" : $("#postcode").val(),
-            "province" : $("#province").val()
+            "province" : $("#province").val(),
+            "line1" : $("#shippingAddress1").val(),
+            "name" : $("#shippingFirstname").val() + " " + $("#shippingLastname").val(),
+            "city" : $("#shippingCity").val(),
+            "phone" : $("#shippingTel").val()
         };
     },
 
@@ -542,11 +549,11 @@ $(document).ready(function() {
             postcode = $("#postcode"),
             firstName = $("#shippingFirstname"),
             lastName = $("#shippingLastname"),
-            address = $("#shippingAddress1"),
+            address1 = $("#shippingAddress1"),
             city = $("#shippingCity"),
             phone = $("#shippingTel"),
             country = $("#country").val(),
-            fields = [firstName, lastName, address, city, phone ];
+            fields = [firstName, lastName, address1, city, phone ];
 
         e.preventDefault();
 
