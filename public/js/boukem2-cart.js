@@ -389,6 +389,7 @@ var UtilityContainer = {
             "postcode" : $("#postcode").val(),
             "province" : $("#province").val(),
             "line1" : $("#shippingAddress1").val(),
+            "line2" : $("#shippingAddress2").val(),
             "name" : $("#shippingFirstname").val() + " " + $("#shippingLastname").val(),
             "city" : $("#shippingCity").val(),
             "phone" : $("#shippingTel").val()
