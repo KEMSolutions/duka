@@ -1,7 +1,7 @@
 /**
  * Object responsible for building the select list populating countries, provinces and states.
  *
- * @type {{populateCountry: Function, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, init: Function}}
+ * @type {{populateCountry: Function, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, autoFillBillingAddress: Function, init: Function}}
  */
 var LocationContainer = {
 
@@ -87,8 +87,16 @@ var LocationContainer = {
         $("#country").on("change", function() {
             LocationContainer.updateChosenSelects($(this).val());
         });
+    },
 
-        //$("#country").trigger("change");
+    /**
+     * Auto fill the billing address with the billing one
+     *
+     */
+    autoFillBillingAddress : function () {
+        $("#shippingAddress1").on("change", function() {
+            $("#billingAddress").val($(this).val());
+        });
     },
 
     /**
@@ -101,6 +109,7 @@ var LocationContainer = {
             $("#province").chosen();
         });
         LocationContainer.callUpdateChosenSelects();
+        LocationContainer.autoFillBillingAddress();
     }
 }
 
