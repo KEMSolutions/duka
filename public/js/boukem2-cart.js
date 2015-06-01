@@ -134,7 +134,7 @@ var estimateContainer = {
                 cancel_url: "example.com",
                 email: $("#customer_email").val(),
                 shipping: {},
-                products: UtilityContainer.getProductsFromSessionStorage(),
+                products: UtilityContainer.getProductsFromLocalStorage(),
                 shipping_address: UtilityContainer.getShippingFromForm()
             },
             success: function(data) {
@@ -236,7 +236,7 @@ var estimateContainer = {
      * @param data
      */
     init : function(data) {
-        if (UtilityContainer.getProductsFromSessionStorage().length == 0)
+        if (UtilityContainer.getProductsFromLocalStorage().length == 0)
         {
             location.reload();
         }
@@ -270,7 +270,7 @@ var paymentContainer = {
      * @param data
      */
     initPaymentPanel : function(data) {
-        var subtotal = parseFloat(UtilityContainer.getProductsPriceFromSessionStorage()).toFixed(2),
+        var subtotal = parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()).toFixed(2),
             priceTransport = $("input:radio.shipping_method:checked").data("cost"),
             taxes = paymentContainer.getTaxes(data) + parseFloat($("input:radio.shipping_method:checked").data("taxes")),
             total = parseFloat(subtotal) + parseFloat(priceTransport) + parseFloat(taxes);
@@ -287,7 +287,7 @@ var paymentContainer = {
      * @param data
      */
     updatePaymentPanel : function(data) {
-        var subtotal = parseFloat(UtilityContainer.getProductsPriceFromSessionStorage()).toFixed(2),
+        var subtotal = parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()).toFixed(2),
             priceTransport, taxes;
 
         $(".shipping_method").on("change", function() {
@@ -352,23 +352,23 @@ var localizationContainer = {
  * Utility object containing various utility functions...
  * Self Explanatory duh.
  *
- * @type {{getProductsFromSessionStorage: Function, getProductsPriceFromSessionStorage: Function, getCountriesFromForm: Function, scrollTopToEstimate: Function}}
+ * @type {{getProductsFromLocalStorage: Function, getProductsPriceFromLocalStorage: Function, getCountriesFromForm: Function, scrollTopToEstimate: Function}}
  */
 var UtilityContainer = {
     /**
-     * Utility function for getting all the products in sessionStorage.
+     * Utility function for getting all the products in localStorage.
      * Returns an array containing their id, their quantity and their price.
      *
      * @returns {Array}
      */
-    getProductsFromSessionStorage : function() {
+    getProductsFromLocalStorage : function() {
         var res = [];
 
-        for(var i =0; i<sessionStorage.length; i++)
+        for(var i =0; i<localStorage.length; i++)
         {
-            if (sessionStorage.key(i).lastIndexOf("_", 0) === 0)
+            if (localStorage.key(i).lastIndexOf("_", 0) === 0)
             {
-                var product = JSON.parse(sessionStorage.getItem(sessionStorage.key(i))),
+                var product = JSON.parse(localStorage.getItem(localStorage.key(i))),
                     productId = product.product,
                     productQuantity = product.quantity,
                     productPrice = product.price;
@@ -385,13 +385,13 @@ var UtilityContainer = {
     },
 
     /**
-     * Utility function to get the total price from all products present in sessionStorage
+     * Utility function to get the total price from all products present in localStorage
      *
      * @returns {number}
      */
-    getProductsPriceFromSessionStorage : function() {
+    getProductsPriceFromLocalStorage : function() {
         var total = 0,
-            products = UtilityContainer.getProductsFromSessionStorage();
+            products = UtilityContainer.getProductsFromLocalStorage();
 
         for(var i=0; i<products.length; i++)
         {
