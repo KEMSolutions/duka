@@ -1,4 +1,4 @@
-var cartDisplay = {
+var cartDisplayContainer = {
     $el : {
         $back : $("#back"),
         $proceed : $("#proceed"),
@@ -9,38 +9,38 @@ var cartDisplay = {
     },
 
     displayOn: function() {
-        _width = cartDisplay.$el.$container.width();
-        cartDisplay.$el.$container.css( {
+        _width = cartDisplayContainer.$el.$container.width();
+        cartDisplayContainer.$el.$container.css( {
             "margin-right" : -_width
             //"margin-right" : 0
         });
 
-        cartDisplay.$el.$trigger.click(function() {
-            cartDisplay.animateIn();
+        cartDisplayContainer.$el.$trigger.click(function() {
+            cartDisplayContainer.animateIn();
         });
     },
 
     displayOff : function() {
-        _width = cartDisplay.$el.$container.width();
-        cartDisplay.$el.$back.click(function() {
-            cartDisplay.animateOut();
+        _width = cartDisplayContainer.$el.$container.width();
+        cartDisplayContainer.$el.$back.click(function() {
+            cartDisplayContainer.animateOut();
         });
-        cartDisplay.$el.$checkout.click(function() {
+        cartDisplayContainer.$el.$checkout.click(function() {
             sessionStorage.isDisplayed = false;
         });
     },
 
     animateIn : function() {
-        cartDisplay.$el.$container.show();
-        cartDisplay.$el.$container.animate( {
+        cartDisplayContainer.$el.$container.show();
+        cartDisplayContainer.$el.$container.animate( {
             "margin-right" : 0
         }, 400);
         sessionStorage.isDisplayed = true;
     },
 
     animateOut: function() {
-        _width = cartDisplay.$el.$container.width();
-        cartDisplay.$el.$container.animate( {
+        _width = cartDisplayContainer.$el.$container.width();
+        cartDisplayContainer.$el.$container.animate( {
             "margin-right" : -_width
         }, 400, function() {
             $(this).hide();
@@ -50,19 +50,19 @@ var cartDisplay = {
 
 
     init : function() {
-        cartDisplay.displayOn();
-        cartDisplay.displayOff();
+        cartDisplayContainer.displayOn();
+        cartDisplayContainer.displayOff();
 
         if (sessionStorage.isDisplayed == "true")
         {
-            cartDisplay.$el.$container.css("margin-right", 0);
-            cartDisplay.$el.$container.show();
+            cartDisplayContainer.$el.$container.css("margin-right", 0);
+            cartDisplayContainer.$el.$container.show();
         }
 
     }
 };
 
-var cartData = {
+var cartLogicContainer = {
     /**
      * Cache a set of elements commonly used (to be updated)
      */
@@ -89,7 +89,7 @@ var cartData = {
             '</li>';
 
         if (!$(".cart-items-list [data-product='" + item.product + "']").length){
-            cartData.$el.$list.append(sidebarElement);
+            cartLogicContainer.$el.$list.append(sidebarElement);
         }
 
     },
@@ -103,8 +103,8 @@ var cartData = {
      */
     storeItem : function(item) {
         localStorage.setItem("_product " + item.product, JSON.stringify(item));
-        cartData.setBadgeQuantity();
-        cartData.setQuantityCookie();
+        cartLogicContainer.setBadgeQuantity();
+        cartLogicContainer.setQuantityCookie();
     },
 
     /**
@@ -116,7 +116,7 @@ var cartData = {
         {
             if (localStorage.key(i).lastIndexOf("_", 0) === 0)
             {
-                cartData.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
+                cartLogicContainer.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
             }
         }
     },
@@ -137,8 +137,8 @@ var cartData = {
 
             localStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
 
-            cartData.setBadgeQuantity();
-            cartData.setQuantityCookie();
+            cartLogicContainer.setBadgeQuantity();
+            cartLogicContainer.setQuantityCookie();
 
         });
     },
@@ -163,8 +163,8 @@ var cartData = {
             oldData.quantity = parseInt($(this).val());
             localStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
 
-            cartData.setBadgeQuantity();
-            cartData.setQuantityCookie();
+            cartLogicContainer.setBadgeQuantity();
+            cartLogicContainer.setQuantityCookie();
 
         });
     },
@@ -206,7 +206,7 @@ var cartData = {
      * Update the value of #cart_badge when adding or deleting elements
      */
     setBadgeQuantity : function() {
-        var total = cartData.getNumberOfProducts();
+        var total = cartLogicContainer.getNumberOfProducts();
 
         $("#cart_badge").text(total);
     },
@@ -216,7 +216,7 @@ var cartData = {
      * The value of the cookie is encoded in base64 (btoa)
      */
     setQuantityCookie : function () {
-        var number = cartData.getNumberOfProducts();
+        var number = cartLogicContainer.getNumberOfProducts();
 
         if (Cookies.get("quantityCart") == undefined || number === 0)
         {
@@ -245,12 +245,12 @@ var cartData = {
     },
 
     init : function() {
-        cartData.setBadgeQuantity();
-        cartData.loadItem();
-        cartData.deleteItem();
-        cartData.modifyQuantity();
-        cartData.modifyQuantityBeforeBuying();
-        cartData.setQuantityCookie();
+        cartLogicContainer.setBadgeQuantity();
+        cartLogicContainer.loadItem();
+        cartLogicContainer.deleteItem();
+        cartLogicContainer.modifyQuantity();
+        cartLogicContainer.modifyQuantityBeforeBuying();
+        cartLogicContainer.setQuantityCookie();
     }
 };
 
@@ -263,13 +263,13 @@ var cartData = {
  */
 
 $(document).ready(function() {
-    cartDisplay.init();
-    cartData.init();
+    cartDisplayContainer.init();
+    cartLogicContainer.init();
 
     $(".buybutton").click(function() {
-        cartDisplay.animateIn();
-        cartData.addItem(cartData.button_to_Json($(this)));
-        cartData.storeItem(cartData.button_to_Json($(this)));
+        cartDisplayContainer.animateIn();
+        cartLogicContainer.addItem(cartLogicContainer.button_to_Json($(this)));
+        cartLogicContainer.storeItem(cartLogicContainer.button_to_Json($(this)));
     });
 
 });
