@@ -20,7 +20,7 @@
                         <label for="shippingLastname" class="form-label" >{{ Lang::get("boukem.last_name") }}</label>
                         <input type="text" name="shippingLastname" id="shippingLastname" class="form-control" required/>
                     </div>
-            </div>
+                </div>
 
                 <div class="form-group">
                     <label for="shippingAddress1" class="form-label">{{ Lang::get("boukem.address_1") }}</label>
@@ -31,8 +31,12 @@
                     <input type="text" name="shippingAddress2" id="shippingAddress2" class="form-control"/>
                 </div>
 
-                <div class="row">
+                <div class="form-group">
+                    <label for="billingAddress" class="form-label">{{ Lang::get("boukem.billing_address") }}</label>
+                    <input type="text" name="billingAddress" id="billingAddress" class="form-control" required/>
+                </div>
 
+                <div class="row">
                     <div class="form-group one-half">
                         <label for="country">{{ Lang::get("boukem.country") }}</label>
                         <select name="country" id="country" class="form-control">

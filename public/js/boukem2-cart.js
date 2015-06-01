@@ -1,7 +1,7 @@
 /**
  * Object responsible for building the select list populating countries, provinces and states.
  *
- * @type {{populateCountry: Function, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, init: Function}}
+ * @type {{populateCountry: Function, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, autoFillBillingAddress: Function, init: Function}}
  */
 var LocationContainer = {
 
@@ -87,8 +87,16 @@ var LocationContainer = {
         $("#country").on("change", function() {
             LocationContainer.updateChosenSelects($(this).val());
         });
+    },
 
-        //$("#country").trigger("change");
+    /**
+     * Auto fill the billing address with the billing one
+     *
+     */
+    autoFillBillingAddress : function () {
+        $("#shippingAddress1").on("change", function() {
+            $("#billingAddress").val($(this).val());
+        });
     },
 
     /**
@@ -101,6 +109,7 @@ var LocationContainer = {
             $("#province").chosen();
         });
         LocationContainer.callUpdateChosenSelects();
+        LocationContainer.autoFillBillingAddress();
     }
 }
 
@@ -120,10 +129,13 @@ var estimateContainer = {
             type: "POST",
             url: "/api/estimate",
             data: {
+                success_url: "example.com",
+                failure_url: "example.com",
+                cancel_url: "example.com",
                 email: $("#customer_email").val(),
                 shipping: {},
                 products: UtilityContainer.getProductsFromSessionStorage(),
-                shipping_address: UtilityContainer.getCountryFromForm()
+                shipping_address: UtilityContainer.getShippingFromForm()
             },
             success: function(data) {
                 estimateContainer.init(data);
@@ -189,19 +201,33 @@ var estimateContainer = {
         {
             var serviceDOM = "<tr data-service='" + data.shipping.services[i].method + "'>" +
                 "<td>" + data.shipping.services[i].name + "</td>" +
-                "<td>" + data.shipping.services[i].transit + "</td>" +
-                "<td>" + data.shipping.services[i].delivery + "</td>" +
-                "<td>" + data.shipping.services[i].price + "</td>" +
-                "<td><input type='radio' name='shipment' class='shipping_method' data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].method, data) + "' data-cost='" + data.shipping.services[i].price + "' value='" + data.shipping.services[i].method + "' checked></td>";
+            "<td>" + data.shipping.services[i].transit + "</td>" +
+            "<td>" + data.shipping.services[i].delivery + "</td>" +
+            "<td>" + data.shipping.services[i].price + "</td>" +
+            "<td><input type='radio' name='shipment' class='shipping_method' data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].method, data) + "' data-cost='" + data.shipping.services[i].price + "' value='" + data.shipping.services[i].method + "'></td>";
 
             $("#estimate .table-striped").append(serviceDOM);
         }
 
         $("#estimateButton").removeClass("btn-three").addClass("btn-one").text(localizationContainer.estimateButton.val);
+        estimateContainer.selectDefaultShipmentMethod();
 
         UtilityContainer.scrollTopToEstimate();
 
         paymentContainer.init(data);
+    },
+
+    selectDefaultShipmentMethod : function() {
+        var defaultShipment = ["DOM.EP", "USA.TP", "INT.TP"],
+            availableShipment = $("input[name=shipment]");
+
+        for(var i=0; i<availableShipment.length; i++)
+        {
+            if (defaultShipment.indexOf(availableShipment[i].value) != -1)
+            {
+                availableShipment[i].checked = true;
+            }
+        }
     },
 
     /**
@@ -380,11 +406,16 @@ var UtilityContainer = {
      *
      * @returns {{country: (*|jQuery), postcode: (*|jQuery), province: (*|jQuery)}}
      */
-    getCountryFromForm : function() {
+    getShippingFromForm : function() {
         return res = {
             "country" : $("#country").val(),
             "postcode" : $("#postcode").val(),
-            "province" : $("#province").val()
+            "province" : $("#province").val(),
+            "line1" : $("#shippingAddress1").val(),
+            "line2" : $("#shippingAddress2").val(),
+            "name" : $("#shippingFirstname").val() + " " + $("#shippingLastname").val(),
+            "city" : $("#shippingCity").val(),
+            "phone" : $("#shippingTel").val()
         };
     },
 
@@ -542,11 +573,11 @@ $(document).ready(function() {
             postcode = $("#postcode"),
             firstName = $("#shippingFirstname"),
             lastName = $("#shippingLastname"),
-            address = $("#shippingAddress1"),
+            address1 = $("#shippingAddress1"),
             city = $("#shippingCity"),
             phone = $("#shippingTel"),
             country = $("#country").val(),
-            fields = [firstName, lastName, address, city, phone ];
+            fields = [firstName, lastName, address1, city, phone ];
 
         e.preventDefault();
 

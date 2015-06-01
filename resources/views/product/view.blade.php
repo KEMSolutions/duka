@@ -41,7 +41,7 @@
                                                         <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 
                                                             <h3 class="price-tag color-one">
-                                                                <meta itemprop="price" content="{{ $product->price }}"><span itemprop="priceCurrency" content="CAD">$</span>{{ $product->price }}
+                                                                <meta itemprop="price" content="{{ $product->price }}"><span itemprop="priceCurrency" content="CAD">$</span>{{ number_format((float)$product->price, 2, '.', '') }}
                                                             </h3>
 
                                                             <ul>
@@ -78,19 +78,19 @@
 
                                                             <button class="btn btn-three buybutton visible-lg-inline"
                                                                     data-product="{{ $product->id }}"
-                                                                    data-price="{{ $product->price }}"
+                                                                    data-price="{{ number_format((float)$product->price, 2, '.', '') }}"
                                                                     data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
                                                                     data-thumbnail_lg="//static.boutiquekem.com/productimg-120-160-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
                                                                     data-name="{{ $product->localization->name }}"
                                                                     data-quantity="1">
-                                                                ><i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
+                                                                <i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
                                                             <button class="btn btn-block btn-three center-block buybutton hidden-lg" data-product="{{ $product->id }}"
-                                                                    data-price="{{ $product->price }}"
+                                                                    data-price="{{ number_format((float)$product->price, 2, '.', '') }}"
                                                                     data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
                                                                     data-thumbnail_lg="//static.boutiquekem.com/productimg-120-160-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
                                                                     data-name="{{ $product->localization->name }}"
                                                                     data-quantity="1">
-                                                                ><i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
+                                                                <i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
                                                         </div>
                                                         </p>
                                                     @endif
