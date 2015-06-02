@@ -171,7 +171,7 @@ return [
     "previous"          =>"Previous",
     "product_unavailable"=>"This product is not available.",
     "express_shipping"  =>"In stock : Express Shipping",
-    "stock_left"        =>"Only :n left in stock (more on the way).",
+    "stock_left"        =>"Only :quantity left in stock (more on the way).",
     "shipping_time"     =>"Usually ships within 3 to 7 days.",
     "back_to_main"      =>"Back to main site",
     "please_wait"       =>"Please wait",

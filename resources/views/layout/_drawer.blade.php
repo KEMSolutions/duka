@@ -20,13 +20,13 @@
                     </dl>
 
                     <dl class="calculation">
-                        <dt>{{ Lang::get("boukem.taxes") }}</dt>
-                        <dd id="taxes">$7.66</dd>
+                        <dt>{{ Lang::get("boukem.shipping") }}</dt>
+                        <dd id="shipping">FREE</dd>
                     </dl>
 
                     <dl class="calculation">
-                        <dt>{{ Lang::get("boukem.shipping") }}</dt>
-                        <dd id="shipping">FREE</dd>
+                        <dt>{{ Lang::get("boukem.taxes") }}</dt>
+                        <dd id="taxes">$7.66</dd>
                     </dl>
 
                 </div>

@@ -171,7 +171,7 @@ return [
     "previous"          =>"Précédent",
     "product_unavailable"=>"Ce produit n'est pas disponible.",
     "express_shipping"  =>"En stock : Expédition express",
-    "stock_left"        =>"Seulement :n restant en expédition express|:n restants en expédition express.",
+    "stock_left"        =>"Seulement :quantity restant en expédition express.",
     "shipping_time"     =>"Expédition prévue dans les 3 à 7 jours.",
     "back_to_main"      =>"Retour au site principal",
     "please_wait"       =>"Veuillez patienter",

@@ -54,7 +54,7 @@
                                                                     <li class="text-success"><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.express_shipping") }}</li>
                                                                 @elseif($product->inventory->count > 0)
                                                                     <link itemprop="availability" href="http://schema.org/InStock" >
-                                                                    <li class="text-warning"><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.stock_left", $product->inventory->count) }}</li>
+                                                                    <li class="text-warning"><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.stock_left", array("quantity" => $product->inventory->count)) }}</li>
                                                                 @else
                                                                     <link itemprop="availability" href="http://schema.org/LimitedAvailability" >
                                                                     <li><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.shipping_time") }}</li>
