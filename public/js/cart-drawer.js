@@ -121,6 +121,7 @@ var cartLogicContainer = {
         localStorage.setItem("_product " + item.product, JSON.stringify(item));
         cartLogicContainer.setBadgeQuantity();
         cartLogicContainer.setQuantityCookie();
+        cartLogicContainer.setCartSubtotal();
     },
 
     /**
@@ -155,6 +156,7 @@ var cartLogicContainer = {
 
             cartLogicContainer.setBadgeQuantity();
             cartLogicContainer.setQuantityCookie();
+            cartLogicContainer.setCartSubtotal();
 
         });
     },
@@ -181,6 +183,7 @@ var cartLogicContainer = {
 
             cartLogicContainer.setBadgeQuantity();
             cartLogicContainer.setQuantityCookie();
+            cartLogicContainer.setCartSubtotal();
 
         });
     },
@@ -200,29 +203,10 @@ var cartLogicContainer = {
     },
 
     /**
-     * Utility function returning the number of products present in the cart.
-     *
-     * @returns {number}
-     */
-    getNumberOfProducts : function() {
-        var total = 0;
-
-        for(var i = 0; i<localStorage.length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_", 0) === 0)
-            {
-                total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
-            }
-        }
-
-        return total;
-    },
-
-    /**
      * Update the value of #cart_badge when adding or deleting elements
      */
     setBadgeQuantity : function() {
-        var total = cartLogicContainer.getNumberOfProducts();
+        var total = UtilityContainer.getNumberOfProducts();
 
         $("#cart_badge").text(total);
     },
@@ -232,7 +216,7 @@ var cartLogicContainer = {
      * The value of the cookie is encoded in base64 (btoa)
      */
     setQuantityCookie : function () {
-        var number = cartLogicContainer.getNumberOfProducts();
+        var number = UtilityContainer.getNumberOfProducts();
 
         if (Cookies.get("quantityCart") == undefined || number === 0)
         {
@@ -241,6 +225,10 @@ var cartLogicContainer = {
         else {
             Cookies.set("quantityCart", btoa(number));
         }
+    },
+
+    setCartSubtotal : function () {
+        $("dd#subtotal").text("$" + UtilityContainer.getProductsPriceFromLocalStorage().toFixed(2));
     },
 
     /**
@@ -267,6 +255,7 @@ var cartLogicContainer = {
         cartLogicContainer.modifyQuantity();
         cartLogicContainer.modifyQuantityBeforeBuying();
         cartLogicContainer.setQuantityCookie();
+        cartLogicContainer.setCartSubtotal();
     }
 };
 

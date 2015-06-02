@@ -16,17 +16,17 @@
                 <div class="cart-subtotal">
                     <dl class="calculation">
                         <dt>Subtotal</dt>
-                        <dd>$85.00</dd>
+                        <dd id="subtotal">$85.00</dd>
                     </dl>
 
                     <dl class="calculation">
                         <dt>Taxes</dt>
-                        <dd>$7.66</dd>
+                        <dd id="taxes">$7.66</dd>
                     </dl>
 
                     <dl class="calculation">
                         <dt>Shipping</dt>
-                        <dd>FREE</dd>
+                        <dd id="shipping">FREE</dd>
                     </dl>
 
                 </div>
