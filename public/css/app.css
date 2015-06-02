@@ -6295,7 +6295,9 @@ header .navbar-white{margin:0; padding:20px 0; background:#FFF; border:0; border
 .navbar-white .dropdown-form h4{margin:0; padding:15px 15px 5px 15px; color:#FFF;}
 .navbar-white h4{color:#FFF;}
 
-
+.view-cart:hover, .view-cart:active {
+  cursor: pointer;
+}
 /*
 SEARCH
 */

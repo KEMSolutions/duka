@@ -12,7 +12,6 @@ var cartDisplayContainer = {
         _width = cartDisplayContainer.$el.$container.width();
         cartDisplayContainer.$el.$container.css( {
             "margin-right" : -_width
-            //"margin-right" : 0
         });
 
         cartDisplayContainer.$el.$trigger.click(function() {
@@ -48,6 +47,23 @@ var cartDisplayContainer = {
         sessionStorage.isDisplayed = false;
     },
 
+    setCartItemsHeight : function() {
+        cartDisplayContainer.computeCartItemsHeight();
+
+        $(window).on("resize", function() {
+           cartDisplayContainer.computeCartItemsHeight();
+        });
+
+        cartDisplayContainer.$el.$trigger.on("click", function() {
+            cartDisplayContainer.computeCartItemsHeight();
+        })
+    },
+
+    computeCartItemsHeight : function() {
+        var cartItemsHeight = $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
+
+        $("#cart-items").css("height", cartItemsHeight);
+    },
 
     init : function() {
         cartDisplayContainer.displayOn();
@@ -265,6 +281,7 @@ var cartLogicContainer = {
 $(document).ready(function() {
     cartDisplayContainer.init();
     cartLogicContainer.init();
+    cartDisplayContainer.setCartItemsHeight();
 
     $(".buybutton").click(function() {
         cartDisplayContainer.animateIn();
