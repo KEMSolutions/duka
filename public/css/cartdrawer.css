@@ -170,6 +170,7 @@ h4 {
 
 .cart-items-list li, .cart-content-giftcard, .cart-content-agreement {
     margin: 1em;
+    height: 110px;
 }
 
 .cart-items-list li img {
