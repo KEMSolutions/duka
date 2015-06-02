@@ -2,7 +2,7 @@
     <div class="cart">
         <header class="cart-header">
             <i class="fa fa-angle-left fa-2x" id="back"></i>
-            <h2>Your cart</h2>
+            <h2>{{ Lang::get("boukem.cart") }}</h2>
         </header>
 
         <div id="cart-items">
@@ -15,23 +15,23 @@
             <div class="cart-price order-summary">
                 <div class="cart-subtotal">
                     <dl class="calculation">
-                        <dt>Subtotal</dt>
+                        <dt>{{ Lang::get("boukem.subtotal") }}</dt>
                         <dd id="subtotal">$85.00</dd>
                     </dl>
 
                     <dl class="calculation">
-                        <dt>Taxes</dt>
+                        <dt>{{ Lang::get("boukem.taxes") }}</dt>
                         <dd id="taxes">$7.66</dd>
                     </dl>
 
                     <dl class="calculation">
-                        <dt>Shipping</dt>
+                        <dt>{{ Lang::get("boukem.shipping") }}</dt>
                         <dd id="shipping">FREE</dd>
                     </dl>
 
                 </div>
                 <div class="cart-total"><dl class="calculation total">
-                        <dt>Total</dt>
+                        <dt>{{ Lang::get("boukem.total") }}</dt>
                         <dd>$92.66</dd>
                     </dl></div>
             </div>

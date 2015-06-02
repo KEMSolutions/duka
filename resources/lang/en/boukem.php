@@ -16,7 +16,7 @@ return [
     'home'          => 'Home',
     'search'        =>'Search',
     'toggle_nav'    =>'Toggle navigation',
-    'cart'          =>'Cart',
+    'cart'          =>'Your cart',
     'go'            =>'Go!',
     'sign_up'       =>'Sign up or sign in',
     "sign_in"       =>"Sign in",

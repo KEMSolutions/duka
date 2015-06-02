@@ -16,7 +16,7 @@ return [
     'home'          =>'Accueil',
     'search'        =>'Rechercher',
     'toggle_nav'    =>'Afficher le menu',
-    'cart'          =>'Panier',
+    'cart'          =>'Votre panier',
     'go'            =>'Go!',
     'sign_up'       =>'Devenir membre ou se connecter',
     "sign_in"       =>"Se connecter",
