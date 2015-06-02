@@ -227,6 +227,9 @@ var cartLogicContainer = {
         }
     },
 
+    /**
+     * Update subtotal when users put something in or out of their cart.
+     */
     setCartSubtotal : function () {
         $("dd#subtotal").text("$" + UtilityContainer.getProductsPriceFromLocalStorage().toFixed(2));
     },
