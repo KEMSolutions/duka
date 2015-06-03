@@ -154,7 +154,7 @@ return [
     "why"           =>"Why?",
     "by"            =>"by",
     "keep_email"    =>"We ask for your email to allow you to retrieve your cart easily, apply any discount associated with your account as well as guarantee you the quoted prices. We will not resell your email, send you any spam or subscribe you in any newsletter.",
-    "calculate_shipping"=>"Please enter your postal code and select your prefered shipping method to continue.",
+    "calculate_shipping"=>"Please enter your postal code and select your preferred shipping method to continue.",
     "no_result"     =>"Sorry, no results were found.",
     "expired_link"  =>"The payment link has expired.",
     "cancel_payment"=>"You canceled the payment of this order. Unfortunately, we cannot process unpaid orders; please contact us if you have any question regarding the payment process.",
@@ -188,5 +188,7 @@ return [
     "secure_payment"    =>"Secure payment",
     "video"             =>"Video",
     "expected_delivery" =>"Expected delivery (days)",
-    "optional"          =>"Optional"
+    "optional"          =>"Optional",
+    "get_estimate_label"=>"Enter your postcode to get a price estimate.",
+    "calculate"         =>"Calculate"
 ];

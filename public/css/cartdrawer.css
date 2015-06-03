@@ -82,6 +82,10 @@
     padding: 20px 30px;
 }
 
+.price-estimate p:first-child {
+    text-align: center;
+}
+
 .calculation {
     margin: 0;
     padding: 10px 20px;

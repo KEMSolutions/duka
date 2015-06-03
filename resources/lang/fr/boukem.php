@@ -188,5 +188,7 @@ return [
     "secure_payment"    =>"Paiement sécurisé",
     "video"             =>"Vidéo",
     "expected_delivery" =>"Date de livraison prévue",
-    "optional"          =>"Optionnel"
+    "optional"          =>"Optionnel",
+    "get_estimate_label"=>"Obtenir un estimé de prix",
+    "calculate"         =>"Calculer"
 ];
