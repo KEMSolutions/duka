@@ -27,15 +27,15 @@
 }
 
 .cart-header h2 {
-    width: 70%;
-    margin: 25px 0px;
+    width: 80%;
+    margin: 20px 0px;
     font-size: 22px;
     text-align: center;
     display: inline-block;
 }
 
 .cart-header #back {
-    padding: 20px;
+    padding: 10px 10px 10px 20px;
     opacity: 0.5;
     cursor: pointer;
 }
@@ -53,6 +53,7 @@
     position: absolute;
     bottom: 0;
     padding-bottom: 0;
+    font-size: 14px;
 }
 
 .cart-footer .order-summary {
@@ -60,6 +61,7 @@
     padding: 15px 0;
     background-color: #F4F4F4;
     line-height: 12px;
+    height: 180px;
 }
 
 .cart-subtotal {
@@ -67,12 +69,17 @@
     box-sizing: border-box;
     color: rgb(102, 102, 102);
     display: block;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: normal;
     height: 96px;
     letter-spacing: 1px;
     line-height: 12px;
     text-transform: uppercase;
+}
+
+.price-estimate {
+    float: left;
+    padding: 20px 30px;
 }
 
 .calculation {
@@ -87,7 +94,14 @@
 
 .cart-subtotal dd, .cart-total dd {
     float: right;
+    font-size: 14px;
+    font-weight: 800;
 }
+
+#getEstimate {
+    margin-top: 5px;
+}
+
 
 .cart-total {
     font-weight: 900;
@@ -95,7 +109,7 @@
 }
 
 .cart-actions {
-    padding: 20px;
+    padding: 5px;
 }
 
 #checkout {

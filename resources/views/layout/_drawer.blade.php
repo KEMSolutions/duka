@@ -19,18 +19,29 @@
                         <dd id="subtotal">$85.00</dd>
                     </dl>
 
-                    <dl class="calculation">
+                    <div class="price-estimate">
+                        <p>Enter your postcode to get a price estimate </p>
+                        <select name="country" id="country" class="form-control one-half pull-left">
+                            {{--Populated from js/data/country-list--}}
+                        </select>
+
+                        <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="postcode" class="form-control one-half">
+
+                        <button type="button" class=" one-half center-block btn btn-info" id="getEstimate">Calculate</button>
+                    </div>
+
+                    <dl class="calculation  hidden">
                         <dt>{{ Lang::get("boukem.shipping") }}</dt>
                         <dd id="shipping">FREE</dd>
                     </dl>
 
-                    <dl class="calculation">
+                    <dl class="calculation hidden">
                         <dt>{{ Lang::get("boukem.taxes") }}</dt>
                         <dd id="taxes">$7.66</dd>
                     </dl>
 
                 </div>
-                <div class="cart-total"><dl class="calculation total">
+                <div class="cart-total hidden"><dl class="calculation total">
                         <dt>{{ Lang::get("boukem.total") }}</dt>
                         <dd>$92.66</dd>
                     </dl></div>

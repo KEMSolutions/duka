@@ -100,6 +100,27 @@ var UtilityContainer = {
     },
 
     /**
+     * Utility function to populate a select list (#country) with a list of country (json formatted)
+     *
+     */
+    populateCountry : function () {
+        $.getJSON("/js/data/country-list.en.json", function(data) {
+            var listItems = '',
+                $country = $("#country");
+
+            $.each(data, function(key, val) {
+                if (key == "CA") {
+                    listItems += "<option value='" + key + "' selected>" + val + "</option>";
+                }
+                else {
+                    listItems += "<option value='" + key + "'>" + val + "</option>";
+                }
+            });
+            $country.append(listItems);
+        });
+    },
+
+    /**
      * Strip HTML tags from a string.
      * @param string html   The string to be stripped.
      * @return string       The stripped result.

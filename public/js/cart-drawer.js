@@ -68,6 +68,7 @@ var cartDisplayContainer = {
     init : function() {
         cartDisplayContainer.displayOn();
         cartDisplayContainer.displayOff();
+        UtilityContainer.populateCountry();
 
         if (sessionStorage.isDisplayed == "true")
         {

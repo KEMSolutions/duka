@@ -6404,6 +6404,18 @@ MIXED
 /*
 GLOBAL
 */
+.one-half {
+  width: 50% !important;
+}
+
+.one-third {
+  width: 33.333333% !important;
+}
+
+.one-quarter {
+  width: 25% !important;
+}
+
 .btn {
   font-size: 14px;
   font-weight: normal;
