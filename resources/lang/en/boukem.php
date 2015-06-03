@@ -189,6 +189,6 @@ return [
     "video"             =>"Video",
     "expected_delivery" =>"Expected delivery (days)",
     "optional"          =>"Optional",
-    "get_estimate_label"=>"Enter your postcode to get a price estimate.",
+    "get_estimate_label"=>"Enter your location to get a price estimate.",
     "calculate"         =>"Calculate"
 ];
