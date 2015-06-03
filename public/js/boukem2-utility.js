@@ -77,7 +77,7 @@ var UtilityContainer = {
      */
     getShippingFromForm : function() {
         return res = {
-            "country" : $("#country").val(),
+            "country" : $(".country").val(),
             "postcode" : $("#postcode").val(),
             "province" : $("#province").val(),
             "line1" : $("#shippingAddress1").val(),
@@ -88,25 +88,14 @@ var UtilityContainer = {
         };
     },
 
-
     /**
-     * Utility function to scroll the body to the estimate table
-     *
-     */
-    scrollTopToEstimate : function() {
-        $('html, body').animate({
-            scrollTop: $("#estimate").offset().top
-        }, 1000);
-    },
-
-    /**
-     * Utility function to populate a select list (#country) with a list of country (json formatted)
+     * Utility function to populate a select list (.country) with a list of country (json formatted)
      *
      */
     populateCountry : function () {
         $.getJSON("/js/data/country-list.en.json", function(data) {
             var listItems = '',
-                $country = $("#country");
+                $country = $(".country");
 
             $.each(data, function(key, val) {
                 if (key == "CA") {
@@ -121,6 +110,51 @@ var UtilityContainer = {
     },
 
     /**
+     * Check if the fields passed in the argument are empty or not.
+     *
+     * @param emptyFields
+     * @returns {boolean}
+     */
+    validateEmptyFields: function(emptyFields) {
+        var passed = true;
+        for(var i=0; i<emptyFields.length; i++) {
+            if (emptyFields[i].val() == "")
+            {
+                passed = false;
+                break;
+            }
+        }
+        return passed;
+    },
+
+    /**
+     * Validate the email address passed as the argument
+     *
+     * @param email
+     * @returns {boolean}
+     */
+    validateEmail: function(email) {
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        return re.test(email);
+    },
+
+    /**
+     * Validate a CA or US postal code.
+     *
+     * @param postcode
+     * @param country
+     * @returns {boolean}
+     */
+    validatePostCode: function(postcode, country) {
+        if (country == "CA")
+            return postcode.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
+        else if (country == "US")
+            return postcode.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
+        else
+            return true;
+    },
+
+    /**
      * Strip HTML tags from a string.
      * @param string html   The string to be stripped.
      * @return string       The stripped result.
@@ -129,5 +163,54 @@ var UtilityContainer = {
         var tmp = document.createElement("DIV");
         tmp.innerHTML = html;
         return tmp.textContent || tmp.innerText || "";
-    }
+    },
+
+    /**
+     * Add .has-error to parent class + animate the relevant fields.
+     *
+     * @param fields
+     */
+    addErrorClassToFields: function(fields) {
+        for(var i=0; i<fields.length; i++)
+        {
+            if (fields[i].val() == "")
+            {
+                fields[i].parent().addClass("has-error");
+                fields[i].addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                    $(this).removeClass("animated");
+                    $(this).removeClass("shake");
+                    $(this).unbind();
+                });
+            }
+        }
+    },
+
+    /**
+     * Same as addErrorClassToFields but accept a single input (ie. specific rules have to be applied: email / postal code / ...
+     *
+     * @param input
+     */
+    addErrorClassToFieldsWithRules: function(input) {
+        input.parent().addClass("has-error");
+        input.addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+            $(this).removeClass("animated");
+            $(this).removeClass("shake");
+            $(this).unbind();
+        });
+    },
+
+    /**
+     * Remove .ha-error from fields
+     *
+     * @param fields
+     */
+    removeErrorClassFromFields: function(fields) {
+        for(var i=0; i<fields.length; i++)
+        {
+            if (fields[i].val() != "" && fields[i].parent().hasClass("has-error"))
+            {
+                fields[i].parent().removeClass("has-error");
+            }
+        }
+    },
 }

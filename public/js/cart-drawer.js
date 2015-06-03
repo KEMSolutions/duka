@@ -282,4 +282,14 @@ $(document).ready(function() {
         cartLogicContainer.storeItem(cartLogicContainer.button_to_Json($(this)));
     });
 
+
+    $("#getEstimate").on("click", function() {
+         if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate .country").val())) {
+             console.log("Ajax call not implemented");
+         }
+        else {
+             UtilityContainer.addErrorClassToFieldsWithRules($("#postcode"));
+         }
+    });
+
 });

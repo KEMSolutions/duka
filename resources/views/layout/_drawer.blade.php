@@ -21,11 +21,13 @@
 
                     <div class="price-estimate">
                         <p>{{ Lang::get("boukem.get_estimate_label") }} </p>
-                        <select name="country" id="country" class="form-control one-half pull-left">
+                        <select name="country" class="form-control one-half pull-left country">
                             {{--Populated from js/data/country-list--}}
                         </select>
+                        <span>
+                            <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="postcode" class="form-control one-half">
+                        </span>
 
-                        <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="postcode" class="form-control one-half">
 
                         <button type="button" class=" one-half center-block btn btn-info" id="getEstimate">{{ Lang::get("boukem.calculate") }}</button>
                     </div>

@@ -13,7 +13,7 @@ var LocationContainer = {
     populateCountry : function() {
         $.getJSON("/js/data/country-list.en.json", function(data) {
             var listItems = '',
-                $country = $("#country");
+                $country = $(".country");
 
             $.each(data, function(key, val) {
                 if (key == "CA") {
@@ -25,7 +25,7 @@ var LocationContainer = {
             });
             $country.append(listItems);
         }).done(function() {
-            $("#country").chosen();
+            $(".country").chosen();
         });
     },
 
@@ -84,7 +84,7 @@ var LocationContainer = {
      *
      */
     callUpdateChosenSelects: function() {
-        $("#country").on("change", function() {
+        $(".country").on("change", function() {
             LocationContainer.updateChosenSelects($(this).val());
         });
     },
@@ -184,6 +184,16 @@ var estimateContainer = {
     displayEstimatePanel : function() {
         $("#estimate").removeClass("hidden").addClass("animated fadeInDown");
     },
+    
+    /**
+     * Utility function to scroll the body to the estimate table
+     *
+     */
+    scrollTopToEstimate : function() {
+        $('html, body').animate({
+            scrollTop: $("#estimate").offset().top
+        }, 1000);
+    },
 
     /**
      * Populate the shipping methods table with the data received after the api call.
@@ -195,7 +205,7 @@ var estimateContainer = {
 
         var email_value = $("#customer_email").val();
         var postcode_value = $("#postcode").val();
-        var country_value = $("#country").val();
+        var country_value = $(".country").val();
 
         for(var i = 0; i<data.shipping.services.length; i++)
         {
@@ -212,7 +222,7 @@ var estimateContainer = {
         $("#estimateButton").removeClass("btn-three").addClass("btn-one").text(localizationContainer.estimateButton.val);
         estimateContainer.selectDefaultShipmentMethod();
 
-        UtilityContainer.scrollTopToEstimate();
+        estimateContainer.scrollTopToEstimate();
 
         paymentContainer.init(data);
     },
@@ -349,73 +359,14 @@ var localizationContainer = {
 }
 
 var validationContainer = {
-    validateEmptyFields: function(emptyFields) {
-        var passed = true;
-        for(var i=0; i<emptyFields.length; i++) {
-            if (emptyFields[i].val() == "")
-            {
-                passed = false;
-                break;
-            }
-        }
-        return passed;
-    },
-    validateEmail: function(email) {
-        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-        return re.test(email);
-    },
-
-    validatePostCode: function(postcode, country) {
-        if (country == "CA")
-            return postcode.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
-        else if (country == "US")
-            return postcode.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
-        else
-            return true;
-    },
-
-    addErrorClassToFields: function(fields) {
-        for(var i=0; i<fields.length; i++)
-        {
-            if (fields[i].val() == "")
-            {
-                fields[i].parent().addClass("has-error");
-                fields[i].addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-                    $(this).removeClass("animated");
-                    $(this).removeClass("shake");
-                    $(this).unbind();
-                });
-            }
-        }
-    },
-
-//AKA email and postcode
-    addErrorClassToFieldsWithRules: function(input) {
-        input.parent().addClass("has-error");
-        input.addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-            $(this).removeClass("animated");
-            $(this).removeClass("shake");
-            $(this).unbind();
-        });
-    },
-
-    removeErrorClassFromFields: function(fields) {
-        for(var i=0; i<fields.length; i++)
-        {
-            if (fields[i].val() != "" && fields[i].parent().hasClass("has-error"))
-            {
-                fields[i].parent().removeClass("has-error");
-            }
-        }
-    },
 
     removeErrorClassFromEmail: function(email) {
-        if (validationContainer.validateEmail(email.val()) && email.parent().hasClass("has-error"))
+        if (UtilityContainer.validateEmail(email.val()) && email.parent().hasClass("has-error"))
             email.parent().removeClass("has-error");
     },
 
     removeErrorClassFromPostcode: function(postcode, country) {
-        if (validationContainer.validatePostCode(postcode.val(), country) && postcode.parent().hasClass("has-error"))
+        if (UtilityContainer.validatePostCode(postcode.val(), country) && postcode.parent().hasClass("has-error"))
             postcode.parent().removeClass("has-error");
     },
 
@@ -429,7 +380,7 @@ var validationContainer = {
      * @param country
      */
     init : function(fields, email, postcode, country) {
-        if (validationContainer.validateEmptyFields(fields) && validationContainer.validateEmail(email.val()) && validationContainer.validatePostCode(postcode.val(), country))
+        if (UtilityContainer.validateEmptyFields(fields) && UtilityContainer.validateEmail(email.val()) && UtilityContainer.validatePostCode(postcode.val(), country))
         {
             $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
 
@@ -441,22 +392,22 @@ var validationContainer = {
         }
         else
         {
-            validationContainer.addErrorClassToFields(fields);
+            UtilityContainer.addErrorClassToFields(fields);
 
-            if(!validationContainer.validatePostCode(postcode.val(), country))
+            if(!UtilityContainer.validatePostCode(postcode.val(), country))
             {
-                validationContainer.addErrorClassToFieldsWithRules(postcode);
+                UtilityContainer.addErrorClassToFieldsWithRules(postcode);
             }
 
-            if(!validationContainer.validateEmail(email.val()))
+            if(!UtilityContainer.validateEmail(email.val()))
             {
-                validationContainer.addErrorClassToFieldsWithRules(email);
+                UtilityContainer.addErrorClassToFieldsWithRules(email);
                 $("#why_email").removeClass("hidden").addClass("animated bounceInRight").tooltip();
             }
 
         }
 
-        validationContainer.removeErrorClassFromFields(fields);
+        UtilityContainer.removeErrorClassFromFields(fields);
         validationContainer.removeErrorClassFromEmail(email);
         validationContainer.removeErrorClassFromPostcode(postcode, country);
     }
@@ -493,7 +444,7 @@ $(document).ready(function() {
             address1 = $("#shippingAddress1"),
             city = $("#shippingCity"),
             phone = $("#shippingTel"),
-            country = $("#country").val(),
+            country = $(".country").val(),
             fields = [firstName, lastName, address1, city, phone ];
 
         e.preventDefault();
