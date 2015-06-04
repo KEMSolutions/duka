@@ -89,13 +89,13 @@ var UtilityContainer = {
     },
 
     /**
-     * Utility function to populate a select list (.country) with a list of country (json formatted)
+     * Utility function to populate a select list (#country) with a list of country (json formatted)
      *
      */
     populateCountry : function () {
         $.getJSON("/js/data/country-list.en.json", function(data) {
             var listItems = '',
-                $country = $(".country");
+                $country = $("#country");
 
             $.each(data, function(key, val) {
                 if (key == "CA") {

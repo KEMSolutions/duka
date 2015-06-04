@@ -21,7 +21,7 @@
 
                     <div class="price-estimate">
                         <p>{{ Lang::get("boukem.get_estimate_label") }} </p>
-                        <select name="country" class="form-control one-half pull-left country">
+                        <select name="country" class="form-control one-half pull-left" id="country">
                             {{--Populated from js/data/country-list--}}
                         </select>
                         <span>

@@ -284,7 +284,7 @@ $(document).ready(function() {
 
 
     $("#getEstimate").on("click", function() {
-         if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate .country").val())) {
+         if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate #country").val())) {
              console.log("Ajax call not implemented");
          }
         else {
