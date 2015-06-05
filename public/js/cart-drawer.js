@@ -283,7 +283,7 @@ var cartLogicContainer = {
     },
 
     setCartTotal : function (data) {
-        $(".calculation.total dd").text(cartLogicContainer.getCartTotal(data))
+        $(".calculation.total dd").text("$ " + cartLogicContainer.getCartTotal(data))
     },
 
 
