@@ -235,6 +235,14 @@ var cartLogicContainer = {
         $("dd#subtotal").text("$" + UtilityContainer.getProductsPriceFromLocalStorage().toFixed(2));
     },
 
+    setCartShipping : function() {
+
+    },
+
+    setCartTotal : function() {
+
+    },
+
     /**
      * parse the information form the button into a readable json format
      *
