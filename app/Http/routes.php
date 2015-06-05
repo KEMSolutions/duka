@@ -23,14 +23,12 @@ Route::group([
     // Cart & checkout.
     Route::get('cart', ['as' => 'cart', 'uses' => 'CheckoutController@index']);
 
+    // Custom pages.
+    Route::get('pages/{slug}', ['as' => 'page', 'uses' => 'PagesController@display']);
+
     // Temporary routes, used for development.
     Route::group(['prefix' => 'dev'], function()
     {
-        // API tests.
-        Route::get('get/{request}', function($request) {
-            return Illuminate\Support\Collection::make(KemAPI::get($request, Input::all()));
-        })->where('request', '.+');
-
         /**
          * Routes for testing product page.
          */
