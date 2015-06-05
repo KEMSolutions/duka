@@ -236,23 +236,23 @@ var cartLogicContainer = {
     },
 
     getCheapestShippingMethod : function(data) {
-        var defaultShipment = ["DOM.EP", "USA.TP", "INT.TP"],
-            availableShipment = data.shipping.services,
-            lowestFare, method;
+        var availableShipment = data.shipping.services,
+            sortedShipmentByPrice = [];
 
         for(var i=0; i<availableShipment.length; i++)
         {
-            if (defaultShipment.indexOf(availableShipment[i].method) != -1)
-            {
-                lowestFare = availableShipment[i].price;
-                method = availableShipment[i].method;
-            }
+            sortedShipmentByPrice.push(availableShipment[i]);
         }
 
+        sortedShipmentByPrice.sort(function(a,b) {
+            return a.price - b.price
+        });
+
         return {
-            fare : lowestFare,
-            method: method
-        };
+            fare: sortedShipmentByPrice[0].price,
+            method: sortedShipmentByPrice[0].method
+        }
+
     },
 
     setCartShipping : function(data) {
@@ -362,13 +362,6 @@ var cartLogicContainer = {
     }
 };
 
-/*
-    TODO: 1. Flusher le contenu du cart mais conserver l’ID de la commande qui nous est passée quand client cliques sur checkout et on POST sur /Orders
-    TODO: 2. Placer l’ID quelque part, genre session php ou même la passer au browser de l'utilisateur pour le conserver, session ou cookie (avantage de théoriquement pouvoir syncer avec son téléphone ou son autre ordinateur)
-    TODO: 3. Rediriger l’utilisateur vers la page de paiement et espérer qu’il paie.
-    TODO: 3.a. S’il paie, supprimer l’ID de la commande de sa session/cookie et afficher un mot de félicitation
-    TODO: 3.b s’Il ne paie pas, et tant que l’ID est présent sur la commande, l'embêter avec un bandeau bien visible en haut de chaque page qui lui présente un lien de paiement pour sa commande précédente.
- */
 
 $(document).ready(function() {
     $.ajaxSetup({
@@ -407,11 +400,8 @@ $(document).ready(function() {
                  },
                  success: function(data) {
                      cartLogicContainer.setCartShipping(data);
+                     cartLogicContainer.setCartTaxes(cartLogicContainer.getCartTaxes(cartLogicContainer.getCheapestShippingMethod(data), data));
                      cartLogicContainer.setCartTotal(data);
-                     cartLogicContainer.setCartTotal(data);
-
-                     console.log(data);
-
                  },
                  error: function(e, status) {
                      console.log(e);
