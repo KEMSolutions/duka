@@ -16,7 +16,7 @@
                 <div class="cart-subtotal">
                     <dl class="calculation">
                         <dt>{{ Lang::get("boukem.subtotal") }}</dt>
-                        <dd id="subtotal">$85.00</dd>
+                        <dd id="subtotal"></dd>
                     </dl>
 
                     <div class="price-estimate">
@@ -34,18 +34,18 @@
 
                     <dl class="calculation  hidden">
                         <dt>{{ Lang::get("boukem.shipping") }}</dt>
-                        <dd id="shipping">FREE</dd>
+                        <dd id="shipping"></dd>
                     </dl>
 
                     <dl class="calculation hidden">
                         <dt>{{ Lang::get("boukem.taxes") }}</dt>
-                        <dd id="taxes">$7.66</dd>
+                        <dd id="taxes"></dd>
                     </dl>
 
                 </div>
                 <div class="cart-total hidden"><dl class="calculation total">
                         <dt>{{ Lang::get("boukem.total") }}</dt>
-                        <dd>$92.66</dd>
+                        <dd></dd>
                     </dl></div>
             </div>
             <div class="cart-actions">
