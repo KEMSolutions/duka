@@ -75,6 +75,7 @@
     letter-spacing: 1px;
     line-height: 12px;
     text-transform: uppercase;
+    margin-bottom: 15px;
 }
 
 .price-estimate {
@@ -88,12 +89,21 @@
 
 .calculation {
     margin: 0;
-    padding: 10px 20px;
+    padding: 15px 20px;
     text-transform: uppercase;
+}
+
+.calculation.total {
+    border-top: 1px solid #D2D2D2;
 }
 
 .cart-subtotal dt, .cart-total dt {
     float: left;
+    font-weight: 400;
+}
+
+.cart-total dt {
+    font-weight: 700;
 }
 
 .cart-subtotal dd, .cart-total dd {

@@ -272,6 +272,12 @@ var cartLogicContainer = {
  */
 
 $(document).ready(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
     cartDisplayContainer.init();
     cartLogicContainer.init();
     cartDisplayContainer.setCartItemsHeight();
@@ -285,7 +291,11 @@ $(document).ready(function() {
 
     $("#getEstimate").on("click", function() {
          if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate #country").val())) {
-             console.log("Ajax call not implemented");
+             $(this).parent().fadeOut(300, function() {
+                 $(".calculation.hidden").fadeIn().removeClass("hidden");
+                 $(".cart-total.hidden").fadeIn().removeClass("hidden");
+             });
+
          }
         else {
              UtilityContainer.addErrorClassToFieldsWithRules($("#postcode"));

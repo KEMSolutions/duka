@@ -18,7 +18,7 @@ class KemApiHttpClient
     /**
      * @var string API endpoint.
      */
-    private $endpoint = 'https://kemsolutions.com/CloudServices/index.php/api';
+    private $endpoint = 'https://api.kem.guru/api';
 
     /**
      * @var string API user ID.
