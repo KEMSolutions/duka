@@ -83,6 +83,21 @@
     padding: 20px 30px;
 }
 
+.price-estimate-update {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 400px;
+    background-color: #FFF;
+    height: 120px;
+    padding-top: 30px;
+}
+
+.price-estimate-update .getEstimate {
+    margin-bottom: 10px;
+}
+
 .price-estimate p:first-child {
     text-align: center;
 }
@@ -112,7 +127,7 @@
     font-weight: 800;
 }
 
-#getEstimate {
+.getEstimate {
     margin-top: 5px;
 }
 

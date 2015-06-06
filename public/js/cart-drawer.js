@@ -124,6 +124,7 @@ var cartLogicContainer = {
         cartLogicContainer.setQuantityCookie();
         cartLogicContainer.setCartSubtotal();
         cartLogicContainer.setCartTotal();
+        cartLogicContainer.updateAjaxCall();
     },
 
     /**
@@ -159,6 +160,8 @@ var cartLogicContainer = {
             cartLogicContainer.setBadgeQuantity();
             cartLogicContainer.setQuantityCookie();
             cartLogicContainer.setCartSubtotal();
+            cartLogicContainer.setCartTotal();
+            cartLogicContainer.updateAjaxCall();
 
         });
     },
@@ -187,6 +190,7 @@ var cartLogicContainer = {
             cartLogicContainer.setQuantityCookie();
             cartLogicContainer.setCartSubtotal();
             cartLogicContainer.setCartTotal();
+            cartLogicContainer.updateAjaxCall();
 
         });
     },
@@ -298,6 +302,30 @@ var cartLogicContainer = {
         });
     },
 
+    updateAjaxCall : function() {
+        //Si le total est affiché, ca veut dire qu'on a déjà fait un ajax call. Donc on doit afficher un update.
+        if(!$(".total").parent().hasClass("hidden")) {
+            $(".price-estimate-update").fadeIn();
+        }
+
+        $(".changeLocation").click(function() {
+            $("dl.calculation").addClass("hidden");
+            $(".getEstimate").html(localizationContainer.calculateEstimateButton.val);
+            $(".price-estimate").fadeIn();
+            $(".price-estimate-update").fadeOut();
+        });
+
+        //TODO: Refactor the arbitrary 1500ms to an actual end of ajax call.
+        $(".price-estimate-update .getEstimate").click(function() {
+            setTimeout(function() {
+                $(".price-estimate-update .getEstimate").parent().fadeOut(300);
+                $(".price-estimate-update .getEstimate").html(localizationContainer.calculateEstimateButton.val);
+            }, 1500);
+
+
+        });
+    },
+
     init : function() {
         cartLogicContainer.setBadgeQuantity();
         cartLogicContainer.loadItem();
@@ -328,7 +356,7 @@ $(document).ready(function() {
     });
 
 
-    $("#getEstimate").on("click", function() {
+    $(".getEstimate").on("click", function() {
          if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate #country").val())
          && UtilityContainer.validateEmptyFields([$("#postcode")])) {
 
