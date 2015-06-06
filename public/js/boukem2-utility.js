@@ -54,7 +54,7 @@ var UtilityContainer = {
     },
 
     /**
-     * Utility function to get the total price from all products present in localStorage
+     * Utility function to get the total price from all products present in localStorage.
      *
      * @returns {number}
      */
@@ -89,7 +89,7 @@ var UtilityContainer = {
     },
 
     /**
-     * Utility function to populate a select list (#country) with a list of country (json formatted)
+     * Utility function to populate a select list (#country) with a list of country (json formatted).
      *
      */
     populateCountry : function () {
@@ -128,7 +128,7 @@ var UtilityContainer = {
     },
 
     /**
-     * Validate the email address passed as the argument
+     * Validate the email address passed as the argument.
      *
      * @param email
      * @returns {boolean}
@@ -154,7 +154,11 @@ var UtilityContainer = {
             return true;
     },
 
-
+    /**
+     * Returns true if the cart is empty, false otherwise.
+     *
+     * @returns {*}
+     */
     validateEmptyCart : function () {
         var empty;
         UtilityContainer.getProductsPriceFromLocalStorage() === 0 ?  empty = true : empty = false;
