@@ -154,6 +154,14 @@ var UtilityContainer = {
             return true;
     },
 
+
+    validateEmptyCart : function () {
+        var empty;
+        UtilityContainer.getProductsPriceFromLocalStorage() === 0 ?  empty = true : empty = false;
+
+        return empty;
+    },
+
     /**
      * Strip HTML tags from a string.
      * @param string html   The string to be stripped.

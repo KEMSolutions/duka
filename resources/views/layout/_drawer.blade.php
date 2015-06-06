@@ -6,6 +6,7 @@
         </header>
 
         <div id="cart-items">
+            <h4 class="text-center empty-cart hidden">{{ Lang::get("boukem.empty_cart") }}</h4>
             <ul class="cart-items-list">
 
             </ul>

@@ -315,12 +315,12 @@ var cartLogicContainer = {
             $(".price-estimate-update").fadeOut();
         });
 
-        //TODO: Refactor the arbitrary 1500ms to an actual end of ajax call.
+        //TODO: Refactor the arbitrary xxxxms to an actual end of ajax call.
         $(".price-estimate-update .getEstimate").click(function() {
             setTimeout(function() {
                 $(".price-estimate-update .getEstimate").parent().fadeOut(300);
                 $(".price-estimate-update .getEstimate").html(localizationContainer.calculateEstimateButton.val);
-            }, 1500);
+            }, 2000);
 
 
         });
@@ -353,19 +353,25 @@ $(document).ready(function() {
         cartDisplayContainer.animateIn();
         cartLogicContainer.addItem(cartLogicContainer.button_to_Json($(this)));
         cartLogicContainer.storeItem(cartLogicContainer.button_to_Json($(this)));
+
+        $("#cart-items .empty-cart").addClass("hidden");
     });
 
 
     $(".getEstimate").on("click", function() {
          if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate #country").val())
-         && UtilityContainer.validateEmptyFields([$("#postcode")])) {
+         && UtilityContainer.validateEmptyFields([$("#postcode")])
+         && !UtilityContainer.validateEmptyCart()) {
 
              $(this).html('<i class="fa fa-spinner fa-spin"></i>');
 
              cartLogicContainer.ajaxCall();
 
          }
-        else {
+         else if (UtilityContainer.validateEmptyCart()) {
+             $("#cart-items .empty-cart").removeClass("hidden");
+         }
+         else {
              UtilityContainer.addErrorClassToFieldsWithRules($("#postcode"));
          }
     });
