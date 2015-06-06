@@ -236,28 +236,43 @@ var cartLogicContainer = {
 
     /**
      * Update subtotal when users put something in or out of their cart.
+     *
      */
     setCartSubtotal : function () {
         $("dd#subtotal").text("$" + UtilityContainer.getProductsPriceFromLocalStorage().toFixed(2));
     },
 
-
+    /**
+     * Set shipping field
+     *
+     * @param data
+     */
     setCartShipping : function(data) {
         $("dd#shipping").text("$" + (UtilityContainer.getCheapestShippingMethod(data).fare));
     },
 
 
+    /**
+     * Set taxes field
+     *
+     * @param taxes
+     */
     setCartTaxes : function(taxes) {
         $("#taxes").text("$" + taxes.toFixed(2));
     },
 
+    /**
+     * Set total field
+     *
+     * @param total
+     */
     setCartTotal : function (total) {
         $(".calculation.total dd").text("$ " + total);
     },
 
 
     /**
-     * parse the information form the button into a readable json format
+     * parse the information from the button into a readable json format
      *
      * @param item
      * @returns {{product: *, name: *, price: *, thumbnail: *, thumbnail_lg: *, quantity: number}}
@@ -273,6 +288,10 @@ var cartLogicContainer = {
         }
     },
 
+    /**
+     * Ajax call to /api/estimate after all verifications have passed.
+     *
+     */
     ajaxCall : function() {
         $.ajax({
             type: "POST",
@@ -302,6 +321,10 @@ var cartLogicContainer = {
         });
     },
 
+    /**
+     * Display an update panel when changes are made to the cart.
+     *
+     */
     updateAjaxCall : function() {
         //Si le total est affiché, ca veut dire qu'on a déjà fait un ajax call. Donc on doit afficher un update.
         if(!$(".total").parent().hasClass("hidden")) {
@@ -354,6 +377,8 @@ $(document).ready(function() {
         cartLogicContainer.addItem(cartLogicContainer.button_to_Json($(this)));
         cartLogicContainer.storeItem(cartLogicContainer.button_to_Json($(this)));
 
+        //We remove the "Your cart is empty" message at the top every time we add an item.
+        //TODO : Maybe improve it?
         $("#cart-items .empty-cart").addClass("hidden");
     });
 
