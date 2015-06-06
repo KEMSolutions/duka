@@ -200,7 +200,7 @@ var UtilityContainer = {
     },
 
     /**
-     * Remove .ha-error from fields
+     * Remove .has-error from fields
      *
      * @param fields
      */
@@ -213,4 +213,111 @@ var UtilityContainer = {
             }
         }
     },
+
+    /**
+     * Returns the method and the price of the cheapest shipping services.
+     *
+     * @param data
+     * @returns {{fare: *, method: (*|string)}}
+     */
+    getCheapestShippingMethod : function(data) {
+        var availableShipment = data.shipping.services,
+            sortedShipmentByPrice = [];
+
+        for(var i=0; i<availableShipment.length; i++)
+        {
+            sortedShipmentByPrice.push(availableShipment[i]);
+        }
+
+        sortedShipmentByPrice.sort(function(a,b) {
+            return a.price - b.price
+        });
+
+        return {
+            fare: sortedShipmentByPrice[0].price,
+            method: sortedShipmentByPrice[0].method
+        }
+    },
+
+    /**
+     * Get the total taxes (TPS/TVQ or TVH or TPS or null) + shipping method taxes.
+     *
+     * @param data
+     * @returns {number}
+     */
+    getTaxes : function(data) {
+        var taxes = 0;
+
+        if (data.taxes.length != 0)
+        {
+            for(var i=0; i<data.taxes.length; i++)
+            {
+                taxes += data.taxes[i].amount;
+            }
+        }
+
+        return taxes.toFixed(2);
+    },
+
+    /**
+     * Get the relevant taxes according to the chosen shipping method.
+     *
+     * @param serviceCode
+     * @param data
+     * @returns {string}
+     */
+    getShipmentTaxes : function(serviceCode, data) {
+        var taxes = 0;
+        console.log(data);
+
+        for(var i=0; i<data.shipping.services.length; i++)
+        {
+            if(data.shipping.services[i].method == serviceCode)
+            {
+                if (data.shipping.services[i].taxes.length != 0)
+                {
+                    for(var j=0; j<data.shipping.services[i].taxes.length; j++)
+                    {
+                        taxes += data.shipping.services[i].taxes[j].amount;
+                    }
+                }
+            }
+        }
+        return taxes.toFixed(2);
+    },
+
+    /**
+     * Returns appropriate taxes according to the shipping method.
+     *
+     * @param serviceCode
+     * @param data
+     * @returns {number}
+     */
+    getCartTaxes : function(serviceCode, data) {
+        var taxes = parseFloat(UtilityContainer.getTaxes(data)),
+            shippingTaxes = parseFloat(UtilityContainer.getShipmentTaxes(serviceCode, data)),
+            totalTaxes = taxes + shippingTaxes;
+
+        return totalTaxes;
+    },
+
+    /**
+     * Returns total price (subtotal + taxes + shipping taxes)
+     * Saves total in sessionStorage (for live update)
+     *
+     * @param data
+     * @returns {string}
+     */
+    cacheCartFees : function(serviceCode, data) {
+        var fees = parseFloat(UtilityContainer.getShipmentTaxes(serviceCode, data)) + parseFloat(UtilityContainer.getCartTaxes(serviceCode, data));
+        console.log((UtilityContainer.getShipmentTaxes(serviceCode, data)) + " " + parseFloat(UtilityContainer.getCartTaxes(serviceCode, data)));
+        sessionStorage.setItem("cartFees", fees);
+    },
+
+
+    getCartTotalFromCache : function() {
+        return sessionStorage.cartTotal;
+    }
+
+
 }

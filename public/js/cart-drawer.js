@@ -123,6 +123,7 @@ var cartLogicContainer = {
         cartLogicContainer.setBadgeQuantity();
         cartLogicContainer.setQuantityCookie();
         cartLogicContainer.setCartSubtotal();
+        cartLogicContainer.setCartTotal();
     },
 
     /**
@@ -185,6 +186,7 @@ var cartLogicContainer = {
             cartLogicContainer.setBadgeQuantity();
             cartLogicContainer.setQuantityCookie();
             cartLogicContainer.setCartSubtotal();
+            cartLogicContainer.setCartTotal();
 
         });
     },
@@ -235,55 +237,18 @@ var cartLogicContainer = {
         $("dd#subtotal").text("$" + UtilityContainer.getProductsPriceFromLocalStorage().toFixed(2));
     },
 
-    getCheapestShippingMethod : function(data) {
-        var availableShipment = data.shipping.services,
-            sortedShipmentByPrice = [];
-
-        for(var i=0; i<availableShipment.length; i++)
-        {
-            sortedShipmentByPrice.push(availableShipment[i]);
-        }
-
-        sortedShipmentByPrice.sort(function(a,b) {
-            return a.price - b.price
-        });
-
-        return {
-            fare: sortedShipmentByPrice[0].price,
-            method: sortedShipmentByPrice[0].method
-        }
-
-    },
 
     setCartShipping : function(data) {
-        $("dd#shipping").text("$" + (cartLogicContainer.getCheapestShippingMethod(data).fare));
+        $("dd#shipping").text("$" + (UtilityContainer.getCheapestShippingMethod(data).fare));
     },
 
-    getCartTaxes : function(serviceCode, data) {
-        var taxes = parseFloat(cartLogicContainer.getTaxes(data)),
-            shippingTaxes = parseFloat(cartLogicContainer.getShipmentTaxes(serviceCode, data)),
-            totalTaxes = taxes + shippingTaxes;
-
-        return totalTaxes;
-    },
 
     setCartTaxes : function(taxes) {
         $("#taxes").text("$" + taxes.toFixed(2));
     },
 
-    getCartTotal : function(data) {
-        var shipping = cartLogicContainer.getCheapestShippingMethod(data),
-            shipping_fare = shipping.fare,
-            taxes = cartLogicContainer.getCartTaxes(shipping.method, data),
-            subtotal = UtilityContainer.getProductsPriceFromLocalStorage().toFixed(2),
-            total = (parseFloat(shipping_fare) + parseFloat(taxes) + parseFloat(subtotal)).toFixed(2);
-
-        console.log("shipping_fare: " + shipping_fare + " taxes:  " + taxes + " total:  " + total);
-        return total;
-    },
-
-    setCartTotal : function (data) {
-        $(".calculation.total dd").text("$ " + cartLogicContainer.getCartTotal(data))
+    setCartTotal : function () {
+        $(".calculation.total dd").text("$ " + (parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()) + parseFloat(sessionStorage.cartFees)).toFixed(2));
     },
 
 
@@ -304,51 +269,34 @@ var cartLogicContainer = {
         }
     },
 
-    /**
-     * TO BE REFACTORED IN UtilityContainer
-     * Get the total taxes (TPS/TVQ or TVH or TPS or null) + shipping method taxes.
-     *
-     * @param data
-     * @returns {number}
-     */
-    getTaxes : function(data) {
-        var taxes = 0;
-
-        if (data.taxes.length != 0)
-        {
-            for(var i=0; i<data.taxes.length; i++)
-            {
-                taxes += data.taxes[i].amount;
-            }
-        }
-
-        return taxes.toFixed(2);
-    },
-
-    /**
-     * Get the relevant taxes according to the chosen shipping method.
-     *
-     * @param serviceCode
-     * @param data
-     * @returns {string}
-     */
-    getShipmentTaxes : function(serviceCode, data) {
-        var taxes = 0;
-
-        for(var i=0; i<data.shipping.services.length; i++)
-        {
-            if(data.shipping.services[i].method == serviceCode)
-            {
-                if (data.shipping.services[i].taxes.length != 0)
-                {
-                    for(var j=0; j<data.shipping.services[i].taxes.length; j++)
-                    {
-                        taxes += data.shipping.services[i].taxes[j].amount;
-                    }
+    ajaxCall : function() {
+        $.ajax({
+            type: "POST",
+            url: "/api/estimate",
+            data: {
+                products: UtilityContainer.getProductsFromLocalStorage(),
+                shipping_address: {
+                    "postcode": $("#postcode").val(),
+                    "country": $(".price-estimate #country").val(),
+                    "province" : "QC"
                 }
+            },
+            success: function(data) {
+                UtilityContainer.cacheCartFees(UtilityContainer.getCheapestShippingMethod(data), data);
+                cartLogicContainer.setCartShipping(data);
+                cartLogicContainer.setCartTaxes(UtilityContainer.getCartTaxes(UtilityContainer.getCheapestShippingMethod(data), data));
+                cartLogicContainer.setCartTotal();
+            },
+            error: function(e, status) {
+                console.log(e);
+            },
+            complete : function() {
+                $(".price-estimate").fadeOut(300, function() {
+                    $(".calculation.hidden").fadeIn().removeClass("hidden");
+                    $(".cart-total.hidden").fadeIn().removeClass("hidden");
+                });
             }
-        }
-        return taxes.toFixed(2);
+        });
     },
 
     init : function() {
@@ -387,32 +335,7 @@ $(document).ready(function() {
 
              $(this).html('<i class="fa fa-spinner fa-spin"></i>');
 
-             $.ajax({
-                 type: "POST",
-                 url: "/api/estimate",
-                 data: {
-                     products: UtilityContainer.getProductsFromLocalStorage(),
-                     shipping_address: {
-                         "postcode": $("#postcode").val(),
-                         "country": $(".price-estimate #country").val(),
-                         "province" : "QC"
-                     }
-                 },
-                 success: function(data) {
-                     cartLogicContainer.setCartShipping(data);
-                     cartLogicContainer.setCartTaxes(cartLogicContainer.getCartTaxes(cartLogicContainer.getCheapestShippingMethod(data), data));
-                     cartLogicContainer.setCartTotal(data);
-                 },
-                 error: function(e, status) {
-                     console.log(e);
-                 },
-                 complete : function() {
-                     $(".price-estimate").fadeOut(300, function() {
-                         $(".calculation.hidden").fadeIn().removeClass("hidden");
-                         $(".cart-total.hidden").fadeIn().removeClass("hidden");
-                     });
-                 }
-             });
+             cartLogicContainer.ajaxCall();
 
          }
         else {
