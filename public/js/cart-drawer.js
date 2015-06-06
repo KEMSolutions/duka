@@ -247,8 +247,8 @@ var cartLogicContainer = {
         $("#taxes").text("$" + taxes.toFixed(2));
     },
 
-    setCartTotal : function () {
-        $(".calculation.total dd").text("$ " + (parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()) + parseFloat(sessionStorage.cartFees)).toFixed(2));
+    setCartTotal : function (total) {
+        $(".calculation.total dd").text("$ " + total);
     },
 
 
@@ -282,10 +282,9 @@ var cartLogicContainer = {
                 }
             },
             success: function(data) {
-                UtilityContainer.cacheCartFees(UtilityContainer.getCheapestShippingMethod(data), data);
                 cartLogicContainer.setCartShipping(data);
                 cartLogicContainer.setCartTaxes(UtilityContainer.getCartTaxes(UtilityContainer.getCheapestShippingMethod(data), data));
-                cartLogicContainer.setCartTotal();
+                cartLogicContainer.setCartTotal(UtilityContainer.getCartTotal(UtilityContainer.getCheapestShippingMethod(data), data));
             },
             error: function(e, status) {
                 console.log(e);

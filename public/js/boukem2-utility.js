@@ -308,16 +308,12 @@ var UtilityContainer = {
      * @param data
      * @returns {string}
      */
-    cacheCartFees : function(serviceCode, data) {
-        var fees = parseFloat(UtilityContainer.getShipmentTaxes(serviceCode, data)) + parseFloat(UtilityContainer.getCartTaxes(serviceCode, data));
-        console.log((UtilityContainer.getShipmentTaxes(serviceCode, data)) + " " + parseFloat(UtilityContainer.getCartTaxes(serviceCode, data)));
-        sessionStorage.setItem("cartFees", fees);
-    },
+    getCartTotal : function(serviceCode, data) {
+        var taxes = parseFloat(UtilityContainer.getShipmentTaxes(serviceCode, data)) + parseFloat(UtilityContainer.getCartTaxes(serviceCode, data)),
+            shipping = parseFloat(UtilityContainer.getCheapestShippingMethod(data).fare),
+            subtotal = parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()),
+            total = (taxes + shipping + subtotal).toFixed(2);
 
-
-    getCartTotalFromCache : function() {
-        return sessionStorage.cartTotal;
+        return total;
     }
-
-
 }
