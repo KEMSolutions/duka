@@ -1,4 +1,4 @@
-var cartDisplay = {
+var cartDisplayContainer = {
     $el : {
         $back : $("#back"),
         $proceed : $("#proceed"),
@@ -9,38 +9,37 @@ var cartDisplay = {
     },
 
     displayOn: function() {
-        _width = cartDisplay.$el.$container.width();
-        cartDisplay.$el.$container.css( {
+        _width = cartDisplayContainer.$el.$container.width();
+        cartDisplayContainer.$el.$container.css( {
             "margin-right" : -_width
-            //"margin-right" : 0
         });
 
-        cartDisplay.$el.$trigger.click(function() {
-            cartDisplay.animateIn();
+        cartDisplayContainer.$el.$trigger.click(function() {
+            cartDisplayContainer.animateIn();
         });
     },
 
     displayOff : function() {
-        _width = cartDisplay.$el.$container.width();
-        cartDisplay.$el.$back.click(function() {
-            cartDisplay.animateOut();
+        _width = cartDisplayContainer.$el.$container.width();
+        cartDisplayContainer.$el.$back.click(function() {
+            cartDisplayContainer.animateOut();
         });
-        cartDisplay.$el.$checkout.click(function() {
+        cartDisplayContainer.$el.$checkout.click(function() {
             sessionStorage.isDisplayed = false;
         });
     },
 
     animateIn : function() {
-        cartDisplay.$el.$container.show();
-        cartDisplay.$el.$container.animate( {
+        cartDisplayContainer.$el.$container.show();
+        cartDisplayContainer.$el.$container.animate( {
             "margin-right" : 0
         }, 400);
         sessionStorage.isDisplayed = true;
     },
 
     animateOut: function() {
-        _width = cartDisplay.$el.$container.width();
-        cartDisplay.$el.$container.animate( {
+        _width = cartDisplayContainer.$el.$container.width();
+        cartDisplayContainer.$el.$container.animate( {
             "margin-right" : -_width
         }, 400, function() {
             $(this).hide();
@@ -48,21 +47,39 @@ var cartDisplay = {
         sessionStorage.isDisplayed = false;
     },
 
+    setCartItemsHeight : function() {
+        cartDisplayContainer.computeCartItemsHeight();
+
+        $(window).on("resize", function() {
+           cartDisplayContainer.computeCartItemsHeight();
+        });
+
+        cartDisplayContainer.$el.$trigger.on("click", function() {
+            cartDisplayContainer.computeCartItemsHeight();
+        })
+    },
+
+    computeCartItemsHeight : function() {
+        var cartItemsHeight = $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
+
+        $("#cart-items").css("height", cartItemsHeight);
+    },
 
     init : function() {
-        cartDisplay.displayOn();
-        cartDisplay.displayOff();
+        cartDisplayContainer.displayOn();
+        cartDisplayContainer.displayOff();
+        UtilityContainer.populateCountry();
 
         if (sessionStorage.isDisplayed == "true")
         {
-            cartDisplay.$el.$container.css("margin-right", 0);
-            cartDisplay.$el.$container.show();
+            cartDisplayContainer.$el.$container.css("margin-right", 0);
+            cartDisplayContainer.$el.$container.show();
         }
 
     }
 };
 
-var cartData = {
+var cartLogicContainer = {
     /**
      * Cache a set of elements commonly used (to be updated)
      */
@@ -89,7 +106,7 @@ var cartData = {
             '</li>';
 
         if (!$(".cart-items-list [data-product='" + item.product + "']").length){
-            cartData.$el.$list.append(sidebarElement);
+            cartLogicContainer.$el.$list.append(sidebarElement);
         }
 
     },
@@ -103,8 +120,11 @@ var cartData = {
      */
     storeItem : function(item) {
         localStorage.setItem("_product " + item.product, JSON.stringify(item));
-        cartData.setBadgeQuantity();
-        cartData.setQuantityCookie();
+        cartLogicContainer.setBadgeQuantity();
+        cartLogicContainer.setQuantityCookie();
+        cartLogicContainer.setCartSubtotal();
+        cartLogicContainer.setCartTotal();
+        cartLogicContainer.updateAjaxCall();
     },
 
     /**
@@ -116,7 +136,7 @@ var cartData = {
         {
             if (localStorage.key(i).lastIndexOf("_", 0) === 0)
             {
-                cartData.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
+                cartLogicContainer.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
             }
         }
     },
@@ -137,8 +157,11 @@ var cartData = {
 
             localStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
 
-            cartData.setBadgeQuantity();
-            cartData.setQuantityCookie();
+            cartLogicContainer.setBadgeQuantity();
+            cartLogicContainer.setQuantityCookie();
+            cartLogicContainer.setCartSubtotal();
+            cartLogicContainer.setCartTotal();
+            cartLogicContainer.updateAjaxCall();
 
         });
     },
@@ -163,8 +186,11 @@ var cartData = {
             oldData.quantity = parseInt($(this).val());
             localStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
 
-            cartData.setBadgeQuantity();
-            cartData.setQuantityCookie();
+            cartLogicContainer.setBadgeQuantity();
+            cartLogicContainer.setQuantityCookie();
+            cartLogicContainer.setCartSubtotal();
+            cartLogicContainer.setCartTotal();
+            cartLogicContainer.updateAjaxCall();
 
         });
     },
@@ -184,29 +210,10 @@ var cartData = {
     },
 
     /**
-     * Utility function returning the number of products present in the cart.
-     *
-     * @returns {number}
-     */
-    getNumberOfProducts : function() {
-        var total = 0;
-
-        for(var i = 0; i<localStorage.length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_", 0) === 0)
-            {
-                total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
-            }
-        }
-
-        return total;
-    },
-
-    /**
      * Update the value of #cart_badge when adding or deleting elements
      */
     setBadgeQuantity : function() {
-        var total = cartData.getNumberOfProducts();
+        var total = UtilityContainer.getNumberOfProducts();
 
         $("#cart_badge").text(total);
     },
@@ -216,7 +223,7 @@ var cartData = {
      * The value of the cookie is encoded in base64 (btoa)
      */
     setQuantityCookie : function () {
-        var number = cartData.getNumberOfProducts();
+        var number = UtilityContainer.getNumberOfProducts();
 
         if (Cookies.get("quantityCart") == undefined || number === 0)
         {
@@ -228,7 +235,45 @@ var cartData = {
     },
 
     /**
-     * parse the information form the button into a readable json format
+     * Update subtotal when users put something in or out of their cart.
+     *
+     */
+    setCartSubtotal : function () {
+        $("dd#subtotal").text("$" + UtilityContainer.getProductsPriceFromLocalStorage().toFixed(2));
+    },
+
+    /**
+     * Set shipping field
+     *
+     * @param data
+     */
+    setCartShipping : function(data) {
+        $("dd#shipping").text("$" + (UtilityContainer.getCheapestShippingMethod(data).fare));
+    },
+
+
+    /**
+     * Set taxes field
+     *
+     * @param taxes
+     */
+    setCartTaxes : function(taxes) {
+        $("#taxes").text("$" + taxes.toFixed(2));
+    },
+
+    /**
+     * Set total field
+     *
+     * @param total
+     */
+    setCartTotal : function (total) {
+        $(".cart-total dl").show();
+        $(".calculation.total dd").text("$ " + total);
+    },
+
+
+    /**
+     * parse the information from the button into a readable json format
      *
      * @param item
      * @returns {{product: *, name: *, price: *, thumbnail: *, thumbnail_lg: *, quantity: number}}
@@ -244,32 +289,122 @@ var cartData = {
         }
     },
 
+    /**
+     * Ajax call to /api/estimate after all verifications have passed.
+     *
+     */
+    ajaxCall : function() {
+        $.ajax({
+            type: "POST",
+            url: "/api/estimate",
+            data: {
+                products: UtilityContainer.getProductsFromLocalStorage(),
+                shipping_address: {
+                    "postcode": $("#postcode").val(),
+                    "country": $(".price-estimate #country").val(),
+                    "province" : "QC"
+                }
+            },
+            success: function(data) {
+                cartLogicContainer.setCartShipping(data);
+                cartLogicContainer.setCartTaxes(UtilityContainer.getCartTaxes(UtilityContainer.getCheapestShippingMethod(data).method, data));
+                cartLogicContainer.setCartTotal(UtilityContainer.getCartTotal(UtilityContainer.getCheapestShippingMethod(data), data));
+            },
+            error: function(e, status) {
+                console.log(e);
+            },
+            complete : function(data) {
+                $(".price-estimate").fadeOut(300, function() {
+                    $(".calculation.hidden").fadeIn().removeClass("hidden");
+                    $(".cart-total.hidden").fadeIn().removeClass("hidden");
+                });
+            }
+        });
+    },
+
+    /**
+     * Display an update panel when changes are made to the cart drawer.
+     *
+     */
+    updateAjaxCall : function() {
+        //If the total is displayed, it means that there's already been an ajax call: we have to display an update!
+        if(!$(".total").parent().hasClass("hidden")) {
+            $(".cart-total dl").hide();
+            $(".price-estimate-update").fadeIn('fast');
+        }
+
+        $(".changeLocation").click(function() {
+            $("dl.calculation").addClass("hidden");
+            $(".getEstimate").html(localizationContainer.calculateEstimateButton.val);
+            $(".price-estimate-update").fadeOut();
+            $(".price-estimate").fadeIn();
+
+        });
+
+        //TODO: Refactor the arbitrary xxxxms to an actual end of ajax call.
+
+        $(".price-estimate-update .getEstimate").click(function() {
+            if(!UtilityContainer.validateEmptyCart()) {
+                setTimeout(function() {
+                    $(".price-estimate-update .getEstimate").parent().fadeOut(300);
+                    $(".price-estimate-update .getEstimate").html(localizationContainer.calculateEstimateButton.val);
+                }, 2250);
+            }
+        });
+
+    },
+
     init : function() {
-        cartData.setBadgeQuantity();
-        cartData.loadItem();
-        cartData.deleteItem();
-        cartData.modifyQuantity();
-        cartData.modifyQuantityBeforeBuying();
-        cartData.setQuantityCookie();
+        cartLogicContainer.setBadgeQuantity();
+        cartLogicContainer.loadItem();
+        cartLogicContainer.deleteItem();
+        cartLogicContainer.modifyQuantity();
+        cartLogicContainer.modifyQuantityBeforeBuying();
+        cartLogicContainer.setQuantityCookie();
+        cartLogicContainer.setCartSubtotal();
     }
 };
 
-/*
-    TODO: 1. Flusher le contenu du cart mais conserver l’ID de la commande qui nous est passée quand client cliques sur checkout et on POST sur /Orders
-    TODO: 2. Placer l’ID quelque part, genre session php ou même la passer au browser de l'utilisateur pour le conserver, session ou cookie (avantage de théoriquement pouvoir syncer avec son téléphone ou son autre ordinateur)
-    TODO: 3. Rediriger l’utilisateur vers la page de paiement et espérer qu’il paie.
-    TODO: 3.a. S’il paie, supprimer l’ID de la commande de sa session/cookie et afficher un mot de félicitation
-    TODO: 3.b s’Il ne paie pas, et tant que l’ID est présent sur la commande, l'embêter avec un bandeau bien visible en haut de chaque page qui lui présente un lien de paiement pour sa commande précédente.
- */
 
 $(document).ready(function() {
-    cartDisplay.init();
-    cartData.init();
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    cartDisplayContainer.init();
+    cartLogicContainer.init();
+    cartDisplayContainer.setCartItemsHeight();
 
     $(".buybutton").click(function() {
-        cartDisplay.animateIn();
-        cartData.addItem(cartData.button_to_Json($(this)));
-        cartData.storeItem(cartData.button_to_Json($(this)));
+        cartDisplayContainer.animateIn();
+        cartLogicContainer.addItem(cartLogicContainer.button_to_Json($(this)));
+        cartLogicContainer.storeItem(cartLogicContainer.button_to_Json($(this)));
+
+        //We remove the "Your cart is empty" message at the top every time we add an item.
+        //TODO : Maybe improve it?
+        $("#cart-items .empty-cart").addClass("hidden");
+    });
+
+
+    $(".getEstimate").on("click", function() {
+        //Fields validation + Empty cart validation.
+         if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate #country").val())
+         && UtilityContainer.validateEmptyFields([$("#postcode")])
+         && !UtilityContainer.validateEmptyCart()) {
+
+             $(this).html('<i class="fa fa-spinner fa-spin"></i>');
+
+             cartLogicContainer.ajaxCall();
+
+         }
+         else if (UtilityContainer.validateEmptyCart()) {
+             $("#cart-items .empty-cart").removeClass("hidden");
+         }
+         else {
+             UtilityContainer.addErrorClassToFieldsWithRules($("#postcode"));
+         }
     });
 
 });

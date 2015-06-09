@@ -39,7 +39,7 @@
                 <div class="row">
                     <div class="form-group one-half">
                         <label for="country">{{ Lang::get("boukem.country") }}</label>
-                        <select name="country" id="country" class="form-control">
+                        <select name="country" class="country form-control">
                             {{--Populated from js/data/country-list--}}
                         </select>
                     </div>

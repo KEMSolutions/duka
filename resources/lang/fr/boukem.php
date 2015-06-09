@@ -16,7 +16,7 @@ return [
     'home'          =>'Accueil',
     'search'        =>'Rechercher',
     'toggle_nav'    =>'Afficher le menu',
-    'cart'          =>'Panier',
+    'cart'          =>'Votre panier',
     'go'            =>'Go!',
     'sign_up'       =>'Devenir membre ou se connecter',
     "sign_in"       =>"Se connecter",
@@ -171,7 +171,7 @@ return [
     "previous"          =>"Précédent",
     "product_unavailable"=>"Ce produit n'est pas disponible.",
     "express_shipping"  =>"En stock : Expédition express",
-    "stock_left"        =>"Seulement :n restant en expédition express|:n restants en expédition express.",
+    "stock_left"        =>"Seulement :quantity restant en expédition express.",
     "shipping_time"     =>"Expédition prévue dans les 3 à 7 jours.",
     "back_to_main"      =>"Retour au site principal",
     "please_wait"       =>"Veuillez patienter",
@@ -188,5 +188,7 @@ return [
     "secure_payment"    =>"Paiement sécurisé",
     "video"             =>"Vidéo",
     "expected_delivery" =>"Date de livraison prévue",
-    "optional"          =>"Optionnel"
+    "optional"          =>"Optionnel",
+    "get_estimate_label"=>"Obtenir un estimé de prix",
+    "calculate"         =>"Calculer"
 ];
