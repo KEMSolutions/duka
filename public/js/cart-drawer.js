@@ -307,7 +307,7 @@ var cartLogicContainer = {
             },
             success: function(data) {
                 cartLogicContainer.setCartShipping(data);
-                cartLogicContainer.setCartTaxes(UtilityContainer.getCartTaxes(UtilityContainer.getCheapestShippingMethod(data), data));
+                cartLogicContainer.setCartTaxes(UtilityContainer.getCartTaxes(UtilityContainer.getCheapestShippingMethod(data).method, data));
                 cartLogicContainer.setCartTotal(UtilityContainer.getCartTotal(UtilityContainer.getCheapestShippingMethod(data), data));
             },
             error: function(e, status) {
