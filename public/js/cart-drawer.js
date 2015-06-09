@@ -267,6 +267,7 @@ var cartLogicContainer = {
      * @param total
      */
     setCartTotal : function (total) {
+        $(".cart-total dl").show();
         $(".calculation.total dd").text("$ " + total);
     },
 
@@ -312,7 +313,8 @@ var cartLogicContainer = {
             error: function(e, status) {
                 console.log(e);
             },
-            complete : function() {
+            complete : function(data) {
+                console.log(data);
                 $(".price-estimate").fadeOut(300, function() {
                     $(".calculation.hidden").fadeIn().removeClass("hidden");
                     $(".cart-total.hidden").fadeIn().removeClass("hidden");
@@ -322,20 +324,22 @@ var cartLogicContainer = {
     },
 
     /**
-     * Display an update panel when changes are made to the cart.
+     * Display an update panel when changes are made to the cart drawer.
      *
      */
     updateAjaxCall : function() {
-        //Si le total est affiché, ca veut dire qu'on a déjà fait un ajax call. Donc on doit afficher un update.
+        //If the total is displayed, it means that there's already been an ajax call: we have to display an update!
         if(!$(".total").parent().hasClass("hidden")) {
-            $(".price-estimate-update").fadeIn();
+            $(".cart-total dl").hide();
+            $(".price-estimate-update").fadeIn('fast');
         }
 
         $(".changeLocation").click(function() {
             $("dl.calculation").addClass("hidden");
             $(".getEstimate").html(localizationContainer.calculateEstimateButton.val);
-            $(".price-estimate").fadeIn();
             $(".price-estimate-update").fadeOut();
+            $(".price-estimate").fadeIn();
+
         });
 
         //TODO: Refactor the arbitrary xxxxms to an actual end of ajax call.
@@ -343,7 +347,7 @@ var cartLogicContainer = {
             setTimeout(function() {
                 $(".price-estimate-update .getEstimate").parent().fadeOut(300);
                 $(".price-estimate-update .getEstimate").html(localizationContainer.calculateEstimateButton.val);
-            }, 2000);
+            }, 2250);
 
 
         });
@@ -384,6 +388,7 @@ $(document).ready(function() {
 
 
     $(".getEstimate").on("click", function() {
+        //Fields validation + Empty cart validation.
          if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate #country").val())
          && UtilityContainer.validateEmptyFields([$("#postcode")])
          && !UtilityContainer.validateEmptyCart()) {
