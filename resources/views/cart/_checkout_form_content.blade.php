@@ -1,7 +1,7 @@
 <section class="cart-checkout">
     <div class="col-md-5 color-two cart-checkout-content">
 
-        <div id="cart-items">
+        <div id="cart-items" style="height: auto !important";>
             <ul class="cart-items-list">
             </ul>
         </div>

@@ -52,7 +52,7 @@
 
                     <li>
                         {{-- TODO : update the cart_badge with the right amount of products in cart--}}
-                        <a href="{{ url("/fr/dev/cart/") }}"><i class="fa fa-shopping-cart icon-cart"></i> {{ " " . Lang::get("boukem.cart") . " " }}<span class="badge" id="cart_badge"> 0 </span></a>
+                        <a class="view-cart""><i class="fa fa-shopping-cart icon-cart"></i> {{ " " . Lang::get("boukem.cart") . " " }}<span class="badge" id="cart_badge"> 0 </span></a>
                     </li>
 
                     @if (Auth::guest())

@@ -16,7 +16,7 @@ return [
     'home'          => 'Home',
     'search'        =>'Search',
     'toggle_nav'    =>'Toggle navigation',
-    'cart'          =>'Cart',
+    'cart'          =>'Your cart',
     'go'            =>'Go!',
     'sign_up'       =>'Sign up or sign in',
     "sign_in"       =>"Sign in",
@@ -154,7 +154,7 @@ return [
     "why"           =>"Why?",
     "by"            =>"by",
     "keep_email"    =>"We ask for your email to allow you to retrieve your cart easily, apply any discount associated with your account as well as guarantee you the quoted prices. We will not resell your email, send you any spam or subscribe you in any newsletter.",
-    "calculate_shipping"=>"Please enter your postal code and select your prefered shipping method to continue.",
+    "calculate_shipping"=>"Please enter your postal code and select your preferred shipping method to continue.",
     "no_result"     =>"Sorry, no results were found.",
     "expired_link"  =>"The payment link has expired.",
     "cancel_payment"=>"You canceled the payment of this order. Unfortunately, we cannot process unpaid orders; please contact us if you have any question regarding the payment process.",
@@ -171,7 +171,7 @@ return [
     "previous"          =>"Previous",
     "product_unavailable"=>"This product is not available.",
     "express_shipping"  =>"In stock : Express Shipping",
-    "stock_left"        =>"Only :n left in stock (more on the way).",
+    "stock_left"        =>"Only :quantity left in stock (more on the way).",
     "shipping_time"     =>"Usually ships within 3 to 7 days.",
     "back_to_main"      =>"Back to main site",
     "please_wait"       =>"Please wait",
@@ -188,5 +188,7 @@ return [
     "secure_payment"    =>"Secure payment",
     "video"             =>"Video",
     "expected_delivery" =>"Expected delivery (days)",
-    "optional"          =>"Optional"
+    "optional"          =>"Optional",
+    "get_estimate_label"=>"Enter your location to get a price estimate.",
+    "calculate"         =>"Calculate"
 ];
