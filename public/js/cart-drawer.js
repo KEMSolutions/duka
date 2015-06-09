@@ -95,28 +95,28 @@ var cartData = {
     },
 
     /**
-     * Store a product in sessionStorage
+     * Store a product in localStorage
      * Update badge quantity
      * Create/update a quantity cookie
      *
      * @param item JSON format converted from attributes on the .buybutton
      */
     storeItem : function(item) {
-        sessionStorage.setItem("_product " + item.product, JSON.stringify(item));
+        localStorage.setItem("_product " + item.product, JSON.stringify(item));
         cartData.setBadgeQuantity();
         cartData.setQuantityCookie();
     },
 
     /**
      * Load a list of items previously bought into the cart.
-     * If there is no item in sessionStorage starting with the key "_product", then nothing is loaded.
+     * If there is no item in localStorage starting with the key "_product", then nothing is loaded.
      */
     loadItem : function() {
-        for(var i = 0; i<sessionStorage.length; i++)
+        for(var i = 0; i<localStorage.length; i++)
         {
-            if (sessionStorage.key(i).lastIndexOf("_", 0) === 0)
+            if (localStorage.key(i).lastIndexOf("_", 0) === 0)
             {
-                cartData.addItem(JSON.parse(sessionStorage.getItem(sessionStorage.key(i))));
+                cartData.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
             }
         }
     },
@@ -124,7 +124,7 @@ var cartData = {
     /**
      * Delete an item from the cart drawer list.
      * Remove it from the DOM.
-     * Delete the object on sessionStorage.
+     * Delete the object on localStorage.
      * Set Badge quantity accordingly.
      * Update Cookie quantity accordingly.
      */
@@ -135,7 +135,7 @@ var cartData = {
                 $(this).remove();
             });
 
-            sessionStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
+            localStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
 
             cartData.setBadgeQuantity();
             cartData.setQuantityCookie();
@@ -146,7 +146,7 @@ var cartData = {
     /**
      * Modify the quantity of a product in the cart
      * Update its price label accordingly
-     * Update the sessionStorage
+     * Update the localStorage
      * Set badge quantity
      * Update Cookie quantity
      */
@@ -159,9 +159,9 @@ var cartData = {
             $product_price.text("$" + ($product_price.data("price") * $(this).val()).toFixed(2));
 
             //retrieve old data from old object then update the quantity and finally update the object
-            var oldData = JSON.parse(sessionStorage.getItem("_product " + $container.data("product")));
+            var oldData = JSON.parse(localStorage.getItem("_product " + $container.data("product")));
             oldData.quantity = parseInt($(this).val());
-            sessionStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
+            localStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
 
             cartData.setBadgeQuantity();
             cartData.setQuantityCookie();
@@ -191,11 +191,11 @@ var cartData = {
     getNumberOfProducts : function() {
         var total = 0;
 
-        for(var i = 0; i<sessionStorage.length; i++)
+        for(var i = 0; i<localStorage.length; i++)
         {
-            if (sessionStorage.key(i).lastIndexOf("_", 0) === 0)
+            if (localStorage.key(i).lastIndexOf("_", 0) === 0)
             {
-                total += JSON.parse(sessionStorage.getItem(sessionStorage.key(i))).quantity;
+                total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
             }
         }
 
@@ -253,6 +253,14 @@ var cartData = {
         cartData.setQuantityCookie();
     }
 };
+
+/*
+    TODO: 1. Flusher le contenu du cart mais conserver l’ID de la commande qui nous est passée quand client cliques sur checkout et on POST sur /Orders
+    TODO: 2. Placer l’ID quelque part, genre session php ou même la passer au browser de l'utilisateur pour le conserver, session ou cookie (avantage de théoriquement pouvoir syncer avec son téléphone ou son autre ordinateur)
+    TODO: 3. Rediriger l’utilisateur vers la page de paiement et espérer qu’il paie.
+    TODO: 3.a. S’il paie, supprimer l’ID de la commande de sa session/cookie et afficher un mot de félicitation
+    TODO: 3.b s’Il ne paie pas, et tant que l’ID est présent sur la commande, l'embêter avec un bandeau bien visible en haut de chaque page qui lui présente un lien de paiement pour sa commande précédente.
+ */
 
 $(document).ready(function() {
     cartDisplay.init();

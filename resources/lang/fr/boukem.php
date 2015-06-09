@@ -53,6 +53,7 @@ return [
     "step"          => "Étape :step",
     "about"         => "A propos de vous",
     "first_name"    =>"Prénom",
+    "last_name"     =>"Nom de famille",
     "name"          =>"Nom",
     "phone"         =>"Téléphone",
     "billing_address"=>"Adresse de facturation",
@@ -186,5 +187,6 @@ return [
     "continue"          =>"Continuer",
     "secure_payment"    =>"Paiement sécurisé",
     "video"             =>"Vidéo",
-    "expected_delivery" =>"Date de livraison prévue"
+    "expected_delivery" =>"Date de livraison prévue",
+    "optional"          =>"Optionnel"
 ];

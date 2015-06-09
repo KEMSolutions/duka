@@ -1,0 +1,25 @@
+.chosen-container-single .chosen-single {
+    background: #fff;
+    box-shadow: none;
+    height: 40px;
+    line-height: 40px;
+}
+
+/*
+    Left arrow
+*/
+.chosen-container-single .chosen-single div {
+    top: 7px;
+}
+
+/*
+    When list is expanded
+*/
+.chosen-container-active.chosen-with-drop .chosen-single {
+    background: #fff;
+}
+
+.chosen-container .chosen-results {
+    z-index: 100;
+    max-height: 200px !important;
+}
