@@ -148,6 +148,7 @@ var estimateContainer = {
                 shipping_address: UtilityContainer.getShippingFromForm()
             },
             success: function(data) {
+                console.log(data);
                 estimateContainer.init(data);
             },
             error: function(e, status) {
@@ -214,7 +215,7 @@ var estimateContainer = {
         $(".has-error").removeClass("has-error");
 
         var email_value = $("#customer_email").val();
-        var postcode_value = $("#postcode").val();
+        var postcode_value = $("#shippingPostcode").val();
         var country_value = $(".country").val();
 
         for(var i = 0; i<data.shipping.services.length; i++)
@@ -436,13 +437,13 @@ $(document).ready(function() {
      */
     $("#estimateButton").on("click", function(e) {
         var email = $("#customer_email"),
-            postcode = $("#postcode"),
+            postcode = $("#shippingPostcode"),
             firstName = $("#shippingFirstname"),
             lastName = $("#shippingLastname"),
             address1 = $("#shippingAddress1"),
             city = $("#shippingCity"),
             phone = $("#shippingTel"),
-            country = $(".country").val(),
+            country = $("#shippingCountry").val(),
             fields = [firstName, lastName, address1, city, phone ];
 
         e.preventDefault();

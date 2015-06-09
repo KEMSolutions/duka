@@ -77,9 +77,9 @@ var UtilityContainer = {
      */
     getShippingFromForm : function() {
         return res = {
-            "country" : $(".country").val(),
-            "postcode" : $("#postcode").val(),
-            "province" : $("#province").val(),
+            "country" : $("#shippingCountry").val(),
+            "postcode" : $("#shippingPostcode").val(),
+            "province" : $("#shippingProvince").val(),
             "line1" : $("#shippingAddress1").val(),
             "line2" : $("#shippingAddress2").val(),
             "name" : $("#shippingFirstname").val() + " " + $("#shippingLastname").val(),
