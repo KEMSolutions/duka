@@ -40,7 +40,7 @@ var LocationContainer = {
         $.getJSON("/js/data/world-states.json", function(data) {
             for(var i=0; i<country.length; i++) {
                 var listItems = '',
-                    $provinces = $("#province").find("[data-country='" + country[i] +"']");
+                    $provinces = $(".province").find("[data-country='" + country[i] +"']");
 
                 $.each(data, function(key, val) {
                     if (data[key].country === country[i] && data[key].short == "QC" ){
@@ -63,18 +63,18 @@ var LocationContainer = {
      */
     updateChosenSelects: function(chosenCountry) {
         if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == "MX"){
-            $('#province').removeAttr('disabled').trigger("chosen:updated");
+            $('.province').removeAttr('disabled').trigger("chosen:updated");
         } else {
-            $('#province').attr('disabled','disabled');
+            $('.province').attr('disabled','disabled');
         }
 
-        $('#province optgroup').attr('disabled','disabled');
+        $('.province optgroup').attr('disabled','disabled');
 
         if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == 'MX'){
-            $('#province [data-country="' + chosenCountry + '"]').removeAttr('disabled');
+            $('.province [data-country="' + chosenCountry + '"]').removeAttr('disabled');
         }
 
-        $('#province').trigger('chosen:updated');
+        $('.province').trigger('chosen:updated');
     },
 
     /**
@@ -90,13 +90,23 @@ var LocationContainer = {
     },
 
     /**
-     * Auto fill the billing address with the billing one
+     * Get user's billing address. By default shipping address = billing address.
+     * Set the width of select list at the same time.
      *
      */
-    autoFillBillingAddress : function () {
-        $("#shippingAddress1").on("change", function() {
-            $("#billingAddress").val($(this).val());
-        });
+    getBillingAddress : function () {
+        $(".billing-checkbox").on("change", function() {
+            $(".form-billing .chosen-container").width($("#customer_email").outerWidth()-20);
+
+            if (!this.checked) {
+                $(".form-billing").hide().removeClass("hidden").fadeIn();
+            }
+            else {
+                $(".form-billing").fadeOut(function() {
+                    $(this).addClass("hidden");
+                });
+            }
+        })
     },
 
     /**
@@ -106,10 +116,10 @@ var LocationContainer = {
     init : function() {
         LocationContainer.populateCountry();
         LocationContainer.populateProvincesAndStates(["CA", "US", "MX"], function() {
-            $("#province").chosen();
+            $(".province").chosen();
         });
         LocationContainer.callUpdateChosenSelects();
-        LocationContainer.autoFillBillingAddress();
+        LocationContainer.getBillingAddress();
     }
 }
 

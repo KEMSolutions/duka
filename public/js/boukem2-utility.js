@@ -178,6 +178,21 @@ var UtilityContainer = {
     },
 
     /**
+     * Finds a hidden element width.
+     *
+     * @param obj
+     * @returns {*}
+     */
+    realWidth : function(obj, origin) {
+        var clone = obj.clone();
+        clone.css("visibility", "hidden");
+        origin.append(clone);
+        var width = clone.outerWidth();
+        clone.remove();
+        return parseInt(width);
+    },
+
+    /**
      * Add .has-error to parent class + animate the relevant fields.
      *
      * @param fields
