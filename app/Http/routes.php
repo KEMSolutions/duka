@@ -23,14 +23,12 @@ Route::group([
     // Cart & checkout.
     Route::get('cart', ['as' => 'cart', 'uses' => 'CheckoutController@index']);
 
+    // Custom pages.
+    Route::get('pages/{slug}', ['as' => 'page', 'uses' => 'PagesController@display']);
+
     // Temporary routes, used for development.
     Route::group(['prefix' => 'dev'], function()
     {
-        // API tests.
-        Route::get('get/{request}', function($request) {
-            return Illuminate\Support\Collection::make(KemAPI::get($request, Input::all()));
-        })->where('request', '.+');
-
         /**
          * Routes for testing product page.
          */
@@ -51,7 +49,9 @@ Route::group(['prefix' => 'api', 'middleware' => 'csrf.any'], function()
     Route::get('layouts/{id?}',   ['as' => 'api.layouts', 'uses' => 'ApiController@getLayout']);
     Route::get('products/{id}',   ['as' => 'api.products', 'uses' => 'ApiController@getProduct']);
     Route::get('search/{query}',  ['as' => 'api.search', 'uses' => 'ApiController@searchProducts']);
+
     Route::post('estimate',       ['as' => 'api.estimate', 'uses' => 'ApiController@getOrderEstimate']);
+    Route::post('orders',         ['as' => 'api.orders', 'uses' => 'ApiController@placeOrder']);
 
     Route::any('/{catchAll}', function($catchAll) {
         return Illuminate\Http\JsonResponse::create(['status' => 400, 'error' => 'Bad request.'], 400);

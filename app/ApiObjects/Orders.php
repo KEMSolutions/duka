@@ -17,7 +17,7 @@ class Orders extends KemApiObject
      * @param array $address    Shipping address.
      * @return mixed
      */
-    public function estimate(array $products, array $address, $email)
+    public function estimate(array $products, array $address)
     {
         // Performance check.
         if (count($products) < 1 || !isset($address['country']) || !isset($address['postcode'])) {
@@ -70,4 +70,17 @@ class Orders extends KemApiObject
         return $estimate;
     }
 
+    public function placeOrder($shipping, $products, $address, $email)
+    {
+        $data = new \stdClass;
+        $data->success_url = 'example.com';
+        $data->failure_url = 'example.com';
+        $data->cancel_url = 'example.com';
+        $data->email = $email;
+        $data->shipping = $shipping;
+        $data->products = $products;
+        $data->shipping_address = $address;
+
+        return $this->badRequest('Method not implemented');
+    }
 }
