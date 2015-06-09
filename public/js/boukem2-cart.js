@@ -90,11 +90,30 @@ var LocationContainer = {
     },
 
     /**
+     * Registering functions to be called outside of this object.
+     *
+     */
+    init : function() {
+        LocationContainer.populateCountry();
+        LocationContainer.populateProvincesAndStates(["CA", "US", "MX"], function() {
+            $(".province").chosen();
+        });
+        LocationContainer.callUpdateChosenSelects();
+
+    }
+}
+
+var billingContainer = {
+    autoFillBillingAddress : function() {
+
+    },
+
+    /**
      * Get user's billing address. By default shipping address = billing address.
      * Set the width of select list at the same time.
      *
      */
-    getBillingAddress : function () {
+    setDifferentBillingAddress : function () {
         $(".billing-checkbox").on("change", function() {
             $(".form-billing .chosen-container").width($("#customer_email").outerWidth()-20);
 
@@ -109,17 +128,8 @@ var LocationContainer = {
         })
     },
 
-    /**
-     * Registering functions to be called outside of this object.
-     *
-     */
-    init : function() {
-        LocationContainer.populateCountry();
-        LocationContainer.populateProvincesAndStates(["CA", "US", "MX"], function() {
-            $(".province").chosen();
-        });
-        LocationContainer.callUpdateChosenSelects();
-        LocationContainer.getBillingAddress();
+    init: function() {
+        billingContainer.setDifferentBillingAddress();
     }
 }
 
@@ -428,6 +438,7 @@ $(document).ready(function() {
      *
      */
     LocationContainer.init();
+    billingContainer.init();
 
     /**
      * Event triggered when the "Continue" button is hit.
@@ -437,14 +448,14 @@ $(document).ready(function() {
      */
     $("#estimateButton").on("click", function(e) {
         var email = $("#customer_email"),
-            postcode = $("#shippingPostcode"),
-            firstName = $("#shippingFirstname"),
-            lastName = $("#shippingLastname"),
-            address1 = $("#shippingAddress1"),
-            city = $("#shippingCity"),
+            postcode = $(".postcode"),
+            firstName = $(".firstName"),
+            lastName = $(".lastName"),
+            address1 = $(".address1"),
+            city = $(".city"),
             phone = $("#shippingTel"),
             country = $("#shippingCountry").val(),
-            fields = [firstName, lastName, address1, city, phone ];
+            fields = [firstName, lastName, address1, city, phone];
 
         e.preventDefault();
 
