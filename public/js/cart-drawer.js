@@ -314,7 +314,6 @@ var cartLogicContainer = {
                 console.log(e);
             },
             complete : function(data) {
-                console.log(data);
                 $(".price-estimate").fadeOut(300, function() {
                     $(".calculation.hidden").fadeIn().removeClass("hidden");
                     $(".cart-total.hidden").fadeIn().removeClass("hidden");
@@ -343,14 +342,16 @@ var cartLogicContainer = {
         });
 
         //TODO: Refactor the arbitrary xxxxms to an actual end of ajax call.
+
         $(".price-estimate-update .getEstimate").click(function() {
-            setTimeout(function() {
-                $(".price-estimate-update .getEstimate").parent().fadeOut(300);
-                $(".price-estimate-update .getEstimate").html(localizationContainer.calculateEstimateButton.val);
-            }, 2250);
-
-
+            if(!UtilityContainer.validateEmptyCart()) {
+                setTimeout(function() {
+                    $(".price-estimate-update .getEstimate").parent().fadeOut(300);
+                    $(".price-estimate-update .getEstimate").html(localizationContainer.calculateEstimateButton.val);
+                }, 2250);
+            }
         });
+
     },
 
     init : function() {

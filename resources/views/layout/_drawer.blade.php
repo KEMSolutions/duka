@@ -23,7 +23,6 @@
                     <div class="price-estimate">
                         <p>{{ Lang::get("boukem.get_estimate_label") }} </p>
                         <select name="country" class="form-control one-half pull-left" id="country">
-                            Populated from js/data/country-list
                         </select>
                         <span>
                             <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="postcode" class="form-control one-half">
@@ -35,7 +34,7 @@
 
                     <div class="price-estimate-update">
                         <button type="button" class=" one-half center-block btn btn-info getEstimate">Update</button>
-                        <p class="text-center">OR <a href="#" class="changeLocation">Change location</a></p>
+                        <p class="text-center">OR <button class="btn-link text-uppercase changeLocation">Change location</button></p>
                     </div>
 
                     <dl class="calculation  hidden">
