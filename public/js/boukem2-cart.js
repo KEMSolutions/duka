@@ -388,11 +388,15 @@ var validationContainer = {
      * @param postcode
      * @param country
      */
-    init : function(fields, email, postcode, country) {
-        if (UtilityContainer.validateEmptyFields(fields) && UtilityContainer.validateEmail(email.val()) && UtilityContainer.validatePostCode(postcode.val(), country))
+    init : function(fields, email, shippingInformation, billingInformation) {
+        if (UtilityContainer.validateEmptyFields(fields)
+            && UtilityContainer.validateEmail(email.val())
+            && UtilityContainer.validatePostCode(shippingInformation.postcode, shippingInformation.country)
+            && UtilityContainer.validatePostCode(billingInformation.postcode, billingInformation.country))
         {
             $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
 
+            //delete previously uploaded shipping method (if any)
             if($("#estimate .table-striped").children().length > 0) {
                 $("#estimate .table-striped tbody").empty();
             }
@@ -403,9 +407,14 @@ var validationContainer = {
         {
             UtilityContainer.addErrorClassToFields(fields);
 
-            if(!UtilityContainer.validatePostCode(postcode.val(), country))
+            if(!UtilityContainer.validatePostCode(shippingInformation.postcode, shippingInformation.country))
             {
-                UtilityContainer.addErrorClassToFieldsWithRules(postcode);
+                UtilityContainer.addErrorClassToFieldsWithRules(shippingInformation.postcodeInput);
+            }
+
+            if(!UtilityContainer.validatePostCode(billingInformation.postcode, billingInformation.country))
+            {
+                UtilityContainer.addErrorClassToFieldsWithRules(billingInformation.postcodeInput);
             }
 
             if(!UtilityContainer.validateEmail(email.val()))
@@ -418,7 +427,8 @@ var validationContainer = {
 
         UtilityContainer.removeErrorClassFromFields(fields);
         validationContainer.removeErrorClassFromEmail(email);
-        validationContainer.removeErrorClassFromPostcode(postcode, country);
+        validationContainer.removeErrorClassFromPostcode(shippingInformation.postcodeInput, shippingInformation.country);
+        validationContainer.removeErrorClassFromPostcode(billingInformation.postcodeInput, billingInformation.country);
     }
 }
 
@@ -448,18 +458,45 @@ $(document).ready(function() {
      */
     $("#estimateButton").on("click", function(e) {
         var email = $("#customer_email"),
-            postcode = $(".postcode"),
-            firstName = $(".firstName"),
-            lastName = $(".lastName"),
-            address1 = $(".address1"),
-            city = $(".city"),
             phone = $("#shippingTel"),
-            country = $("#shippingCountry").val(),
-            fields = [firstName, lastName, address1, city, phone];
+            shippingFirstName = $("#shippingFirstname"),
+            shippingLastName = $("#shippingLastname"),
+            shippingAddress1 = $("#shippingAddress1"),
+            shippingCity = $("#shippingCity"),
+            shippingCountry = $("#shippingCountry").val(),
+            shippingPostcode = $("#shippingPostcode"),
+            billingFirstName = $("#billingFirstname"),
+            billingLastName = $("#billingLastname"),
+            billingAddress1 = $("#billingAddress1"),
+            billingCity = $("#billingCity"),
+            billingCountry = $("#billingCountry").val(),
+            billingPostcode = ("#billingPostcode"),
+            shippingInformation = {
+                "country" : shippingCountry,
+                "postcode" : $("#shippingPostcode").val(),
+                "postcodeInput" : $("#shippingPostcode")
+            },
+            billingInformation = {
+                "country" : billingCountry,
+                "postcode" : $("#billingPostcode").val(),
+                "postcodeInput" : $("#billingPostcode")
+            }
+            fields = [
+                shippingFirstName,
+                shippingLastName,
+                shippingAddress1,
+                shippingCity,
+                billingFirstName,
+                billingLastName,
+                billingAddress1,
+                billingCity,
+                email,
+                phone
+            ];
 
         e.preventDefault();
 
-        validationContainer.init(fields, email, postcode, country);
+        validationContainer.init(fields, email, shippingInformation, billingInformation);
     });
 });
 
