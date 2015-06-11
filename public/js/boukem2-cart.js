@@ -105,7 +105,7 @@ var LocationContainer = {
 
 var billingContainer = {
     autoFillBillingAddress : function() {
-
+        console.log("not yet implemented");
     },
 
     /**
@@ -124,6 +124,7 @@ var billingContainer = {
                 $(".form-billing").fadeOut(function() {
                     $(this).addClass("hidden");
                 });
+                billingContainer.autoFillBillingAddress();
             }
         })
     },

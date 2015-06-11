@@ -34,14 +34,14 @@
                 <div class="row">
                     <div class="form-group one-half">
                         <label for="country">{{ Lang::get("boukem.country") }}</label>
-                        <select name="country" class="form-control" id="shippingCountry">
+                        <select name="country" class="form-control country" id="shippingCountry">
                             {{--Populated from js/data/country-list--}}
                         </select>
                     </div>
 
                     <div class="form-group one-half">
                         <label for="province">{{ Lang::get("boukem.province_state_reg") }}</label>
-                        <select name="province" class="form-control" id="shippingProvince">
+                        <select name="province" class="form-control province" id="shippingProvince">
                             <optgroup data-country="CA" label="{{ Lang::get("boukem.ca_province") }}"></optgroup>
                             <optgroup data-country="US" label="{{ Lang::get("boukem.us_states") }}"></optgroup>
                             <optgroup data-country="MX" label="{{ Lang::get("boukem.mex_states") }}"></optgroup>
@@ -111,14 +111,14 @@
                         <div class="row">
                             <div class="form-group one-half">
                                 <label for="country">{{ Lang::get("boukem.country") }}</label>
-                                <select name="country" class="form-control" id="billingCountry">
+                                <select name="country" class="form-control country" id="billingCountry">
                                     {{--Populated from js/data/country-list--}}
                                 </select>
                             </div>
 
                             <div class="form-group one-half">
                                 <label for="province">{{ Lang::get("boukem.province_state_reg") }}</label>
-                                <select name="province" class="form-control" id="billingProvince">
+                                <select name="province" class="form-control province" id="billingProvince">
                                     <optgroup data-country="CA" label="{{ Lang::get("boukem.ca_province") }}"></optgroup>
                                     <optgroup data-country="US" label="{{ Lang::get("boukem.us_states") }}"></optgroup>
                                     <optgroup data-country="MX" label="{{ Lang::get("boukem.mex_states") }}"></optgroup>
