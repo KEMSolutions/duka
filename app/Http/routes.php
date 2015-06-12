@@ -42,7 +42,7 @@ Route::group([
 });
 
 // API endpoints.
-Route::group(['prefix' => 'api', 'middleware' => 'csrf.any'], function()
+Route::group(['prefix' => 'api'], function()
 {
     Route::get('brands/{id}',     ['as' => 'api.brands', 'uses' => 'ApiController@getBrand']);
     Route::get('categories/{id}', ['as' => 'api.categories', 'uses' => 'ApiController@getCategory']);
@@ -52,6 +52,9 @@ Route::group(['prefix' => 'api', 'middleware' => 'csrf.any'], function()
 
     Route::post('estimate',       ['as' => 'api.estimate', 'uses' => 'ApiController@getOrderEstimate']);
     Route::post('orders',         ['as' => 'api.orders', 'uses' => 'ApiController@placeOrder']);
+    Route::get('orders/success',  ['as' => 'api.orders.success', 'uses' => 'ApiController@handleSuccessfulPayment']);
+    Route::get('orders/failure',  ['as' => 'api.orders.failure', 'uses' => 'ApiController@handleFailedPayment']);
+    Route::get('orders/cancel',   ['as' => 'api.orders.cancel', 'uses' => 'ApiController@handleCancelledPayment']);
 
     Route::any('/{catchAll}', function($catchAll) {
         return Illuminate\Http\JsonResponse::create(['status' => 400, 'error' => 'Bad request.'], 400);
