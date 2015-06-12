@@ -9,27 +9,26 @@ use Pages;
  */
 class PagesController extends Controller
 {
-
 	public function display($slug)
     {
         // Retrieve page content.
-        $content = Pages::get($slug);
-        if (empty($content) || (property_exists($content, 'status') && $content->status != 200)) {
+        $page = Pages::get($slug);
+        if (empty($page) || (property_exists($page, 'status') && $page->status != 200)) {
             abort(404, Lang::get('boukem.error_occurred'));
         }
 
         // Convert to HTML.
-        switch ($content->type)
+        switch ($page->type)
         {
             case 'markdown':
-                $html = '';
+                $parser = new \cebe\markdown\MarkdownExtra;
+                $html = $parser->parse($page->content);
                 break;
 
             default:
-                $html = $content;
+                $html = $page->content;
         }
 
-        dd($html);
+        return view('site.page', ['html' => $html]);
     }
-
 }
