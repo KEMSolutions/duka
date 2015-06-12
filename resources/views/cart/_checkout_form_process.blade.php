@@ -13,22 +13,22 @@
                 <div class="row">
                     <div class="form-group one-half">
                         <label for="shippingFirstname" class="form-label" >{{ Lang::get("boukem.first_name") }}</label>
-                        <input type="text" name="shippingFirstname" id="shippingFirstname" class="form-control" required/>
+                        <input type="text" name="shippingFirstname" id="shippingFirstname" class="form-control firstname" required/>
                     </div>
 
                     <div class="form-group one-half">
                         <label for="shippingLastname" class="form-label" >{{ Lang::get("boukem.last_name") }}</label>
-                        <input type="text" name="shippingLastname" id="shippingLastname" class="form-control" required/>
+                        <input type="text" name="shippingLastname" id="shippingLastname" class="form-control lastname" required/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="shippingAddress1" class="form-label">{{ Lang::get("boukem.address_1") }}</label>
-                    <input type="text" name="shippingAddress1" id="shippingAddress1" class="form-control" required/>
+                    <input type="text" name="shippingAddress1" id="shippingAddress1" class="form-control address1" required/>
                 </div>
                 <div class="form-group">
                     <label for="shippingAddress2" class="form-label">{{ Lang::get("boukem.address_2") }} ( {{ Lang::get("boukem.optional") }} )</label>
-                    <input type="text" name="shippingAddress2" id="shippingAddress2" class="form-control"/>
+                    <input type="text" name="shippingAddress2" id="shippingAddress2" class="form-control address2"/>
                 </div>
 
                 <div class="row">
@@ -53,12 +53,12 @@
                 <div class="row">
                     <div class="form-group one-half">
                         <label for="shippingCity" class="form-label">{{ Lang::get("boukem.city") }}</label>
-                        <input type="text" name="shippingCity" id="shippingCity" class="form-control" required/>
+                        <input type="text" name="shippingCity" id="shippingCity" class="form-control city" required/>
                     </div>
 
                     <div class="form-group one-half">
                         <label for="postalcode" class="control-label">{{ Lang::get("boukem.postal_code") }}</label>
-                        <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="shippingPostcode" class="form-control" required>
+                        <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="shippingPostcode" class="form-control postcode" required>
                     </div>
                 </div>
 
@@ -71,8 +71,8 @@
                     </div>
 
                     <div class="form-group one-half">
-                        <label for="shippingTel" class="form-label">{{ Lang::get("boukem.phone") }}</label>
-                        <input type="tel" name="shippingTel" id="shippingTel" class="form-control" required/>
+                        <label for="customer_phone" class="form-label">{{ Lang::get("boukem.phone") }}</label>
+                        <input type="tel" name="customer_phone" id="customer_phone" class="form-control " required/>
                     </div>
                 </div>
 
@@ -90,22 +90,22 @@
                         <div class="row">
                             <div class="form-group one-half">
                                 <label for="billingFirstname" class="form-label" >{{ Lang::get("boukem.first_name") }}</label>
-                                <input type="text" name="billingFirstname" id="billingFirstname" class="form-control" required/>
+                                <input type="text" name="billingFirstname" id="billingFirstname" class="form-control firstname" required/>
                             </div>
 
                             <div class="form-group one-half">
                                 <label for="billingLastname" class="form-label" >{{ Lang::get("boukem.last_name") }}</label>
-                                <input type="text" name="billingLastname" id="billingLastname" class="form-control" required/>
+                                <input type="text" name="billingLastname" id="billingLastname" class="form-control lastname" required/>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="billingAddress1" class="form-label">{{ Lang::get("boukem.address_1") }}</label>
-                            <input type="text" name="billingAddress1" id="billingAddress1" class="form-control" required/>
+                            <input type="text" name="billingAddress1" id="billingAddress1" class="form-control address1" required/>
                         </div>
                         <div class="form-group">
                             <label for="billingAddress2" class="form-label">{{ Lang::get("boukem.address_2") }} ( {{ Lang::get("boukem.optional") }} )</label>
-                            <input type="text" name="billingAddress2" id="billingAddress2" class="form-control"/>
+                            <input type="text" name="billingAddress2" id="billingAddress2" class="form-control address2"/>
                         </div>
 
                         <div class="row">
@@ -130,12 +130,12 @@
                         <div class="row">
                             <div class="form-group one-half">
                                 <label for="billingCity" class="form-label">{{ Lang::get("boukem.city") }}</label>
-                                <input type="text" name="billingCity" id="billingCity" class="form-control" required/>
+                                <input type="text" name="billingCity" id="billingCity" class="form-control city" required/>
                             </div>
 
                             <div class="form-group one-half">
                                 <label for="postalcode" class="control-label">{{ Lang::get("boukem.postal_code") }}</label>
-                                <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="billingPostcode" class="form-control" required>
+                                <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="billingPostcode" class="form-control postcode" required>
                             </div>
                         </div>
                     </div>

@@ -105,7 +105,9 @@ var LocationContainer = {
 
 var billingContainer = {
     autoFillBillingAddress : function() {
-        console.log("not yet implemented");
+        //$("input[id^='shipping']").on("change", function() {
+        //    $("." + $(this)[0].className).val($(this).val());
+        //});
     },
 
     /**
@@ -323,7 +325,7 @@ var paymentContainer = {
             priceTransport, taxes;
 
         $(".shipping_method").on("change", function() {
-            priceTransport = parseFloat($(this).data("cost").toFixed(2));
+            priceTransport = $(this).data("cost");
             taxes = paymentContainer.getTaxes(data) + parseFloat($(this).data("taxes"));
             total = parseFloat(subtotal) + parseFloat(priceTransport) + parseFloat(taxes);
 
@@ -459,7 +461,7 @@ $(document).ready(function() {
      */
     $("#estimateButton").on("click", function(e) {
         var email = $("#customer_email"),
-            phone = $("#shippingTel"),
+            phone = $("#customer_phone"),
             shippingFirstName = $("#shippingFirstname"),
             shippingLastName = $("#shippingLastname"),
             shippingAddress1 = $("#shippingAddress1"),
