@@ -103,11 +103,29 @@ var LocationContainer = {
     }
 }
 
+
+/**
+ * Object responsible for handling billing information.
+ *
+ * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
+ */
 var billingContainer = {
-    autoFillBillingAddress : function() {
-        //$("input[id^='shipping']").on("change", function() {
-        //    $("." + $(this)[0].className).val($(this).val());
-        //});
+    autoFillBillingAddress : function(fields, fieldWithRules) {
+        if($(".billing-checkbox").is(":checked"))
+        {
+            //We assume here that fieldWithRules is the shipping postcode.
+            $("#billing" + fieldWithRules[0].id.substring("shipping".length, fieldWithRules[0].id.length)).val(fieldWithRules[0].value);
+
+            for(var i=0; i<fields.length; i++) {
+                //check if the id has the string "shipping".
+                //if it does, delete the shipping prefix and replace it by billing.
+                //Create a new jquery selector and fill it with the value of the shipping one.
+                if (fields[i][0].id.indexOf("shipping") > -1) {
+                    var genericInput = fields[i][0].id.substring("shipping".length, fields[i][0].id.length);
+                    $("#billing" + genericInput).val(fields[i][0].value);
+                }
+            }
+        }
     },
 
     /**
@@ -121,14 +139,20 @@ var billingContainer = {
 
             if (!this.checked) {
                 $(".form-billing").hide().removeClass("hidden").fadeIn();
+                billingContainer.clearBillingAddress();
             }
             else {
                 $(".form-billing").fadeOut(function() {
                     $(this).addClass("hidden");
                 });
-                billingContainer.autoFillBillingAddress();
             }
         })
+    },
+
+    clearBillingAddress : function() {
+          if ($(".form-billing input").val() != "") {
+              $(".form-billing input").val() == "";
+          }
     },
 
     init: function() {
@@ -479,11 +503,6 @@ $(document).ready(function() {
                 "postcode" : $("#shippingPostcode").val(),
                 "postcodeInput" : $("#shippingPostcode")
             },
-            billingInformation = {
-                "country" : billingCountry,
-                "postcode" : $("#billingPostcode").val(),
-                "postcodeInput" : $("#billingPostcode")
-            }
             fields = [
                 shippingFirstName,
                 shippingLastName,
@@ -499,6 +518,17 @@ $(document).ready(function() {
 
         e.preventDefault();
 
+        //Auto fill billing address if checkbox is checked.
+        billingContainer.autoFillBillingAddress(fields, shippingInformation.postcodeInput);
+
+        //Build the billing information object (from auto fill or entered by hand)
+        var billingInformation = {
+                "country" : billingCountry,
+                "postcode" : $("#billingPostcode").val(),
+                "postcodeInput" : $("#billingPostcode")
+            };
+
+        //Validate all fields and make the ajax call!
         validationContainer.init(fields, email, shippingInformation, billingInformation);
     });
 });
