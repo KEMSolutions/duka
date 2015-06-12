@@ -44,7 +44,7 @@ return [
     "sku"           =>"SKU",
     "stock"         =>"En stock",
     "availability"=>"Disponible à la livraison 7 à 10 jours après achat.",
-    "update"        =>"Modifier",
+    "update"        =>"Mettre à jour",
     "service_name"  =>"Nom du service",
     "estimated_transit_time"=>"Jours de transit",
     "cost"          =>"Prix",
@@ -190,5 +190,7 @@ return [
     "expected_delivery" =>"Date de livraison prévue",
     "optional"          =>"Optionnel",
     "get_estimate_label"=>"Obtenir un estimé de prix",
-    "calculate"         =>"Calculer"
+    "calculate"         =>"Calculer",
+    "or"                =>"ou",
+    "change_location"   =>"Changer destination"
 ];
