@@ -73,14 +73,22 @@ class Orders extends KemApiObject
     public function placeOrder($shipping, $products, $address, $email)
     {
         $data = new \stdClass;
-        $data->success_url = 'example.com';
-        $data->failure_url = 'example.com';
-        $data->cancel_url = 'example.com';
+        $data->success_url = route('api.orders.success');
+        $data->failure_url = route('api.orders.failure');
+        $data->cancel_url = route('api.orders.cancel');
         $data->email = $email;
         $data->shipping = $shipping;
         $data->products = $products;
         $data->shipping_address = $address;
 
-        return $this->badRequest('Method not implemented');
+        $response = KemAPI::post($this->baseRequest, $data);
+
+        // Check that response is not an error
+        // ...
+
+        // Do something with response
+        // ...
+
+        return $response->payment_url;
     }
 }

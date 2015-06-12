@@ -60,12 +60,29 @@ class ApiController extends Controller
 
     public function placeOrder()
     {
-        return $this->send(Orders::placeOrder(
+        $redirect = Orders::placeOrder(
             Request::input('shipping'),
             Request::input('products'),
             Request::input('shipping_address'),
             Request::input('email')
-        ));
+        );
+
+        return URL::to($redirect);
+    }
+
+    public function handleSuccessfulPayment()
+    {
+        dd('Payment successful.');
+    }
+
+    public function handleFailedPayment()
+    {
+        dd('Payment failed.');
+    }
+
+    public function handleCancelledPayment()
+    {
+        dd('Payment cancelled');
     }
 
     //
