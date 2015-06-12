@@ -61,9 +61,9 @@ return [
     "address_2"     =>"Address line 2",
     "city"          =>"City",
     "email"         =>"Email",
-    "ship_billing"  =>"Ship to your billing address",
+    "ship_billing"  =>"Use the same address for billing.",
     "ship_different"=>"Ship to a different address",
-    "ship_address"  =>"Shipping Address",
+    "shipping_address"=>"Shipping Address",
     "error_polite"         =>"Sorry, but an error has been made.",
     "mandatory_error"=>"Some mandatory fields were not filled out properly. Please correct and submit the form again.",
     "proceed_checkout"=>"Proceed to secure checkout",
@@ -190,5 +190,6 @@ return [
     "expected_delivery" =>"Expected delivery (days)",
     "optional"          =>"Optional",
     "get_estimate_label"=>"Enter your location to get a price estimate.",
-    "calculate"         =>"Calculate"
+    "calculate"         =>"Calculate",
+    "change_location"   =>"Change location"
 ];

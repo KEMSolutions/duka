@@ -44,7 +44,7 @@ return [
     "sku"           =>"SKU",
     "stock"         =>"En stock",
     "availability"=>"Disponible à la livraison 7 à 10 jours après achat.",
-    "update"        =>"Modifier",
+    "update"        =>"Mettre à jour",
     "service_name"  =>"Nom du service",
     "estimated_transit_time"=>"Jours de transit",
     "cost"          =>"Prix",
@@ -61,9 +61,9 @@ return [
     "address_2"     =>"Adresse ligne 2",
     "city"          =>"Ville",
     "email"         =>"Courriel",
-    "ship_billing"  =>"Utiliser l'adresse de facturation pour la livraison.",
+    "ship_billing"  =>"Utiliser cette adresse pour la facturation",
     "ship_different"=>"Livrer à une adresse différente.",
-    "ship_address"  =>"Adresse de livraison",
+    "shipping_address"=>"Adresse de livraison",
     "error_polite"          =>"Votre formulaire est incomplet.",
     "mandatory_error"       =>"Certains champs obligatoires ne sont pas correctement remplis. Retournez dans le formulaire et renseignez ces champs avant de soumettre à nouveau le formulaire.",
     "proceed_checkout"      =>"Poursuivre vers le paiement sécurisé",
@@ -190,5 +190,7 @@ return [
     "expected_delivery" =>"Date de livraison prévue",
     "optional"          =>"Optionnel",
     "get_estimate_label"=>"Obtenir un estimé de prix",
-    "calculate"         =>"Calculer"
+    "calculate"         =>"Calculer",
+    "or"                =>"ou",
+    "change_location"   =>"Changer destination"
 ];

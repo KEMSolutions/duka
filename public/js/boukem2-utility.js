@@ -77,9 +77,9 @@ var UtilityContainer = {
      */
     getShippingFromForm : function() {
         return res = {
-            "country" : $(".country").val(),
-            "postcode" : $("#postcode").val(),
-            "province" : $("#province").val(),
+            "country" : $("#shippingCountry").val(),
+            "postcode" : $("#shippingPostcode").val(),
+            "province" : $("#shippingProvince").val(),
             "line1" : $("#shippingAddress1").val(),
             "line2" : $("#shippingAddress2").val(),
             "name" : $("#shippingFirstname").val() + " " + $("#shippingLastname").val(),
@@ -175,6 +175,21 @@ var UtilityContainer = {
         var tmp = document.createElement("DIV");
         tmp.innerHTML = html;
         return tmp.textContent || tmp.innerText || "";
+    },
+
+    /**
+     * Finds a hidden element width.
+     *
+     * @param obj
+     * @returns {*}
+     */
+    realWidth : function(obj, origin) {
+        var clone = obj.clone();
+        clone.css("visibility", "hidden");
+        origin.append(clone);
+        var width = clone.outerWidth();
+        clone.remove();
+        return parseInt(width);
     },
 
     /**

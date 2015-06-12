@@ -40,7 +40,7 @@ var LocationContainer = {
         $.getJSON("/js/data/world-states.json", function(data) {
             for(var i=0; i<country.length; i++) {
                 var listItems = '',
-                    $provinces = $("#province").find("[data-country='" + country[i] +"']");
+                    $provinces = $(".province").find("[data-country='" + country[i] +"']");
 
                 $.each(data, function(key, val) {
                     if (data[key].country === country[i] && data[key].short == "QC" ){
@@ -63,18 +63,18 @@ var LocationContainer = {
      */
     updateChosenSelects: function(chosenCountry) {
         if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == "MX"){
-            $('#province').removeAttr('disabled').trigger("chosen:updated");
+            $('.province').removeAttr('disabled').trigger("chosen:updated");
         } else {
-            $('#province').attr('disabled','disabled');
+            $('.province').attr('disabled','disabled');
         }
 
-        $('#province optgroup').attr('disabled','disabled');
+        $('.province optgroup').attr('disabled','disabled');
 
         if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == 'MX'){
-            $('#province [data-country="' + chosenCountry + '"]').removeAttr('disabled');
+            $('.province [data-country="' + chosenCountry + '"]').removeAttr('disabled');
         }
 
-        $('#province').trigger('chosen:updated');
+        $('.province').trigger('chosen:updated');
     },
 
     /**
@@ -90,26 +90,73 @@ var LocationContainer = {
     },
 
     /**
-     * Auto fill the billing address with the billing one
-     *
-     */
-    autoFillBillingAddress : function () {
-        $("#shippingAddress1").on("change", function() {
-            $("#billingAddress").val($(this).val());
-        });
-    },
-
-    /**
      * Registering functions to be called outside of this object.
      *
      */
     init : function() {
         LocationContainer.populateCountry();
         LocationContainer.populateProvincesAndStates(["CA", "US", "MX"], function() {
-            $("#province").chosen();
+            $(".province").chosen();
         });
         LocationContainer.callUpdateChosenSelects();
-        LocationContainer.autoFillBillingAddress();
+
+    }
+}
+
+
+/**
+ * Object responsible for handling billing information.
+ *
+ * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
+ */
+var billingContainer = {
+    autoFillBillingAddress : function(fields, fieldWithRules) {
+        if($(".billing-checkbox").is(":checked"))
+        {
+            //We assume here that fieldWithRules is the shipping postcode.
+            $("#billing" + fieldWithRules[0].id.substring("shipping".length, fieldWithRules[0].id.length)).val(fieldWithRules[0].value);
+
+            for(var i=0; i<fields.length; i++) {
+                //check if the id has the string "shipping".
+                //if it does, delete the shipping prefix and replace it by billing.
+                //Create a new jquery selector and fill it with the value of the shipping one.
+                if (fields[i][0].id.indexOf("shipping") > -1) {
+                    var genericInput = fields[i][0].id.substring("shipping".length, fields[i][0].id.length);
+                    $("#billing" + genericInput).val(fields[i][0].value);
+                }
+            }
+        }
+    },
+
+    /**
+     * Get user's billing address. By default shipping address = billing address.
+     * Set the width of select list at the same time.
+     *
+     */
+    setDifferentBillingAddress : function () {
+        $(".billing-checkbox").on("change", function() {
+            $(".form-billing .chosen-container").width($("#customer_email").outerWidth()-20);
+
+            if (!this.checked) {
+                $(".form-billing").hide().removeClass("hidden").fadeIn();
+                billingContainer.clearBillingAddress();
+            }
+            else {
+                $(".form-billing").fadeOut(function() {
+                    $(this).addClass("hidden");
+                });
+            }
+        })
+    },
+
+    clearBillingAddress : function() {
+          if ($(".form-billing input").val() != "") {
+              $(".form-billing input").val() == "";
+          }
+    },
+
+    init: function() {
+        billingContainer.setDifferentBillingAddress();
     }
 }
 
@@ -138,6 +185,7 @@ var estimateContainer = {
                 shipping_address: UtilityContainer.getShippingFromForm()
             },
             success: function(data) {
+                console.log(data);
                 estimateContainer.init(data);
             },
             error: function(e, status) {
@@ -204,7 +252,7 @@ var estimateContainer = {
         $(".has-error").removeClass("has-error");
 
         var email_value = $("#customer_email").val();
-        var postcode_value = $("#postcode").val();
+        var postcode_value = $("#shippingPostcode").val();
         var country_value = $(".country").val();
 
         for(var i = 0; i<data.shipping.services.length; i++)
@@ -301,7 +349,7 @@ var paymentContainer = {
             priceTransport, taxes;
 
         $(".shipping_method").on("change", function() {
-            priceTransport = parseFloat($(this).data("cost").toFixed(2));
+            priceTransport = $(this).data("cost");
             taxes = paymentContainer.getTaxes(data) + parseFloat($(this).data("taxes"));
             total = parseFloat(subtotal) + parseFloat(priceTransport) + parseFloat(taxes);
 
@@ -367,11 +415,15 @@ var validationContainer = {
      * @param postcode
      * @param country
      */
-    init : function(fields, email, postcode, country) {
-        if (UtilityContainer.validateEmptyFields(fields) && UtilityContainer.validateEmail(email.val()) && UtilityContainer.validatePostCode(postcode.val(), country))
+    init : function(fields, email, shippingInformation, billingInformation) {
+        if (UtilityContainer.validateEmptyFields(fields)
+            && UtilityContainer.validateEmail(email.val())
+            && UtilityContainer.validatePostCode(shippingInformation.postcode, shippingInformation.country)
+            && UtilityContainer.validatePostCode(billingInformation.postcode, billingInformation.country))
         {
             $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
 
+            //delete previously uploaded shipping method (if any)
             if($("#estimate .table-striped").children().length > 0) {
                 $("#estimate .table-striped tbody").empty();
             }
@@ -382,9 +434,14 @@ var validationContainer = {
         {
             UtilityContainer.addErrorClassToFields(fields);
 
-            if(!UtilityContainer.validatePostCode(postcode.val(), country))
+            if(!UtilityContainer.validatePostCode(shippingInformation.postcode, shippingInformation.country))
             {
-                UtilityContainer.addErrorClassToFieldsWithRules(postcode);
+                UtilityContainer.addErrorClassToFieldsWithRules(shippingInformation.postcodeInput);
+            }
+
+            if(!UtilityContainer.validatePostCode(billingInformation.postcode, billingInformation.country))
+            {
+                UtilityContainer.addErrorClassToFieldsWithRules(billingInformation.postcodeInput);
             }
 
             if(!UtilityContainer.validateEmail(email.val()))
@@ -397,7 +454,8 @@ var validationContainer = {
 
         UtilityContainer.removeErrorClassFromFields(fields);
         validationContainer.removeErrorClassFromEmail(email);
-        validationContainer.removeErrorClassFromPostcode(postcode, country);
+        validationContainer.removeErrorClassFromPostcode(shippingInformation.postcodeInput, shippingInformation.country);
+        validationContainer.removeErrorClassFromPostcode(billingInformation.postcodeInput, billingInformation.country);
     }
 }
 
@@ -417,6 +475,7 @@ $(document).ready(function() {
      *
      */
     LocationContainer.init();
+    billingContainer.init();
 
     /**
      * Event triggered when the "Continue" button is hit.
@@ -426,18 +485,51 @@ $(document).ready(function() {
      */
     $("#estimateButton").on("click", function(e) {
         var email = $("#customer_email"),
-            postcode = $("#postcode"),
-            firstName = $("#shippingFirstname"),
-            lastName = $("#shippingLastname"),
-            address1 = $("#shippingAddress1"),
-            city = $("#shippingCity"),
-            phone = $("#shippingTel"),
-            country = $(".country").val(),
-            fields = [firstName, lastName, address1, city, phone ];
+            phone = $("#customer_phone"),
+            shippingFirstName = $("#shippingFirstname"),
+            shippingLastName = $("#shippingLastname"),
+            shippingAddress1 = $("#shippingAddress1"),
+            shippingCity = $("#shippingCity"),
+            shippingCountry = $("#shippingCountry").val(),
+            shippingPostcode = $("#shippingPostcode"),
+            billingFirstName = $("#billingFirstname"),
+            billingLastName = $("#billingLastname"),
+            billingAddress1 = $("#billingAddress1"),
+            billingCity = $("#billingCity"),
+            billingCountry = $("#billingCountry").val(),
+            billingPostcode = ("#billingPostcode"),
+            shippingInformation = {
+                "country" : shippingCountry,
+                "postcode" : $("#shippingPostcode").val(),
+                "postcodeInput" : $("#shippingPostcode")
+            },
+            fields = [
+                shippingFirstName,
+                shippingLastName,
+                shippingAddress1,
+                shippingCity,
+                billingFirstName,
+                billingLastName,
+                billingAddress1,
+                billingCity,
+                email,
+                phone
+            ];
 
         e.preventDefault();
 
-        validationContainer.init(fields, email, postcode, country);
+        //Auto fill billing address if checkbox is checked.
+        billingContainer.autoFillBillingAddress(fields, shippingInformation.postcodeInput);
+
+        //Build the billing information object (from auto fill or entered by hand)
+        var billingInformation = {
+                "country" : billingCountry,
+                "postcode" : $("#billingPostcode").val(),
+                "postcodeInput" : $("#billingPostcode")
+            };
+
+        //Validate all fields and make the ajax call!
+        validationContainer.init(fields, email, shippingInformation, billingInformation);
     });
 });
 

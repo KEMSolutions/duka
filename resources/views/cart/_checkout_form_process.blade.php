@@ -1,52 +1,47 @@
-<div class="col-md-7 cart-content-checkout-process">
-    <form method="post" id="cart_form" class="{{ base64_decode($_COOKIE["quantityCart"]) == "0" ? "hidden" : "" }}" autocomplete="on">
+<div class="col-md-7 cart-content-checkout-process" data-chosen-width="">
+    <form method="post" action="{{ route('api.orders')  }}" id="cart_form" class="{{ base64_decode($_COOKIE["quantityCart"]) == "0" ? "hidden" : "" }}" autocomplete="on">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
         <div class="panel panel-default">
             <!-- Default panel contents -->
             <div class="panel-heading">
                 <span class="badge pull-right">1</span>
-                {{ Lang::get("boukem.taxes_delivery") }}
+                {{ Lang::get("boukem.shipping_address") }}
             </div>
             <div class="panel-body">
 
                 <div class="row">
                     <div class="form-group one-half">
-                        <label for="shippingFirstname" class="form-label" >{{ Lang::get("boukem.first_name") }}</label>
-                        <input type="text" name="shippingFirstname" id="shippingFirstname" class="form-control" required/>
+                        <label for="shipping_address[firstname]" class="form-label" >{{ Lang::get("boukem.first_name") }}</label>
+                        <input type="text" name="shipping_address[firstname]" id="shippingFirstname" class="form-control firstname" required/>
                     </div>
 
                     <div class="form-group one-half">
-                        <label for="shippingLastname" class="form-label" >{{ Lang::get("boukem.last_name") }}</label>
-                        <input type="text" name="shippingLastname" id="shippingLastname" class="form-control" required/>
+                        <label for="shipping_address[lastname]" class="form-label" >{{ Lang::get("boukem.last_name") }}</label>
+                        <input type="text" name="shipping_address[lastname]" id="shippingLastname" class="form-control lastname" required/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="shippingAddress1" class="form-label">{{ Lang::get("boukem.address_1") }}</label>
-                    <input type="text" name="shippingAddress1" id="shippingAddress1" class="form-control" required/>
+                    <label for="shipping_address[line1]" class="form-label">{{ Lang::get("boukem.address_1") }}</label>
+                    <input type="text" name="shipping_address[line1]" id="shippingAddress1" class="form-control address1" required/>
                 </div>
                 <div class="form-group">
-                    <label for="shippingAddress2" class="form-label">{{ Lang::get("boukem.address_2") }} ( {{ Lang::get("boukem.optional") }} )</label>
-                    <input type="text" name="shippingAddress2" id="shippingAddress2" class="form-control"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="billingAddress" class="form-label">{{ Lang::get("boukem.billing_address") }}</label>
-                    <input type="text" name="billingAddress" id="billingAddress" class="form-control" required/>
+                    <label for="shipping_address[line2]" class="form-label">{{ Lang::get("boukem.address_2") }} ( {{ Lang::get("boukem.optional") }} )</label>
+                    <input type="text" name="shipping_address[line2]" id="shippingAddress2" class="form-control address2"/>
                 </div>
 
                 <div class="row">
                     <div class="form-group one-half">
-                        <label for="country">{{ Lang::get("boukem.country") }}</label>
-                        <select name="country" class="country form-control">
+                        <label for="shipping_address[country]">{{ Lang::get("boukem.country") }}</label>
+                        <select name="shipping_address[country]" class="form-control country" id="shippingCountry">
                             {{--Populated from js/data/country-list--}}
                         </select>
                     </div>
 
                     <div class="form-group one-half">
-                        <label for="province">{{ Lang::get("boukem.province_state_reg") }}</label>
-                        <select name="province" id="province" class="form-control">
+                        <label for="shipping_address[province]">{{ Lang::get("boukem.province_state_reg") }}</label>
+                        <select name="shipping_address[province]" class="form-control province" id="shippingProvince">
                             <optgroup data-country="CA" label="{{ Lang::get("boukem.ca_province") }}"></optgroup>
                             <optgroup data-country="US" label="{{ Lang::get("boukem.us_states") }}"></optgroup>
                             <optgroup data-country="MX" label="{{ Lang::get("boukem.mex_states") }}"></optgroup>
@@ -57,13 +52,13 @@
 
                 <div class="row">
                     <div class="form-group one-half">
-                        <label for="shippingCity" class="form-label">{{ Lang::get("boukem.city") }}</label>
-                        <input type="text" name="shippingCity" id="shippingCity" class="form-control" required/>
+                        <label for="shipping_address[city]" class="form-label">{{ Lang::get("boukem.city") }}</label>
+                        <input type="text" name="shipping_address[city]" id="shippingCity" class="form-control city" required/>
                     </div>
 
                     <div class="form-group one-half">
-                        <label for="postalcode" class="control-label">{{ Lang::get("boukem.postal_code") }}</label>
-                        <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="postcode" class="form-control" required>
+                        <label for="shipping_address[postcode]" class="control-label">{{ Lang::get("boukem.postal_code") }}</label>
+                        <input type="text" name="shipping_address[postcode]" value="" placeholder="A1A 1A1" id="shippingPostcode" class="form-control postcode" required>
                     </div>
                 </div>
 
@@ -71,19 +66,85 @@
                 <div class="row">
                     <div class="form-group one-half">
                         <span class="hidden label label-info pull-right" id="why_email" data-toggle="tooltip" data-placement="left" data-trigger="click" title="{{ Lang::get("boukem.keep_email") }}">{{ Lang::get("boukem.why") }}</span>
-                        <label for="customer_email" class="control-label">{{ Lang::get("boukem.email_address") }}</label>
+                        <label for="email" class="control-label">{{ Lang::get("boukem.email_address") }}</label>
                         <input type="email" name="email" id="customer_email" class="form-control" value="" required>
                     </div>
 
                     <div class="form-group one-half">
-                        <label for="shippingTel" class="form-label">{{ Lang::get("boukem.phone") }}</label>
-                        <input type="tel" name="shippingTel" id="shippingTel" class="form-control" required/>
+                        <label for="shipping_address[phone]" class="form-label">{{ Lang::get("boukem.phone") }}</label>
+                        <input type="tel" name="shipping_address[phone]" id="customer_phone" class="form-control " required/>
                     </div>
                 </div>
+
+                <div class="checkbox has-success form-group">
+                    <label>
+                        <input type="checkbox" checked="checked" id="checkboxSuccess" class="billing-checkbox"> {{ Lang::get("boukem.ship_billing") }}
+                    </label>
+                </div>
+
+                <div class="form-billing panel panel-default hidden">
+                    <div class="panel-heading">
+                        {{ Lang::get("boukem.billing_address") }}
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="form-group one-half">
+                                <label for="billing_address[firstname]" class="form-label" >{{ Lang::get("boukem.first_name") }}</label>
+                                <input type="text" name="billing_address[firstname]" id="billingFirstname" class="form-control firstname" required/>
+                            </div>
+
+                            <div class="form-group one-half">
+                                <label for="billing_address[lastname]" class="form-label" >{{ Lang::get("boukem.last_name") }}</label>
+                                <input type="text" name="billing_address[lastname]" id="billingLastname" class="form-control lastname" required/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="billingAddress1" class="form-label">{{ Lang::get("boukem.address_1") }}</label>
+                            <input type="text" name="billing_address[line1]" id="billingAddress1" class="form-control address1" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="billingAddress2" class="form-label">{{ Lang::get("boukem.address_2") }} ( {{ Lang::get("boukem.optional") }} )</label>
+                            <input type="text" name="billing_address[line2]" id="billingAddress2" class="form-control address2"/>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group one-half">
+                                <label for="billing_address[country]">{{ Lang::get("boukem.country") }}</label>
+                                <select name="billing_address[country]" class="form-control country" id="billingCountry">
+                                    {{--Populated from js/data/country-list--}}
+                                </select>
+                            </div>
+
+                            <div class="form-group one-half">
+                                <label for="billing_address[province]">{{ Lang::get("boukem.province_state_reg") }}</label>
+                                <select name="billing_address[province]" class="form-control province" id="billingProvince">
+                                    <optgroup data-country="CA" label="{{ Lang::get("boukem.ca_province") }}"></optgroup>
+                                    <optgroup data-country="US" label="{{ Lang::get("boukem.us_states") }}"></optgroup>
+                                    <optgroup data-country="MX" label="{{ Lang::get("boukem.mex_states") }}"></optgroup>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="form-group one-half">
+                                <label for="billing_address[city]" class="form-label">{{ Lang::get("boukem.city") }}</label>
+                                <input type="text" name="billing_address[city]" id="billingCity" class="form-control city" required/>
+                            </div>
+
+                            <div class="form-group one-half">
+                                <label for="billing_address[postcode]" class="control-label">{{ Lang::get("boukem.postal_code") }}</label>
+                                <input type="text" name="billing_address[postcode]" value="" placeholder="A1A 1A1" id="billingPostcode" class="form-control postcode" required>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- billing panel -->
 
 
                 <button class="btn btn-three pull-right btn-lg" id="estimateButton">{{ Lang::get("boukem.continue") }}</button>
             </div> <!-- panel-body -->
+
         </div>  <!-- first panel -->
 
         <div class="panel panel-default hidden" id="estimate">

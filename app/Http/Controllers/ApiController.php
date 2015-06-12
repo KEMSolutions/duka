@@ -60,14 +60,54 @@ class ApiController extends Controller
 
     public function placeOrder()
     {
-        $redirect = Orders::placeOrder(
-            Request::input('shipping'),
-            Request::input('products'),
-            Request::input('shipping_address'),
-            Request::input('email')
-        );
+        $shipAddress = Request::input('shipping_address');
+        $shipAddress = [
+            "postcode"=>"H2V 4G7",
+            "country"=>"CA",
+            "province"=>"QC",
+            "line1"=>"5412 avenue du Parc",
+            "firstname"=>"Remy Vanherweghem",
+            "lastname"=>"Remy Vanherweghem",
+            "city"=>"Montreal",
+            "phone"=>"514-441-5488"
+        ];
+        $billAddress = Request::input('billing_address');
+        $shipping = [
+            'method' => 'DOM.ZZ',
+            'name' => 'Colis accélérés',
+            'signature' => '1432685850:l0esPFkm0VyT:434d400b84f7e350423fded032c32029b4a3bbca76a859de25f915ff42db5a5c',
+            "price" => "7.86",
+            "delivery" => "2015-05-27",
+            "transit" => 1,
+            "taxes"=> [
+                [
+                    "rate"=> 9.975,
+                    "name"=> "TVQ",
+                    "amount"=> 0.78
+                ],
+                [
+                    "rate"=> 5,
+                    "name"=> "TPS",
+                    "amount"=> 0.39
+                ]
+            ]
+        ];
+        $products = [
+            [
+                "id" => 4321,
+                "quantity" => 1
+            ],
+            [
+                "id" => 1234,
+                "quantity"=> 2
+            ]
+        ];
+        $email = 'remyv@kemsolutions.com';
 
-        return URL::to($redirect);
+
+        $redirect = Orders::placeOrder($shipping, $products, $shipAddress, $email);
+
+        return \Redirect::to($redirect);
     }
 
     public function handleSuccessfulPayment()
