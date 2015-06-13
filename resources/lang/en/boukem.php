@@ -191,5 +191,6 @@ return [
     "optional"          =>"Optional",
     "get_estimate_label"=>"Enter your location to get a price estimate.",
     "calculate"         =>"Calculate",
+    "or"                =>"or",
     "change_location"   =>"Change location"
 ];
