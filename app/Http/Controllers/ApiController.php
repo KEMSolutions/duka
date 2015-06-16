@@ -60,18 +60,41 @@ class ApiController extends Controller
 
     public function placeOrder()
     {
+        // Retrieve shipment address.
         $shipAddress = Request::input('shipping_address');
-        $shipAddress = [
-            "postcode"=>"H2V 4G7",
-            "country"=>"CA",
-            "province"=>"QC",
-            "line1"=>"5412 avenue du Parc",
-            "firstname"=>"Remy Vanherweghem",
-            "lastname"=>"Remy Vanherweghem",
-            "city"=>"Montreal",
-            "phone"=>"514-441-5488"
-        ];
-        $billAddress = Request::input('billing_address');
+        $shipAddress['name'] = $shipAddress['firstname'] .' '. $shipAddress['lastname'];
+
+        // Retrieve billing address.
+        $useShipAddress = Request::input('use_shipping_address', false);
+        if ($useShipAddress) {
+            $billAddress = null;
+        } else {
+            $billAddress = Request::input('billing_address');
+            $billAddress['name'] = $billAddress['firstname'] .' '. $billAddress['lastname'];
+        }
+
+        // Retrieve shipping details.
+        $shipping = Request::input('shipping');
+
+        // Retrieve product list.
+        $products = Request::input('products');
+
+        // Retrieve email address.
+        $email = Request::input('email');
+
+
+
+        // Dummy data.
+//        $shipAddress = [
+//            "postcode"=>"H2V 4G7",
+//            "country"=>"CA",
+//            "province"=>"QC",
+//            "line1"=>"5412 avenue du Parc",
+//            "name"=>"Remy Vanherweghem",
+//            "city"=>"Montreal",
+//            "phone"=>"514-441-5488"
+//        ];
+//        $billAddress = null;
         $shipping = [
             'method' => 'DOM.ZZ',
             'name' => 'Colis accélérés',
@@ -102,10 +125,10 @@ class ApiController extends Controller
                 "quantity"=> 2
             ]
         ];
-        $email = 'remyv@kemsolutions.com';
+//        $email = 'remyv@kemsolutions.com';
 
 
-        $redirect = Orders::placeOrder($shipping, $products, $shipAddress, $email);
+        $redirect = Orders::placeOrder($shipping, $products, $email, $shipAddress, $billAddress);
 
         return \Redirect::to($redirect);
     }

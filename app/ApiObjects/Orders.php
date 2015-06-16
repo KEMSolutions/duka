@@ -70,16 +70,32 @@ class Orders extends KemApiObject
         return $estimate;
     }
 
-    public function placeOrder($shipping, $products, $address, $email)
+    /**
+     * @param $shippingDetails
+     * @param $productList
+     * @param $email
+     * @param $shippingAddress
+     * @param null $billingAddress
+     * @return mixed
+     */
+    public function placeOrder($shippingDetails, $productList, $email, $shippingAddress, $billingAddress = null)
     {
+        // Build request body.
         $data = new \stdClass;
+
+        // Set return URLs.
         $data->success_url = route('api.orders.success');
         $data->failure_url = route('api.orders.failure');
         $data->cancel_url = route('api.orders.cancel');
+
+        // Set order details.
         $data->email = $email;
-        $data->shipping = $shipping;
-        $data->products = $products;
-        $data->shipping_address = $address;
+        $data->shipping = $shippingDetails;
+        $data->products = $productList;
+        $data->shipping_address = $shippingAddress;
+        if ($billingAddress) {
+            $data->billing_address = $billingAddress;
+        }
 
         $response = KemAPI::post($this->baseRequest, $data);
 
