@@ -12,22 +12,22 @@
 
                 <div class="row">
                     <div class="form-group one-half">
-                        <label for="shipping_address[firstname]" class="form-label" >{{ Lang::get("boukem.first_name") }}</label>
+                        <label for="shipping_address[firstname]" class="control-label" >{{ Lang::get("boukem.first_name") }}</label>
                         <input type="text" name="shipping_address[firstname]" id="shippingFirstname" class="form-control firstname" required/>
                     </div>
 
                     <div class="form-group one-half">
-                        <label for="shipping_address[lastname]" class="form-label" >{{ Lang::get("boukem.last_name") }}</label>
+                        <label for="shipping_address[lastname]" class="control-label" >{{ Lang::get("boukem.last_name") }}</label>
                         <input type="text" name="shipping_address[lastname]" id="shippingLastname" class="form-control lastname" required/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="shipping_address[line1]" class="form-label">{{ Lang::get("boukem.address_1") }}</label>
+                    <label for="shipping_address[line1]" class="control-label">{{ Lang::get("boukem.address_1") }}</label>
                     <input type="text" name="shipping_address[line1]" id="shippingAddress1" class="form-control address1" required/>
                 </div>
                 <div class="form-group">
-                    <label for="shipping_address[line2]" class="form-label">{{ Lang::get("boukem.address_2") }} ( {{ Lang::get("boukem.optional") }} )</label>
+                    <label for="shipping_address[line2]" class="control-label">{{ Lang::get("boukem.address_2") }} ( {{ Lang::get("boukem.optional") }} )</label>
                     <input type="text" name="shipping_address[line2]" id="shippingAddress2" class="form-control address2"/>
                 </div>
 
@@ -52,7 +52,7 @@
 
                 <div class="row">
                     <div class="form-group one-half">
-                        <label for="shipping_address[city]" class="form-label">{{ Lang::get("boukem.city") }}</label>
+                        <label for="shipping_address[city]" class="control-label">{{ Lang::get("boukem.city") }}</label>
                         <input type="text" name="shipping_address[city]" id="shippingCity" class="form-control city" required/>
                     </div>
 
@@ -71,7 +71,7 @@
                     </div>
 
                     <div class="form-group one-half">
-                        <label for="shipping_address[phone]" class="form-label">{{ Lang::get("boukem.phone") }}</label>
+                        <label for="shipping_address[phone]" class="control-label">{{ Lang::get("boukem.phone") }}</label>
                         <input type="tel" name="shipping_address[phone]" id="customer_phone" class="form-control " required/>
                     </div>
                 </div>
@@ -89,22 +89,22 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="form-group one-half">
-                                <label for="billing_address[firstname]" class="form-label" >{{ Lang::get("boukem.first_name") }}</label>
+                                <label for="billing_address[firstname]" class="control-label" >{{ Lang::get("boukem.first_name") }}</label>
                                 <input type="text" name="billing_address[firstname]" id="billingFirstname" class="form-control firstname" required/>
                             </div>
 
                             <div class="form-group one-half">
-                                <label for="billing_address[lastname]" class="form-label" >{{ Lang::get("boukem.last_name") }}</label>
+                                <label for="billing_address[lastname]" class="control-label" >{{ Lang::get("boukem.last_name") }}</label>
                                 <input type="text" name="billing_address[lastname]" id="billingLastname" class="form-control lastname" required/>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="billingAddress1" class="form-label">{{ Lang::get("boukem.address_1") }}</label>
+                            <label for="billingAddress1" class="control-label">{{ Lang::get("boukem.address_1") }}</label>
                             <input type="text" name="billing_address[line1]" id="billingAddress1" class="form-control address1" required/>
                         </div>
                         <div class="form-group">
-                            <label for="billingAddress2" class="form-label">{{ Lang::get("boukem.address_2") }} ( {{ Lang::get("boukem.optional") }} )</label>
+                            <label for="billingAddress2" class="control-label">{{ Lang::get("boukem.address_2") }} ( {{ Lang::get("boukem.optional") }} )</label>
                             <input type="text" name="billing_address[line2]" id="billingAddress2" class="form-control address2"/>
                         </div>
 
@@ -129,7 +129,7 @@
 
                         <div class="row">
                             <div class="form-group one-half">
-                                <label for="billing_address[city]" class="form-label">{{ Lang::get("boukem.city") }}</label>
+                                <label for="billing_address[city]" class="control-label">{{ Lang::get("boukem.city") }}</label>
                                 <input type="text" name="billing_address[city]" id="billingCity" class="form-control city" required/>
                             </div>
 

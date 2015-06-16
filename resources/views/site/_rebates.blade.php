@@ -9,10 +9,10 @@
 
                 {{--Include the appropriate layout (dense or regular cards) according to the layoutDense boolean--}}
                 @if($layoutData["rebates"]["layoutDense"])
-                    @include("component._product_card_dense",
+                    @include("product.layout._product_card_dense",
                     ["products" => array_slice($layoutData["rebates"]["products"], 0, $layoutData["rebates"]["limit"])])
                 @elseif(!$layoutData["rebates"]["layoutDense"])
-                    @include("component._product_card",
+                    @include("product.layout._product_card",
                     ["products" => array_slice($layoutData["rebates"]["products"], 0, $layoutData["rebates"]["limit"])])
                 @endif
 
