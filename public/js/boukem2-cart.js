@@ -262,7 +262,16 @@ var estimateContainer = {
             "<td>" + data.shipping.services[i].transit + "</td>" +
             "<td>" + data.shipping.services[i].delivery + "</td>" +
             "<td>" + data.shipping.services[i].price + "</td>" +
-            "<td><input type='radio' name='shipment' class='shipping_method' data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].method, data) + "' data-cost='" + data.shipping.services[i].price + "' value='" + data.shipping.services[i].method + "'></td>";
+            "<td>" +
+                "<input " +
+                "type='radio' " +
+                "name='shipment' " +
+                "class='shipping_method' " +
+                "data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].method, data) + "' " +
+                "data-cost='" + data.shipping.services[i].price + "' " +
+                "data-value='" + data.shipping.services[i].method + "' " +
+                "value='" + btoa(data.shipping.services[i]) + "' >" +
+                "</td>";
 
             $("#estimate .table-striped").append(serviceDOM);
         }
@@ -281,7 +290,7 @@ var estimateContainer = {
 
         for(var i=0; i<availableShipment.length; i++)
         {
-            if (defaultShipment.indexOf(availableShipment[i].value) != -1)
+            if (defaultShipment.indexOf(availableShipment[i].dataset.value) != -1)
             {
                 availableShipment[i].checked = true;
             }
