@@ -66,8 +66,7 @@ class ApiController extends Controller
             "country"=>"CA",
             "province"=>"QC",
             "line1"=>"5412 avenue du Parc",
-            "firstname"=>"Remy Vanherweghem",
-            "lastname"=>"Remy Vanherweghem",
+            "name"=>"Remy Vanherweghem",
             "city"=>"Montreal",
             "phone"=>"514-441-5488"
         ];

@@ -80,6 +80,7 @@ class Orders extends KemApiObject
         $data->shipping = $shipping;
         $data->products = $products;
         $data->shipping_address = $address;
+//        $data->billing_address = null;
 
         $response = KemAPI::post($this->baseRequest, $data);
 
