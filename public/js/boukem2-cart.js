@@ -270,7 +270,7 @@ var estimateContainer = {
                 "data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].method, data) + "' " +
                 "data-cost='" + data.shipping.services[i].price + "' " +
                 "data-value='" + data.shipping.services[i].method + "' " +
-                "value='" + btoa(data.shipping.services[i]) + "' >" +
+                "value='" + btoa(JSON.stringify(data.shipping.services[i])) + "' >" +
             "</td>";
 
             $("#estimate .table-striped").append(serviceDOM);
