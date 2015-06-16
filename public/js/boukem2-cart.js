@@ -57,9 +57,10 @@ var LocationContainer = {
     },
 
     /**
-     * Event function enabling or disabling postcode and province fields according to the chosen country
+     * Event function enabling or disabling postcode and province fields according to the chosen country and the provided input (shipping or billing)
      *
      * @param chosenCountry
+     * @param input
      */
     updateChosenSelects: function(chosenCountry, input) {
         if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == "MX"){
@@ -79,9 +80,8 @@ var LocationContainer = {
     },
 
     /**
-     * Triggers updateChosenSelects($country)
+     * Triggers updateChosenSelects($country, $input)
      * This function will be registered in init().
-     * TODO: Display appropriate provinces at the beginning of the process
      *
      */
     callUpdateChosenSelects: function() {
@@ -101,8 +101,7 @@ var LocationContainer = {
     init : function() {
         LocationContainer.populateCountry();
         LocationContainer.populateProvincesAndStates(["CA", "US", "MX"], function() {
-            $("#shippingProvince").chosen();
-            $("#billingProvince").chosen();
+            $(".province").chosen();
         });
         LocationContainer.callUpdateChosenSelects();
 
@@ -116,6 +115,16 @@ var LocationContainer = {
  * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
  */
 var billingContainer = {
+
+    /**
+     * Fill the billing address with the shipping address.
+     * First parameter is an array of all fields that only need basic validation (empty or not)
+     * Second parameter is an input that requires more advanced verification (postcode)
+     *
+     *
+     * @param fields
+     * @param fieldWithRules
+     */
     autoFillBillingAddress : function(fields, fieldWithRules) {
         if($(".billing-checkbox").is(":checked"))
         {
@@ -155,6 +164,10 @@ var billingContainer = {
         })
     },
 
+    /**
+     * Clear the billing form.
+     *
+     */
     clearBillingAddress : function() {
           if ($(".form-billing input").val() != "") {
               $(".form-billing input").val() == "";
