@@ -336,7 +336,7 @@ var UtilityContainer = {
      * @returns {string}
      */
     getCartTotal : function(serviceCode, data) {
-        var taxes = parseFloat(UtilityContainer.getShipmentTaxes(serviceCode, data)) + parseFloat(UtilityContainer.getCartTaxes(serviceCode, data)),
+        var taxes = parseFloat(UtilityContainer.getCartTaxes(serviceCode.method, data)),
             shipping = parseFloat(UtilityContainer.getCheapestShippingMethod(data).fare),
             subtotal = parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()),
             total = (taxes + shipping + subtotal).toFixed(2);
