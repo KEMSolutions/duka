@@ -265,13 +265,13 @@ var estimateContainer = {
             "<td>" +
                 "<input " +
                 "type='radio' " +
-                "name='shipment' " +
+                "name='shipping' " +
                 "class='shipping_method' " +
                 "data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].method, data) + "' " +
                 "data-cost='" + data.shipping.services[i].price + "' " +
                 "data-value='" + data.shipping.services[i].method + "' " +
                 "value='" + btoa(data.shipping.services[i]) + "' >" +
-                "</td>";
+            "</td>";
 
             $("#estimate .table-striped").append(serviceDOM);
         }
@@ -286,7 +286,7 @@ var estimateContainer = {
 
     selectDefaultShipmentMethod : function() {
         var defaultShipment = ["DOM.EP", "USA.TP", "INT.TP"],
-            availableShipment = $("input[name=shipment]");
+            availableShipment = $("input[name=shipping]");
 
         for(var i=0; i<availableShipment.length; i++)
         {
