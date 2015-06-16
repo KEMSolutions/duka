@@ -40,7 +40,7 @@ var LocationContainer = {
         $.getJSON("/js/data/world-states.json", function(data) {
             for(var i=0; i<country.length; i++) {
                 var listItems = '',
-                    $provinces = $(".province").find("[data-country='" + country[i] +"']");
+                    $province = $(".province").find("[data-country='" + country[i] +"']");
 
                 $.each(data, function(key, val) {
                     if (data[key].country === country[i] && data[key].short == "QC" ){
@@ -50,7 +50,7 @@ var LocationContainer = {
                         listItems += "<option value='" + data[key].short + "'>" + data[key].name + "</option>";
                     }
                 });
-                $provinces.append(listItems);
+                $province.append(listItems);
             }
             callback();
         });
@@ -61,20 +61,21 @@ var LocationContainer = {
      *
      * @param chosenCountry
      */
-    updateChosenSelects: function(chosenCountry) {
+    updateChosenSelects: function(chosenCountry, input) {
         if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == "MX"){
-            $('.province').removeAttr('disabled').trigger("chosen:updated");
+            $(input).removeAttr('disabled').trigger("chosen:updated");
         } else {
-            $('.province').attr('disabled','disabled');
+            $(input).attr('disabled','disabled');
         }
 
-        $('.province optgroup').attr('disabled','disabled');
+        $(input + ' optgroup').attr('disabled','disabled');
 
         if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == 'MX'){
-            $('.province [data-country="' + chosenCountry + '"]').removeAttr('disabled');
+            $(input + ' [data-country="' + chosenCountry + '"]').removeAttr('disabled');
+
         }
 
-        $('.province').trigger('chosen:updated');
+        $(input).trigger('chosen:updated');
     },
 
     /**
@@ -84,8 +85,12 @@ var LocationContainer = {
      *
      */
     callUpdateChosenSelects: function() {
-        $(".country").on("change", function() {
-            LocationContainer.updateChosenSelects($(this).val());
+        $("#billingCountry").on("change", function() {
+            LocationContainer.updateChosenSelects($(this).val(), "#billingProvince");
+        });
+
+        $("#shippingCountry").on("change", function() {
+            LocationContainer.updateChosenSelects($(this).val(), "#shippingProvince");
         });
     },
 
@@ -96,7 +101,8 @@ var LocationContainer = {
     init : function() {
         LocationContainer.populateCountry();
         LocationContainer.populateProvincesAndStates(["CA", "US", "MX"], function() {
-            $(".province").chosen();
+            $("#shippingProvince").chosen();
+            $("#billingProvince").chosen();
         });
         LocationContainer.callUpdateChosenSelects();
 
