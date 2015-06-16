@@ -115,17 +115,18 @@ class ApiController extends Controller
                 ]
             ]
         ];
-        $products = [
-            [
-                "id" => 4321,
-                "quantity" => 1
-            ],
-            [
-                "id" => 1234,
-                "quantity"=> 2
-            ]
-        ];
+//        $products = [
+//            4321 => [
+//                "id" => 4321,
+//                "quantity" => 1
+//            ],
+//            1234 => [
+//                "id" => 1234,
+//                "quantity"=> 2
+//            ]
+//        ];
 //        $email = 'remyv@kemsolutions.com';
+
 
 
         $redirect = Orders::placeOrder($shipping, $products, $email, $shipAddress, $billAddress);
@@ -133,16 +134,19 @@ class ApiController extends Controller
         return \Redirect::to($redirect);
     }
 
+    // TODO: handle succesful payments.
     public function handleSuccessfulPayment()
     {
         dd('Payment successful.');
     }
 
+    // TODO: handle failed payments.
     public function handleFailedPayment()
     {
         dd('Payment failed.');
     }
 
+    // TODO: handle cancelled payments.
     public function handleCancelledPayment()
     {
         dd('Payment cancelled');
