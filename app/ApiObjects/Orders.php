@@ -34,7 +34,7 @@ class Orders extends KemApiObject
             return $this->badRequest('Invalid parameters.');
         } elseif ($address['country'] == 'CA' && strlen($address['province']) != 2) {
             Log::info('Invalid province code for order estimate.');
-            return $this->badRequest('Invalid parameters.');
+            return $this->badRequest('Shipements to Canada must include a province code.');
         }
 
         // Prepare API request body.
