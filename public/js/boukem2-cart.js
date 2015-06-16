@@ -3,7 +3,7 @@
  *
  * @type {{populateCountry: Function, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, autoFillBillingAddress: Function, init: Function}}
  */
-var LocationContainer = {
+var locationContainer = {
 
     /**
      * Function to populate country list
@@ -86,11 +86,11 @@ var LocationContainer = {
      */
     callUpdateChosenSelects: function() {
         $("#billingCountry").on("change", function() {
-            LocationContainer.updateChosenSelects($(this).val(), "#billingProvince");
+            locationContainer.updateChosenSelects($(this).val(), "#billingProvince");
         });
 
         $("#shippingCountry").on("change", function() {
-            LocationContainer.updateChosenSelects($(this).val(), "#shippingProvince");
+            locationContainer.updateChosenSelects($(this).val(), "#shippingProvince");
         });
     },
 
@@ -99,14 +99,16 @@ var LocationContainer = {
      *
      */
     init : function() {
-        LocationContainer.populateCountry();
-        LocationContainer.populateProvincesAndStates(["CA", "US", "MX"], function() {
+        locationContainer.populateCountry();
+        locationContainer.populateProvincesAndStates(["CA", "US", "MX"], function() {
             $(".province").chosen();
         });
-        LocationContainer.callUpdateChosenSelects();
+        locationContainer.callUpdateChosenSelects();
 
     }
 }
+
+
 
 
 /**
@@ -179,6 +181,11 @@ var billingContainer = {
     }
 }
 
+
+
+
+
+
 /**
  * Object responsible for handling the estimation of user's purchase.
  *
@@ -195,9 +202,6 @@ var estimateContainer = {
             type: "POST",
             url: "/api/estimate",
             data: {
-                success_url: "example.com",
-                failure_url: "example.com",
-                cancel_url: "example.com",
                 email: $("#customer_email").val(),
                 shipping: {},
                 products: UtilityContainer.getProductsFromLocalStorage(),
@@ -335,6 +339,10 @@ var estimateContainer = {
 
 }
 
+
+
+
+
 /**
  * Object responsible for handling the payment panel.
  *
@@ -386,8 +394,6 @@ var paymentContainer = {
             $("#price_taxes").text(taxes.toFixed(2));
             $("#price_total").text(total.toFixed(2));
         });
-
-
     },
 
     /**
@@ -406,7 +412,6 @@ var paymentContainer = {
                taxes += data.taxes[i].amount;
            }
         }
-
         return taxes;
     },
 
@@ -419,8 +424,33 @@ var paymentContainer = {
         paymentContainer.displayPaymentPanel();
         paymentContainer.initPaymentPanel(data);
         paymentContainer.updatePaymentPanel(data);
+        paymentProcessContainer.test();
     }
 }
+
+
+var paymentProcessContainer = {
+    test: function() {
+        $("#checkoutButton").on("click", function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                method: "POST",
+                url: "/api/orders",
+                data: $("#cart_form").serialize(),
+                success: function(data) {
+                    console.log(data);
+                },
+                error: function() {
+                    console.log("error");
+                }
+            });
+
+        });
+    }
+}
+
+
 
 var validationContainer = {
 
@@ -487,6 +517,10 @@ var validationContainer = {
     }
 }
 
+
+
+
+
 $(document).ready(function() {
     /**
      * Sets up the ajax token for all ajax requests
@@ -503,7 +537,7 @@ $(document).ready(function() {
      * Set the form focus on first name field
      *
      */
-    LocationContainer.init();
+    locationContainer.init();
     billingContainer.init();
     $("#shippingFirstname").focus();
 
