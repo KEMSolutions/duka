@@ -30,7 +30,7 @@
                                         </p>
 
                                         <p>
-                                            {{ str_limit(strip_tags($product->localization->short_description), 100, "...") }}
+                                            {{ str_limit(strip_tags($product->localization->short_description), 140, "...") }}
 
                                             <br/>
                                             <button class="btn btn-one btn-xs buybutton"

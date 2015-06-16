@@ -471,11 +471,13 @@ $(document).ready(function() {
     });
 
     /**
-     * Populate select lists.
+     * Populate select lists and set up billing address container behaviour.
+     * Set the form focus on first name field
      *
      */
     LocationContainer.init();
     billingContainer.init();
+    $("#shippingFirstname").focus();
 
     /**
      * Event triggered when the "Continue" button is hit.
