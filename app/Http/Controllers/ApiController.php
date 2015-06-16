@@ -60,8 +60,6 @@ class ApiController extends Controller
 
     public function placeOrder()
     {
-        dd($_POST);
-
         // Retrieve shipment address.
         $shipAddress = Request::input('shipping_address');
         $shipAddress['name'] = $shipAddress['firstname'] .' '. $shipAddress['lastname'];
