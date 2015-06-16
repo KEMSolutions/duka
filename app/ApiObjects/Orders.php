@@ -100,10 +100,13 @@ class Orders extends KemApiObject
         $response = KemAPI::post($this->baseRequest, $data);
 
         // Check that response is not an error
-        // ...
+        if (property_exists($response, 'error'))
+        {
+            \Log::error($response->error);
 
-        // Do something with response
-        // ...
+            // TODO: Redirect to cart and display an error message.
+            abort(404, \Lang::get('boukem.error_occurred'));
+        }
 
         return $response->payment_url;
     }
