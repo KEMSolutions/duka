@@ -7,6 +7,7 @@ use Layouts;
 use Orders;
 use Products;
 use Request;
+use Redirect;
 
 use Illuminate\Http\JsonResponse;
 
@@ -129,9 +130,9 @@ class ApiController extends Controller
 
 
 
-        $redirect = Orders::placeOrder($shipping, $products, $email, $shipAddress, $billAddress);
+        $response = Orders::placeOrder($shipping, $products, $email, $shipAddress, $billAddress);
 
-        return \Redirect::to($redirect);
+        return Request::ajax() ? $this->send($response) : Redirect::to($response->payment_url);
     }
 
     // TODO: handle succesful payments.
