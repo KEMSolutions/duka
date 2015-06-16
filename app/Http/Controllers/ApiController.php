@@ -95,26 +95,26 @@ class ApiController extends Controller
 //            "phone"=>"514-441-5488"
 //        ];
 //        $billAddress = null;
-//        $shipping = [
-//            'method' => 'DOM.ZZ',
-//            'name' => 'Colis accélérés',
-//            'signature' => '1432685850:l0esPFkm0VyT:434d400b84f7e350423fded032c32029b4a3bbca76a859de25f915ff42db5a5c',
-//            "price" => "7.86",
-//            "delivery" => "2015-05-27",
-//            "transit" => 1,
-//            "taxes"=> [
-//                [
-//                    "rate"=> 9.975,
-//                    "name"=> "TVQ",
-//                    "amount"=> 0.78
-//                ],
-//                [
-//                    "rate"=> 5,
-//                    "name"=> "TPS",
-//                    "amount"=> 0.39
-//                ]
-//            ]
-//        ];
+        $shipping = [
+            'method' => 'DOM.ZZ',
+            'name' => 'Colis accélérés',
+            'signature' => '1432685850:l0esPFkm0VyT:434d400b84f7e350423fded032c32029b4a3bbca76a859de25f915ff42db5a5c',
+            "price" => "7.86",
+            "delivery" => "2015-05-27",
+            "transit" => 1,
+            "taxes"=> [
+                [
+                    "rate"=> 9.975,
+                    "name"=> "TVQ",
+                    "amount"=> 0.78
+                ],
+                [
+                    "rate"=> 5,
+                    "name"=> "TPS",
+                    "amount"=> 0.39
+                ]
+            ]
+        ];
         $products = [
             [
                 "id" => 4321,
