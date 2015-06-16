@@ -78,7 +78,7 @@
 
                 <div class="checkbox has-success form-group">
                     <label>
-                        <input type="checkbox" checked="checked" id="checkboxSuccess" class="billing-checkbox"> {{ Lang::get("boukem.ship_billing") }}
+                        <input type="checkbox" name="use_shipping_address" checked="checked" id="checkboxSuccess" class="billing-checkbox"> {{ Lang::get("boukem.ship_billing") }}
                     </label>
                 </div>
 

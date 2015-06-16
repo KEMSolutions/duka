@@ -60,37 +60,63 @@ class ApiController extends Controller
 
     public function placeOrder()
     {
+        dd($_POST);
+
+        // Retrieve shipment address.
         $shipAddress = Request::input('shipping_address');
-        $shipAddress = [
-            "postcode"=>"H2V 4G7",
-            "country"=>"CA",
-            "province"=>"QC",
-            "line1"=>"5412 avenue du Parc",
-            "name"=>"Remy Vanherweghem",
-            "city"=>"Montreal",
-            "phone"=>"514-441-5488"
-        ];
-        $billAddress = Request::input('billing_address');
-        $shipping = [
-            'method' => 'DOM.ZZ',
-            'name' => 'Colis accélérés',
-            'signature' => '1432685850:l0esPFkm0VyT:434d400b84f7e350423fded032c32029b4a3bbca76a859de25f915ff42db5a5c',
-            "price" => "7.86",
-            "delivery" => "2015-05-27",
-            "transit" => 1,
-            "taxes"=> [
-                [
-                    "rate"=> 9.975,
-                    "name"=> "TVQ",
-                    "amount"=> 0.78
-                ],
-                [
-                    "rate"=> 5,
-                    "name"=> "TPS",
-                    "amount"=> 0.39
-                ]
-            ]
-        ];
+        $shipAddress['name'] = $shipAddress['firstname'] .' '. $shipAddress['lastname'];
+
+        // Retrieve billing address.
+        $useShipAddress = Request::input('use_shipping_address', false);
+        if ($useShipAddress) {
+            $billAddress = null;
+        } else {
+            $billAddress = Request::input('billing_address');
+            $billAddress['name'] = $billAddress['firstname'] .' '. $billAddress['lastname'];
+        }
+
+        // Retrieve shipping details.
+        $shipping = Request::input('shipping');
+
+        // Retrieve product list.
+        $products = Request::input('products');
+
+        // Retrieve email address.
+        $email = Request::input('email');
+
+
+
+        // Dummy data.
+//        $shipAddress = [
+//            "postcode"=>"H2V 4G7",
+//            "country"=>"CA",
+//            "province"=>"QC",
+//            "line1"=>"5412 avenue du Parc",
+//            "name"=>"Remy Vanherweghem",
+//            "city"=>"Montreal",
+//            "phone"=>"514-441-5488"
+//        ];
+//        $billAddress = null;
+//        $shipping = [
+//            'method' => 'DOM.ZZ',
+//            'name' => 'Colis accélérés',
+//            'signature' => '1432685850:l0esPFkm0VyT:434d400b84f7e350423fded032c32029b4a3bbca76a859de25f915ff42db5a5c',
+//            "price" => "7.86",
+//            "delivery" => "2015-05-27",
+//            "transit" => 1,
+//            "taxes"=> [
+//                [
+//                    "rate"=> 9.975,
+//                    "name"=> "TVQ",
+//                    "amount"=> 0.78
+//                ],
+//                [
+//                    "rate"=> 5,
+//                    "name"=> "TPS",
+//                    "amount"=> 0.39
+//                ]
+//            ]
+//        ];
         $products = [
             [
                 "id" => 4321,
@@ -101,10 +127,10 @@ class ApiController extends Controller
                 "quantity"=> 2
             ]
         ];
-        $email = 'remyv@kemsolutions.com';
+//        $email = 'remyv@kemsolutions.com';
 
 
-        $redirect = Orders::placeOrder($shipping, $products, $shipAddress, $email);
+        $redirect = Orders::placeOrder($shipping, $products, $email, $shipAddress, $billAddress);
 
         return \Redirect::to($redirect);
     }
