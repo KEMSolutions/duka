@@ -132,6 +132,6 @@ class Orders extends KemApiObject
             abort(404, \Lang::get('boukem.error_occurred'));
         }
 
-        return $response->payment_url;
+        return $response;
     }
 }
