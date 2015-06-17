@@ -438,11 +438,28 @@ var paymentProcessContainer = {
                 method: "POST",
                 url: "/api/orders",
                 data: $("#cart_form").serialize(),
+                cache: false,
                 success: function(data) {
                     console.log(data);
+
+                    //Create a localStorage object containing the id and the verification code.
+                    var paymentId = data.id,
+                        paymentVerification = data.verification;
+
+                    localStorage.setItem("_payment " + paymentId, JSON.stringify( {
+                        id : paymentId,
+                        verification : paymentVerification
+                    } ));
+
+                    //redirect the user to the checkout page if he backs from the payment page
+                    history.pushState({data: data}, "Checkout ","/dev/cart");
+
+                    //redirect to success url
+                    window.location.replace(data.payment_details.payment_url);
                 },
-                error: function() {
-                    console.log("error");
+                error: function(xhr, e) {
+                    console.log(xhr);
+                    console.log(e);
                 }
             });
 

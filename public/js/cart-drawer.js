@@ -135,7 +135,7 @@ var cartLogicContainer = {
     loadItem : function() {
         for(var i = 0; i<localStorage.length; i++)
         {
-            if (localStorage.key(i).lastIndexOf("_", 0) === 0)
+            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
             {
                 cartLogicContainer.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
             }

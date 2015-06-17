@@ -16,7 +16,7 @@ var UtilityContainer = {
 
         for(var i =0; i<localStorage.length; i++)
         {
-            if (localStorage.key(i).lastIndexOf("_", 0) === 0)
+            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
             {
                 var product = JSON.parse(localStorage.getItem(localStorage.key(i))),
                     productId = product.product,
@@ -44,7 +44,7 @@ var UtilityContainer = {
 
         for(var i = 0; i<localStorage.length; i++)
         {
-            if (localStorage.key(i).lastIndexOf("_", 0) === 0)
+            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
             {
                 total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
             }
