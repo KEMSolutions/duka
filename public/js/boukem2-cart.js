@@ -448,7 +448,7 @@ var paymentProcessContainer = {
                     var paymentId = data.id,
                         paymentVerification = data.verification;
 
-                    localStorage.setItem("_payment " + paymentId, JSON.stringify( {
+                    localStorage.setItem("_payment", JSON.stringify( {
                         id : paymentId,
                         verification : paymentVerification
                     } ));
