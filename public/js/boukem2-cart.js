@@ -434,6 +434,8 @@ var paymentProcessContainer = {
         $("#checkoutButton").on("click", function (e) {
             e.preventDefault();
 
+            $('#checkoutButton').html('<i class="fa fa-spinner fa-spin"></i>');
+
             $.ajax({
                 method: "POST",
                 url: "/api/orders",
@@ -454,7 +456,7 @@ var paymentProcessContainer = {
                     //redirect the user to the checkout page if he backs from the payment page
                     history.pushState({data: data}, "Checkout ","/dev/cart");
 
-                    //redirect to success url
+                    //Redirect to success url
                     window.location.replace(data.payment_details.payment_url);
                 },
                 error: function(xhr, e) {
