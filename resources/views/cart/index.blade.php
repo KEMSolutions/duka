@@ -8,6 +8,10 @@
         <link rel="stylesheet" href="{{ asset('/css/chosen_plugin/chosen_custom.css') }}"/>
     @endsection
 
+    @section("overlay_message")
+        @include("cart._unpaid_payment")
+    @endsection
+
     @section("content")
         @if (!isset($_COOKIE["quantityCart"]) || base64_decode($_COOKIE["quantityCart"]) == "0")
             @include("cart._empty")

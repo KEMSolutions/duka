@@ -37,6 +37,8 @@
 	<![endif]-->
 </head>
 <body>
+	@yield("overlay_message")
+
 	@include('layout._header')
 	@include('layout._search')
 

@@ -3,6 +3,9 @@ html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
+
+  position: relative;
+  min-height: 100%;
 }
 body {
   margin: 0;
@@ -6478,6 +6481,20 @@ section.slice {
 
 .text-center {
   text-align: center;
+}
+
+.vertical-align {
+  position: relative;
+  top: 25%;
+  transform: translateY(-25%);
+}
+
+.fullScreen {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 10000;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .widget {
