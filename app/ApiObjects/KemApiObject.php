@@ -92,7 +92,10 @@ abstract class KemApiObject
         // Cache object by ID and by slug.
         $expires = Carbon::now()->addHours(3);
         Cache::put($this->cacheNamespace . $object->id, $object, $expires);
-        Cache::put($this->cacheNamespace . $object->slug, $object, $expires);
+        if (property_exists($object, 'slug')) {
+            Cache::put($this->cacheNamespace . $object->slug, $object, $expires);
+        }
+
         Log::info('Caching "'. $this->cacheNamespace . $object->id .'" until "'. $expires .'"');
     }
 

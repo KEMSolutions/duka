@@ -33,8 +33,11 @@
                     </div>
 
                     <div class="price-estimate-update">
-                        <button type="button" class=" one-half center-block btn btn-info getEstimate">Update</button>
-                        <p class="text-center">OR <button class="btn-link text-uppercase changeLocation">Change location</button></p>
+                        <button type="button" class=" one-half center-block btn btn-info getEstimate">{{ Lang::get("boukem.update") }}</button>
+                        <p class="text-center text-uppercase">
+                            {{ Lang::get("boukem.or") . " " }}
+                            <button class="btn-link text-uppercase changeLocation">{{ Lang::get("boukem.change_location") }}</button>
+                        </p>
                     </div>
 
                     <dl class="calculation  hidden">

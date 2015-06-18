@@ -272,4 +272,5 @@ abstract class Controller {
 	{
 		throw new BadMethodCallException("Method [$method] does not exist.");
 	}
+
 }

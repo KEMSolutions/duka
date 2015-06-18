@@ -5,8 +5,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use View;
+use Localization;
 
 class LayoutController extends Controller {
 
@@ -18,7 +18,7 @@ class LayoutController extends Controller {
     public function home()
     {
         $apiData = KemAPI::getHomePage();
-        $currentLocale = LaravelLocalization::getCurrentLocale();
+        $currentLocale = Localization::getCurrentLocale();
         $elementType = [];
         $layoutData = [];
 

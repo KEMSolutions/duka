@@ -202,6 +202,7 @@ return [
         'Categories'    => 'App\Facades\Categories',
         'Layouts'   => 'App\Facades\Layouts',
         'Orders'    => 'App\Facades\Orders',
+        'Pages'     => 'App\Facades\Pages',
         'Products'  => 'App\Facades\Products',
         'Utilities' => 'App\Facades\Utilities',
 

@@ -16,7 +16,7 @@ var UtilityContainer = {
 
         for(var i =0; i<localStorage.length; i++)
         {
-            if (localStorage.key(i).lastIndexOf("_", 0) === 0)
+            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
             {
                 var product = JSON.parse(localStorage.getItem(localStorage.key(i))),
                     productId = product.product,
@@ -44,7 +44,7 @@ var UtilityContainer = {
 
         for(var i = 0; i<localStorage.length; i++)
         {
-            if (localStorage.key(i).lastIndexOf("_", 0) === 0)
+            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
             {
                 total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
             }
@@ -77,9 +77,9 @@ var UtilityContainer = {
      */
     getShippingFromForm : function() {
         return res = {
-            "country" : $(".country").val(),
-            "postcode" : $("#postcode").val(),
-            "province" : $("#province").val(),
+            "country" : $("#shippingCountry").val(),
+            "postcode" : $("#shippingPostcode").val(),
+            "province" : $("#shippingProvince").val(),
             "line1" : $("#shippingAddress1").val(),
             "line2" : $("#shippingAddress2").val(),
             "name" : $("#shippingFirstname").val() + " " + $("#shippingLastname").val(),
@@ -175,6 +175,21 @@ var UtilityContainer = {
         var tmp = document.createElement("DIV");
         tmp.innerHTML = html;
         return tmp.textContent || tmp.innerText || "";
+    },
+
+    /**
+     * Finds a hidden element width.
+     *
+     * @param obj
+     * @returns {*}
+     */
+    realWidth : function(obj, origin) {
+        var clone = obj.clone();
+        clone.css("visibility", "hidden");
+        origin.append(clone);
+        var width = clone.outerWidth();
+        clone.remove();
+        return parseInt(width);
     },
 
     /**
@@ -321,7 +336,7 @@ var UtilityContainer = {
      * @returns {string}
      */
     getCartTotal : function(serviceCode, data) {
-        var taxes = parseFloat(UtilityContainer.getShipmentTaxes(serviceCode, data)) + parseFloat(UtilityContainer.getCartTaxes(serviceCode, data)),
+        var taxes = parseFloat(UtilityContainer.getCartTaxes(serviceCode.method, data)),
             shipping = parseFloat(UtilityContainer.getCheapestShippingMethod(data).fare),
             subtotal = parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()),
             total = (taxes + shipping + subtotal).toFixed(2);

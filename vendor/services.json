@@ -47,7 +47,6 @@
         "App\\Providers\\BusServiceProvider",
         "App\\Providers\\ConfigServiceProvider",
         "App\\Providers\\EventServiceProvider",
-        "App\\Providers\\KemApiServiceProvider",
         "App\\Providers\\LocalizationServiceProvider",
         "App\\Providers\\RouteServiceProvider",
         "Mcamara\\LaravelLocalization\\LaravelLocalizationServiceProvider"
@@ -128,7 +127,8 @@
         "auth.password": "Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider",
         "auth.password.tokens": "Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider",
         "translator": "Illuminate\\Translation\\TranslationServiceProvider",
-        "translation.loader": "Illuminate\\Translation\\TranslationServiceProvider"
+        "translation.loader": "Illuminate\\Translation\\TranslationServiceProvider",
+        "KemApiHttpClient": "App\\Providers\\KemApiServiceProvider"
     },
     "when": {
         "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider": [],
@@ -141,6 +141,7 @@
         "Illuminate\\Queue\\QueueServiceProvider": [],
         "Illuminate\\Redis\\RedisServiceProvider": [],
         "Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider": [],
-        "Illuminate\\Translation\\TranslationServiceProvider": []
+        "Illuminate\\Translation\\TranslationServiceProvider": [],
+        "App\\Providers\\KemApiServiceProvider": []
     }
 }
