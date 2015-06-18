@@ -1,4 +1,4 @@
-<div class="container overlay fullScreen">
+<div class="container overlay fullScreen" id="cancelledOrders">
     <div class="jumbotron vertical-align color-one" >
 
         <div class="text-center">

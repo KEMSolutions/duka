@@ -84,13 +84,13 @@ var locationContainer = {
      * This function will be registered in init().
      *
      */
-    callUpdateChosenSelects: function() {
+    callUpdateChosenSelects: function(self) {
         $("#billingCountry").on("change", function() {
-            locationContainer.updateChosenSelects($(this).val(), "#billingProvince");
+            self.updateChosenSelects($(this).val(), "#billingProvince");
         });
 
         $("#shippingCountry").on("change", function() {
-            locationContainer.updateChosenSelects($(this).val(), "#shippingProvince");
+            self.updateChosenSelects($(this).val(), "#shippingProvince");
         });
     },
 
@@ -99,11 +99,13 @@ var locationContainer = {
      *
      */
     init : function() {
-        locationContainer.populateCountry();
-        locationContainer.populateProvincesAndStates(["CA", "US", "MX"], function() {
+        var self = locationContainer;
+
+        self.populateCountry();
+        self.populateProvincesAndStates(["CA", "US", "MX"], function() {
             $(".province").chosen();
         });
-        locationContainer.callUpdateChosenSelects();
+        self.callUpdateChosenSelects(self);
 
     }
 }
@@ -150,13 +152,13 @@ var billingContainer = {
      * Set the width of select list at the same time.
      *
      */
-    setDifferentBillingAddress : function () {
+    setDifferentBillingAddress : function (self) {
         $(".billing-checkbox").on("change", function() {
             $(".form-billing .chosen-container").width($("#customer_email").outerWidth()-20);
 
             if (!this.checked) {
                 $(".form-billing").hide().removeClass("hidden").fadeIn();
-                billingContainer.clearBillingAddress();
+                self.clearBillingAddress();
             }
             else {
                 $(".form-billing").fadeOut(function() {
@@ -177,7 +179,9 @@ var billingContainer = {
     },
 
     init: function() {
-        billingContainer.setDifferentBillingAddress();
+        var self = billingContainer;
+
+        self.setDifferentBillingAddress(self);
     }
 }
 
@@ -271,7 +275,7 @@ var estimateContainer = {
      *
      * @param data
      */
-    fetchEstimate : function(data) {
+    fetchEstimate : function(data, self) {
         $(".has-error").removeClass("has-error");
 
         var email_value = $("#customer_email").val();
@@ -290,7 +294,7 @@ var estimateContainer = {
                 "type='radio' " +
                 "name='shipping' " +
                 "class='shipping_method' " +
-                "data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].method, data) + "' " +
+                "data-taxes='" + self.getShipmentTaxes(data.shipping.services[i].method, data) + "' " +
                 "data-cost='" + data.shipping.services[i].price + "' " +
                 "data-value='" + data.shipping.services[i].method + "' " +
                 "value='" + btoa(JSON.stringify(data.shipping.services[i])) + "' >" +
@@ -300,9 +304,9 @@ var estimateContainer = {
         }
 
         $("#estimateButton").removeClass("btn-three").addClass("btn-one").text(localizationContainer.estimateButton.val);
-        estimateContainer.selectDefaultShipmentMethod();
+        self.selectDefaultShipmentMethod();
 
-        estimateContainer.scrollTopToEstimate();
+        self.scrollTopToEstimate();
 
         paymentContainer.init(data);
     },
@@ -326,14 +330,16 @@ var estimateContainer = {
      * @param data
      */
     init : function(data) {
+        var self = estimateContainer;
+
         if (UtilityContainer.getProductsFromLocalStorage().length == 0)
         {
             location.reload();
         }
         else
         {
-            estimateContainer.displayEstimatePanel();
-            estimateContainer.fetchEstimate(data);
+            self.displayEstimatePanel();
+            self.fetchEstimate(data, self);
         }
     }
 
@@ -424,46 +430,68 @@ var paymentContainer = {
         paymentContainer.displayPaymentPanel();
         paymentContainer.initPaymentPanel(data);
         paymentContainer.updatePaymentPanel(data);
-        paymentProcessContainer.test();
+
+        paymentProcessContainer.init();
     }
 }
 
 
 var paymentProcessContainer = {
-    test: function() {
+
+    /**
+     * Create a localStorage object containing the id and the verification code.
+     *
+     * @param data
+     */
+    createOrdersCookie: function(data) {
+        var paymentId = data.id,
+            paymentVerification = data.verification;
+
+        localStorage.setItem("_payment", JSON.stringify( {
+            id : paymentId,
+            verification : paymentVerification
+        } ));
+    },
+
+    /**
+     * Makes an ajax call to api/orders with the values from the form
+     *
+     * @param self
+     */
+    ajaxCall: function(self) {
+        $.ajax({
+            method: "POST",
+            url: "/api/orders",
+            data: $("#cart_form").serialize(),
+            cache: false,
+            success: function(data) {
+                console.log(data);
+
+                self.createOrdersCookie(data);
+
+                //redirect the user to the checkout page if he backs from the payment page
+                history.pushState({data: data}, "Checkout ","/dev/cart");
+
+                //Redirect to success url
+                window.location.replace(data.payment_details.payment_url);
+            },
+            error: function(xhr, e) {
+                console.log(xhr);
+                console.log(e);
+            }
+        })
+
+    },
+
+    init: function() {
+        var self = paymentProcessContainer;
+
         $("#checkoutButton").on("click", function (e) {
             e.preventDefault();
 
             $('#checkoutButton').html('<i class="fa fa-spinner fa-spin"></i>');
 
-            $.ajax({
-                method: "POST",
-                url: "/api/orders",
-                data: $("#cart_form").serialize(),
-                cache: false,
-                success: function(data) {
-                    console.log(data);
-
-                    //Create a localStorage object containing the id and the verification code.
-                    var paymentId = data.id,
-                        paymentVerification = data.verification;
-
-                    localStorage.setItem("_payment", JSON.stringify( {
-                        id : paymentId,
-                        verification : paymentVerification
-                    } ));
-
-                    //redirect the user to the checkout page if he backs from the payment page
-                    history.pushState({data: data}, "Checkout ","/dev/cart");
-
-                    //Redirect to success url
-                    window.location.replace(data.payment_details.payment_url);
-                },
-                error: function(xhr, e) {
-                    console.log(xhr);
-                    console.log(e);
-                }
-            });
+            self.ajaxCall(self);
 
         });
     }
@@ -493,6 +521,8 @@ var validationContainer = {
      * @param country
      */
     init : function(fields, email, shippingInformation, billingInformation) {
+        var self = validationContainer;
+
         if (UtilityContainer.validateEmptyFields(fields)
             && UtilityContainer.validateEmail(email.val())
             && UtilityContainer.validatePostCode(shippingInformation.postcode, shippingInformation.country)
@@ -530,9 +560,9 @@ var validationContainer = {
         }
 
         UtilityContainer.removeErrorClassFromFields(fields);
-        validationContainer.removeErrorClassFromEmail(email);
-        validationContainer.removeErrorClassFromPostcode(shippingInformation.postcodeInput, shippingInformation.country);
-        validationContainer.removeErrorClassFromPostcode(billingInformation.postcodeInput, billingInformation.country);
+        self.removeErrorClassFromEmail(email);
+        self.removeErrorClassFromPostcode(shippingInformation.postcodeInput, shippingInformation.country);
+        self.removeErrorClassFromPostcode(billingInformation.postcodeInput, billingInformation.country);
     }
 }
 

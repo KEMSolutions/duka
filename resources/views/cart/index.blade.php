@@ -9,7 +9,7 @@
     @endsection
 
     @section("overlay_message")
-        @include("cart._unpaid_payment")
+        {{--@include("cart._unpaid_payment")--}}
     @endsection
 
     @section("content")
