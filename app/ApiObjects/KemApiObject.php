@@ -3,6 +3,7 @@
 use Log;
 use Cache;
 use KemAPI;
+use Products;
 use Localization;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -74,10 +75,6 @@ abstract class KemApiObject
             $this->findAndCache($object);
         }
 
-        else {
-            Log::info('Retrieved "'. $this->cacheNamespace . $id .'" from cache.');
-        }
-
         return $object;
     }
 
@@ -109,8 +106,7 @@ abstract class KemApiObject
     {
         // Look for products to cache.
         if (isset($object->products) && count($object->products)) {
-            Log::info('Attempting to cache products...');
-            $this->extractAndCache($object->products, \Products::getCacheNamespace());
+            $this->extractAndCache($object->products, Products::getCacheNamespace());
         }
     }
 
