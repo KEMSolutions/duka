@@ -26,6 +26,7 @@ var paymentOverlayContainer = {
 
     /**
      * Checks whether the user has any unpaid orders, and displays a message if that's the case.
+     *
      */
     checkPendingOrders : function() {
 
@@ -49,6 +50,10 @@ var paymentOverlayContainer = {
 
     },
 
+    /**
+     * Shows payment notice.
+     *
+     */
     showPaymentNotice : function() {
 
         // Retrieve order details.
@@ -78,12 +83,14 @@ var paymentOverlayContainer = {
         );
     },
 
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
     init : function() {
         var self = paymentOverlayContainer;
 
         self.cancelOrder();
-
-        // Check if there are any pending orders.
         self.checkPendingOrders();
     }
 }
@@ -94,5 +101,6 @@ $(document).ready(function () {
         initval: 1
     });
 
+    //Initialize overlay plugin.
     paymentOverlayContainer.init();
 });
