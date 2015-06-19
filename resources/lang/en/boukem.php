@@ -192,5 +192,9 @@ return [
     "get_estimate_label"=>"Enter your location to get a price estimate.",
     "calculate"         =>"Calculate",
     "or"                =>"or",
-    "change_location"   =>"Change location"
+    "change_location"   =>"Change location",
+    "unfinished_order"  =>"Your order #:command has not been paid.",
+    "what_to_do"        =>"What would you like to do?",
+    "pay_now"           =>"Pay now!",
+    "cancel_order"      =>"Cancel this order."
 ];
