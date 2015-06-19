@@ -1,6 +1,5 @@
 <?php namespace App\ApiObjects;
 
-use App\Facades\Utilities;
 use Log;
 use Auth;
 use Lang;
@@ -81,7 +80,6 @@ class Orders extends KemApiObject
         // Retrieve estimate from cache.
         $key = json_encode($body);
         if (Cache::has($key)) {
-            Log::info('Retrieving order estimate from cache...');
             return Cache::get($key);
         }
 
@@ -126,10 +124,10 @@ class Orders extends KemApiObject
         // Check that response is not an error
         if (property_exists($response, 'error'))
         {
-            \Log::error($response->error);
+            Log::error($response->error);
 
             // TODO: Redirect to cart and display an error message.
-            abort(404, \Lang::get('boukem.error_occurred'));
+            abort(404, Lang::get('boukem.error_occurred'));
         }
 
         return $response;

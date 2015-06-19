@@ -53,7 +53,8 @@ Route::group(['prefix' => 'api'], function()
 
     Route::post('estimate',       ['as' => 'api.estimate', 'uses' => 'ApiController@getOrderEstimate']);
     Route::post('orders',         ['as' => 'api.orders', 'uses' => 'ApiController@placeOrder']);
-    Route::get('orders/pay/{id}', ['as' => 'api.orders.pay', 'uses' => 'ApiController@redirectToPaymentPage']);
+    Route::get('orders/pay/{id}/{verification}',
+        ['as' => 'api.orders.pay', 'uses' => 'ApiController@redirectToPaymentPage']);
     Route::get('orders/success',  ['as' => 'api.orders.success', 'uses' => 'ApiController@handleSuccessfulPayment']);
     Route::get('orders/failure',  ['as' => 'api.orders.failure', 'uses' => 'ApiController@handleFailedPayment']);
     Route::get('orders/cancel',   ['as' => 'api.orders.cancel', 'uses' => 'ApiController@handleCancelledPayment']);

@@ -29,6 +29,6 @@ class PagesController extends Controller
                 $html = $page->content;
         }
 
-        return view('site.page', ['html' => $html]);
+        return view('site.pages.index', ['html' => $html]);
     }
 }
