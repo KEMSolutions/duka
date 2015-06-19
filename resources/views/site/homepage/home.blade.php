@@ -14,7 +14,7 @@
                 If not, skip them.
         --}}
         @if(isset($layoutData[$site]["products"]) || $site === "headline")
-            @include("site._" . $site)
+            @include("site.homepage._" . $site)
         @endif
     @endforeach
 @stop

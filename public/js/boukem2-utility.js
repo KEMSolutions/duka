@@ -14,7 +14,7 @@ var UtilityContainer = {
     getProductsFromLocalStorage : function() {
         var res = [];
 
-        for(var i =0; i<localStorage.length; i++)
+        for(var i = 0, length = localStorage.length; i<length; i++)
         {
             if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
             {
@@ -173,32 +173,6 @@ var UtilityContainer = {
         UtilityContainer.getProductsPriceFromLocalStorage() === 0 ?  empty = true : empty = false;
 
         return empty;
-    },
-
-    /**
-     * Strip HTML tags from a string.
-     * @param string html   The string to be stripped.
-     * @return string       The stripped result.
-     */
-    stripTags: function(html) {
-        var tmp = document.createElement("DIV");
-        tmp.innerHTML = html;
-        return tmp.textContent || tmp.innerText || "";
-    },
-
-    /**
-     * Finds a hidden element width.
-     *
-     * @param obj
-     * @returns {*}
-     */
-    realWidth : function(obj, origin) {
-        var clone = obj.clone();
-        clone.css("visibility", "hidden");
-        origin.append(clone);
-        var width = clone.outerWidth();
-        clone.remove();
-        return parseInt(width);
     },
 
     /**
