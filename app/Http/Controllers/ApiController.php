@@ -113,6 +113,14 @@ class ApiController extends Controller
         return Request::ajax() ? $this->send($response) : Redirect::to($response->payment_url);
     }
 
+    public function getOrderDetails($id, $verification)
+    {
+        // Retrieve order details.
+        $order = Orders::get($id, $verification);
+
+        return Request::ajax() ? $this->send($order) : $order;
+    }
+
     /**
      * Redirects user to payment URL for a given order.
      *
