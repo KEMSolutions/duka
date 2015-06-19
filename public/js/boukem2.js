@@ -17,9 +17,10 @@ var paymentOverlayContainer = {
 
             $("#cancelledOrder .jumbotron").fadeOut();
 
+            window.location.replace("/");
+
             UtilityContainer.removeAllProductsFromLocalStorage();
 
-            window.location.replace("/");
         });
     },
 
