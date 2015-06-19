@@ -17,7 +17,6 @@ figcaption,
 figure,
 footer,
 header,
-hgroup,
 main,
 menu,
 nav,
@@ -5863,9 +5862,6 @@ section.slice {
   font-weight: bold !important;
 }
 
-.text-center {
-  text-align: center;
-}
 
 .vertical-align {
   position: relative;

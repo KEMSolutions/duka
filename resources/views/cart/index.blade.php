@@ -20,6 +20,7 @@
 
     @section("scripts")
         <script src="/js_assets/chosen.jquery.min.js"></script>
+        <script src="/js/boukem2-cart.js"></script>
     @endsection
 
 @stop
