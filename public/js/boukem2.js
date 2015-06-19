@@ -24,6 +24,60 @@ var paymentOverlayContainer = {
         });
     },
 
+    /**
+     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_unpaid_orders')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(data) {
+                    if (data.status == 'pending')
+                        paymentOverlayContainer.showPaymentNotice();
+                    else
+                        Cookies.remove('_unpaid_orders');
+                }
+            });
+        }
+
+    },
+
+    showPaymentNotice : function() {
+
+        // Retrieve order details.
+        var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+        // Display notice.
+        $('body').prepend(
+            '<div class="container overlay fullScreen" id="cancelledOrder">'+
+                '<div class="jumbotron vertical-align color-one">'+
+                    '<div class="text-center">'+
+                        '<h2>'+
+                            Localization.pending_order.replace(':command', order.id) +
+                        '</h2>'+
+                        '<h4>'+ Localization.what_to_do +'</h4>'+
+                        '<br />'+
+                        '<a href="'+
+                            ApiEndpoints.orders.pay.replace(':id', order.id)
+                                .replace(':verification', order.verification) +'">'+
+                            '<button class="btn btn-success" id="payOrder">'+ Localization.pay_now +'</button>'+
+                        '</a>'+
+                        '<button class="btn btn-danger" id="cancelOrder">'+
+                            Localization.cancel_order +
+                        '</button>'+
+                    '</div>'+
+                '</div>'+
+            '</div>'
+        );
+    },
+
     init : function() {
         var self = paymentOverlayContainer;
 
@@ -39,4 +93,6 @@ $(document).ready(function () {
 
     paymentOverlayContainer.init();
 
+    // Check if there are any pending orders.
+    paymentOverlayContainer.checkPendingOrders();
 });
