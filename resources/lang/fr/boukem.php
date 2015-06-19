@@ -193,7 +193,7 @@ return [
     "calculate"         =>"Calculer",
     "or"                =>"ou",
     "change_location"   =>"Changer destination",
-    "unfinished_order"  =>"Votre commande #:command n'a pas été finalisée.",
+    "pending_order"  =>"Votre commande #:command n'a pas été finalisée.",
     "what_to_do"        =>"Que souhaitez vous faire?",
     "pay_now"           =>"Payer cette commande.",
     "cancel_order"      =>"Annuler cette commande"
