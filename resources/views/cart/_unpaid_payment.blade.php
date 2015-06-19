@@ -7,7 +7,10 @@
 
             <br/>
 
-            <a href="{{ route("api.orders.pay", ["id" => json_decode($_COOKIE["_unpaid_orders"])->id]) }}">
+            <a href="{{ route("api.orders.pay", ["id" => json_decode($_COOKIE["_unpaid_orders"])->id,
+                                                 "verification" => json_decode($_COOKIE["_unpaid_orders"])->verification])
+                    }}"
+            >
                 <button class="btn btn-success" id="payOrder">{{ Lang::get("boukem.pay_now") }}</button>
             </a>
             <button class="btn btn-danger" id="cancelOrder">{{ Lang::get("boukem.cancel_order") }}</button>
