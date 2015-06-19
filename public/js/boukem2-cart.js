@@ -38,7 +38,7 @@ var locationContainer = {
      */
     populateProvincesAndStates : function (country, callback) {
         $.getJSON("/js/data/world-states.json", function(data) {
-            for(var i=0; i<country.length; i++) {
+            for(var i= 0, length = country.length; i<length; i++) {
                 var listItems = '',
                     $province = $(".province").find("[data-country='" + country[i] +"']");
 
@@ -135,7 +135,7 @@ var billingContainer = {
             //We assume here that fieldWithRules is the shipping postcode.
             $("#billing" + fieldWithRules[0].id.substring("shipping".length, fieldWithRules[0].id.length)).val(fieldWithRules[0].value);
 
-            for(var i=0; i<fields.length; i++) {
+            for(var i= 0, length = fields.length; i<length; i++) {
                 //check if the id has the string "shipping".
                 //if it does, delete the shipping prefix and replace it by billing.
                 //Create a new jquery selector and fill it with the value of the shipping one.
@@ -282,7 +282,7 @@ var estimateContainer = {
         var postcode_value = $("#shippingPostcode").val();
         var country_value = $(".country").val();
 
-        for(var i = 0; i<data.shipping.services.length; i++)
+        for(var i = 0, shippingLength = data.shipping.services.length; i<shippingLength; i++)
         {
             var serviceDOM = "<tr data-service='" + data.shipping.services[i].method + "'>" +
                 "<td>" + data.shipping.services[i].name + "</td>" +
@@ -315,7 +315,7 @@ var estimateContainer = {
         var defaultShipment = ["DOM.EP", "USA.TP", "INT.TP"],
             availableShipment = $("input[name=shipping]");
 
-        for(var i=0; i<availableShipment.length; i++)
+        for(var i= 0, length = availableShipment.length; i<length; i++)
         {
             if (defaultShipment.indexOf(availableShipment[i].dataset.value) != -1)
             {
@@ -409,11 +409,12 @@ var paymentContainer = {
      * @returns {number}
      */
     getTaxes : function(data) {
-        var taxes = 0;
+        var taxes = 0,
+            dataTaxesLength = data.taxes.length;
 
-        if (data.taxes.length != 0)
+        if (dataTaxesLength != 0)
         {
-           for(var i=0; i<data.taxes.length; i++)
+           for(var i=0; i<dataTaxesLength; i++)
            {
                taxes += data.taxes[i].amount;
            }

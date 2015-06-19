@@ -42,7 +42,7 @@ var UtilityContainer = {
     getNumberOfProducts : function() {
         var total = 0;
 
-        for(var i = 0; i<localStorage.length; i++)
+        for(var i = 0, length = localStorage.length; i<length; i++)
         {
             if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
             {
@@ -62,7 +62,7 @@ var UtilityContainer = {
         var total = 0,
             products = UtilityContainer.getProductsFromLocalStorage();
 
-        for(var i=0; i<products.length; i++)
+        for(var i= 0, length = products.length; i<length; i++)
         {
             total += (products[i].price * products[i].quantity);
         }
@@ -117,7 +117,7 @@ var UtilityContainer = {
      */
     validateEmptyFields: function(emptyFields) {
         var passed = true;
-        for(var i=0; i<emptyFields.length; i++) {
+        for(var i= 0, length = emptyFields.length; i<length; i++) {
             if (emptyFields[i].val() == "")
             {
                 passed = false;
@@ -198,7 +198,7 @@ var UtilityContainer = {
      * @param fields
      */
     addErrorClassToFields: function(fields) {
-        for(var i=0; i<fields.length; i++)
+        for(var i= 0, length = fields.length; i<length; i++)
         {
             if (fields[i].val() == "")
             {
@@ -232,7 +232,7 @@ var UtilityContainer = {
      * @param fields
      */
     removeErrorClassFromFields: function(fields) {
-        for(var i=0; i<fields.length; i++)
+        for(var i= 0, length = fields.length; i<length; i++)
         {
             if (fields[i].val() != "" && fields[i].parent().hasClass("has-error"))
             {
@@ -251,7 +251,7 @@ var UtilityContainer = {
         var availableShipment = data.shipping.services,
             sortedShipmentByPrice = [];
 
-        for(var i=0; i<availableShipment.length; i++)
+        for(var i= 0, length = availableShipment.length; i<length; i++)
         {
             sortedShipmentByPrice.push(availableShipment[i]);
         }
@@ -273,11 +273,12 @@ var UtilityContainer = {
      * @returns {number}
      */
     getTaxes : function(data) {
-        var taxes = 0;
+        var taxes = 0,
+            dataTaxesLength = data.taxes.length;
 
-        if (data.taxes.length != 0)
+        if (dataTaxesLength != 0)
         {
-            for(var i=0; i<data.taxes.length; i++)
+            for(var i=0; i<dataTaxesLength; i++)
             {
                 taxes += data.taxes[i].amount;
             }
