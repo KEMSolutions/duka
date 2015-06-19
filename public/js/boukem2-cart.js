@@ -448,10 +448,10 @@ var paymentProcessContainer = {
         var paymentId = data.id,
             paymentVerification = data.verification;
 
-        localStorage.setItem("_payment", JSON.stringify( {
+        Cookies.set("_unpaid_orders", JSON.stringify( {
             id : paymentId,
             verification : paymentVerification
-        } ));
+        }));
     },
 
     /**
@@ -497,6 +497,42 @@ var paymentProcessContainer = {
         });
     }
 }
+
+
+
+var paymentOverlayContainer = {
+
+    /**
+     * Cancels an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     *
+     */
+    cancelOrder : function() {
+        $("#cancelOrder").on("click", function() {
+            Cookies.remove("_unpaid_orders");
+
+            $("#cancelledOrder .jumbotron").fadeOut();
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+
+            window.location.replace("/");
+        });
+    },
+
+    payOrder: function () {
+        $("#payOrder").on("click", function() {
+
+        });
+    },
+
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+    }
+}
+
+
 
 
 
@@ -590,6 +626,7 @@ $(document).ready(function() {
     locationContainer.init();
     billingContainer.init();
     $("#shippingFirstname").focus();
+    paymentOverlayContainer.init();
 
     /**
      * Event triggered when the "Continue" button is hit.

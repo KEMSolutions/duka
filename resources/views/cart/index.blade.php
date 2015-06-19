@@ -9,7 +9,9 @@
     @endsection
 
     @section("overlay_message")
-        {{--@include("cart._unpaid_payment")--}}
+        @if (isset($_COOKIE["_unpaid_orders"]))
+            @include("cart._unpaid_payment")
+        @endif
     @endsection
 
     @section("content")

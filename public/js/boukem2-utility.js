@@ -70,6 +70,15 @@ var UtilityContainer = {
         return total;
     },
 
+    removeAllProductsFromLocalStorage : function() {
+        for(var i= 0, length = localStorage.length; i<length; i++) {
+            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
+            {
+                localStorage.removeItem(localStorage.key(i));
+            }
+        }
+    },
+
     /**
      * Utility function fo getting the country, the postal code and the province (if any) of the user.
      *
