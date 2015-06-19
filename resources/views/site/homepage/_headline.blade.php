@@ -1,6 +1,6 @@
 <section id="homepageCarousel" class="carousel carousel-1 home_headline slide {{ $color }}">
     @if ($showTab)
-        @include("site._tab", ["tabTitle" => $layoutData["headline"]["tabTitle"]])
+        @include("site.homepage._tab", ["tabTitle" => $layoutData["headline"]["tabTitle"]])
     @endif
 
     <div class="carousel-inner">

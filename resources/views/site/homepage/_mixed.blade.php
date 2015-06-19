@@ -1,6 +1,6 @@
 <section class="slice color-one home_mixed">
     @if ($showTab)
-        @include("site._tab", ["tabTitle" => $layoutData["mixed"]["tabTitle"]])
+        @include("site.homepage._tab", ["tabTitle" => $layoutData["mixed"]["tabTitle"]])
     @endif
 
     <div class="w-section inverse">

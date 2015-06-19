@@ -14,15 +14,12 @@
                 If not, skip them.
         --}}
         @if(isset($layoutData[$site]["products"]) || $site === "headline")
-            @include("site._" . $site)
+            @include("site.homepage._" . $site)
         @endif
     @endforeach
 @stop
 
 @section("scripts")
-    <script src="/js/boukem2-utility.js"></script>
-    <script src="/js/cart-drawer.js"></script>
-
     <script>
         $(".indicator-down:first").hide();
     </script>

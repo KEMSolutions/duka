@@ -220,8 +220,3 @@
 
 
 @endsection
-
-@section("scripts")
-    <script src="/js/boukem2-utility.js"></script>
-    <script src="/js/cart-drawer.js"></script>
-@endsection

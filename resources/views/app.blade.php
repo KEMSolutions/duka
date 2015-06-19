@@ -55,7 +55,6 @@
 	<script src="//cdn.kem.guru/boukem/spirit/js/gcc_ressources.js.gz"></script>
 	<script src="/js_assets/mixitup/jquery.mixitup.init.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
-	<script src="/js/boukem2.js"></script>
 	<script>
 	    {{-- Include all language strings into a javascript object, based on the current locale. --}}
 	    {{-- We're basically including the language file, which itself contains an array of strings. --}}
@@ -70,6 +69,9 @@
             ]
         ]) !!};
 	</script>
+	<script src="/js/boukem2.js"></script>
+	<script src="/js/boukem2-utility.js"></script>
+	<script src="/js/boukem2-cart-drawer.js"></script>
 	@yield("scripts")
 </body>
 

@@ -1,6 +1,6 @@
 <section class="slice home_rebates" style="background: white; color: black">
     @if ($showTab)
-        @include("site._tab", ["tabTitle" => $layoutData["rebates"]["tabTitle"]])
+        @include("site.homepage._tab", ["tabTitle" => $layoutData["rebates"]["tabTitle"]])
     @endif
 
     <div class="w-section inverse blog-grid">
