@@ -500,42 +500,6 @@ var paymentProcessContainer = {
 
 
 
-var paymentOverlayContainer = {
-
-    /**
-     * Cancels an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("#cancelOrder").on("click", function() {
-            Cookies.remove("_unpaid_orders");
-
-            $("#cancelledOrder .jumbotron").fadeOut();
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-
-            window.location.replace("/");
-        });
-    },
-
-    payOrder: function () {
-        $("#payOrder").on("click", function() {
-
-        });
-    },
-
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-    }
-}
-
-
-
-
-
 var validationContainer = {
 
     removeErrorClassFromEmail: function(email) {
@@ -626,7 +590,6 @@ $(document).ready(function() {
     locationContainer.init();
     billingContainer.init();
     $("#shippingFirstname").focus();
-    paymentOverlayContainer.init();
 
     /**
      * Event triggered when the "Continue" button is hit.

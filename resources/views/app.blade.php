@@ -37,7 +37,9 @@
 	<![endif]-->
 </head>
 <body>
-	@yield("overlay_message")
+	@if (isset($_COOKIE["_unpaid_orders"]))
+		@include("cart._unpaid_payment")
+	@endif
 
 	@include('layout._header')
 	@include('layout._search')
