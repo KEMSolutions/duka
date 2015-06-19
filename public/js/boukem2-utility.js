@@ -2,7 +2,7 @@
  * Utility object containing various utility functions...
  * Self Explanatory duh.
  *
- * @type {{getProductsFromLocalStorage: Function, getProductsPriceFromLocalStorage: Function, getCountriesFromForm: Function, scrollTopToEstimate: Function}}
+ * @type {{getProductsFromLocalStorage: Function, getNumberOfProducts: Function, getProductsPriceFromLocalStorage: Function, removeAllProductsFromLocalStorage: Function, getShippingFromForm: Function, populateCountry: Function, validateEmptyFields: Function, validateEmail: Function, validatePostCode: Function, validateEmptyCart: Function, addErrorClassToFields: Function, addErrorClassToFieldsWithRules: Function, removeErrorClassFromFields: Function, getCheapestShippingMethod: Function, getTaxes: Function, getShipmentTaxes: Function, getCartTaxes: Function, getCartTotal: Function}}
  */
 var UtilityContainer = {
     /**
@@ -70,6 +70,10 @@ var UtilityContainer = {
         return total;
     },
 
+    /**
+     * Utility function to delete all products from localStorage.
+     *
+     */
     removeAllProductsFromLocalStorage : function() {
         for(var i= 0, length = localStorage.length; i<length; i++) {
             if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
