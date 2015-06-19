@@ -12,7 +12,7 @@ var paymentOverlayContainer = {
      *
      */
     cancelOrder : function() {
-        $("#cancelOrder").on("click", function() {
+        $("body").on("click", "#cancelOrder", function() {
             Cookies.remove("_unpaid_orders");
 
             $("#cancelledOrder .jumbotron").fadeOut();
@@ -82,6 +82,9 @@ var paymentOverlayContainer = {
         var self = paymentOverlayContainer;
 
         self.cancelOrder();
+
+        // Check if there are any pending orders.
+        self.checkPendingOrders();
     }
 }
 
@@ -92,7 +95,4 @@ $(document).ready(function () {
     });
 
     paymentOverlayContainer.init();
-
-    // Check if there are any pending orders.
-    paymentOverlayContainer.checkPendingOrders();
 });
