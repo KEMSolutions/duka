@@ -204,7 +204,7 @@ var estimateContainer = {
     ajaxCall : function() {
         $.ajax({
             type: "POST",
-            url: "/api/estimate",
+            url: ApiEndpoints.estimate,
             data: {
                 email: $("#customer_email").val(),
                 shipping: {},
@@ -462,7 +462,7 @@ var paymentProcessContainer = {
     ajaxCall: function(self) {
         $.ajax({
             method: "POST",
-            url: "/api/orders",
+            url: ApiEndpoints.placeOrder,
             data: $("#cart_form").serialize(),
             cache: false,
             success: function(data) {
