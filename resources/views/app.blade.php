@@ -56,6 +56,11 @@
 	<script src="/js_assets/mixitup/jquery.mixitup.init.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
 	<script src="/js/boukem2.js"></script>
+	<script>
+	    {{-- Include all language strings into a javascript object, based on the current locale. --}}
+	    {{-- We're basically including the language file, which itself contains an array of strings. --}}
+	    var Localization = {!! json_encode(include base_path('resources/lang/'. Localization::getCurrentLocale() .'/boukem.php')) !!};
+	</script>
 	@yield("scripts")
 </body>
 
