@@ -133,9 +133,9 @@ var cartLogicContainer = {
      * If there is no item in localStorage starting with the key "_product", then nothing is loaded.
      */
     loadItem : function() {
-        for(var i = 0; i<localStorage.length; i++)
+        for(var i = 0, length = localStorage.length; i<length; i++)
         {
-            if (localStorage.key(i).lastIndexOf("_", 0) === 0)
+            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
             {
                 cartLogicContainer.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
             }

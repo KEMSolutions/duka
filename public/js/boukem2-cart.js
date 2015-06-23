@@ -3,7 +3,7 @@
  *
  * @type {{populateCountry: Function, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, autoFillBillingAddress: Function, init: Function}}
  */
-var LocationContainer = {
+var locationContainer = {
 
     /**
      * Function to populate country list
@@ -38,9 +38,9 @@ var LocationContainer = {
      */
     populateProvincesAndStates : function (country, callback) {
         $.getJSON("/js/data/world-states.json", function(data) {
-            for(var i=0; i<country.length; i++) {
+            for(var i= 0, length = country.length; i<length; i++) {
                 var listItems = '',
-                    $provinces = $(".province").find("[data-country='" + country[i] +"']");
+                    $province = $(".province").find("[data-country='" + country[i] +"']");
 
                 $.each(data, function(key, val) {
                     if (data[key].country === country[i] && data[key].short == "QC" ){
@@ -50,42 +50,47 @@ var LocationContainer = {
                         listItems += "<option value='" + data[key].short + "'>" + data[key].name + "</option>";
                     }
                 });
-                $provinces.append(listItems);
+                $province.append(listItems);
             }
             callback();
         });
     },
 
     /**
-     * Event function enabling or disabling postcode and province fields according to the chosen country
+     * Event function enabling or disabling postcode and province fields according to the chosen country and the provided input (shipping or billing)
      *
      * @param chosenCountry
+     * @param input
      */
-    updateChosenSelects: function(chosenCountry) {
+    updateChosenSelects: function(chosenCountry, input) {
         if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == "MX"){
-            $('.province').removeAttr('disabled').trigger("chosen:updated");
+            $(input).removeAttr('disabled').trigger("chosen:updated");
         } else {
-            $('.province').attr('disabled','disabled');
+            $(input).attr('disabled','disabled');
         }
 
-        $('.province optgroup').attr('disabled','disabled');
+        $(input + ' optgroup').attr('disabled','disabled');
 
         if (chosenCountry == 'CA' || chosenCountry == 'US' || chosenCountry == 'MX'){
-            $('.province [data-country="' + chosenCountry + '"]').removeAttr('disabled');
+            $(input + ' [data-country="' + chosenCountry + '"]').removeAttr('disabled');
+
         }
 
-        $('.province').trigger('chosen:updated');
+        $(input).trigger('chosen:updated');
     },
 
     /**
-     * Triggers updateChosenSelects($country)
+     * Triggers updateChosenSelects($country, $input)
      * This function will be registered in init().
-     * TODO: Display appropriate provinces at the beginning of the process
      *
      */
-    callUpdateChosenSelects: function() {
-        $(".country").on("change", function() {
-            LocationContainer.updateChosenSelects($(this).val());
+    callUpdateChosenSelects: function(self) {
+        $("#billingCountry").on("change", function() {
+            self.updateChosenSelects($(this).val(), "#billingProvince");
+        });
+
+        $("#shippingCountry").on("change", function() {
+            self.updateChosenSelects($(this).val(), "#shippingProvince");
         });
     },
 
@@ -94,14 +99,18 @@ var LocationContainer = {
      *
      */
     init : function() {
-        LocationContainer.populateCountry();
-        LocationContainer.populateProvincesAndStates(["CA", "US", "MX"], function() {
+        var self = locationContainer;
+
+        self.populateCountry();
+        self.populateProvincesAndStates(["CA", "US", "MX"], function() {
             $(".province").chosen();
         });
-        LocationContainer.callUpdateChosenSelects();
+        self.callUpdateChosenSelects(self);
 
     }
 }
+
+
 
 
 /**
@@ -110,13 +119,23 @@ var LocationContainer = {
  * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
  */
 var billingContainer = {
+
+    /**
+     * Fill the billing address with the shipping address.
+     * First parameter is an array of all fields that only need basic validation (empty or not)
+     * Second parameter is an input that requires more advanced verification (postcode)
+     *
+     *
+     * @param fields
+     * @param fieldWithRules
+     */
     autoFillBillingAddress : function(fields, fieldWithRules) {
         if($(".billing-checkbox").is(":checked"))
         {
             //We assume here that fieldWithRules is the shipping postcode.
             $("#billing" + fieldWithRules[0].id.substring("shipping".length, fieldWithRules[0].id.length)).val(fieldWithRules[0].value);
 
-            for(var i=0; i<fields.length; i++) {
+            for(var i= 0, length = fields.length; i<length; i++) {
                 //check if the id has the string "shipping".
                 //if it does, delete the shipping prefix and replace it by billing.
                 //Create a new jquery selector and fill it with the value of the shipping one.
@@ -133,13 +152,13 @@ var billingContainer = {
      * Set the width of select list at the same time.
      *
      */
-    setDifferentBillingAddress : function () {
+    setDifferentBillingAddress : function (self) {
         $(".billing-checkbox").on("change", function() {
             $(".form-billing .chosen-container").width($("#customer_email").outerWidth()-20);
 
             if (!this.checked) {
                 $(".form-billing").hide().removeClass("hidden").fadeIn();
-                billingContainer.clearBillingAddress();
+                self.clearBillingAddress();
             }
             else {
                 $(".form-billing").fadeOut(function() {
@@ -149,6 +168,10 @@ var billingContainer = {
         })
     },
 
+    /**
+     * Clear the billing form.
+     *
+     */
     clearBillingAddress : function() {
           if ($(".form-billing input").val() != "") {
               $(".form-billing input").val() == "";
@@ -156,9 +179,16 @@ var billingContainer = {
     },
 
     init: function() {
-        billingContainer.setDifferentBillingAddress();
+        var self = billingContainer;
+
+        self.setDifferentBillingAddress(self);
     }
 }
+
+
+
+
+
 
 /**
  * Object responsible for handling the estimation of user's purchase.
@@ -174,11 +204,8 @@ var estimateContainer = {
     ajaxCall : function() {
         $.ajax({
             type: "POST",
-            url: "/api/estimate",
+            url: ApiEndpoints.estimate,
             data: {
-                success_url: "example.com",
-                failure_url: "example.com",
-                cancel_url: "example.com",
                 email: $("#customer_email").val(),
                 shipping: {},
                 products: UtilityContainer.getProductsFromLocalStorage(),
@@ -248,14 +275,14 @@ var estimateContainer = {
      *
      * @param data
      */
-    fetchEstimate : function(data) {
+    fetchEstimate : function(data, self) {
         $(".has-error").removeClass("has-error");
 
         var email_value = $("#customer_email").val();
         var postcode_value = $("#shippingPostcode").val();
         var country_value = $(".country").val();
 
-        for(var i = 0; i<data.shipping.services.length; i++)
+        for(var i = 0, shippingLength = data.shipping.services.length; i<shippingLength; i++)
         {
             var serviceDOM = "<tr data-service='" + data.shipping.services[i].method + "'>" +
                 "<td>" + data.shipping.services[i].name + "</td>" +
@@ -265,30 +292,30 @@ var estimateContainer = {
             "<td>" +
                 "<input " +
                 "type='radio' " +
-                "name='shipment' " +
+                "name='shipping' " +
                 "class='shipping_method' " +
-                "data-taxes='" + estimateContainer.getShipmentTaxes(data.shipping.services[i].method, data) + "' " +
+                "data-taxes='" + self.getShipmentTaxes(data.shipping.services[i].method, data) + "' " +
                 "data-cost='" + data.shipping.services[i].price + "' " +
                 "data-value='" + data.shipping.services[i].method + "' " +
-                "value='" + btoa(data.shipping.services[i]) + "' >" +
-                "</td>";
+                "value='" + btoa(JSON.stringify(data.shipping.services[i])) + "' >" +
+            "</td>";
 
             $("#estimate .table-striped").append(serviceDOM);
         }
 
         $("#estimateButton").removeClass("btn-three").addClass("btn-one").text(localizationContainer.estimateButton.val);
-        estimateContainer.selectDefaultShipmentMethod();
+        self.selectDefaultShipmentMethod();
 
-        estimateContainer.scrollTopToEstimate();
+        self.scrollTopToEstimate();
 
         paymentContainer.init(data);
     },
 
     selectDefaultShipmentMethod : function() {
         var defaultShipment = ["DOM.EP", "USA.TP", "INT.TP"],
-            availableShipment = $("input[name=shipment]");
+            availableShipment = $("input[name=shipping]");
 
-        for(var i=0; i<availableShipment.length; i++)
+        for(var i= 0, length = availableShipment.length; i<length; i++)
         {
             if (defaultShipment.indexOf(availableShipment[i].dataset.value) != -1)
             {
@@ -303,18 +330,24 @@ var estimateContainer = {
      * @param data
      */
     init : function(data) {
+        var self = estimateContainer;
+
         if (UtilityContainer.getProductsFromLocalStorage().length == 0)
         {
             location.reload();
         }
         else
         {
-            estimateContainer.displayEstimatePanel();
-            estimateContainer.fetchEstimate(data);
+            self.displayEstimatePanel();
+            self.fetchEstimate(data, self);
         }
     }
 
 }
+
+
+
+
 
 /**
  * Object responsible for handling the payment panel.
@@ -367,8 +400,6 @@ var paymentContainer = {
             $("#price_taxes").text(taxes.toFixed(2));
             $("#price_total").text(total.toFixed(2));
         });
-
-
     },
 
     /**
@@ -378,16 +409,16 @@ var paymentContainer = {
      * @returns {number}
      */
     getTaxes : function(data) {
-        var taxes = 0;
+        var taxes = 0,
+            dataTaxesLength = data.taxes.length;
 
-        if (data.taxes.length != 0)
+        if (dataTaxesLength != 0)
         {
-           for(var i=0; i<data.taxes.length; i++)
+           for(var i=0; i<dataTaxesLength; i++)
            {
                taxes += data.taxes[i].amount;
            }
         }
-
         return taxes;
     },
 
@@ -400,8 +431,74 @@ var paymentContainer = {
         paymentContainer.displayPaymentPanel();
         paymentContainer.initPaymentPanel(data);
         paymentContainer.updatePaymentPanel(data);
+
+        paymentProcessContainer.init();
     }
 }
+
+
+var paymentProcessContainer = {
+
+    /**
+     * Create a localStorage object containing the id and the verification code.
+     *
+     * @param data
+     */
+    createOrdersCookie: function(data) {
+        var paymentId = data.id,
+            paymentVerification = data.verification;
+
+        Cookies.set("_unpaid_orders", JSON.stringify( {
+            id : paymentId,
+            verification : paymentVerification
+        }));
+    },
+
+    /**
+     * Makes an ajax call to api/orders with the values from the form
+     *
+     * @param self
+     */
+    ajaxCall: function(self) {
+        $.ajax({
+            method: "POST",
+            url: ApiEndpoints.placeOrder,
+            data: $("#cart_form").serialize(),
+            cache: false,
+            success: function(data) {
+                console.log(data);
+
+                self.createOrdersCookie(data);
+
+                //redirect the user to the checkout page if he backs from the payment page
+                history.pushState({data: data}, "Checkout ","/dev/cart");
+
+                //Redirect to success url
+                window.location.replace(data.payment_details.payment_url);
+            },
+            error: function(xhr, e) {
+                console.log(xhr);
+                console.log(e);
+            }
+        })
+
+    },
+
+    init: function() {
+        var self = paymentProcessContainer;
+
+        $("#checkoutButton").on("click", function (e) {
+            e.preventDefault();
+
+            $('#checkoutButton').html('<i class="fa fa-spinner fa-spin"></i>');
+
+            self.ajaxCall(self);
+
+        });
+    }
+}
+
+
 
 var validationContainer = {
 
@@ -425,6 +522,8 @@ var validationContainer = {
      * @param country
      */
     init : function(fields, email, shippingInformation, billingInformation) {
+        var self = validationContainer;
+
         if (UtilityContainer.validateEmptyFields(fields)
             && UtilityContainer.validateEmail(email.val())
             && UtilityContainer.validatePostCode(shippingInformation.postcode, shippingInformation.country)
@@ -462,11 +561,15 @@ var validationContainer = {
         }
 
         UtilityContainer.removeErrorClassFromFields(fields);
-        validationContainer.removeErrorClassFromEmail(email);
-        validationContainer.removeErrorClassFromPostcode(shippingInformation.postcodeInput, shippingInformation.country);
-        validationContainer.removeErrorClassFromPostcode(billingInformation.postcodeInput, billingInformation.country);
+        self.removeErrorClassFromEmail(email);
+        self.removeErrorClassFromPostcode(shippingInformation.postcodeInput, shippingInformation.country);
+        self.removeErrorClassFromPostcode(billingInformation.postcodeInput, billingInformation.country);
     }
 }
+
+
+
+
 
 $(document).ready(function() {
     /**
@@ -484,7 +587,7 @@ $(document).ready(function() {
      * Set the form focus on first name field
      *
      */
-    LocationContainer.init();
+    locationContainer.init();
     billingContainer.init();
     $("#shippingFirstname").focus();
 

@@ -1,12 +1,12 @@
 <?php namespace App\Http\Controllers;
 
-// Import facades & other dependencies.
 use Brands;
 use Categories;
 use Layouts;
 use Orders;
 use Products;
 use Request;
+use Redirect;
 
 use Illuminate\Http\JsonResponse;
 
@@ -18,10 +18,17 @@ use Illuminate\Http\JsonResponse;
  */
 class ApiController extends Controller
 {
+
+
     //
-    // Categories
+    // Categories related methods.
     //
 
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response|static
+     */
     public function getBrand($id)
     {
         return $this->send(Brands::get($id,
@@ -30,6 +37,10 @@ class ApiController extends Controller
         ));
     }
 
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response|static
+     */
     public function getCategory($id)
     {
         return $this->send(Categories::get($id,
@@ -38,18 +49,31 @@ class ApiController extends Controller
         ));
     }
 
+
     //
-    // Layouts
+    // Layouts related methods.
     //
 
+
+    /**
+     * @param string $id
+     * @return mixed
+     */
     public function getLayout($id = '') {
         return $this->send(Layouts::get($id));
     }
 
+
     //
-    // Orders
+    // Orders related methods.
     //
 
+
+    /**
+     * Gets an estimation of shipping costs.
+     *
+     * @return mixed    Order estimate
+     */
     public function getOrderEstimate()
     {
         return $this->send(Orders::estimate(
@@ -58,6 +82,11 @@ class ApiController extends Controller
         ));
     }
 
+    /**
+     * Places an order.
+     *
+     * @return mixed    Order placement response or HTTP redirect to payment page.
+     */
     public function placeOrder()
     {
         // Retrieve shipment address.
@@ -73,65 +102,38 @@ class ApiController extends Controller
             $billAddress['name'] = $billAddress['firstname'] .' '. $billAddress['lastname'];
         }
 
-        // Retrieve shipping details.
+        // Retrieve other details.
+        $email = Request::input('email');
+        $products = Request::input('products');
         $shipping = json_decode(base64_decode(Request::input('shipping')));
 
-        // Retrieve product list.
-        $products = Request::input('products');
+        // Place order.
+        $response = Orders::placeOrder($shipping, $products, $email, $shipAddress, $billAddress);
 
-        // Retrieve email address.
-        $email = Request::input('email');
+        return Request::ajax() ? $this->send($response) : Redirect::to($response->payment_url);
+    }
 
+    public function getOrderDetails($id, $verification)
+    {
+        // Retrieve order details.
+        $order = Orders::get($id, $verification);
 
+        return Request::ajax() ? $this->send($order) : $order;
+    }
 
-        // Dummy data.
-//        $shipAddress = [
-//            "postcode"=>"H2V 4G7",
-//            "country"=>"CA",
-//            "province"=>"QC",
-//            "line1"=>"5412 avenue du Parc",
-//            "name"=>"Remy Vanherweghem",
-//            "city"=>"Montreal",
-//            "phone"=>"514-441-5488"
-//        ];
-//        $billAddress = null;
-//        $shipping = [
-//            'method' => 'DOM.ZZ',
-//            'name' => 'Colis accélérés',
-//            'signature' => '1432685850:l0esPFkm0VyT:434d400b84f7e350423fded032c32029b4a3bbca76a859de25f915ff42db5a5c',
-//            "price" => "7.86",
-//            "delivery" => "2015-05-27",
-//            "transit" => 1,
-//            "taxes"=> [
-//                [
-//                    "rate"=> 9.975,
-//                    "name"=> "TVQ",
-//                    "amount"=> 0.78
-//                ],
-//                [
-//                    "rate"=> 5,
-//                    "name"=> "TPS",
-//                    "amount"=> 0.39
-//                ]
-//            ]
-//        ];
-//        $products = [
-//            4321 => [
-//                "id" => 4321,
-//                "quantity" => 1
-//            ],
-//            1234 => [
-//                "id" => 1234,
-//                "quantity"=> 2
-//            ]
-//        ];
-//        $email = 'remyv@kemsolutions.com';
+    /**
+     * Redirects user to payment URL for a given order.
+     *
+     * @param int $id   Order ID.
+     * @return void
+     */
+    public function redirectToPaymentPage($id, $verification)
+    {
+        // Retrieve order details.
+        $order = Orders::get($id, $verification);
 
-
-
-        $redirect = Orders::placeOrder($shipping, $products, $email, $shipAddress, $billAddress);
-
-        return \Redirect::to($redirect);
+        // Redirect to payment URL.
+        return Redirect::to($order->payment_details->payment_url);
     }
 
     // TODO: handle succesful payments.
@@ -152,14 +154,24 @@ class ApiController extends Controller
         dd('Payment cancelled');
     }
 
+
     //
-    // Products
+    // Products related methods.
     //
 
+
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function getProduct($id) {
         return $this->send(Products::get($id));
     }
 
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function searchProducts($query)
     {
         return $this->send(Products::search($query,
@@ -168,9 +180,11 @@ class ApiController extends Controller
         ));
     }
 
+
     //
-    // Helper methods
+    // Other generic methods.
     //
+
 
     protected function send($data) {
         return JsonResponse::create($data, 200);

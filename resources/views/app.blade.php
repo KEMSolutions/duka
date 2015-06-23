@@ -37,6 +37,10 @@
 	<![endif]-->
 </head>
 <body>
+	{{--@if (isset($_COOKIE["_unpaid_orders"]))--}}
+		{{--@include("cart._unpaid_payment")--}}
+	{{--@endif--}}
+
 	@include('layout._header')
 	@include('layout._search')
 
@@ -51,7 +55,12 @@
 	<script src="//cdn.kem.guru/boukem/spirit/js/gcc_ressources.js.gz"></script>
 	<script src="/js_assets/mixitup/jquery.mixitup.init.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+	@include("_dynamic_resources")
+
 	<script src="/js/boukem2.js"></script>
+	<script src="/js/boukem2-utility.js"></script>
+	<script src="/js/boukem2-cart-drawer.js"></script>
 	@yield("scripts")
 </body>
 

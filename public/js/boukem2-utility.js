@@ -2,7 +2,7 @@
  * Utility object containing various utility functions...
  * Self Explanatory duh.
  *
- * @type {{getProductsFromLocalStorage: Function, getProductsPriceFromLocalStorage: Function, getCountriesFromForm: Function, scrollTopToEstimate: Function}}
+ * @type {{getProductsFromLocalStorage: Function, getNumberOfProducts: Function, getProductsPriceFromLocalStorage: Function, removeAllProductsFromLocalStorage: Function, getShippingFromForm: Function, populateCountry: Function, validateEmptyFields: Function, validateEmail: Function, validatePostCode: Function, validateEmptyCart: Function, addErrorClassToFields: Function, addErrorClassToFieldsWithRules: Function, removeErrorClassFromFields: Function, getCheapestShippingMethod: Function, getTaxes: Function, getShipmentTaxes: Function, getCartTaxes: Function, getCartTotal: Function}}
  */
 var UtilityContainer = {
     /**
@@ -14,9 +14,9 @@ var UtilityContainer = {
     getProductsFromLocalStorage : function() {
         var res = [];
 
-        for(var i =0; i<localStorage.length; i++)
+        for(var i = 0, length = localStorage.length; i<length; i++)
         {
-            if (localStorage.key(i).lastIndexOf("_", 0) === 0)
+            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
             {
                 var product = JSON.parse(localStorage.getItem(localStorage.key(i))),
                     productId = product.product,
@@ -42,9 +42,9 @@ var UtilityContainer = {
     getNumberOfProducts : function() {
         var total = 0;
 
-        for(var i = 0; i<localStorage.length; i++)
+        for(var i = 0, length = localStorage.length; i<length; i++)
         {
-            if (localStorage.key(i).lastIndexOf("_", 0) === 0)
+            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
             {
                 total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
             }
@@ -62,12 +62,25 @@ var UtilityContainer = {
         var total = 0,
             products = UtilityContainer.getProductsFromLocalStorage();
 
-        for(var i=0; i<products.length; i++)
+        for(var i= 0, length = products.length; i<length; i++)
         {
             total += (products[i].price * products[i].quantity);
         }
 
         return total;
+    },
+
+    /**
+     * Utility function to delete all products from localStorage.
+     *
+     */
+    removeAllProductsFromLocalStorage : function() {
+        for(var i= 0, length = localStorage.length; i<length; i++) {
+            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
+            {
+                localStorage.removeItem(localStorage.key(i));
+            }
+        }
     },
 
     /**
@@ -117,7 +130,7 @@ var UtilityContainer = {
      */
     validateEmptyFields: function(emptyFields) {
         var passed = true;
-        for(var i=0; i<emptyFields.length; i++) {
+        for(var i= 0, length = emptyFields.length; i<length; i++) {
             if (emptyFields[i].val() == "")
             {
                 passed = false;
@@ -167,38 +180,12 @@ var UtilityContainer = {
     },
 
     /**
-     * Strip HTML tags from a string.
-     * @param string html   The string to be stripped.
-     * @return string       The stripped result.
-     */
-    stripTags: function(html) {
-        var tmp = document.createElement("DIV");
-        tmp.innerHTML = html;
-        return tmp.textContent || tmp.innerText || "";
-    },
-
-    /**
-     * Finds a hidden element width.
-     *
-     * @param obj
-     * @returns {*}
-     */
-    realWidth : function(obj, origin) {
-        var clone = obj.clone();
-        clone.css("visibility", "hidden");
-        origin.append(clone);
-        var width = clone.outerWidth();
-        clone.remove();
-        return parseInt(width);
-    },
-
-    /**
      * Add .has-error to parent class + animate the relevant fields.
      *
      * @param fields
      */
     addErrorClassToFields: function(fields) {
-        for(var i=0; i<fields.length; i++)
+        for(var i= 0, length = fields.length; i<length; i++)
         {
             if (fields[i].val() == "")
             {
@@ -232,7 +219,7 @@ var UtilityContainer = {
      * @param fields
      */
     removeErrorClassFromFields: function(fields) {
-        for(var i=0; i<fields.length; i++)
+        for(var i= 0, length = fields.length; i<length; i++)
         {
             if (fields[i].val() != "" && fields[i].parent().hasClass("has-error"))
             {
@@ -251,7 +238,7 @@ var UtilityContainer = {
         var availableShipment = data.shipping.services,
             sortedShipmentByPrice = [];
 
-        for(var i=0; i<availableShipment.length; i++)
+        for(var i= 0, length = availableShipment.length; i<length; i++)
         {
             sortedShipmentByPrice.push(availableShipment[i]);
         }
@@ -273,11 +260,12 @@ var UtilityContainer = {
      * @returns {number}
      */
     getTaxes : function(data) {
-        var taxes = 0;
+        var taxes = 0,
+            dataTaxesLength = data.taxes.length;
 
-        if (data.taxes.length != 0)
+        if (dataTaxesLength != 0)
         {
-            for(var i=0; i<data.taxes.length; i++)
+            for(var i=0; i<dataTaxesLength; i++)
             {
                 taxes += data.taxes[i].amount;
             }

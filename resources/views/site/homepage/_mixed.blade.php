@@ -1,6 +1,6 @@
 <section class="slice color-one home_mixed">
     @if ($showTab)
-        @include("site._tab", ["tabTitle" => $layoutData["mixed"]["tabTitle"]])
+        @include("site.homepage._tab", ["tabTitle" => $layoutData["mixed"]["tabTitle"]])
     @endif
 
     <div class="w-section inverse">
@@ -52,7 +52,7 @@
 
                 <div class="col-md-4">
                     <div class="widget">
-                        <form class="form-inline" method="get" action="/">
+                        <form class="form-inline" method="get" action="{{ route('search') }}">
                             <div class="input-group col-xs-12">
                                 <input type="search" class="form-control" name="q" placeholder="{{ Lang::get("boukem.search") }}" value="" autocomplete="off" spellcheck="false">
                                         <span class="input-group-btn">

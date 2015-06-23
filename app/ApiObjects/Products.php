@@ -3,6 +3,7 @@
 use Log;
 use Cache;
 use KemAPI;
+use Request;
 use Carbon\Carbon;
 
 class Products extends KemApiObject
@@ -22,7 +23,9 @@ class Products extends KemApiObject
         // Performance check
         $query = trim(strip_tags($query));
         if (strlen($query) < 1) {
-            return $this->badRequest('Query too short.');
+            return Request::ajax() ? $this->badRequest('Query too short.') : null;
+        } elseif ($perPage > 40 || $perPage < 1) {
+            $perPage = 40;
         }
 
         // Retrieve search results
@@ -50,10 +53,6 @@ class Products extends KemApiObject
             foreach ($results->tags as $tag) {
                 $this->extractAndCache($tag->products, \Products::getCacheNamespace());
             }
-        }
-
-        else {
-            Log::info('Retrieving results for "'. $query .'" from cache.');
         }
 
         return $results;

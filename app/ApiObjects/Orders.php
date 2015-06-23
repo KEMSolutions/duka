@@ -1,7 +1,8 @@
 <?php namespace App\ApiObjects;
 
-use App\Facades\Utilities;
 use Log;
+use Auth;
+use Lang;
 use Cache;
 use KemAPI;
 use Carbon\Carbon;
@@ -9,6 +10,26 @@ use Carbon\Carbon;
 class Orders extends KemApiObject
 {
     public function __construct() { parent::__construct('orders'); }
+
+    public function get($id, $verification = null)
+    {
+        // Retrieve order details.
+        $original = parent::get($id);
+
+        // Check that user can view the order details.
+        if (!Auth::check() && $verification != $original->verification) {
+            abort(404, Lang::get('boukem.no_exist'));
+        }
+
+        // Remove sensitive information.
+        $order = new \stdClass;
+        $order->id = $original->id;
+        $order->status = $original->status;
+        $order->payment_details = new \stdClass;
+        $order->payment_details->payment_url = $original->payment_details->payment_url;
+
+        return $order;
+    }
 
     /**
      * Retrieves shipping costs and delivery time estimates.
@@ -34,7 +55,7 @@ class Orders extends KemApiObject
             return $this->badRequest('Invalid parameters.');
         } elseif ($address['country'] == 'CA' && strlen($address['province']) != 2) {
             Log::info('Invalid province code for order estimate.');
-            return $this->badRequest('Invalid parameters.');
+            return $this->badRequest('Shipements to Canada must include a province code.');
         }
 
         // Prepare API request body.
@@ -59,7 +80,6 @@ class Orders extends KemApiObject
         // Retrieve estimate from cache.
         $key = json_encode($body);
         if (Cache::has($key)) {
-            Log::info('Retrieving order estimate from cache...');
             return Cache::get($key);
         }
 
@@ -97,17 +117,19 @@ class Orders extends KemApiObject
             $data->billing_address = $billingAddress;
         }
 
+//        dd($data);
         $response = KemAPI::post($this->baseRequest, $data);
+//        dd($response);
 
         // Check that response is not an error
         if (property_exists($response, 'error'))
         {
-            \Log::error($response->error);
+            Log::error($response->error);
 
             // TODO: Redirect to cart and display an error message.
-            abort(404, \Lang::get('boukem.error_occurred'));
+            abort(404, Lang::get('boukem.error_occurred'));
         }
 
-        return $response->payment_url;
+        return $response;
     }
 }
