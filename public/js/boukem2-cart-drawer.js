@@ -336,7 +336,7 @@ var cartLogicContainer = {
 
         $(".changeLocation").click(function() {
             $("dl.calculation").addClass("hidden");
-            $(".getEstimate").html(localizationContainer.calculateEstimateButton.val);
+            $(".getEstimate").html(Localization.calculate);
             $(".price-estimate-update").fadeOut();
             $(".price-estimate").fadeIn();
 
