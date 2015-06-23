@@ -5442,6 +5442,10 @@ GLOBAL
   width: 25% !important;
 }
 
+.full-width {
+  width: 100% !important;
+}
+
 .btn {
   font-size: 14px;
   font-weight: normal;
