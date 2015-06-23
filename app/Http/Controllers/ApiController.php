@@ -7,6 +7,7 @@ use Orders;
 use Products;
 use Request;
 use Redirect;
+use Session;
 
 use Illuminate\Http\JsonResponse;
 
@@ -136,22 +137,28 @@ class ApiController extends Controller
         return Redirect::to($order->payment_details->payment_url);
     }
 
-    // TODO: handle succesful payments.
+    /**
+     * Handles a successfull payment.
+     */
     public function handleSuccessfulPayment()
     {
-        dd('Payment successful.');
+        // Redirect to homepage with a message.
+        Session::push('messages', '[test] Payment successful.');
+        return Redirect::to('home');
     }
 
-    // TODO: handle failed payments.
-    public function handleFailedPayment()
-    {
-        dd('Payment failed.');
+    /**
+     * Handles a failed payment. Currently ignored and redirected to successful payment page.
+     */
+    public function handleFailedPayment() {
+        return $this->handleSuccessfulPayment();
     }
 
-    // TODO: handle cancelled payments.
-    public function handleCancelledPayment()
-    {
-        dd('Payment cancelled');
+    /**
+     * Handles a cancelled payment. Currently ignored and redirected to successful payment page.
+     */
+    public function handleCancelledPayment() {
+        return $this->handleSuccessfulPayment();
     }
 
 

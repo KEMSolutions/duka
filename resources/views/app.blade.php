@@ -42,6 +42,7 @@
 	{{--@endif--}}
 
 	@include('layout._header')
+	@include('layout._messages')
 	@include('layout._search')
 
 	@yield("content")
