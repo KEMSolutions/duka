@@ -214,6 +214,17 @@ var UtilityContainer = {
     },
 
     /**
+     * Adds a fadeOutUp class then hide the element passed as an argument.
+     *
+     * @param $element
+     */
+    addFadeOutUpClass: function ($element) {
+        $element.addClass("animated fadeOutUp").delay(1000).queue(function() {
+            $(this).addClass("hidden").clearQueue();
+        });
+    },
+
+    /**
      * Remove .has-error from fields
      *
      * @param fields

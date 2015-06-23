@@ -257,7 +257,7 @@ var estimateContainer = {
      *
      */
     displayEstimatePanel : function() {
-        $("#estimate").removeClass("hidden").addClass("animated fadeInDown");
+        $("#estimate").removeClass("hidden fadeOutUp").addClass("animated fadeInDown");
     },
     
     /**
@@ -303,7 +303,7 @@ var estimateContainer = {
             $("#estimate .table-striped").append(serviceDOM);
         }
 
-        $("#estimateButton").removeClass("btn-three").addClass("btn-one").text(localizationContainer.estimateButton.val);
+        $("#estimateButton").removeClass("btn-three").addClass("btn-one").text(Localization.continue);
         self.selectDefaultShipmentMethod();
 
         self.scrollTopToEstimate();
@@ -360,7 +360,7 @@ var paymentContainer = {
      *
      */
     displayPaymentPanel : function() {
-        $("#payment").removeClass("hidden").addClass("animated fadeInDown");
+        $("#payment").removeClass("hidden fadeOutUp").addClass("animated fadeInDown");
         $("#checkoutButton").addClass("animated rubberBand");
     },
 
@@ -432,12 +432,19 @@ var paymentContainer = {
         paymentContainer.initPaymentPanel(data);
         paymentContainer.updatePaymentPanel(data);
 
-        paymentProcessContainer.init();
+        checkoutLogicContainer.init();
     }
 }
 
-
-var paymentProcessContainer = {
+/**
+ * Object responsible for handling the overall logic of the checkout process.
+ * After clicking on "Proceed to checkout", create a cookie and make an ajax call to get all the data before redirecting the user to the payment page.
+ *
+ * When a user changes the quantity of an item, fadeOut the shipping estimate and payment panel. Replace the Continue button with an Update value.
+ *
+ * @type {{createOrdersCookie: Function, placeOrderAjaxCall: Function, init: Function}}
+ */
+var checkoutLogicContainer = {
 
     /**
      * Create a localStorage object containing the id and the verification code.
@@ -459,7 +466,7 @@ var paymentProcessContainer = {
      *
      * @param self
      */
-    ajaxCall: function(self) {
+    placeOrderAjaxCall: function(self) {
         $.ajax({
             method: "POST",
             url: ApiEndpoints.placeOrder,
@@ -484,17 +491,44 @@ var paymentProcessContainer = {
 
     },
 
+
+    hidePanels: function (self) {
+        $(".quantity").on("change", function () {
+            UtilityContainer.addFadeOutUpClass($("#estimate"));
+            UtilityContainer.addFadeOutUpClass($("#payment"));
+
+            self.updateEstimateButtonValue();
+        });
+
+        $(".close-button").on("click", function() {
+            UtilityContainer.addFadeOutUpClass($("#estimate"));
+            UtilityContainer.addFadeOutUpClass($("#payment"));
+
+            self.updateEstimateButtonValue();
+        });
+    },
+
+
+    updateEstimateButtonValue: function() {
+        if ($("#estimate").css("display") != "none") {
+            $("#estimateButton").removeClass("btn-one").addClass("animated rubberBand btn-three").text(Localization.update);
+        }
+    },
+
+
     init: function() {
-        var self = paymentProcessContainer;
+        var self = checkoutLogicContainer;
 
         $("#checkoutButton").on("click", function (e) {
             e.preventDefault();
 
             $('#checkoutButton').html('<i class="fa fa-spinner fa-spin"></i>');
 
-            self.ajaxCall(self);
+            self.placeOrderAjaxCall(self);
 
         });
+
+        self.hidePanels(self);
     }
 }
 
