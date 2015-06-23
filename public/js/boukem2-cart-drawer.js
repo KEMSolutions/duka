@@ -336,7 +336,7 @@ var cartLogicContainer = {
 
         $(".changeLocation").click(function() {
             $("dl.calculation").addClass("hidden");
-            $(".getEstimate").html(localizationContainer.calculateEstimateButton.val);
+            $(".getEstimate").html(Localization.calculate);
             $(".price-estimate-update").fadeOut();
             $(".price-estimate").fadeIn();
 
@@ -348,7 +348,7 @@ var cartLogicContainer = {
             if(!UtilityContainer.validateEmptyCart()) {
                 setTimeout(function() {
                     $(".price-estimate-update .getEstimate").parent().fadeOut(300);
-                    $(".price-estimate-update .getEstimate").html(localizationContainer.calculateEstimateButton.val);
+                    $(".price-estimate-update .getEstimate").html(Localization.calculate);
                 }, 2250);
             }
         });

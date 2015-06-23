@@ -5442,6 +5442,10 @@ GLOBAL
   width: 25% !important;
 }
 
+.full-width {
+  width: 100% !important;
+}
+
 .btn {
   font-size: 14px;
   font-weight: normal;
@@ -5453,7 +5457,6 @@ GLOBAL
   background-image: none;
   border: 1px solid rgba(0, 0, 0, 0);
   border-radius: 2px;
-  margin: 10px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
