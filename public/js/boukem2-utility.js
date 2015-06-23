@@ -344,17 +344,3 @@ var UtilityContainer = {
     }
 }
 
-/**
- * Utility container storing relevant locales to be manipulated in javascript.
- *
- * @type {{estimateButton: {val: (*|jQuery)}}}
- */
-var localizationContainer = {
-    estimateButton : {
-        val : $("#estimateButton").text()
-    },
-
-    calculateEstimateButton : {
-        val : $(".price-estimate .getEstimate").text()
-    }
-}
