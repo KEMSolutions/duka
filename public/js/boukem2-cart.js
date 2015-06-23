@@ -311,6 +311,10 @@ var estimateContainer = {
         paymentContainer.init(data);
     },
 
+    /**
+     * Select the default shipment method from a predefined list.
+     *
+     */
     selectDefaultShipmentMethod : function() {
         var defaultShipment = ["DOM.EP", "USA.TP", "INT.TP"],
             availableShipment = $("input[name=shipping]");
@@ -440,7 +444,7 @@ var paymentContainer = {
  * Object responsible for handling the overall logic of the checkout process.
  * After clicking on "Proceed to checkout", create a cookie and make an ajax call to get all the data before redirecting the user to the payment page.
  *
- * When a user changes the quantity of an item, fadeOut the shipping estimate and payment panel. Replace the Continue button with an Update value.
+ * When a user changes the quantity or deletes an item, fadeOut the shipping estimate and payment panel. Replace the Continue button with "Update".
  *
  * @type {{createOrdersCookie: Function, placeOrderAjaxCall: Function, init: Function}}
  */
@@ -491,7 +495,11 @@ var checkoutLogicContainer = {
 
     },
 
-
+    /**
+     * Hide the panels by fading them up then adding a hidden class.
+     *
+     * @param self
+     */
     hidePanels: function (self) {
         $(".quantity").on("change", function () {
             UtilityContainer.addFadeOutUpClass($("#estimate"));
@@ -508,14 +516,21 @@ var checkoutLogicContainer = {
         });
     },
 
-
+    /**
+     * Updates the estimate button with "Update" while making it bouncy ;)
+     *
+     */
     updateEstimateButtonValue: function() {
+        // if estimate is not displayed, it means we do not need to mark this as an update.
         if ($("#estimate").css("display") != "none") {
             $("#estimateButton").removeClass("btn-one").addClass("animated rubberBand btn-three").text(Localization.update);
         }
     },
 
-
+    /**
+     * Register methods for outside calling.
+     *
+     */
     init: function() {
         var self = checkoutLogicContainer;
 
