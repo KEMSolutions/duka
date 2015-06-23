@@ -7,24 +7,13 @@
     @endsection
 
     @section("content")
-        <h1>Search Test</h1>
 
-        @if ($results)
-            <h2>Results for: <b>{{ $query }}</b></h2>
-
-            <ol>
-                @foreach ($results->organic_results as $prod)
-                    <li>
-                        <a href="{{ route('product', ['slug' => $prod->slug]) }}">
-                            {{ $prod->localization->name }}
-                        </a>
-                    </li>
-                @endforeach
-            </ol>
+        {{-- Display search results --}}
+        @if (count($results->organic_results))
+            @include('site.search._results', ['results' => $results->organic_results])
+        @else
+            @include('site.search._no-results-found')
         @endif
-    @endsection
-
-    @section("scripts")
 
     @endsection
 

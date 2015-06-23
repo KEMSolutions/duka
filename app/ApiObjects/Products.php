@@ -32,17 +32,24 @@ class Products extends KemApiObject
         $key = $this->cacheNamespace .'.search.'. $query;
         if (!$results = Cache::get($key))
         {
-            $results = KemAPI::get('products/search', [
+            // Make the API call.
+            $response = KemAPI::get('products/search', [
                 'q' => $query,
                 'embed' => 'tags',
                 'page' => $page,
                 'per_page' => $perPage
-            ]);
+            ], true);
+
+            $results = json_decode($response->getBody());
 
             // Check for errors.
-            if (!$results || isset($results->error)) {
+            if ($response->getStatusCode() != 200) {
                 return $results;
             }
+
+            // Retrieve the details related to this search, and save them in the search object.
+//            $links = $response->getHeader('links');
+            $results->total = $response->getHeader('x-total-count');
 
             // Cache results and product details
             Log::info('Caching results for "'. $query .'" until '. Carbon::now()->addMinutes(15));
