@@ -521,10 +521,10 @@ var checkoutLogicContainer = {
      *
      */
     updateEstimateButtonValue: function() {
-        // if estimate is not displayed, it means we do not need to mark this as an update.
-        if ($("#estimate").css("display") != "none") {
-            $("#estimateButton").removeClass("btn-one animated").addClass("animated rubberBand btn-three").text(Localization.update);
-        }
+        $("#estimateButton")
+            .removeClass("btn-one animated rubberBand")
+            .addClass("animated rubberBand btn-three")
+            .text(Localization.update);
     },
 
     /**
