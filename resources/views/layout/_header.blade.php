@@ -118,7 +118,7 @@
 
         <div class="col-xs-2 visible-xs-block pull-right view-cart-wrapper-xs">
             <button class="btn btn-default">
-                <a href="#" class="view-cart"><i class="fa fa-shopping-cart icon-cart"></i> <span class="badge" id="cart_badge">0</span></a>
+                <a href="#" class="view-cart"><i class="fa fa-shopping-cart icon-cart"></i> <span class="badge cart_badge">0</span></a>
             </button>
 
         </div>
@@ -127,7 +127,7 @@
                 <div class="col-md-12 col-sm-12">
                     <p class="inline-block hidden-xs">{{ Lang::get("boukem.search_in") }}</p>
 
-
+                    <form class="inline-block searchBar-form" method="get" action="{{ route('search') }}">
                     <div class="btn-group search-filter hidden-xs">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ Lang::get("boukem.all") }} <span class="caret"></span>
@@ -144,7 +144,7 @@
                         </ul>
                     </div>
 
-                    <form class="inline-block searchBar-form" method="get" action="{{ route('search') }}">
+
                         <input type="search" class="form-control" name="q" id="searchBar" value="" autocomplete="off" spellcheck="false">
                         <button class="btn btn-primary search" type="submit"><i class="fa fa-search"></i><span class="sr-only">{{ Lang::get("boukem.search") }}</span></button>
                     </form>
@@ -179,7 +179,7 @@
                 <li>
                     <a class="view-cart">
                         <button class="btn btn-default" id="view-cart-wrapper">
-                            <i class="fa fa-shopping-cart icon-cart"></i> <span id="cart-description">{{ " " . Lang::get("boukem.cart") . " " }}</span> <span class="badge" id="cart_badge">0</span>
+                            <i class="fa fa-shopping-cart icon-cart"></i> <span id="cart-description">{{ " " . Lang::get("boukem.cart") . " " }}</span> <span class="badge cart_badge">0</span>
                         </button>
                     </a>
                 </li>
