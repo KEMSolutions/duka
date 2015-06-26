@@ -129,11 +129,16 @@ var headerContainer = {
         }
     },
 
-    changeTextFromDropdown : function() {
-        $(".dropdown-menu li a").click(function(){
+    /**
+     * Changes text from dropdown button within the parent node passed in the argument
+     *
+     * @param $elem
+     */
+    changeTextFromDropdown : function($elem) {
+        $($elem + " .dropdown-menu li a").click(function(){
 
-            $(".btn:first-child").text($(this).text());
-            $(".btn:first-child").val($(this).text());
+            $($elem + " .btn:first-child").html($(this).text() + '<span class=\"caret\"></span>');
+            $($elem + " .btn:first-child").val($(this).text());
 
         });
     },
@@ -150,7 +155,7 @@ var headerContainer = {
             self.sm.btnTransform_sm();
         });
 
-        //self.changeTextFromDropdown();
+        self.changeTextFromDropdown(".search-filter");
     }
 }
 
