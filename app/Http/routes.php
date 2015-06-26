@@ -7,12 +7,6 @@ Route::group([
     'prefix' => Localization::setLocale(),
     'middleware' => ['localeSessionRedirect', 'localizationRedirect']], function() {
 
-    // User authentication (not implemented).
-//    Route::controllers([
-//        'auth' => 'Auth\AuthController',
-//        'password' => 'Auth\PasswordController',
-//    ]);
-
     // Homepage.
     Route::get('home', 'LayoutController@home');
     Route::get('/', ['as' => 'home', 'uses' => 'LayoutController@home']);
@@ -26,6 +20,12 @@ Route::group([
 
     // Custom pages.
     Route::get('pages/{slug}', ['as' => 'page', 'uses' => 'PagesController@display']);
+
+    // User authentication.
+    Route::controllers([
+        'auth' => 'Auth\AuthController',
+        'password' => 'Auth\PasswordController',
+    ]);
 
     // Temporary routes, used for development.
     Route::group(['prefix' => 'dev'], function()
