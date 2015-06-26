@@ -4779,7 +4779,14 @@ Custom colors.
   color: #fff;
 }
 
+
+/*-----------------------------------*/
+/*-----------------------------------*/
+/*-----------------------------------*/
 /* Navigation bar style (.header) */
+/*-----------------------------------*/
+/*-----------------------------------*/
+/*-----------------------------------*/
 .header {
   height: 113px;
   border-bottom: 1px solid #E7E7E7;
@@ -4850,12 +4857,9 @@ Custom colors.
   margin-top: 1%;
 }
 
-.searchBar-form {
-  width: 70%;
-}
 
 #searchBar {
-  width: 80%;
+  width: 60%;
   border-left: none;
   border-radius: 0;
   box-shadow: none;
@@ -4864,7 +4868,7 @@ Custom colors.
 
 @media screen and (min-width: 935px) and (max-width: 1035px) {
   .searchBar-form {
-    width: 60%;
+    width: 100%;
   }
 }
 
@@ -4873,6 +4877,7 @@ Custom colors.
     width: 49%;
   }
 }
+
 
 .search-filter {
   margin-left: 5px;
@@ -4891,6 +4896,8 @@ Custom colors.
 #searchBarWrapper .dropdown-toggle {
   border-radius: 5px 0 0 5px;
   border: 1px solid #ccc;
+  padding-left: 6px;
+  padding-right: 6px;
 }
 
 #searchBarWrapper .search {
@@ -4912,11 +4919,27 @@ Custom colors.
   padding-bottom: 16px;
 }
 
+@media screen and (min-width: 935px) and (max-width: 1279px) {
+  #searchBar {
+    width: 50%;
+  }
+}
+
+@media (max-width: 1024px) {
+   #search_in {
+     display: none;
+   }
+}
+
 @media (max-width: 768px) {
   #searchBar {
     float: left;
     width: 90%;
     border-left: 1px solid #CCC;
+  }
+
+  .searchBar-form {
+    width: 100%;
   }
 
   #searchBarWrapper {
@@ -4932,7 +4955,8 @@ Custom colors.
     border-bottom: 0;
   }
 
-  .view-cart-wrapper-xs {
+  .wrapper-xs {
     padding-top: 1%;
   }
 }
+
