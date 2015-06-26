@@ -1,10 +1,10 @@
-# phpStorm project files.
+# phpStorm project files
 /.idea
 
-# Node mofules.
+# Node modules
 /node_modules
 
-# Laravel environment variables.
+# Laravel environment variables
 .env
 
 # Vendor git files
