@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <a href="#">
+        <a href="{{ url("/") }}">
             <div class="col-md-2 col-sm-3 col-xs-8" id="nav-left">
                 &nbsp; &nbsp;
             </div>
