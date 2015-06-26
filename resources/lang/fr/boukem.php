@@ -15,10 +15,11 @@ return [
 
     'home'          =>'Accueil',
     'search'        =>'Rechercher',
+    'search_in'     =>'Rechercher dans: ',
     'toggle_nav'    =>'Afficher le menu',
     'cart'          =>'Votre panier',
     'go'            =>'Go!',
-    'sign_up'       =>'Devenir membre ou se connecter',
+    'sign_up'       =>'S\'inscrire',
     "sign_in"       =>"Se connecter",
     'sign_out'      =>'Se déconnecter',
     'copyrights'    =>'tous droits réservés',
@@ -196,5 +197,10 @@ return [
     "pending_order"  =>"Votre commande #:command n'a pas été finalisée.",
     "what_to_do"        =>"Que souhaitez vous faire?",
     "pay_now"           =>"Payer cette commande.",
-    "cancel_order"      =>"Annuler cette commande."
+    "cancel_order"      =>"Annuler cette commande.",
+    "all"               =>"Tout",
+    "brands"            =>"Marques",
+    "health_issues"     =>"Sujets de santé",
+    "featured_products" =>"Produits recommandés",
+    "your"              =>"Votre"
 ];

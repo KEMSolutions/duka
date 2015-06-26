@@ -95,6 +95,65 @@ var paymentOverlayContainer = {
     }
 }
 
+/**
+ * Object responsible for displaying the navigation header.
+ * Will be present on all the pages, thus written here.
+ *
+ * @type {{md: {removeCartDescription: Function}, sm: {btnTransform_sm: Function}, init: Function}}
+ */
+var headerContainer = {
+    /**
+     * Desktop size
+     *
+     */
+    md: {
+        removeCartDescription : function() {
+            if ($(window).width() <= 1195) {
+                $("#nav-right #cart-description").text("");
+                $("#nav-right").css("padding-bottom", "18px");
+            }
+        }
+    },
+
+    /**
+     * Tablet size
+     *
+     */
+    sm : {
+        btnTransform_sm : function() {
+            if ($(window).width() <= 934 && ($(window).width() >= 769)) {
+                $(".row:first .btn").addClass("btn-sm");
+                $("#searchBar").addClass("input-sm");
+                $("#view-cart-wrapper").addClass("btn-xs btn-xs-btn-sm-height");
+            }
+        }
+    },
+
+    changeTextFromDropdown : function() {
+        $(".dropdown-menu li a").click(function(){
+
+            $(".btn:first-child").text($(this).text());
+            $(".btn:first-child").val($(this).text());
+
+        });
+    },
+
+    /**
+     * Register functions in event handler (onload, onresize) to be called outside of this object.
+     *
+     */
+    init: function () {
+        var self = headerContainer;
+
+        $(window).on("load resize", function() {
+            self.md.removeCartDescription();
+            self.sm.btnTransform_sm();
+        });
+
+        //self.changeTextFromDropdown();
+    }
+}
+
 $(document).ready(function () {
     //fancy plugin for product page (quantity input)
     $(".input-qty").TouchSpin({
@@ -103,4 +162,7 @@ $(document).ready(function () {
 
     //Initialize overlay plugin.
     paymentOverlayContainer.init();
+
+    //Initialize navigation header.
+    headerContainer.init();
 });
