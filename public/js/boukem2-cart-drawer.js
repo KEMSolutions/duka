@@ -216,7 +216,7 @@ var cartLogicContainer = {
     setBadgeQuantity : function() {
         var total = UtilityContainer.getNumberOfProducts();
 
-        $("#cart_badge").text(total);
+        $(".cart_badge").text(total);
     },
 
     /**

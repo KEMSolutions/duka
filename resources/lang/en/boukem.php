@@ -14,13 +14,14 @@ return [
     */
 
     'home'          => 'Home',
-    'search'        =>'Search',
+    "search"        => 'Search',
+    'search_in'     =>'Search in: ',
     'toggle_nav'    =>'Toggle navigation',
     'cart'          =>'Your cart',
     'go'            =>'Go!',
-    'sign_up'       =>'Sign up or sign in',
-    "sign_in"       =>"Sign in",
-    'sign_out'      =>'Sign out',
+    'sign_up'       =>'Sign up',
+    "sign_in"       =>"Log in",
+    'sign_out'      =>'Log out',
     'copyrights'    =>'all rights reserved',
     'no_exist'      =>'The requested page does not exist.',
     "canada_post_estimate"=>"Canada Post cannot provide an estimate at this time. Please try again later.",
@@ -196,5 +197,10 @@ return [
     "pending_order"  =>"Your order #:command has not been paid.",
     "what_to_do"        =>"What would you like to do?",
     "pay_now"           =>"Pay now!",
-    "cancel_order"      =>"Cancel this order."
+    "cancel_order"      =>"Cancel this order.",
+    "all"               =>"All",
+    "brands"            =>"Brands",
+    "health_issues"     =>"Health Issues",
+    "featured_products" =>"Featured Products",
+    "your"              =>"Your"
 ];
