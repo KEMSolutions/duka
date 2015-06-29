@@ -61,6 +61,7 @@
 	<script src="/js/boukem2.js"></script>
 	<script src="/js/boukem2-utility.js"></script>
 	<script src="/js/boukem2-cart-drawer.js"></script>
+	<script src="/js/boukem2-cart.js"></script>
 	@yield("scripts")
 </body>
 

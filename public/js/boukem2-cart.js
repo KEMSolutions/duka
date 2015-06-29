@@ -549,7 +549,7 @@ var checkoutLogicContainer = {
 
 
 
-var validationContainer = {
+var checkoutValidationContainer = {
 
     removeErrorClassFromEmail: function(email) {
         if (UtilityContainer.validateEmail(email.val()) && email.parent().hasClass("has-error"))
@@ -571,7 +571,7 @@ var validationContainer = {
      * @param country
      */
     init : function(fields, email, shippingInformation, billingInformation) {
-        var self = validationContainer;
+        var self = checkoutValidationContainer;
 
         if (UtilityContainer.validateEmptyFields(fields)
             && UtilityContainer.validateEmail(email.val())
@@ -692,7 +692,7 @@ $(document).ready(function() {
             };
 
         //Validate all fields and make the ajax call!
-        validationContainer.init(fields, email, shippingInformation, billingInformation);
+        checkoutValidationContainer.init(fields, email, shippingInformation, billingInformation);
     });
 });
 
