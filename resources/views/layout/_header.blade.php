@@ -121,7 +121,7 @@
         </div>
 
 
-        <ul>
+        <ul class="col-md-10">
             <li class="inline-block ">
                 <button type="button " class="btn btn-link "><a href="# ">Back to store</a></button>
             </li>
