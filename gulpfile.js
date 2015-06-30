@@ -20,6 +20,7 @@ elixir(function(mix) {
         "../../../public/js/dev/components/layout/drawer.js",
         "../../../public/js/dev/components/layout/header.js",
         "../../../public/js/dev/components/layout/payment-overlay.js",
+        "../../../public/js/dev/components/site/category.js",
         "../../../public/js/dev/utils/utility.js",
         "../../../public/js/dev/actions/checkout/checkout-init.js",
         "../../../public/js/dev/actions/checkout/checkout-logic.js",

@@ -1090,84 +1090,6 @@ var checkoutInitContainer = {
         self.estimateButtonClick();
     }
 }
-
-//$(document).ready(function() {
-//    /**
-//     * Sets up the ajax token for all ajax requests
-//     *
-//     */
-//    $.ajaxSetup({
-//        headers: {
-//            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//        }
-//    });
-//
-//    /**
-//     * Populate select lists and set up billing address container behaviour.
-//     * Set the form focus on first name field
-//     *
-//     */
-//    locationContainer.init();
-//    billingContainer.init();
-//    $("#shippingFirstname").focus();
-//
-//    /**
-//     * Event triggered when the "Continue" button is hit.
-//     * If the input fields entered are appropriate, make the ajax call to "/api/estimate".
-//     * If they are not, display the relevant error message(s)
-//     *
-//     */
-//    $("#estimateButton").on("click", function(e) {
-//        var email = $("#customer_email"),
-//            phone = $("#customer_phone"),
-//            shippingFirstName = $("#shippingFirstname"),
-//            shippingLastName = $("#shippingLastname"),
-//            shippingAddress1 = $("#shippingAddress1"),
-//            shippingCity = $("#shippingCity"),
-//            shippingCountry = $("#shippingCountry").val(),
-//            shippingPostcode = $("#shippingPostcode"),
-//            billingFirstName = $("#billingFirstname"),
-//            billingLastName = $("#billingLastname"),
-//            billingAddress1 = $("#billingAddress1"),
-//            billingCity = $("#billingCity"),
-//            billingCountry = $("#billingCountry").val(),
-//            billingPostcode = ("#billingPostcode"),
-//            shippingInformation = {
-//                "country" : shippingCountry,
-//                "postcode" : $("#shippingPostcode").val(),
-//                "postcodeInput" : $("#shippingPostcode")
-//            },
-//            fields = [
-//                shippingFirstName,
-//                shippingLastName,
-//                shippingAddress1,
-//                shippingCity,
-//                billingFirstName,
-//                billingLastName,
-//                billingAddress1,
-//                billingCity,
-//                email,
-//                phone
-//            ];
-//
-//        e.preventDefault();
-//
-//        //Auto fill billing address if checkbox is checked.
-//        billingContainer.autoFillBillingAddress(fields, shippingInformation.postcodeInput);
-//
-//        //Build the billing information object (from auto fill or entered by hand)
-//        var billingInformation = {
-//            "country" : billingCountry,
-//            "postcode" : $("#billingPostcode").val(),
-//            "postcodeInput" : $("#billingPostcode")
-//        };
-//
-//        //Validate all fields and make the ajax call!
-//        checkoutValidationContainer.init(fields, email, shippingInformation, billingInformation);
-//    });
-//});
-//
-
 /**
  * Object responsible for handling the overall logic of the checkout process.
  * After clicking on "Proceed to checkout", create a cookie and make an ajax call to get all the data before redirecting the user to the payment page.
@@ -1349,7 +1271,7 @@ var checkoutValidationContainer = {
 
 /**
  * Object responsible for the overall logic (CRUD) of the cart drawer.
- * Layout handled in dev/components/layout/drawer.js
+ * Layout handled in dev/components/layout/cart-drawer.js
  *
  * @type {{$el: {$list: (*|jQuery|HTMLElement)}, addItem: Function, storeItem: Function, loadItem: Function, deleteItem: Function, modifyQuantity: Function, modifyQuantityBeforeBuying: Function, setBadgeQuantity: Function, setQuantityCookie: Function, setCartSubtotal: Function, setCartShipping: Function, setCartTaxes: Function, setCartTotal: Function, button_to_Json: Function, ajaxCall: Function, updateAjaxCall: Function, init: Function}}
  */
@@ -1694,48 +1616,6 @@ var cartDrawerInitContainer = {
 
 }
 
-//$(document).ready(function() {
-//    $.ajaxSetup({
-//        headers: {
-//            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//        }
-//    });
-//
-//    cartDisplayContainer.init();
-//    cartLogicContainer.init();
-//    cartDisplayContainer.setCartItemsHeight();
-//
-//    $(".buybutton").click(function() {
-//        cartDisplayContainer.animateIn();
-//        cartLogicContainer.addItem(cartLogicContainer.button_to_Json($(this)));
-//        cartLogicContainer.storeItem(cartLogicContainer.button_to_Json($(this)));
-//
-//        //We remove the "Your cart is empty" message at the top every time we add an item.
-//        //TODO : Maybe improve it?
-//        $("#cart-items .empty-cart").addClass("hidden");
-//    });
-//
-//
-//    $(".getEstimate").on("click", function() {
-//        //Fields validation + Empty cart validation.
-//        if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate #country").val())
-//            && UtilityContainer.validateEmptyFields([$("#postcode")])
-//            && !UtilityContainer.validateEmptyCart()) {
-//
-//            $(this).html('<i class="fa fa-spinner fa-spin"></i>');
-//
-//            cartLogicContainer.ajaxCall();
-//
-//        }
-//        else if (UtilityContainer.validateEmptyCart()) {
-//            $("#cart-items .empty-cart").removeClass("hidden");
-//        }
-//        else {
-//            UtilityContainer.addErrorClassToFieldsWithRules($("#postcode"));
-//        }
-//    });
-//
-//});
 $(document).ready(function () {
 
     /**

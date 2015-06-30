@@ -4971,3 +4971,10 @@ Custom colors.
   height: 120px;
   border-radius: 100px;
 }
+
+.category-header {
+  padding: 50px;
+  margin-bottom: 20px;
+
+  background-size: cover;
+}
