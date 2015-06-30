@@ -1,16 +1,26 @@
-@foreach($products as $product)
+<?php foreach($products as $product): ?>
+
+    {{-- Performance check --}}
+    <?php
+    if (empty($product)) {
+        continue;
+    }
+    ?>
     {{--TODO: TEMPORARY FIX AS TO WHY THE $products array contains empty fields?--}}
     {{--      {{ var_dump($product) }}--}}
-    @if(is_object($product) && isset($product->brand->slug))
+    @if(is_object($product))
         <div class="col-xs-6 col-sm-4 col-md-3 text-center dense_product">
 
             <a href="/{{ $locale }}/dev/prod/{{ $product->slug }}" class="strong">
                 <img src="//static.boutiquekem.com/productimg-160-160-{{ count($product->images) > 0 ? $product->images[0]->id . "-h." . $product->images[0]->extension : "0000.png" }}" class="img-responsive center-block"/>
             </a>
 
-            <div class="text-uppercase brand">
-                <strong><a href="/{{ $locale }}/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a></strong>
-            </div>
+            {{-- Link to product brand --}}
+            @if (isset($product->brand->slug))
+                <div class="text-uppercase brand">
+                    <strong><a href="/{{ $locale }}/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a></strong>
+                </div>
+            @endif
 
             <div class="name">
                 <a href="/{{ $locale }}/dev/prod/{{ $product->slug }}">{{ $product->localization->name }}</a>
@@ -31,6 +41,7 @@
         </div>
 
     @endif
-@endforeach
+
+<?php endforeach; ?>
 
 

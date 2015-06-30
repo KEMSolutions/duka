@@ -8,8 +8,18 @@
 
             {{-- Suggested results (tags) --}}
             {{-- Hey @Rob, the tags are in $results->tags --}}
+            @if (count($results->tags))
+                <h3>Testing tags...</h3>
+                @include(
+                    'product.layout._product_card_dense', [
+                        'showTag' => false,
+                        'locale' => Localization::getCurrentLocale(),
+                        'products' => $results->tags[0]->products
+                ])
+            @endif
 
             {{-- Search results --}}
+            <h3>Testing organic results...</h3>
             @include(
                 'product.layout._product_card_dense', [
                     'showTag' => false,
