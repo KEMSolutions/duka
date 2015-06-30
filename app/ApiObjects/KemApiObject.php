@@ -43,6 +43,33 @@ abstract class KemApiObject
     }
 
     /**
+     * Most basic request: a GET request without any parameters.
+     */
+    public function basic()
+    {
+        // Retrieve object from cache, or make an API call.
+        if (!$object = Cache::get($this->cacheNamespace . 'basic'))
+        {
+            $object = KemAPI::get($this->baseRequest);
+
+            // Check for errors.
+            if (!$object ||
+                (is_object($object) && property_exists($object, 'error')) ||
+                (!is_object($object) && !is_array($object))) {
+                return $object;
+            }
+
+            // Cache result.
+            $this->cache($object, 'basic');
+
+            // Look for products to cache within results.
+            $this->findAndCache($object);
+        }
+
+        return $object;
+    }
+
+    /**
      * Retrieves an object from the API, the type of which is defined by $this->baseRequest.
      *
      * @param mixed $id             ID or slug of requested object.
@@ -88,8 +115,9 @@ abstract class KemApiObject
     {
         // Cache object by ID and by slug.
         $expires = Carbon::now()->addHours(3);
-        Cache::put($this->cacheNamespace . $object->id, $object, $expires);
-        if (property_exists($object, 'slug')) {
+        $requestID = $requestID ?: $object->id;
+        Cache::put($this->cacheNamespace . $requestID, $object, $expires);
+        if (is_object($object) && property_exists($object, 'slug')) {
             Cache::put($this->cacheNamespace . $object->slug, $object, $expires);
         }
 

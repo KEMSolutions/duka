@@ -33,7 +33,13 @@ Route::group([
     // Temporary routes, used for development.
     Route::group(['prefix' => 'dev'], function()
     {
+        Route::get('list-categories', function() {
+            return dd(Categories::getAllCategories());
+        });
 
+        Route::get('list-conditions', function() {
+            return dd(Categories::getAllConditions());
+        });
     });
 });
 

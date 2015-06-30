@@ -5,6 +5,24 @@ class Categories extends KemApiObject
     public function __construct() { parent::__construct('categories'); }
 
     /**
+     * Retrieves a nested list of categories.
+     *
+     * @return array    List of categories.
+     */
+    public function getAllCategories() {
+        return parent::basic()[0]->children;
+    }
+
+    /**
+     * Retrieves a nested list of conditions (sujets de santé).
+     *
+     * @return array    List of conditions.
+     */
+    public function getAllConditions() {
+        return parent::basic()[1]->children;
+    }
+
+    /**
      * Retrieves the details for a category.
      *
      * @param mixed $id     ID or slug of the category.
