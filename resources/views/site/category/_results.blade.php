@@ -16,9 +16,9 @@
             ])
         </div>
 
-        {{-- Pagination --}}
-        {{--<div class="row text-center">--}}
-            {{--{!! $paginator->render() !!}--}}
-        {{--</div>--}}
+         {{--Pagination --}}
+        <div class="row text-center">
+            {!! $paginator->render() !!}
+        </div>
     </div>
 </div>
