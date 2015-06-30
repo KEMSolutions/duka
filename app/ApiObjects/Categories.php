@@ -14,7 +14,7 @@ class Categories extends KemApiObject
      */
     public function get($id, $page = 1, $perPage = 40) {
         return parent::get($id, [
-            'embed' => 'products',
+            'embed' => 'products,presentation',
             'page' => $page,
             'per_page' => $perPage
         ]);
