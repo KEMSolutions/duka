@@ -35,10 +35,6 @@ Route::group([
          */
         Route::get("prod/{slug}", "ProductController@show");
 
-        /**
-         * Route for testing checkout
-         */
-        Route::get("cart", "CheckoutController@index");
     });
 });
 

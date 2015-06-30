@@ -241,6 +241,7 @@ h4 {
 
 .cart-checkout{
     overflow: hidden;
+    width: 100%;
 }
 
 .cart-checkout [class*="col-"]{

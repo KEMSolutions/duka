@@ -37,9 +37,6 @@
 	<![endif]-->
 </head>
 <body>
-	{{--@if (isset($_COOKIE["_unpaid_orders"]))--}}
-		{{--@include("cart._unpaid_payment")--}}
-	{{--@endif--}}
 
 	@include('layout._header')
 	@include('layout._messages')
@@ -58,9 +55,7 @@
 
 	@include("_dynamic_resources")
 
-	<script src="/js/boukem2.js"></script>
-	<script src="/js/boukem2-utility.js"></script>
-	<script src="/js/boukem2-cart-drawer.js"></script>
+	<script src="/js/prod/boukem2.js"></script>
 	@yield("scripts")
 </body>
 

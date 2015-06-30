@@ -4906,8 +4906,7 @@ Custom colors.
 }
 
 /* Border bottom for separation between row 1 and 2 */
-#searchBarWrapper,
-#nav-right {
+#searchBarWrapper{
   border-bottom: 1px solid #F7F7F7;
 }
 
@@ -4934,7 +4933,7 @@ Custom colors.
 @media (max-width: 768px) {
   #searchBar {
     float: left;
-    width: 90%;
+    width: 85%;
     border-left: 1px solid #CCC;
   }
 

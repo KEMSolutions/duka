@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <a href="#">
+        <a href="{{ url("/") }}">
             <div class="col-md-2 col-sm-3 col-xs-8" id="nav-left">
                 &nbsp; &nbsp;
             </div>
@@ -41,11 +41,12 @@
                     <form class="inline-block searchBar-form col-md-11" method="get" action="{{ route('search') }}">
                     <div class="btn-group search-filter hidden-sm hidden-xs">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ Lang::get("boukem.featured_products") }} <span class="caret"></span>
+                            {{ Lang::get("boukem.all") }} <span class="caret"></span>
                         </button>
                         <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu">
+                            <li><a href="#">{{ Lang::get("boukem.all") }}</a></li>
                             <li><a href="#">{{ Lang::get("boukem.categories") }}</a></li>
                             <li><a href="#">{{ Lang::get("boukem.brands") }}</a></li>
                             <li><a href="#">{{ Lang::get("boukem.health_issues") }}</a></li>
@@ -120,7 +121,7 @@
         </div>
 
 
-        <ul>
+        <ul class="col-md-10">
             <li class="inline-block ">
                 <button type="button " class="btn btn-link "><a href="# ">Back to store</a></button>
             </li>

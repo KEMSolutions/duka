@@ -1,84 +1,9 @@
-var cartDisplayContainer = {
-    $el : {
-        $back : $("#back"),
-        $proceed : $("#proceed"),
-        $trigger : $(".view-cart"),
-        $container : $("#cart-container"),
-        $checkout : $("#checkout"),
-        $body : $("body")
-    },
-
-    displayOn: function() {
-        _width = cartDisplayContainer.$el.$container.width();
-        cartDisplayContainer.$el.$container.css( {
-            "margin-right" : -_width
-        });
-
-        cartDisplayContainer.$el.$trigger.click(function() {
-            cartDisplayContainer.animateIn();
-        });
-    },
-
-    displayOff : function() {
-        _width = cartDisplayContainer.$el.$container.width();
-        cartDisplayContainer.$el.$back.click(function() {
-            cartDisplayContainer.animateOut();
-        });
-        cartDisplayContainer.$el.$checkout.click(function() {
-            sessionStorage.isDisplayed = false;
-        });
-    },
-
-    animateIn : function() {
-        cartDisplayContainer.$el.$container.show();
-        cartDisplayContainer.$el.$container.animate( {
-            "margin-right" : 0
-        }, 400);
-        sessionStorage.isDisplayed = true;
-    },
-
-    animateOut: function() {
-        _width = cartDisplayContainer.$el.$container.width();
-        cartDisplayContainer.$el.$container.animate( {
-            "margin-right" : -_width
-        }, 400, function() {
-            $(this).hide();
-        });
-        sessionStorage.isDisplayed = false;
-    },
-
-    setCartItemsHeight : function() {
-        cartDisplayContainer.computeCartItemsHeight();
-
-        $(window).on("resize", function() {
-           cartDisplayContainer.computeCartItemsHeight();
-        });
-
-        cartDisplayContainer.$el.$trigger.on("click", function() {
-            cartDisplayContainer.computeCartItemsHeight();
-        })
-    },
-
-    computeCartItemsHeight : function() {
-        var cartItemsHeight = $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
-
-        $("#cart-items").css("height", cartItemsHeight);
-    },
-
-    init : function() {
-        cartDisplayContainer.displayOn();
-        cartDisplayContainer.displayOff();
-        UtilityContainer.populateCountry();
-
-        if (sessionStorage.isDisplayed == "true")
-        {
-            cartDisplayContainer.$el.$container.css("margin-right", 0);
-            cartDisplayContainer.$el.$container.show();
-        }
-
-    }
-};
-
+/**
+ * Object responsible for the overall logic (CRUD) of the cart drawer.
+ * Layout handled in dev/components/layout/cart-drawer.js
+ *
+ * @type {{$el: {$list: (*|jQuery|HTMLElement)}, addItem: Function, storeItem: Function, loadItem: Function, deleteItem: Function, modifyQuantity: Function, modifyQuantityBeforeBuying: Function, setBadgeQuantity: Function, setQuantityCookie: Function, setCartSubtotal: Function, setCartShipping: Function, setCartTaxes: Function, setCartTotal: Function, button_to_Json: Function, ajaxCall: Function, updateAjaxCall: Function, init: Function}}
+ */
 var cartLogicContainer = {
     /**
      * Cache a set of elements commonly used (to be updated)
@@ -365,47 +290,3 @@ var cartLogicContainer = {
         cartLogicContainer.setCartSubtotal();
     }
 };
-
-
-$(document).ready(function() {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    cartDisplayContainer.init();
-    cartLogicContainer.init();
-    cartDisplayContainer.setCartItemsHeight();
-
-    $(".buybutton").click(function() {
-        cartDisplayContainer.animateIn();
-        cartLogicContainer.addItem(cartLogicContainer.button_to_Json($(this)));
-        cartLogicContainer.storeItem(cartLogicContainer.button_to_Json($(this)));
-
-        //We remove the "Your cart is empty" message at the top every time we add an item.
-        //TODO : Maybe improve it?
-        $("#cart-items .empty-cart").addClass("hidden");
-    });
-
-
-    $(".getEstimate").on("click", function() {
-        //Fields validation + Empty cart validation.
-         if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate #country").val())
-         && UtilityContainer.validateEmptyFields([$("#postcode")])
-         && !UtilityContainer.validateEmptyCart()) {
-
-             $(this).html('<i class="fa fa-spinner fa-spin"></i>');
-
-             cartLogicContainer.ajaxCall();
-
-         }
-         else if (UtilityContainer.validateEmptyCart()) {
-             $("#cart-items .empty-cart").removeClass("hidden");
-         }
-         else {
-             UtilityContainer.addErrorClassToFieldsWithRules($("#postcode"));
-         }
-    });
-
-});
