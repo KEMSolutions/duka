@@ -6,7 +6,7 @@
             <div class="w-box">
                 <figure>
 
-                    <a href="/{{ $locale }}/dev/prod/{{ $product->slug }}" class="strong">
+                    <a href="/{{ $locale }}/prod/{{ $product->slug }}" class="strong">
                         <img src="//static.boutiquekem.com/productimg-300-280-{{ $product->images[0]->id . "." . $product->images[0]->extension }}" class="img-responsive center-block "/>
                     </a>
 

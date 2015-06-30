@@ -14,14 +14,14 @@
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="img-feature">
-                                            <a href="/{{ $locale }}/dev/prod/{{ $product->slug }}">
+                                            <a href="/{{ $locale }}/prod/{{ $product->slug }}">
                                                 <img src="//static.boutiquekem.com/productimg-120-120-{{ $product->images[0]->id . "." . $product->images[0]->extension }}" class="img-thumbnail center-block"/>
                                             </a>
                                         </div>
                                     </div>
                                     <div class="col-md-10">
                                         <p>
-                                            <a href="/{{ $locale }}/dev/prod/{{ $product->slug }}" class="strong">
+                                            <a href="/{{ $locale }}/prod/{{ $product->slug }}" class="strong">
                                                 {{ $product->localization->name }}
                                             </a>
                                                 <span class="pull-right">

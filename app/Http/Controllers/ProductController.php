@@ -11,7 +11,7 @@ use Localization;
 
 class ProductController extends Controller {
 
-    public function show($slug){
+    public function display($slug){
         return View::make("product.view")->with([
            "product" => Products::get($slug),
             "locale" => Localization::getCurrentLocale(),

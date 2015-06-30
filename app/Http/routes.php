@@ -14,11 +14,11 @@ Route::group([
 //    ]);
 
     // Homepage.
-    Route::get('home', 'LayoutController@home');
-    Route::get('/', ['as' => 'home', 'uses' => 'LayoutController@home']);
+    Route::get('home', 'HomeController@index');
+    Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
 
     // Products.
-    Route::get('prod/{slug}', ['as' => 'product', 'uses' => 'ProductController@show']);
+    Route::get('prod/{slug}', ['as' => 'product', 'uses' => 'ProductController@display']);
     Route::get('search', ['as' => 'search', 'uses' => 'SearchController@index']);
 
     // Cart & checkout.
@@ -27,13 +27,12 @@ Route::group([
     // Custom pages.
     Route::get('pages/{slug}', ['as' => 'page', 'uses' => 'PagesController@display']);
 
+    // Categories.
+    Route::get('cat/{slug}', ['as' => 'category', 'uses' => 'CategoryController@display']);
+
     // Temporary routes, used for development.
     Route::group(['prefix' => 'dev'], function()
     {
-        /**
-         * Routes for testing product page.
-         */
-        Route::get("prod/{slug}", "ProductController@show");
 
     });
 });
