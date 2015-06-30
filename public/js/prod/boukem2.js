@@ -670,6 +670,23 @@ var paymentOverlayContainer = {
     }
 }
 
+var categoryContainer = {
+
+    blurBackground: function () {
+        $(".category-header").blurjs({
+            source: ".category-header",
+            overlay: "rgba(0,0,0,0.5)"
+        });
+    },
+
+    init: function () {
+        var self = categoryContainer;
+
+        console.log("eh");
+        self.blurBackground();
+    }
+
+}
 /**
  * Utility object containing various utility functions...
  * Self Explanatory duh.
@@ -1639,6 +1656,12 @@ $(document).ready(function () {
      *
      */
     cartDrawerInitContainer.init();
+
+    /**
+     * Initialize category container
+     *
+     */
+    categoryContainer.init();
 
     /**
      * Global initialization of elements.

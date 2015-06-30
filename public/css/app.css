@@ -4978,3 +4978,7 @@ Custom colors.
 
   background-size: cover;
 }
+
+.category-title, .category-subtitle {
+  color: #fff;
+}
