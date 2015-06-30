@@ -11,6 +11,13 @@ class Orders extends KemApiObject
 {
     public function __construct() { parent::__construct('orders'); }
 
+    /**
+     * Retrieves the details of an existing order.
+     *
+     * @param int $id           Order ID.
+     * @param int $verification Order verification code.
+     * @return object
+     */
     public function get($id, $verification = null)
     {
         // Retrieve order details.
@@ -46,7 +53,7 @@ class Orders extends KemApiObject
             return $this->badRequest('Invalid parameters.');
         }
 
-        // Validate some inputs, to avoid unnecessary strain on the main server.
+        // Validate some inputs before making request.
         $address['country'] = preg_replace('/[^A-Z]/', '', strtoupper($address['country']));
         $address['province'] = preg_replace('/[^A-Z]/', '', strtoupper(@$address['province']));
         $address['postcode'] = preg_replace('/[^A-Z0-9- ]/', '', strtoupper($address['postcode']));
@@ -91,14 +98,16 @@ class Orders extends KemApiObject
     }
 
     /**
-     * @param $shippingDetails
-     * @param $productList
-     * @param $email
-     * @param $shippingAddress
-     * @param null $billingAddress
+     * Places an order and redirects user to payment page.
+     *
+     * @param array $shippingDetails
+     * @param array $productList
+     * @param string $email
+     * @param array $shippingAddress
+     * @param array $billingAddress
      * @return mixed
      */
-    public function placeOrder($shippingDetails, $productList, $email, $shippingAddress, $billingAddress = null)
+    public function placeOrder(array $shippingDetails, array $productList, $email, array $shippingAddress, array $billingAddress = null)
     {
         // Build request body.
         $data = new \stdClass;
@@ -117,19 +126,6 @@ class Orders extends KemApiObject
             $data->billing_address = $billingAddress;
         }
 
-//        dd($data);
-        $response = KemAPI::post($this->baseRequest, $data);
-//        dd($response);
-
-        // Check that response is not an error
-        if (property_exists($response, 'error'))
-        {
-            Log::error($response->error);
-
-            // TODO: Redirect to cart and display an error message.
-            abort(404, Lang::get('boukem.error_occurred'));
-        }
-
-        return $response;
+        return KemAPI::post($this->baseRequest, $data);
     }
 }
