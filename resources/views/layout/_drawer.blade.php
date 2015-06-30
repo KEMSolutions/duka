@@ -57,7 +57,7 @@
                     </dl></div>
             </div>
             <div class="cart-actions">
-                <a class="checkout" id="checkout" href="{{ url("/dev/cart") }}">
+                <a class="checkout" id="checkout" href="{{ url("/cart") }}">
                     <span class="cart-action-text">{{ Lang::get("boukem.check_out") }}</span>
                 </a>
             </div>
