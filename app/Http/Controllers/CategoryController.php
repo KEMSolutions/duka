@@ -17,7 +17,9 @@ class CategoryController extends Controller {
         return View::make("site.category.index")->with([
             "name" => $category->name,
             "featured" => $category->featured,
-            "products" => $category->products
+            "products" => $category->products,
+            "children" => $category->children,
+            "presentation" => $category->presentation
         ]);
     }
 }

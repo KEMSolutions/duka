@@ -7,7 +7,11 @@
     @endsection
 
     @section("content")
+        {{-- Include header --}}
         @include("site.category._header")
+
+        {{-- Include results --}}
+        @include('site.category._results', ['results' => $products])
     @endsection
 
 
