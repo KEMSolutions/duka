@@ -14,7 +14,11 @@ class CategoryController extends Controller {
     {
         $category = Categories::get($slug);
 
-        dd($category);
+        return View::make("site.category.index")->with([
+            "name" => $category->name,
+            "featured" => $category->featured,
+            "products" => $category->products
+        ]);
     }
 }
 
