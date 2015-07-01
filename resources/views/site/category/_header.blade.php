@@ -1,4 +1,4 @@
-<div class="container-fluid category-header no-padding" style="background-image: url('{{ str_replace("{width}/{height}", "1500/200", $presentation->background->image) }}')">
+<div class="container-fluid category-header no-padding" style="background-image: url('{{ $background }}')">
     <div class="category-overlay">
         <div class="center-block text-center category-header-text">
             {{--logo--}}
