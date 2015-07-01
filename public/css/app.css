@@ -4645,6 +4645,10 @@ GLOBAL
   width: 100% !important;
 }
 
+.no-padding {
+  padding: 0;
+}
+
 .btn {
   font-size: 14px;
   font-weight: normal;
@@ -4973,12 +4977,17 @@ Custom colors.
 }
 
 .category-header {
-  padding: 50px;
-  margin-bottom: 20px;
-
   background-size: cover;
+
+  margin-bottom: 5%;
 }
 
 .category-title, .category-subtitle {
   color: #fff;
+}
+
+.category-overlay {
+  background-color: rgba(0,0,0,0.5);
+
+  padding: 50px;
 }
