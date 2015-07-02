@@ -4991,3 +4991,28 @@ Custom colors.
 
   padding: 50px;
 }
+
+    /*-----------------------------------*/
+
+    /* Style for Category page refining bar */
+
+    /*-----------------------------------*/
+
+.absolute-scrollable {
+  height: 130px;
+  border: 1px solid #eee;
+  padding: 0 5px;
+  overflow: auto;
+}
+
+#refine-search-container {
+  border: 1px solid #3E3F4C;
+}
+
+.refine-search-title {
+  border-bottom: 1px solid #3E3F4C;
+}
+
+.refine-search-component:last-child {
+  padding-bottom: 20px;
+}

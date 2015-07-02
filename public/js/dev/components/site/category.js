@@ -9,7 +9,6 @@ var categoryContainer = {
     init: function () {
         var self = categoryContainer;
 
-        console.log("eh");
         self.blurBackground();
     }
 
