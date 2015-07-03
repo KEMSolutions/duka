@@ -77,13 +77,16 @@
                     </button>
                     <ul class="dropdown-menu">
                         @if (Auth::guest())
+                            <li><a href="#">Your Wish List</a></li>
+                            <li role="separator" class="divider"></li>
                             <li><a href="#">{{ Lang::get("boukem.sign_up") }}</a></li>
                             <li><a href="#">{{ Lang::get("boukem.sign_in") }}</a></li>
                         @else
-                            <li><a href="{{ url('/auth/logout') }}">{{ Lang::get("boukem.sign_out") }}</a></li>
-                            <li role="separator" class="divider"></li>
                             <li><a href="#">Your orders</a></li>
+                            <li><a href="#">Your Wish List</a></li>
                             <li><a href="#">Account Settings</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{ url('/auth/logout') }}">{{ Lang::get("boukem.sign_out") }}</a></li>
                         @endif
 
                     </ul>
