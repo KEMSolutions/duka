@@ -4754,6 +4754,7 @@ section.slice {
   height: 320px;
   border: 1px solid #CCC;
   border-left: 0;
+  border-top: 0;
   padding: 25px;
 }
 
@@ -4761,6 +4762,10 @@ section.slice {
   margin-bottom: 1.3rem;
   max-width: 20em;
   height: 160px;
+}
+
+.blog-grid {
+  margin-top: -36px;
 }
 
 /*

@@ -30,7 +30,7 @@
             </div>
 
             <div class="price">
-                <button class="btn btn-default btn-xs buybutton"
+                <button class="btn btn-default btn-sm buybutton"
                         data-product="{{ $product->id }}"
                         data-price="{{ $product->price }}"
                         data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
