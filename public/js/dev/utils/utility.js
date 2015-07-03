@@ -35,6 +35,25 @@ var UtilityContainer = {
     },
 
     /**
+     * Utility function returning the number of products present in the wish list.
+     *
+     * @returns {number}
+     */
+    getNumberOfProductsInWishlist : function() {
+        var total = 0;
+
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
+            {
+                total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
+            }
+        }
+
+        return total;
+    },
+
+    /**
      * Utility function returning the number of products present in the cart.
      *
      * @returns {number}

@@ -5,7 +5,7 @@ var productLayoutFavorite = {
         $(".dense_product").hover(function() {
             $(this).children(".favorite-wrapper").fadeIn();
         }, function () {
-            $(this).children(".favorite-wrapper").fadeOut();
+            $(this).children(".favorite-wrapper").hide();
         });
     },
 
@@ -22,7 +22,17 @@ var productLayoutFavorite = {
 
             $(this).addClass("favorited");
 
+            self.setWishlistBadgeQuantity();
         });
+    },
+
+    /**
+     * Update the value of #cart_badge when adding or deleting elements
+     */
+    setWishlistBadgeQuantity : function() {
+        var total = UtilityContainer.getNumberOfProductsInWishlist();
+
+        $(".wishlist_badge").text(total);
     },
 
     /**
@@ -37,7 +47,8 @@ var productLayoutFavorite = {
             "name" : item.data("name"),
             "price" : item.data("price"),
             "thumbnail" : item.data("thumbnail"),
-            "thumbnail_lg" : item.data("thumbnail_lg")
+            "thumbnail_lg" : item.data("thumbnail_lg"),
+            "quantity" : 1
         }
     },
 
@@ -46,5 +57,6 @@ var productLayoutFavorite = {
 
         self.fadeInFavoriteIcon();
         self.addToFavorite();
+        self.setWishlistBadgeQuantity();
     }
 }
