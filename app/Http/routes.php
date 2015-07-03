@@ -21,9 +21,16 @@ Route::group([
     // Custom pages.
     Route::get('pages/{slug}', ['as' => 'page', 'uses' => 'PagesController@display']);
 
-    // User authentication.
+    // User authentication (and related named routes).
+    Route::controller('auth', 'Auth\AuthController', [
+        'getRegister' => 'auth.register',
+        'postRegister' => 'auth.register.action',
+        'getLogin' => 'auth.login',
+        'postLogin' => 'auth.login.action',
+        'getLogout' => 'auth.logout'
+    ]);
     Route::controllers([
-        'auth' => 'Auth\AuthController',
+//        'auth' => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]);
 
