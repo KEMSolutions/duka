@@ -16,7 +16,7 @@ class CheckoutController extends Controller {
         header("Pragma: no-cache");
         header('Expires: Fri, 01 Jan 2010 00:00:00 GMT');
 
-        return View::make("cart.index");
+        return View::make("checkout.index");
     }
 
 }

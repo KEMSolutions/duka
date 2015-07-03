@@ -4959,3 +4959,26 @@ Custom colors.
   }
 }
 
+
+/*-----------------------------------*/
+/*-----------------------------------*/
+/*-----------------------------------*/
+/* Style for Category's page */
+/*-----------------------------------*/
+/*-----------------------------------*/
+/*-----------------------------------*/
+.category-logo {
+  height: 120px;
+  border-radius: 100px;
+}
+
+.category-header {
+  padding: 50px;
+  margin-bottom: 20px;
+
+  background-size: cover;
+}
+
+.category-title, .category-subtitle {
+  color: #fff;
+}

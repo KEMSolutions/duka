@@ -23,6 +23,12 @@ $(document).ready(function () {
     cartDrawerInitContainer.init();
 
     /**
+     * Initialize category container
+     *
+     */
+    categoryContainer.init();
+
+    /**
      * Global initialization of elements.
      *
      */

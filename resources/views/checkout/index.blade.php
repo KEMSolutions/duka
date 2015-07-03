@@ -10,10 +10,10 @@
 
     @section("content")
         @if (!isset($_COOKIE["quantityCart"]) || base64_decode($_COOKIE["quantityCart"]) == "0")
-            @include("cart._empty")
+            @include("checkout._empty")
         @else
             <form method="post" action="{{ route('api.orders')  }}" id="cart_form" class="{{ base64_decode($_COOKIE["quantityCart"]) == "0" ? "hidden" : "" }}" autocomplete="on">
-                @include("cart._checkout_form_content")
+                @include("checkout._checkout_form_content")
             </form>
         @endif
     @endsection
