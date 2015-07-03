@@ -40,6 +40,8 @@ Route::group([
         Route::get('list-conditions', function() {
             return dd(Categories::getAllConditions());
         });
+
+        Route::get("wishlist","WishlistController@index");
     });
 });
 
