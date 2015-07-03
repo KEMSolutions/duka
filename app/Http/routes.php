@@ -63,7 +63,7 @@ Route::group(['prefix' => 'api'], function()
     Route::get('orders/cancel',   ['as' => 'api.orders.cancel', 'uses' => 'ApiController@handleCancelledPayment']);
 
     // Return '400 Bad Request' on all other requests.
-    Route::any('/{catchAll}', function($catchAll) {
+    Route::any('/{catchAll?}', function($catchAll = null) {
         return Illuminate\Http\JsonResponse::create(['status' => 400, 'error' => 'Bad request.'], 400);
     });
 });
