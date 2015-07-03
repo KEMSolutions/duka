@@ -4768,6 +4768,16 @@ section.slice {
   margin-top: -36px;
 }
 
+.heart-red {
+  color: #F45D5D;
+}
+
+.heart-wrapper {
+  padding: 2px 5px;
+  border: 1px solid lightgray;
+  border-radius: 2px;
+}
+
 /*
 Breadcrumbs
 */
@@ -4808,7 +4818,6 @@ Custom colors.
 .color-one a {
   color: #fff;
 }
-
 
 /*-----------------------------------*/
 /*-----------------------------------*/

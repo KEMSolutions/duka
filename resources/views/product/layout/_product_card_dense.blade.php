@@ -13,6 +13,9 @@
                     {!! 'no-border' !!}
                 @endif
         ">
+            <span class="pull-right heart-wrapper">
+                <i class="fa fa-heart heart-red"></i>
+            </span>
 
             <a href="/{{ $locale }}/prod/{{ $product->slug }}" class="strong">
                 <img src="//static.boutiquekem.com/productimg-160-160-{{ count($product->images) > 0 ? $product->images[0]->id . "-h." . $product->images[0]->extension : "0000.png" }}" class="img-responsive center-block"/>
