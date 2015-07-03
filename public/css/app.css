@@ -4726,25 +4726,41 @@ section.slice {
   margin-bottom: 20px;
 }
 
-.dense_product {
-  height: 300px;
-  border: 1px solid #CCC;
-  border-left: 0;
-  padding: 25px;
-}
-
-.dense_product img {
-  margin-bottom: 0.5em;
-  max-width: 20em;
-  height: 160px;
-}
-
 #product_long_description {
   padding: 40px;
 }
 
 #why_email {
   cursor: default ;
+}
+
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+/* Style for product tiles (dense layout) */
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+.dense_product .name, .dense_product .brand, .dense_product .price {
+  padding: 3px;
+}
+
+.dense_product .btn {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+.dense_product {
+  height: 320px;
+  border: 1px solid #CCC;
+  border-left: 0;
+  padding: 25px;
+}
+
+.dense_product img {
+  margin-bottom: 1.3rem;
+  max-width: 20em;
+  height: 160px;
 }
 
 /*
