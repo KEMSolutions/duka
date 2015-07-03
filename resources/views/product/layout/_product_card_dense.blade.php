@@ -6,10 +6,13 @@
         continue;
     }
     ?>
-    {{--TODO: TEMPORARY FIX AS TO WHY THE $products array contains empty fields?--}}
-    {{--      {{ var_dump($product) }}--}}
+
     @if(is_object($product))
-        <div class="col-xs-6 col-sm-4 col-md-3 text-center dense_product">
+        <div class="col-xs-6 col-sm-4 col-md-3 text-center dense_product
+                @if ($border)
+                    {!! 'no-border' !!}
+                @endif
+        ">
 
             <a href="/{{ $locale }}/prod/{{ $product->slug }}" class="strong">
                 <img src="//static.boutiquekem.com/productimg-160-160-{{ count($product->images) > 0 ? $product->images[0]->id . "-h." . $product->images[0]->extension : "0000.png" }}" class="img-responsive center-block"/>

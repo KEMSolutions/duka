@@ -4704,6 +4704,9 @@ section.slice {
   font-weight: bold !important;
 }
 
+.no-border {
+  border: none !important;
+}
 
 .vertical-align {
   position: relative;
@@ -4724,8 +4727,10 @@ section.slice {
 }
 
 .dense_product {
-  margin-bottom: 2em;
-  height: 280px;
+  height: 300px;
+  border: 1px solid #CCC;
+  border-left: 0;
+  padding: 25px;
 }
 
 .dense_product img {
