@@ -57,7 +57,7 @@
 	@include("_dynamic_resources")
 
 	<script src="/js/prod/boukem2.js"></script>
-	<script src="/js/dev/components/site/category.js"></script>
+	<script src="/js/dev/components/products/layout/product-layout-favorite.js"></script>
 	@yield("scripts")
 </body>
 

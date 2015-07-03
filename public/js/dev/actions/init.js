@@ -42,4 +42,7 @@ $(document).ready(function () {
 
     //Initialize navigation header.
     headerContainer.init();
+
+    //Initialize favorite products feature
+    productLayoutFavorite.init();
 });

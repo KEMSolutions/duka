@@ -674,15 +674,13 @@ var categoryContainer = {
 
     blurBackground: function () {
         $(".category-header").blurjs({
-            source: ".category-header",
-            overlay: "rgba(0,0,0,0.5)"
+            source: ".category-header"
         });
     },
 
     init: function () {
         var self = categoryContainer;
 
-        console.log("eh");
         self.blurBackground();
     }
 
@@ -1677,5 +1675,8 @@ $(document).ready(function () {
 
     //Initialize navigation header.
     headerContainer.init();
+
+    //Initialize favorite products feature
+    productLayoutFavorite.init();
 });
 //# sourceMappingURL=boukem2.js.map
