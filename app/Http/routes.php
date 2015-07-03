@@ -48,8 +48,12 @@ Route::group([
             return Illuminate\Support\Collection::make(Categories::getAllConditions());
         });
 
-        Route::get('list-customers', function() {
+        // Customer API tests
+        Route::get('customers', function() {
             return Illuminate\Support\Collection::make(Customers::all());
+        });
+        Route::get('customers/{id}', function($id) {
+            return Illuminate\Support\Collection::make(Customers::get($id));
         });
     });
 });
