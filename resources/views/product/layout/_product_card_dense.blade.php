@@ -13,8 +13,8 @@
                     {!! 'no-border' !!}
                 @endif
         ">
-            <span class="pull-right heart-wrapper">
-                <i class="fa fa-heart heart-red"></i>
+            <span class="pull-right favorite-wrapper">
+                <i class="fa fa-heart favorite-heart"></i>
             </span>
 
             <a href="/{{ $locale }}/prod/{{ $product->slug }}" class="strong">

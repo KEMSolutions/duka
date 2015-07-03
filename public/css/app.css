@@ -4768,22 +4768,26 @@ section.slice {
   margin-top: -36px;
 }
 
-.heart-red {
+.favorite-heart {
+  padding: 5px;
   color: #F45D5D;
-}
-
-.heart-wrapper {
-  padding: 2px 5px;
   border: 1px solid #E1E1E1;
   border-radius: 2px;
+}
+
+.favorite-wrapper {
   cursor: pointer;
   display: none;
 
   transition: all 0.1s ease-in;
 }
 
-.heart-wrapper:hover, .heart-wrapper:active {
+.favorite-heart:hover, .favorite-heart:active {
   border: 1px solid #F45D5D;
+}
+
+.favorited {
+  display: block !important;
 }
 
 /*

@@ -3,9 +3,9 @@ var productLayoutFavorite = {
 
     fadeInFavoriteIcon: function() {
         $(".dense_product").hover(function() {
-            $(this).children(".heart-wrapper").fadeIn();
+            $(this).children(".favorite-wrapper").fadeIn();
         }, function () {
-            $(this).children(".heart-wrapper").fadeOut();
+            $(this).children(".favorite-wrapper").fadeOut();
         });
     },
 
@@ -16,9 +16,12 @@ var productLayoutFavorite = {
         var self = productLayoutFavorite,
             item;
 
-        $(".heart-wrapper").on("click", function() {
+        $(".favorite-wrapper").on("click", function() {
             item = self.button_to_Json($(this).parent().find(".buybutton"));
             localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+
+            $(this).addClass("favorited");
+
         });
     },
 
