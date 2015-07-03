@@ -41,11 +41,15 @@ Route::group([
     Route::group(['prefix' => 'dev'], function()
     {
         Route::get('list-categories', function() {
-            return dd(Categories::getAllCategories());
+            return Illuminate\Support\Collection::make(Categories::getAllCategories());
         });
 
         Route::get('list-conditions', function() {
-            return dd(Categories::getAllConditions());
+            return Illuminate\Support\Collection::make(Categories::getAllConditions());
+        });
+
+        Route::get('list-customers', function() {
+            return Illuminate\Support\Collection::make(Customers::all());
         });
     });
 });

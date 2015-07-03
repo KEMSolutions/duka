@@ -10,7 +10,7 @@ class Categories extends KemApiObject
      * @return array    List of categories.
      */
     public function getAllCategories() {
-        return parent::basic()[0]->children;
+        return parent::all()[0]->children;
     }
 
     /**
@@ -19,7 +19,7 @@ class Categories extends KemApiObject
      * @return array    List of conditions.
      */
     public function getAllConditions() {
-        return parent::basic()[1]->children;
+        return parent::all()[1]->children;
     }
 
     /**
