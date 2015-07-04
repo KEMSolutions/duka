@@ -14,6 +14,3 @@
     @include('site.wishlist._results')
 @endsection
 
-
-
-@endsection

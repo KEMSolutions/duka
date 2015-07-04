@@ -4649,6 +4649,10 @@ GLOBAL
   padding: 0;
 }
 
+.padding-side-lg {
+  padding: 10px 40px;
+}
+
 .btn {
   font-size: 14px;
   font-weight: normal;
@@ -4665,6 +4669,27 @@ GLOBAL
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
+}
+
+.btn-outline {
+  background: none;
+}
+
+.btn-outline {
+  border: 1px solid #D43F3A;
+  color: #D43F3A;
+  margin-left: 5px;
+}
+
+.btn-danger-outline:hover, .btn-danger-outline:focus, .btn-danger-outline:active, .btn-danger-outline.active {
+  color: #fff;
+  border-color: #D9534F;
+  background-color: #D43F3A;
+}
+.btn-danger-outline:active, .btn-danger-outline.active {
+  border-color: #D43F3A;
+  color: #D43F3A;
+  box-shadow: none;
 }
 
 .btn i {
@@ -4732,6 +4757,19 @@ section.slice {
 
 #why_email {
   cursor: default ;
+}
+
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+/* Style for list layout                  */
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+.list-layout-element {
+  border-bottom: 1px solid #c6c6c6;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
 }
 
 /*----------------------------------------*/
