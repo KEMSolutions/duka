@@ -8,7 +8,7 @@
             <h1 class="category-title">Your Wish List</h1>
 
             {{--subtitle--}}
-            <h4 class="category-subtitle">You have x items in your wishlist. <br/> <br/>Your wishlist will be saved while your browser session lasts.</h4>
+            <h4 class="category-subtitle">You have <span id="quantity-wishlist">0 item</span> in your wishlist. <br/> <br/>Your wishlist will be saved while your browser session lasts.</h4>
         </div>
     </div>
 </div>

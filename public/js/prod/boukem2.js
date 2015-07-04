@@ -1697,5 +1697,7 @@ $(document).ready(function () {
 
     //Initialize favorite products feature
     productLayoutFavorite.init();
+
+    wishlistContainer.init();
 });
 //# sourceMappingURL=boukem2.js.map

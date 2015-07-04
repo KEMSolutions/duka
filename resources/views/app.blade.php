@@ -58,6 +58,7 @@
 
 	<script src="/js/prod/boukem2.js"></script>
 	<script src="/js/dev/components/products/layout/product-layout-favorite.js"></script>
+	<script src="/js/dev/components/site/wishlist.js"></script>
 	@yield("scripts")
 </body>
 
