@@ -42,10 +42,21 @@ var wishlistContainer = {
         }
     },
 
+    removeWishlistElement: function () {
+          $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
+              UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
+
+              localStorage.removeItem("_wish_product " + $(this).data("product"));
+
+              wishlistContainer.setNumberOfProductsInHeader();
+          });
+    },
+
     init: function() {
         var self = wishlistContainer;
 
         self.setNumberOfProductsInHeader();
         self.renderWishlist();
+        self.removeWishlistElement();
     }
 }
