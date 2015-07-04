@@ -13,7 +13,7 @@
                     {!! 'no-border' !!}
                 @endif
         ">
-            <span class="pull-right favorite-wrapper">
+            <span class="pull-right favorite-wrapper" data-product="{{ $product->id }}">
                 <i class="fa fa-heart favorite-heart"></i>
             </span>
 

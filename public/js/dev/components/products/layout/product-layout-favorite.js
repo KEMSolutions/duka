@@ -17,13 +17,42 @@ var productLayoutFavorite = {
             item;
 
         $(".favorite-wrapper").on("click", function() {
-            item = self.button_to_Json($(this).parent().find(".buybutton"));
-            localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+            //No favorited class.
+            if (!$(this).hasClass("favorited")) {
+                item = self.button_to_Json($(this).parent().find(".buybutton"));
+                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
 
-            $(this).addClass("favorited");
+                $(this).addClass("favorited");
 
-            self.setWishlistBadgeQuantity();
+                self.setWishlistBadgeQuantity();
+            }
+            else
+            //Has a favorited class. We remove it, then delete the element from local Storage.
+            {
+                self.removeFromFavorite($(this));
+            }
         });
+    },
+
+
+    persistFavorite: function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
+                for(var j = 0; j<$(".favorite-wrapper").length; j++)
+                {
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === parseInt($(".favorite-wrapper")[j].dataset.product))
+                    {
+                        $(".favorite-wrapper")[j].className += " favorited";
+                    }
+                }
+            }
+        };
+    },
+
+    removeFromFavorite: function (context) {
+        context.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + context.data("product"));
     },
 
     /**
@@ -58,5 +87,6 @@ var productLayoutFavorite = {
         self.fadeInFavoriteIcon();
         self.addToFavorite();
         self.setWishlistBadgeQuantity();
+        self.persistFavorite();
     }
 }
