@@ -1,7 +1,7 @@
 var wishlistContainer = {
     setNumberOfProductsInHeader: function() {
         var quantity = "";
-        UtilityContainer.getNumberOfProductsInWishlist() == 0 ? quantity+="0 item" : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
+        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
         $("#quantity-wishlist").text(quantity);
     },
 
