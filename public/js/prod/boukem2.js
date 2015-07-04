@@ -1602,7 +1602,7 @@ var cartDrawerInitContainer = {
      *
      */
     buyButtonClick : function () {
-        $(".buybutton").click(function() {
+        $("body").on("click", ".buybutton", function() {
             cartDisplayContainer.animateIn();
             cartLogicContainer.addItem(cartLogicContainer.button_to_Json($(this)));
             cartLogicContainer.storeItem(cartLogicContainer.button_to_Json($(this)));
