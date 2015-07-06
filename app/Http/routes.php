@@ -27,6 +27,9 @@ Route::group([
         'password' => 'Auth\PasswordController',
     ]);
 
+    // Wish list.
+    Route::get("wishlist","WishlistController@index");
+
     // Categories.
     Route::get('cat/{slug}', ['as' => 'category', 'uses' => 'CategoryController@display']);
 
@@ -41,7 +44,7 @@ Route::group([
             return dd(Categories::getAllConditions());
         });
 
-        Route::get("wishlist","WishlistController@index");
+
     });
 });
 
