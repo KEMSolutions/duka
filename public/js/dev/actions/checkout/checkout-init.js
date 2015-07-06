@@ -1,3 +1,10 @@
+/**
+ * Container responsible for initializing the checkout page.
+ * Overall logic is handled in js/dev/actions/checkout/*.js
+ * View component is handled in js/dev/components/checkout/*.js
+ *
+ * @type {{estimateButtonClick: Function, init: Function}}
+ */
 var checkoutInitContainer = {
 
     /**

@@ -1,6 +1,5 @@
 /**
  * Object responsible for displaying the navigation header.
- * Will be present on all the pages, thus written here.
  *
  * @type {{md: {removeCartDescription: Function}, sm: {btnTransform_sm: Function}, init: Function}}
  */

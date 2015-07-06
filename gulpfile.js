@@ -17,7 +17,7 @@ elixir(function(mix) {
         "../../../public/js/dev/components/checkout/estimate.js",
         "../../../public/js/dev/components/checkout/location.js",
         "../../../public/js/dev/components/checkout/payment.js",
-        "../../../public/js/dev/components/layout/drawer.js",
+        "../../../public/js/dev/components/layout/cart-drawer.js",
         "../../../public/js/dev/components/layout/header.js",
         "../../../public/js/dev/components/layout/payment-overlay.js",
         "../../../public/js/dev/components/products/layout/product-layout-favorite.js",

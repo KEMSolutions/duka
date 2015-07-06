@@ -1,4 +1,15 @@
+/**
+ * Container responsible for handling the logic of adding products to a user's wishlist.
+ * Layout handled in dev/components/products/layout/product-layout-favorite.js
+ *
+ * @type {{addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
+ */
 var productLayoutFavoriteLogicContainer = {
+
+    /**
+     * Add the clicked product to the wish list.
+     *
+     */
     addToFavorite: function() {
         var self = productLayoutFavoriteLogicContainer,
             selfLayout = productLayoutFavoriteContainer,
@@ -22,7 +33,10 @@ var productLayoutFavoriteLogicContainer = {
         });
     },
 
-
+    /**
+     * Persist the heart icon next to products already marked as wished.
+     *
+     */
     persistFavorite: function() {
         for(var i = 0, length = localStorage.length; i<length; i++)
         {
@@ -38,6 +52,11 @@ var productLayoutFavoriteLogicContainer = {
         };
     },
 
+    /**
+     * Delete the clicked element from the wish list.
+     *
+     * @param context
+     */
     removeFromFavorite: function (context) {
         context.removeClass("favorited");
         localStorage.removeItem("_wish_product " + context.data("product"));

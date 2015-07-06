@@ -1,5 +1,16 @@
+/**
+ * Container responsible for handling the logic of the wish list page.
+ * Layout handled in dev/components/site/wishlist.js
+ *
+ * @type {{createWishlistElement: Function, renderWishlist: Function, removeWishlistElement: Function, init: Function}}
+ */
 var wishlistLogicContainer = {
 
+    /**
+     * Create a list layout element from the information passed as an argument.
+     *
+     * @param item
+     */
     createWishlistElement: function(item) {
         var element =
             '<div class="col-md-12 list-layout-element">' +
@@ -24,6 +35,11 @@ var wishlistLogicContainer = {
         $(".list-layout-element-container").append(element);
     },
 
+    /**
+     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
+     * The creation is handled in createWishlistElement function.
+     *
+     */
     renderWishlist: function() {
         var self = wishlistLogicContainer;
 
@@ -36,13 +52,23 @@ var wishlistLogicContainer = {
         }
     },
 
+    /**
+     * Remove the element from the wishlist after a subtle animation.
+     *
+     */
     removeWishlistElement: function () {
         $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
+            //Animate the element.
             UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
 
+            //Delete the element from localStorage.
             localStorage.removeItem("_wish_product " + $(this).data("product"));
 
+            //Set wishlist header quantity.
             wishlistContainer.setNumberOfProductsInHeader();
+
+            //Set wishlist badge
+            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
         });
     },
 

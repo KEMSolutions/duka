@@ -512,7 +512,6 @@ var cartDisplayContainer = {
 };
 /**
  * Object responsible for displaying the navigation header.
- * Will be present on all the pages, thus written here.
  *
  * @type {{md: {removeCartDescription: Function}, sm: {btnTransform_sm: Function}, init: Function}}
  */
@@ -670,9 +669,17 @@ var paymentOverlayContainer = {
     }
 }
 
+/**
+ * Object responsible for the view component of the favorite feature.
+ * Logic handled in dev/actions/products/layout-favorite-logic.js
+ *
+ * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, init: Function}}
+ */
 var productLayoutFavoriteContainer = {
-
-
+    /**
+     * Fade in the favorite icon (heart icon) when hovering on a product tile.
+     *
+     */
     fadeInFavoriteIcon: function() {
         $(".dense_product").hover(function() {
             $(this).children(".favorite-wrapper").fadeIn();
@@ -681,9 +688,9 @@ var productLayoutFavoriteContainer = {
         });
     },
 
-
     /**
-     * Update the value of #cart_badge when adding or deleting elements
+     * Update the value of .wishlist_badge when adding or deleting elements.
+     *
      */
     setWishlistBadgeQuantity : function() {
         var total = UtilityContainer.getNumberOfProductsInWishlist();
@@ -698,8 +705,17 @@ var productLayoutFavoriteContainer = {
         self.setWishlistBadgeQuantity();
     }
 }
+/**
+ * Object responsible for the view component of each category page.
+ *
+ * @type {{blurBackground: Function, init: Function}}
+ */
 var categoryContainer = {
 
+    /**
+     * Blurs the background of each category's page header.
+     *
+     */
     blurBackground: function () {
         $(".category-header").blurjs({
             source: ".category-header"
@@ -713,7 +729,18 @@ var categoryContainer = {
     }
 
 }
+/**
+ * Object responsible for the view component of the wish list page.
+ * Logic handled in dev/actions/site/wishlist-logic.js
+ *
+ * @type {{setNumberOfProductsInHeader: Function, init: Function}}
+ */
 var wishlistContainer = {
+
+    /**
+     * Sets the number of products in the header (singular / plural).
+     *
+     */
     setNumberOfProductsInHeader: function() {
         var quantity = "";
         UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
@@ -731,7 +758,7 @@ var wishlistContainer = {
  * Utility object containing various utility functions...
  * Self Explanatory duh.
  *
- * @type {{getProductsFromLocalStorage: Function, getNumberOfProducts: Function, getProductsPriceFromLocalStorage: Function, removeAllProductsFromLocalStorage: Function, getShippingFromForm: Function, populateCountry: Function, validateEmptyFields: Function, validateEmail: Function, validatePostCode: Function, validateEmptyCart: Function, addErrorClassToFields: Function, addErrorClassToFieldsWithRules: Function, removeErrorClassFromFields: Function, getCheapestShippingMethod: Function, getTaxes: Function, getShipmentTaxes: Function, getCartTaxes: Function, getCartTotal: Function}}
+ * @type {{getProductsFromLocalStorage: Function, getNumberOfProductsInWishlist: Function, getNumberOfProducts: Function, getProductsPriceFromLocalStorage: Function, removeAllProductsFromLocalStorage: Function, getShippingFromForm: Function, buyButton_to_Json: Function, populateCountry: Function, validateEmptyFields: Function, validateEmail: Function, validatePostCode: Function, validateEmptyCart: Function, addErrorClassToFields: Function, addErrorClassToFieldsWithRules: Function, addFadeOutUpClass: Function, removeErrorClassFromFields: Function, getCheapestShippingMethod: Function, getTaxes: Function, getShipmentTaxes: Function, getCartTaxes: Function, getCartTotal: Function}}
  */
 var UtilityContainer = {
     /**
@@ -1110,6 +1137,13 @@ var UtilityContainer = {
 }
 
 
+/**
+ * Container responsible for initializing the checkout page.
+ * Overall logic is handled in js/dev/actions/checkout/*.js
+ * View component is handled in js/dev/components/checkout/*.js
+ *
+ * @type {{estimateButtonClick: Function, init: Function}}
+ */
 var checkoutInitContainer = {
 
     /**
@@ -1638,6 +1672,11 @@ var cartLogicContainer = {
         cartLogicContainer.setCartSubtotal();
     }
 };
+/**
+ * Container responsible for initializing the cart drawer feature.
+ *
+ * @type {{buyButtonClick: Function, getEstimateClick: Function, init: Function}}
+ */
 var cartDrawerInitContainer = {
 
     /**
@@ -1693,7 +1732,18 @@ var cartDrawerInitContainer = {
 
 }
 
+/**
+ * Container responsible for handling the logic of adding products to a user's wishlist.
+ * Layout handled in dev/components/products/layout/product-layout-favorite.js
+ *
+ * @type {{addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
+ */
 var productLayoutFavoriteLogicContainer = {
+
+    /**
+     * Add the clicked product to the wish list.
+     *
+     */
     addToFavorite: function() {
         var self = productLayoutFavoriteLogicContainer,
             selfLayout = productLayoutFavoriteContainer,
@@ -1717,7 +1767,10 @@ var productLayoutFavoriteLogicContainer = {
         });
     },
 
-
+    /**
+     * Persist the heart icon next to products already marked as wished.
+     *
+     */
     persistFavorite: function() {
         for(var i = 0, length = localStorage.length; i<length; i++)
         {
@@ -1733,6 +1786,11 @@ var productLayoutFavoriteLogicContainer = {
         };
     },
 
+    /**
+     * Delete the clicked element from the wish list.
+     *
+     * @param context
+     */
     removeFromFavorite: function (context) {
         context.removeClass("favorited");
         localStorage.removeItem("_wish_product " + context.data("product"));
@@ -1749,8 +1807,19 @@ var productLayoutFavoriteLogicContainer = {
         self.persistFavorite();
     }
 }
+/**
+ * Container responsible for handling the logic of the wish list page.
+ * Layout handled in dev/components/site/wishlist.js
+ *
+ * @type {{createWishlistElement: Function, renderWishlist: Function, removeWishlistElement: Function, init: Function}}
+ */
 var wishlistLogicContainer = {
 
+    /**
+     * Create a list layout element from the information passed as an argument.
+     *
+     * @param item
+     */
     createWishlistElement: function(item) {
         var element =
             '<div class="col-md-12 list-layout-element">' +
@@ -1775,6 +1844,11 @@ var wishlistLogicContainer = {
         $(".list-layout-element-container").append(element);
     },
 
+    /**
+     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
+     * The creation is handled in createWishlistElement function.
+     *
+     */
     renderWishlist: function() {
         var self = wishlistLogicContainer;
 
@@ -1787,13 +1861,23 @@ var wishlistLogicContainer = {
         }
     },
 
+    /**
+     * Remove the element from the wishlist after a subtle animation.
+     *
+     */
     removeWishlistElement: function () {
         $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
+            //Animate the element.
             UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
 
+            //Delete the element from localStorage.
             localStorage.removeItem("_wish_product " + $(this).data("product"));
 
+            //Set wishlist header quantity.
             wishlistContainer.setNumberOfProductsInHeader();
+
+            //Set wishlist badge
+            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
         });
     },
 
@@ -1809,6 +1893,10 @@ var wishlistLogicContainer = {
     }
 
 }
+/**
+ * Entry point of script.
+ *
+ */
 $(document).ready(function () {
 
     /**
@@ -1840,6 +1928,30 @@ $(document).ready(function () {
     categoryContainer.init();
 
     /**
+     * Initialize overlay plugin.
+     *
+     */
+    paymentOverlayContainer.init();
+
+    /**
+     * Initialize navigation header.
+     *
+     */
+    headerContainer.init();
+
+    /**
+     * Initialize favorite products feature.
+     *
+     */
+    productLayoutFavoriteLogicContainer.init();
+
+    /**
+     * Initialize wishlist page.
+     *
+     */
+    wishlistLogicContainer.init();
+
+    /**
      * Global initialization of elements.
      *
      */
@@ -1848,16 +1960,5 @@ $(document).ready(function () {
         initval: 1
     });
 
-    //Initialize overlay plugin.
-    paymentOverlayContainer.init();
-
-    //Initialize navigation header.
-    headerContainer.init();
-
-    //Initialize favorite products feature
-    productLayoutFavoriteLogicContainer.init();
-
-    //Initialize wishlist page
-    wishlistLogicContainer.init();
 });
 //# sourceMappingURL=boukem2.js.map
