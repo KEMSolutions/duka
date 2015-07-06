@@ -133,7 +133,8 @@ var UtilityContainer = {
             "price" : item.data("price"),
             "thumbnail" : item.data("thumbnail"),
             "thumbnail_lg" : item.data("thumbnail_lg"),
-            "quantity" : parseInt(item.data("quantity"))
+            "quantity" : parseInt(item.data("quantity")),
+            "link" : item.data("link")
         }
     },
 

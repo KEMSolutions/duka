@@ -9,6 +9,8 @@ var wishlistLogicContainer = {
     /**
      * Create a list layout element from the information passed as an argument.
      *
+     * Rounding to 2 decimals, courtesy of http://stackoverflow.com/a/6134070.
+     *
      * @param item
      */
     createWishlistElement: function(item) {
@@ -27,8 +29,8 @@ var wishlistLogicContainer = {
             'data-name="' + item.name + '"' +
             'data-quantity="' + item.quantity  + '"' + ">" +
             'Add to cart </button>' +
-            '<h4 style="margin-top: 5px">' + item.name + '</h4>' +
-            '<h5> $ ' + item.price + '</h5>'+
+            '<a href=' + item.link + '><h4 style="margin-top: 5px">' + item.name + '</h4></a>' +
+            '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
             '</div>' +
             '</div>';
 

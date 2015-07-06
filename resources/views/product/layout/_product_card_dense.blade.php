@@ -39,7 +39,8 @@
                         data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
                         data-thumbnail_lg="//static.boutiquekem.com/productimg-70-110-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
                         data-name="{{ $product->localization->name }}"
-                        data-quantity="1">
+                        data-quantity="1"
+                        data-link="prod/{{ $product->slug }}">
                     <i class="fa fa-shopping-cart"></i>
                     $ {{ number_format((float)$product->price, 2, '.', '') }}
                 </button>
