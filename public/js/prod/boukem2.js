@@ -670,6 +670,34 @@ var paymentOverlayContainer = {
     }
 }
 
+var productLayoutFavoriteContainer = {
+
+
+    fadeInFavoriteIcon: function() {
+        $(".dense_product").hover(function() {
+            $(this).children(".favorite-wrapper").fadeIn();
+        }, function () {
+            $(this).children(".favorite-wrapper").hide();
+        });
+    },
+
+
+    /**
+     * Update the value of #cart_badge when adding or deleting elements
+     */
+    setWishlistBadgeQuantity : function() {
+        var total = UtilityContainer.getNumberOfProductsInWishlist();
+
+        $(".wishlist_badge").text(total);
+    },
+
+    init: function () {
+        var self = productLayoutFavoriteContainer;
+
+        self.fadeInFavoriteIcon();
+        self.setWishlistBadgeQuantity();
+    }
+}
 var categoryContainer = {
 
     blurBackground: function () {
@@ -684,6 +712,20 @@ var categoryContainer = {
         self.blurBackground();
     }
 
+}
+var wishlistContainer = {
+    setNumberOfProductsInHeader: function() {
+        var quantity = "";
+        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
+        $("#quantity-wishlist").text(quantity);
+    },
+
+
+    init: function() {
+        var self = wishlistContainer;
+
+        self.setNumberOfProductsInHeader();
+    }
 }
 /**
  * Utility object containing various utility functions...
@@ -1651,6 +1693,122 @@ var cartDrawerInitContainer = {
 
 }
 
+var productLayoutFavoriteLogicContainer = {
+    addToFavorite: function() {
+        var self = productLayoutFavoriteLogicContainer,
+            selfLayout = productLayoutFavoriteContainer,
+            item;
+
+        $(".favorite-wrapper").on("click", function() {
+            //No favorited class.
+            if (!$(this).hasClass("favorited")) {
+                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
+                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+
+                $(this).addClass("favorited");
+
+                selfLayout.setWishlistBadgeQuantity();
+            }
+            else
+            //Has a favorited class. We remove it, then delete the element from local Storage.
+            {
+                self.removeFromFavorite($(this));
+            }
+        });
+    },
+
+
+    persistFavorite: function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
+                for(var j = 0; j<$(".favorite-wrapper").length; j++)
+                {
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === parseInt($(".favorite-wrapper")[j].dataset.product))
+                    {
+                        $(".favorite-wrapper")[j].className += " favorited";
+                    }
+                }
+            }
+        };
+    },
+
+    removeFromFavorite: function (context) {
+        context.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + context.data("product"));
+    },
+
+    init: function () {
+        var self = productLayoutFavoriteLogicContainer;
+
+        //Calls the layout container (productLayoutFavoriteContainer).
+        productLayoutFavoriteContainer.init();
+
+        //Initialize the logic.
+        self.addToFavorite();
+        self.persistFavorite();
+    }
+}
+var wishlistLogicContainer = {
+
+    createWishlistElement: function(item) {
+        var element =
+            '<div class="col-md-12 list-layout-element">' +
+            '<div class="col-md-2">' +
+            '<img src=' + item.thumbnail_lg + '>' +
+            '</div>' +
+            '<div class="col-md-10">' +
+            '<button class="btn btn-outline btn-danger-outline pull-right btn-lg inline-block padding-side-lg removeFavoriteButton" data-product="' + item.product + '">Remove from wishlist </button>' +
+            '<button class="btn btn-success buybutton pull-right btn-lg inline-block padding-side-lg"' +
+            'data-product="' + item.product + '"' +
+            'data-price="' + item.price + '"' +
+            'data-thumbnail="' + item.thumbnail + '"' +
+            'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
+            'data-name="' + item.name + '"' +
+            'data-quantity="' + item.quantity  + '"' + ">" +
+            'Add to cart </button>' +
+            '<h4 style="margin-top: 5px">' + item.name + '</h4>' +
+            '<h5> $ ' + item.price + '</h5>'+
+            '</div>' +
+            '</div>';
+
+        $(".list-layout-element-container").append(element);
+    },
+
+    renderWishlist: function() {
+        var self = wishlistLogicContainer;
+
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
+            {
+                self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
+            }
+        }
+    },
+
+    removeWishlistElement: function () {
+        $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
+            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
+
+            localStorage.removeItem("_wish_product " + $(this).data("product"));
+
+            wishlistContainer.setNumberOfProductsInHeader();
+        });
+    },
+
+    init: function () {
+        var self = wishlistLogicContainer;
+
+        //Calls the layout container (wishlistContainer).
+        wishlistContainer.init();
+
+        //Initialize the logic.
+        self.renderWishlist();
+        self.removeWishlistElement();
+    }
+
+}
 $(document).ready(function () {
 
     /**
@@ -1697,8 +1855,9 @@ $(document).ready(function () {
     headerContainer.init();
 
     //Initialize favorite products feature
-    productLayoutFavorite.init();
+    productLayoutFavoriteLogicContainer.init();
 
-    wishlistContainer.init();
+    //Initialize wishlist page
+    wishlistLogicContainer.init();
 });
 //# sourceMappingURL=boukem2.js.map

@@ -44,5 +44,8 @@ $(document).ready(function () {
     headerContainer.init();
 
     //Initialize favorite products feature
-    productLayoutFavorite.init();
+    productLayoutFavoriteLogicContainer.init();
+
+    //Initialize wishlist page
+    wishlistLogicContainer.init();
 });
