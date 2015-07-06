@@ -19,7 +19,7 @@ var productLayoutFavorite = {
         $(".favorite-wrapper").on("click", function() {
             //No favorited class.
             if (!$(this).hasClass("favorited")) {
-                item = self.button_to_Json($(this).parent().find(".buybutton"));
+                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
                 localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
 
                 $(this).addClass("favorited");
@@ -62,23 +62,6 @@ var productLayoutFavorite = {
         var total = UtilityContainer.getNumberOfProductsInWishlist();
 
         $(".wishlist_badge").text(total);
-    },
-
-    /**
-     * parse the information from the button into a readable json format
-     *
-     * @param item
-     * @returns {{product: *, name: *, price: *, thumbnail: *, thumbnail_lg: *, quantity: number}}
-     */
-    button_to_Json : function(item) {
-        return {
-            "product" : item.data("product"),
-            "name" : item.data("name"),
-            "price" : item.data("price"),
-            "thumbnail" : item.data("thumbnail"),
-            "thumbnail_lg" : item.data("thumbnail_lg"),
-            "quantity" : 1
-        }
     },
 
     init: function () {

@@ -198,22 +198,6 @@ var cartLogicContainer = {
     },
 
 
-    /**
-     * parse the information from the button into a readable json format
-     *
-     * @param item
-     * @returns {{product: *, name: *, price: *, thumbnail: *, thumbnail_lg: *, quantity: number}}
-     */
-    button_to_Json : function(item) {
-        return {
-            "product" : item.data("product"),
-            "name" : item.data("name"),
-            "price" : item.data("price"),
-            "thumbnail" : item.data("thumbnail"),
-            "thumbnail_lg" : item.data("thumbnail_lg"),
-            "quantity" : parseInt(item.data("quantity"))
-        }
-    },
 
     /**
      * Ajax call to /api/estimate after all verifications have passed.

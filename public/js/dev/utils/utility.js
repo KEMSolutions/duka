@@ -121,6 +121,23 @@ var UtilityContainer = {
     },
 
     /**
+     * parse the information from a buy button into a readable json format
+     *
+     * @param item
+     * @returns {{product: *, name: *, price: *, thumbnail: *, thumbnail_lg: *, quantity: number}}
+     */
+    buyButton_to_Json : function(item) {
+        return {
+            "product" : item.data("product"),
+            "name" : item.data("name"),
+            "price" : item.data("price"),
+            "thumbnail" : item.data("thumbnail"),
+            "thumbnail_lg" : item.data("thumbnail_lg"),
+            "quantity" : parseInt(item.data("quantity"))
+        }
+    },
+
+    /**
      * Utility function to populate a select list (#country) with a list of country (json formatted).
      *
      */
