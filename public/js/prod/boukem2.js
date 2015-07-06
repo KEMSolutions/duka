@@ -1279,7 +1279,7 @@ var checkoutLogicContainer = {
      * @param self
      */
     hidePanels: function (self) {
-        $(".quantity").on("change", function () {
+        $(".quantity, #shippingPostcode, #shippingCity").on("change", function () {
             UtilityContainer.addFadeOutUpClass($("#estimate"));
             UtilityContainer.addFadeOutUpClass($("#payment"));
 
