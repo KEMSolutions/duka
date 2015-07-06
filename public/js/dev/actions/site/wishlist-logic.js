@@ -14,7 +14,8 @@ var wishlistLogicContainer = {
      * @param item
      */
     createWishlistElement: function(item) {
-        var element =
+        var self = wishlistLogicContainer,
+            element =
             '<div class="col-md-12 list-layout-element">' +
             '<div class="col-md-2">' +
             '<img src=' + item.thumbnail_lg + '>' +
@@ -34,6 +35,10 @@ var wishlistLogicContainer = {
             '</div>' +
             '</div>';
 
+        //Localize button (default in english)
+        self.localizeWishlistButton();
+
+        //Append elements
         $(".list-layout-element-container").append(element);
     },
 
@@ -52,6 +57,11 @@ var wishlistLogicContainer = {
                 self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
             }
         }
+    },
+
+    localizeWishlistButton: function() {
+        $(".list-layout-element .buybutton").text(Localization.add_cart);
+        $(".list-layout-element .removeFavoriteButton").text(Localization.wishlist_remove);
     },
 
     /**
