@@ -16,6 +16,8 @@ Most named routes are defined in "app\Http\routes.php" and can be used through t
 	
 	// Returns something like "https://example.com/api/products/616"
     $url = route( 'api.products', [ 'id' => 616 ] );
+    
+For a list of all available routes, run `php artisan route:list` from the root folder.
 
 ## API Facades
 

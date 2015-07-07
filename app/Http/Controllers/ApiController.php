@@ -8,6 +8,8 @@ use Products;
 use Request;
 use Redirect;
 use Session;
+use Cookie;
+use App\User;
 
 use Illuminate\Http\JsonResponse;
 
@@ -106,12 +108,39 @@ class ApiController extends Controller
         // Retrieve other details.
         $email = Request::input('email');
         $products = Request::input('products');
-        $shipping = json_decode(base64_decode(Request::input('shipping')));
+        $shipping = json_decode(base64_decode(Request::input('shipping')), true);
 
         // Place order.
         $response = Orders::placeOrder($shipping, $products, $email, $shipAddress, $billAddress);
 
-        return Request::ajax() ? $this->send($response) : Redirect::to($response->payment_url);
+        // If we have errors, redirect to cart and display an error message.
+        if (property_exists($response, 'error'))
+        {
+            $redirect = route('cart');
+            Log::error($response->error);
+            Session::push('messages', Lang::get('boukem.error_occurred'));
+        }
+
+        else
+        {
+            $redirect = $response->payment_details->payment_url;
+
+            // If user does not already have an account, create one for them.
+            // We'll ask them to create a password later.
+            $customer = $response->customer;
+            if (!User::find($customer->id))
+            {
+                User::create([
+                    'id' => $customer->id,
+                    'name' => $shipAddress['name'],
+                    'email' => $customer->email
+                ]);
+
+                Cookie::queue('unregistered_user', $customer->id, 2628000);
+            }
+        }
+
+        return Request::ajax() ? $this->send($response) : Redirect::to($redirect);
     }
 
     public function getOrderDetails($id, $verification)

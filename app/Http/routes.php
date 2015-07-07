@@ -21,9 +21,16 @@ Route::group([
     // Custom pages.
     Route::get('pages/{slug}', ['as' => 'page', 'uses' => 'PagesController@display']);
 
-    // User authentication.
+    // User authentication (and related named routes).
+    Route::controller('auth', 'Auth\AuthController', [
+        'getRegister' => 'auth.register',
+        'postRegister' => 'auth.register.action',
+        'getLogin' => 'auth.login',
+        'postLogin' => 'auth.login.action',
+        'getLogout' => 'auth.logout'
+    ]);
     Route::controllers([
-        'auth' => 'Auth\AuthController',
+//        'auth' => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]);
 
@@ -37,11 +44,19 @@ Route::group([
     Route::group(['prefix' => 'dev'], function()
     {
         Route::get('list-categories', function() {
-            return dd(Categories::getAllCategories());
+            return Illuminate\Support\Collection::make(Categories::getAllCategories());
         });
 
         Route::get('list-conditions', function() {
-            return dd(Categories::getAllConditions());
+            return Illuminate\Support\Collection::make(Categories::getAllConditions());
+        });
+
+        // Customer API tests
+        Route::get('customers', function() {
+            return Illuminate\Support\Collection::make(Customers::all());
+        });
+        Route::get('customers/{id}', function($id) {
+            return Illuminate\Support\Collection::make(Customers::get($id));
         });
 
 
@@ -68,7 +83,7 @@ Route::group(['prefix' => 'api'], function()
     Route::get('orders/cancel',   ['as' => 'api.orders.cancel', 'uses' => 'ApiController@handleCancelledPayment']);
 
     // Return '400 Bad Request' on all other requests.
-    Route::any('/{catchAll}', function($catchAll) {
+    Route::any('/{catchAll?}', function($catchAll = null) {
         return Illuminate\Http\JsonResponse::create(['status' => 400, 'error' => 'Bad request.'], 400);
     });
 });

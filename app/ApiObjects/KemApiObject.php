@@ -43,12 +43,14 @@ abstract class KemApiObject
     }
 
     /**
-     * Most basic request: a GET request without any parameters.
+     * Retrieves a list of objects within the scope.
+     *
+     * @return array    Array of all defined objects in this scope.
      */
-    public function basic()
+    public function all()
     {
         // Retrieve object from cache, or make an API call.
-        if (!$object = Cache::get($this->cacheNamespace . 'basic'))
+        if (!$object = Cache::get($this->cacheNamespace . 'list'))
         {
             $object = KemAPI::get($this->baseRequest);
 
@@ -60,7 +62,7 @@ abstract class KemApiObject
             }
 
             // Cache result.
-            $this->cache($object, 'basic');
+            $this->cache($object, 'list');
 
             // Look for products to cache within results.
             $this->findAndCache($object);
@@ -121,7 +123,7 @@ abstract class KemApiObject
             Cache::put($this->cacheNamespace . $object->slug, $object, $expires);
         }
 
-        Log::info('Caching "'. $this->cacheNamespace . $object->id .'" until "'. $expires .'"');
+        Log::info('Caching "'. $this->cacheNamespace . $requestID .'" until "'. $expires .'"');
     }
 
     /**

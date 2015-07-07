@@ -200,6 +200,7 @@ return [
         'KemAPI'    => 'App\Facades\KemAPI',
         'Brands'    => 'App\Facades\Brands',
         'Categories'    => 'App\Facades\Categories',
+        'Customers'     => 'App\Facades\Customers',
         'Layouts'   => 'App\Facades\Layouts',
         'Orders'    => 'App\Facades\Orders',
         'Pages'     => 'App\Facades\Pages',
