@@ -6,7 +6,6 @@ use KemAPI;
 use Localization;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use Illuminate\Http\JsonResponse;
 
 class KemApiHttpClient
 {
@@ -120,8 +119,6 @@ class KemApiHttpClient
         $sig = $body . $this->secret;
         $sig = base64_encode(hash('sha512', $sig, true));
 
-        \Log::info("\n\n\tMaking API request...\n\tEndpoint: $endpoint\n\tBody: $body\n\tSignature: $sig\n\n");
-
         // Create request.
         $request = $this->client->createRequest($method, $endpoint, [
             'body' => $body,
@@ -143,70 +140,14 @@ class KemApiHttpClient
         {
             // Log error.
             Log::error($e->getMessage());
-//            return $returnResponse ? null : JsonResponse::create([
-//                'status' => $e->getCode(),
-//                'error' => $e->getMessage()
-//            ])->getData();
             return $returnResponse ? null : (object) [
                 'status' => $e->getCode(),
                 'error' => $e->getMessage()
             ];
         }
 
-        \Log::info("\n\n\tResponse:\n\n". var_export($response->json(['object' => true]), true) ."\n\n");
-
         // Return an instance of GuzzleHttp\Message\Response or a JSON object.
         return $returnResponse ? $response : $response->json(['object' => true]);
-    }
-
-    /**
-     * Shortcut to retrieve layouts for home page and cache the product details at the same time.
-     *
-     * @deprecated
-     */
-    public function getHomePage()
-    {
-        return \Layouts::get('');
-    }
-
-    /**
-     * Shortcut to retrieve the details for a category and cache the product details at the same time.
-     *
-     * @deprecated
-     */
-    public function getCategory($id, $page = 1, $perPage = 40)
-    {
-        return \Categories::get($id, $page, $perPage);
-    }
-
-    /**
-     * Shortcut to retrieve the details for a brand and cache the product details at the same time.
-     *
-     * @deprecated
-     */
-    public function getBrand($id, $page = 1, $perPage = 40)
-    {
-        return \Brands::get($id, $page, $perPage);
-    }
-
-    /**
-     * Shortcut to retrieve the details for a given product.
-     *
-     * @deprecated
-     */
-    public function getProduct($id)
-    {
-        return \Products::get($id);
-    }
-
-    /**
-     * Shortcut to search database for products.
-     *
-     * @deprecated
-     */
-    public function search($query, $page = 1, $perPage = 40)
-    {
-        return \Products::search($query, $page, $perPage);
     }
 
     /**
