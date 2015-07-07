@@ -1,12 +1,11 @@
-# phpStorm project files
+# Ignore phpStorm project files
 /.idea
 
 # Node modules
 /node_modules
 
-# Laravel environment variables
+# Ignore Laravel environment variables
 .env
 
-# Vendor git files
-vendor/.git
-
+# Ignore vendor directory.
+/vendor
