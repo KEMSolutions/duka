@@ -2,6 +2,9 @@
 
 use \Localization;
 
+//dd(\Auth::user());
+//dd(\App\User::all());
+
 // Set all localized routes here.
 Route::group([
     'prefix' => Localization::setLocale(),
@@ -21,14 +24,15 @@ Route::group([
     // Custom pages.
     Route::get('pages/{slug}', ['as' => 'page', 'uses' => 'PagesController@display']);
 
-    // User authentication (and related named routes).
-    Route::controller('auth', 'Auth\AuthController', [
-        'getRegister' => 'auth.register',
-        'postRegister' => 'auth.register.action',
-        'getLogin' => 'auth.login',
-        'postLogin' => 'auth.login.action',
-        'getLogout' => 'auth.logout'
-    ]);
+    // Authentication routes.
+    Route::get('login',     ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
+    Route::post('login',    ['as' => 'auth.login.action', 'uses' => 'Auth\AuthController@postLogin']);
+    Route::get('logout',    ['as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout']);
+
+    // Registration routes.
+    Route::get('register',  ['as' => 'auth.register', 'uses' => 'Auth\AuthController@getRegister']);
+    Route::post('register', ['as' => 'auth.register.action', 'uses' => 'Auth\AuthController@postRegister']);
+
     Route::controllers([
 //        'auth' => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
@@ -50,16 +54,6 @@ Route::group([
         Route::get('list-conditions', function() {
             return Illuminate\Support\Collection::make(Categories::getAllConditions());
         });
-
-        // Customer API tests
-        Route::get('customers', function() {
-            return Illuminate\Support\Collection::make(Customers::all());
-        });
-        Route::get('customers/{id}', function($id) {
-            return Illuminate\Support\Collection::make(Customers::get($id));
-        });
-
-
     });
 });
 
