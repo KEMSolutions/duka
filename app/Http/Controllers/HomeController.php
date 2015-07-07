@@ -1,10 +1,10 @@
 <?php namespace App\Http\Controllers;
 
-use App\Facades\Categories;
-use App\Facades\KemAPI;
 use App\Http\Requests;
 
 use View;
+use Layouts;
+use Categories;
 use Localization;
 
 class HomeController extends Controller {
@@ -16,7 +16,7 @@ class HomeController extends Controller {
 	 */
 	public function index()
 	{
-		$apiData = KemAPI::getHomePage();
+		$apiData = Layouts::get('');
 		$currentLocale = Localization::getCurrentLocale();
 		$elementType = [];
 		$layoutData = [];
