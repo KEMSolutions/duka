@@ -7,6 +7,8 @@ use Localization;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 /**
  * This controller handles the registration of new users, as well as the
@@ -17,8 +19,9 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
  */
 class AuthController extends Controller
 {
-	use AuthenticatesAndRegistersUsers {
-        postRegister as registerNewUser;
+    use AuthenticatesUsers, RegistersUsers {
+        RegistersUsers::postRegister as registerNewUser;
+        AuthenticatesUsers::redirectPath insteadof RegistersUsers;
     }
 
 	/**
@@ -29,8 +32,9 @@ class AuthController extends Controller
 	 */
 	public function __construct()
 	{
-        // Path to redirect to after logging in.
-        $this->redirectPath = route('home');
+        // Define some paths.
+        $this->loginPath = route('auth.login');
+        $this->redirectAfterLogout = $this->redirectPath = route('home');
 
 		$this->middleware('guest', ['except' => 'getLogout']);
 	}
