@@ -1,40 +1,37 @@
 <?php namespace App\Http\Controllers;
 
-use App\Facades\Categories;
-use App\Facades\KemAPI;
-use App\Http\Requests;
-
 use View;
 use Request;
 use Localization;
 
-class CategoryController extends Controller {
+use App\Facades\Categories;
+use App\Http\Requests;
+use Illuminate\Pagination\LengthAwarePaginator;
 
-
+class CategoryController extends Controller
+{
     public function display($slug)
     {
-
-        // Retrieve category details
+        // Retrieve category details.
         $category = Categories::get($slug);
 
         // Retrieve query details.
-        $page = 1;
-        $perPage = 10;
-
-        //Retrieve all products
-        $results = $category->products;
+        $page = (int) Request::input('page', 1);
+        $perPage = (int) Request::input('per_page', 8);
 
         // Create a paginator instance.
         $paginator = null;
         if (count($category->products))
         {
-            $paginator = new \Illuminate\Pagination\LengthAwarePaginator(
-                $results,
-                count($results),
-                $perPage,
-                $page
-            );
+            // Make sure we have valid query settings.
+            $perPage = max(4, min(40, $perPage));
+            $page = max(1, min($page, ceil(count($category->products) / $perPage)));
 
+            // Retrieve the requested products, depending on the query details.
+            $results = array_slice($category->products, ($page - 1) * $perPage, $perPage);
+
+            // Setup the paginator.
+            $paginator = new LengthAwarePaginator($category->products, count($category->products), $perPage, $page);
             $paginator->setPath(route('category', ["slug" => $slug]));
             $paginator->appends(['per_page' => $perPage]);
 
@@ -43,7 +40,7 @@ class CategoryController extends Controller {
         return View::make("site.category.index")->with([
             "name" => $category->name,
             "featured" => $category->featured,
-            "products" => $category->products,
+            "products" => $results,
             "children" => $category->children,
             "presentation" => $category->presentation,
             "background" => $this->sanitizeBackground($category->presentation->background->image, "1500", "200"),
