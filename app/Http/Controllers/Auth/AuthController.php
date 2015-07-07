@@ -6,9 +6,8 @@ use Customers;
 use Localization;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Foundation\Auth\RegistersUsers;
 
 /**
  * This controller handles the registration of new users, as well as the
@@ -19,9 +18,8 @@ use Illuminate\Foundation\Auth\RegistersUsers;
  */
 class AuthController extends Controller
 {
-    use AuthenticatesUsers, RegistersUsers {
-        RegistersUsers::postRegister as registerNewUser;
-        AuthenticatesUsers::redirectPath insteadof RegistersUsers;
+	use AuthenticatesAndRegistersUsers, ThrottlesLogins {
+        AuthenticatesAndRegistersUsers::postRegister as registerNewUser;
     }
 
 	/**
