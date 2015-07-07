@@ -4645,6 +4645,14 @@ GLOBAL
   width: 100% !important;
 }
 
+.no-padding {
+  padding: 0;
+}
+
+.padding-side-lg {
+  padding: 10px 40px;
+}
+
 .btn {
   font-size: 14px;
   font-weight: normal;
@@ -4661,6 +4669,27 @@ GLOBAL
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
+}
+
+.btn-outline {
+  background: none;
+}
+
+.btn-outline {
+  border: 1px solid #D43F3A;
+  color: #D43F3A;
+  margin-left: 5px;
+}
+
+.btn-danger-outline:hover, .btn-danger-outline:focus, .btn-danger-outline:active, .btn-danger-outline.active {
+  color: #fff;
+  border-color: #D9534F;
+  background-color: #D43F3A;
+}
+.btn-danger-outline:active, .btn-danger-outline.active {
+  border-color: #D43F3A;
+  color: #D43F3A;
+  box-shadow: none;
 }
 
 .btn i {
@@ -4700,6 +4729,9 @@ section.slice {
   font-weight: bold !important;
 }
 
+.no-border {
+  border: none !important;
+}
 
 .vertical-align {
   position: relative;
@@ -4719,23 +4751,81 @@ section.slice {
   margin-bottom: 20px;
 }
 
-.dense_product {
-  margin-bottom: 2em;
-  height: 280px;
-}
-
-.dense_product img {
-  margin-bottom: 0.5em;
-  max-width: 20em;
-  height: 160px;
-}
-
 #product_long_description {
   padding: 40px;
 }
 
 #why_email {
   cursor: default ;
+}
+
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+/* Style for list layout                  */
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+.list-layout-element {
+  border-bottom: 1px solid #c6c6c6;
+  margin-bottom: 20px;
+  padding: 20px 0px;
+}
+
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+/* Style for product tiles (dense layout) */
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+.dense_product .name, .dense_product .brand, .dense_product .price {
+  padding: 3px;
+}
+
+.dense_product .btn {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+.dense_product {
+  height: 320px;
+  border: 1px solid #CCC;
+  border-left: 0;
+  border-top: 0;
+  padding: 25px;
+}
+
+.dense_product img {
+  margin-bottom: 1.3rem;
+  max-width: 20em;
+  height: 160px;
+}
+
+.blog-grid {
+  margin-top: -36px;
+}
+
+.favorite-heart {
+  padding: 5px;
+  color: #F45D5D;
+  border: 1px solid #E1E1E1;
+  border-radius: 2px;
+}
+
+.favorite-wrapper {
+  cursor: pointer;
+  display: none;
+
+  transition: all 0.1s ease-in;
+}
+
+.favorite-heart:hover, .favorite-heart:active {
+  border: 1px solid #F45D5D;
+}
+
+.favorited {
+  display: block !important;
 }
 
 /*
@@ -4779,7 +4869,6 @@ Custom colors.
   color: #fff;
 }
 
-
 /*-----------------------------------*/
 /*-----------------------------------*/
 /*-----------------------------------*/
@@ -4788,7 +4877,7 @@ Custom colors.
 /*-----------------------------------*/
 /*-----------------------------------*/
 .header {
-  height: 113px;
+  height: 117px;
   border-bottom: 1px solid #E7E7E7;
 
   background: #ffffff; /* Old browsers */
@@ -4973,12 +5062,42 @@ Custom colors.
 }
 
 .category-header {
-  padding: 50px;
-  margin-bottom: 20px;
-
   background-size: cover;
+
+  margin-bottom: 5%;
 }
 
 .category-title, .category-subtitle {
   color: #fff;
+}
+
+.category-overlay {
+  background-color: rgba(0,0,0,0.2);
+
+  padding: 50px;
+}
+
+    /*-----------------------------------*/
+
+    /* Style for Category page refining bar */
+
+    /*-----------------------------------*/
+
+.absolute-scrollable {
+  height: 130px;
+  border: 1px solid #eee;
+  padding: 0 5px;
+  overflow: auto;
+}
+
+#refine-search-container {
+  border: 1px solid #3E3F4C;
+}
+
+.refine-search-title {
+  border-bottom: 1px solid #3E3F4C;
+}
+
+.refine-search-component:last-child {
+  padding-bottom: 20px;
 }

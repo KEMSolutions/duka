@@ -17,16 +17,20 @@ elixir(function(mix) {
         "../../../public/js/dev/components/checkout/estimate.js",
         "../../../public/js/dev/components/checkout/location.js",
         "../../../public/js/dev/components/checkout/payment.js",
-        "../../../public/js/dev/components/layout/drawer.js",
+        "../../../public/js/dev/components/layout/cart-drawer.js",
         "../../../public/js/dev/components/layout/header.js",
         "../../../public/js/dev/components/layout/payment-overlay.js",
+        "../../../public/js/dev/components/products/layout/product-layout-favorite.js",
         "../../../public/js/dev/components/site/category.js",
+        "../../../public/js/dev/components/site/wishlist.js",
         "../../../public/js/dev/utils/utility.js",
         "../../../public/js/dev/actions/checkout/checkout-init.js",
         "../../../public/js/dev/actions/checkout/checkout-logic.js",
         "../../../public/js/dev/actions/checkout/checkout-validation.js",
         "../../../public/js/dev/actions/layout/cart-drawer-logic.js",
         "../../../public/js/dev/actions/layout/cart-drawer-init.js",
+        "../../../public/js/dev/actions/products/layout/layout-favorite-logic.js",
+        "../../../public/js/dev/actions/site/wishlist-logic.js",
         "../../../public/js/dev/actions/init.js"
     ], "public/js/prod/boukem2.js");
 });

@@ -1,3 +1,7 @@
+/**
+ * Entry point of script.
+ *
+ */
 $(document).ready(function () {
 
     /**
@@ -29,6 +33,30 @@ $(document).ready(function () {
     categoryContainer.init();
 
     /**
+     * Initialize overlay plugin.
+     *
+     */
+    paymentOverlayContainer.init();
+
+    /**
+     * Initialize navigation header.
+     *
+     */
+    headerContainer.init();
+
+    /**
+     * Initialize favorite products feature.
+     *
+     */
+    productLayoutFavoriteLogicContainer.init();
+
+    /**
+     * Initialize wishlist page.
+     *
+     */
+    wishlistLogicContainer.init();
+
+    /**
      * Global initialization of elements.
      *
      */
@@ -37,9 +65,4 @@ $(document).ready(function () {
         initval: 1
     });
 
-    //Initialize overlay plugin.
-    paymentOverlayContainer.init();
-
-    //Initialize navigation header.
-    headerContainer.init();
 });

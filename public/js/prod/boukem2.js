@@ -512,7 +512,6 @@ var cartDisplayContainer = {
 };
 /**
  * Object responsible for displaying the navigation header.
- * Will be present on all the pages, thus written here.
  *
  * @type {{md: {removeCartDescription: Function}, sm: {btnTransform_sm: Function}, init: Function}}
  */
@@ -670,28 +669,96 @@ var paymentOverlayContainer = {
     }
 }
 
+/**
+ * Object responsible for the view component of the favorite feature.
+ * Logic handled in dev/actions/products/layout-favorite-logic.js
+ *
+ * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, init: Function}}
+ */
+var productLayoutFavoriteContainer = {
+    /**
+     * Fade in the favorite icon (heart icon) when hovering on a product tile.
+     *
+     */
+    fadeInFavoriteIcon: function() {
+        $(".dense_product").hover(function() {
+            $(this).children(".favorite-wrapper").fadeIn();
+        }, function () {
+            $(this).children(".favorite-wrapper").hide();
+        });
+    },
+
+    /**
+     * Update the value of .wishlist_badge when adding or deleting elements.
+     *
+     */
+    setWishlistBadgeQuantity : function() {
+        var total = UtilityContainer.getNumberOfProductsInWishlist();
+
+        $(".wishlist_badge").text(total);
+    },
+
+    init: function () {
+        var self = productLayoutFavoriteContainer;
+
+        self.fadeInFavoriteIcon();
+        self.setWishlistBadgeQuantity();
+    }
+}
+/**
+ * Object responsible for the view component of each category page.
+ *
+ * @type {{blurBackground: Function, init: Function}}
+ */
 var categoryContainer = {
 
+    /**
+     * Blurs the background of each category's page header.
+     *
+     */
     blurBackground: function () {
         $(".category-header").blurjs({
-            source: ".category-header",
-            overlay: "rgba(0,0,0,0.5)"
+            source: ".category-header"
         });
     },
 
     init: function () {
         var self = categoryContainer;
 
-        console.log("eh");
         self.blurBackground();
     }
 
 }
 /**
+ * Object responsible for the view component of the wish list page.
+ * Logic handled in dev/actions/site/wishlist-logic.js
+ *
+ * @type {{setNumberOfProductsInHeader: Function, init: Function}}
+ */
+var wishlistContainer = {
+
+    /**
+     * Sets the number of products in the header (singular / plural).
+     *
+     */
+    setNumberOfProductsInHeader: function() {
+        var quantity = "";
+        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
+        $("#quantity-wishlist").text(quantity);
+    },
+
+
+    init: function() {
+        var self = wishlistContainer;
+
+        self.setNumberOfProductsInHeader();
+    }
+}
+/**
  * Utility object containing various utility functions...
  * Self Explanatory duh.
  *
- * @type {{getProductsFromLocalStorage: Function, getNumberOfProducts: Function, getProductsPriceFromLocalStorage: Function, removeAllProductsFromLocalStorage: Function, getShippingFromForm: Function, populateCountry: Function, validateEmptyFields: Function, validateEmail: Function, validatePostCode: Function, validateEmptyCart: Function, addErrorClassToFields: Function, addErrorClassToFieldsWithRules: Function, removeErrorClassFromFields: Function, getCheapestShippingMethod: Function, getTaxes: Function, getShipmentTaxes: Function, getCartTaxes: Function, getCartTotal: Function}}
+ * @type {{getProductsFromLocalStorage: Function, getNumberOfProductsInWishlist: Function, getNumberOfProducts: Function, getProductsPriceFromLocalStorage: Function, removeAllProductsFromLocalStorage: Function, getShippingFromForm: Function, buyButton_to_Json: Function, populateCountry: Function, validateEmptyFields: Function, validateEmail: Function, validatePostCode: Function, validateEmptyCart: Function, addErrorClassToFields: Function, addErrorClassToFieldsWithRules: Function, addFadeOutUpClass: Function, removeErrorClassFromFields: Function, getCheapestShippingMethod: Function, getTaxes: Function, getShipmentTaxes: Function, getCartTaxes: Function, getCartTotal: Function}}
  */
 var UtilityContainer = {
     /**
@@ -721,6 +788,25 @@ var UtilityContainer = {
         }
 
         return res;
+    },
+
+    /**
+     * Utility function returning the number of products present in the wish list.
+     *
+     * @returns {number}
+     */
+    getNumberOfProductsInWishlist : function() {
+        var total = 0;
+
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
+            {
+                total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
+            }
+        }
+
+        return total;
     },
 
     /**
@@ -788,6 +874,24 @@ var UtilityContainer = {
             "city" : $("#shippingCity").val(),
             "phone" : $("#shippingTel").val()
         };
+    },
+
+    /**
+     * parse the information from a buy button into a readable json format
+     *
+     * @param item
+     * @returns {{product: *, name: *, price: *, thumbnail: *, thumbnail_lg: *, quantity: number}}
+     */
+    buyButton_to_Json : function(item) {
+        return {
+            "product" : item.data("product"),
+            "name" : item.data("name"),
+            "price" : item.data("price"),
+            "thumbnail" : item.data("thumbnail"),
+            "thumbnail_lg" : item.data("thumbnail_lg"),
+            "quantity" : parseInt(item.data("quantity")),
+            "link" : item.data("link")
+        }
     },
 
     /**
@@ -1034,6 +1138,13 @@ var UtilityContainer = {
 }
 
 
+/**
+ * Container responsible for initializing the checkout page.
+ * Overall logic is handled in js/dev/actions/checkout/*.js
+ * View component is handled in js/dev/components/checkout/*.js
+ *
+ * @type {{estimateButtonClick: Function, init: Function}}
+ */
 var checkoutInitContainer = {
 
     /**
@@ -1168,7 +1279,7 @@ var checkoutLogicContainer = {
      * @param self
      */
     hidePanels: function (self) {
-        $(".quantity").on("change", function () {
+        $(".quantity, #shippingPostcode, #shippingCity").on("change", function () {
             UtilityContainer.addFadeOutUpClass($("#estimate"));
             UtilityContainer.addFadeOutUpClass($("#payment"));
 
@@ -1486,22 +1597,6 @@ var cartLogicContainer = {
     },
 
 
-    /**
-     * parse the information from the button into a readable json format
-     *
-     * @param item
-     * @returns {{product: *, name: *, price: *, thumbnail: *, thumbnail_lg: *, quantity: number}}
-     */
-    button_to_Json : function(item) {
-        return {
-            "product" : item.data("product"),
-            "name" : item.data("name"),
-            "price" : item.data("price"),
-            "thumbnail" : item.data("thumbnail"),
-            "thumbnail_lg" : item.data("thumbnail_lg"),
-            "quantity" : parseInt(item.data("quantity"))
-        }
-    },
 
     /**
      * Ajax call to /api/estimate after all verifications have passed.
@@ -1578,6 +1673,11 @@ var cartLogicContainer = {
         cartLogicContainer.setCartSubtotal();
     }
 };
+/**
+ * Container responsible for initializing the cart drawer feature.
+ *
+ * @type {{buyButtonClick: Function, getEstimateClick: Function, init: Function}}
+ */
 var cartDrawerInitContainer = {
 
     /**
@@ -1585,10 +1685,10 @@ var cartDrawerInitContainer = {
      *
      */
     buyButtonClick : function () {
-        $(".buybutton").click(function() {
+        $("body").on("click", ".buybutton", function() {
             cartDisplayContainer.animateIn();
-            cartLogicContainer.addItem(cartLogicContainer.button_to_Json($(this)));
-            cartLogicContainer.storeItem(cartLogicContainer.button_to_Json($(this)));
+            cartLogicContainer.addItem(UtilityContainer.buyButton_to_Json($(this)));
+            cartLogicContainer.storeItem(UtilityContainer.buyButton_to_Json($(this)));
 
             //We remove the "Your cart is empty" message at the top every time we add an item.
             //TODO : Maybe improve it?
@@ -1633,6 +1733,183 @@ var cartDrawerInitContainer = {
 
 }
 
+/**
+ * Container responsible for handling the logic of adding products to a user's wishlist.
+ * Layout handled in dev/components/products/layout/product-layout-favorite.js
+ *
+ * @type {{addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
+ */
+var productLayoutFavoriteLogicContainer = {
+
+    /**
+     * Add the clicked product to the wish list.
+     *
+     */
+    addToFavorite: function() {
+        var self = productLayoutFavoriteLogicContainer,
+            selfLayout = productLayoutFavoriteContainer,
+            item;
+
+        $(".favorite-wrapper").on("click", function() {
+            //No favorited class.
+            if (!$(this).hasClass("favorited")) {
+                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
+                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+
+                $(this).addClass("favorited");
+
+                selfLayout.setWishlistBadgeQuantity();
+            }
+            else
+            //Has a favorited class. We remove it, then delete the element from local Storage.
+            {
+                self.removeFromFavorite($(this));
+            }
+        });
+    },
+
+    /**
+     * Persist the heart icon next to products already marked as wished.
+     *
+     */
+    persistFavorite: function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
+                for(var j = 0; j<$(".favorite-wrapper").length; j++)
+                {
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === parseInt($(".favorite-wrapper")[j].dataset.product))
+                    {
+                        $(".favorite-wrapper")[j].className += " favorited";
+                    }
+                }
+            }
+        };
+    },
+
+    /**
+     * Delete the clicked element from the wish list.
+     *
+     * @param context
+     */
+    removeFromFavorite: function (context) {
+        context.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + context.data("product"));
+    },
+
+    init: function () {
+        var self = productLayoutFavoriteLogicContainer;
+
+        //Calls the layout container (productLayoutFavoriteContainer).
+        productLayoutFavoriteContainer.init();
+
+        //Initialize the logic.
+        self.addToFavorite();
+        self.persistFavorite();
+    }
+}
+/**
+ * Container responsible for handling the logic of the wish list page.
+ * Layout handled in dev/components/site/wishlist.js
+ *
+ * @type {{createWishlistElement: Function, renderWishlist: Function, removeWishlistElement: Function, init: Function}}
+ */
+var wishlistLogicContainer = {
+
+    /**
+     * Create a list layout element from the information passed as an argument.
+     *
+     * Rounding to 2 decimals, courtesy of http://stackoverflow.com/a/6134070.
+     *
+     * @param item
+     */
+    createWishlistElement: function(item) {
+        var self = wishlistLogicContainer,
+            element =
+            '<div class="col-md-12 list-layout-element">' +
+            '<div class="col-md-2">' +
+            '<img src=' + item.thumbnail_lg + '>' +
+            '</div>' +
+            '<div class="col-md-10">' +
+            '<button class="btn btn-outline btn-danger-outline pull-right btn-lg inline-block padding-side-lg removeFavoriteButton" data-product="' + item.product + '">Remove from wishlist </button>' +
+            '<button class="btn btn-success buybutton pull-right btn-lg inline-block padding-side-lg"' +
+            'data-product="' + item.product + '"' +
+            'data-price="' + item.price + '"' +
+            'data-thumbnail="' + item.thumbnail + '"' +
+            'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
+            'data-name="' + item.name + '"' +
+            'data-quantity="' + item.quantity  + '"' + ">" +
+            'Add to cart </button>' +
+            '<a href=' + item.link + '><h4 style="margin-top: 5px">' + item.name + '</h4></a>' +
+            '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
+            '</div>' +
+            '</div>';
+
+        //Localize button (default in english)
+        self.localizeWishlistButton();
+
+        //Append elements
+        $(".list-layout-element-container").append(element);
+    },
+
+    /**
+     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
+     * The creation is handled in createWishlistElement function.
+     *
+     */
+    renderWishlist: function() {
+        var self = wishlistLogicContainer;
+
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
+            {
+                self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
+            }
+        }
+    },
+
+    localizeWishlistButton: function() {
+        $(".list-layout-element .buybutton").text(Localization.add_cart);
+        $(".list-layout-element .removeFavoriteButton").text(Localization.wishlist_remove);
+    },
+
+    /**
+     * Remove the element from the wishlist after a subtle animation.
+     *
+     */
+    removeWishlistElement: function () {
+        $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
+            //Animate the element.
+            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
+
+            //Delete the element from localStorage.
+            localStorage.removeItem("_wish_product " + $(this).data("product"));
+
+            //Set wishlist header quantity.
+            wishlistContainer.setNumberOfProductsInHeader();
+
+            //Set wishlist badge
+            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
+        });
+    },
+
+    init: function () {
+        var self = wishlistLogicContainer;
+
+        //Calls the layout container (wishlistContainer).
+        wishlistContainer.init();
+
+        //Initialize the logic.
+        self.renderWishlist();
+        self.removeWishlistElement();
+    }
+
+}
+/**
+ * Entry point of script.
+ *
+ */
 $(document).ready(function () {
 
     /**
@@ -1664,6 +1941,30 @@ $(document).ready(function () {
     categoryContainer.init();
 
     /**
+     * Initialize overlay plugin.
+     *
+     */
+    paymentOverlayContainer.init();
+
+    /**
+     * Initialize navigation header.
+     *
+     */
+    headerContainer.init();
+
+    /**
+     * Initialize favorite products feature.
+     *
+     */
+    productLayoutFavoriteLogicContainer.init();
+
+    /**
+     * Initialize wishlist page.
+     *
+     */
+    wishlistLogicContainer.init();
+
+    /**
      * Global initialization of elements.
      *
      */
@@ -1672,10 +1973,5 @@ $(document).ready(function () {
         initval: 1
     });
 
-    //Initialize overlay plugin.
-    paymentOverlayContainer.init();
-
-    //Initialize navigation header.
-    headerContainer.init();
 });
 //# sourceMappingURL=boukem2.js.map

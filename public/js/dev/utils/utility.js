@@ -2,7 +2,7 @@
  * Utility object containing various utility functions...
  * Self Explanatory duh.
  *
- * @type {{getProductsFromLocalStorage: Function, getNumberOfProducts: Function, getProductsPriceFromLocalStorage: Function, removeAllProductsFromLocalStorage: Function, getShippingFromForm: Function, populateCountry: Function, validateEmptyFields: Function, validateEmail: Function, validatePostCode: Function, validateEmptyCart: Function, addErrorClassToFields: Function, addErrorClassToFieldsWithRules: Function, removeErrorClassFromFields: Function, getCheapestShippingMethod: Function, getTaxes: Function, getShipmentTaxes: Function, getCartTaxes: Function, getCartTotal: Function}}
+ * @type {{getProductsFromLocalStorage: Function, getNumberOfProductsInWishlist: Function, getNumberOfProducts: Function, getProductsPriceFromLocalStorage: Function, removeAllProductsFromLocalStorage: Function, getShippingFromForm: Function, buyButton_to_Json: Function, populateCountry: Function, validateEmptyFields: Function, validateEmail: Function, validatePostCode: Function, validateEmptyCart: Function, addErrorClassToFields: Function, addErrorClassToFieldsWithRules: Function, addFadeOutUpClass: Function, removeErrorClassFromFields: Function, getCheapestShippingMethod: Function, getTaxes: Function, getShipmentTaxes: Function, getCartTaxes: Function, getCartTotal: Function}}
  */
 var UtilityContainer = {
     /**
@@ -32,6 +32,25 @@ var UtilityContainer = {
         }
 
         return res;
+    },
+
+    /**
+     * Utility function returning the number of products present in the wish list.
+     *
+     * @returns {number}
+     */
+    getNumberOfProductsInWishlist : function() {
+        var total = 0;
+
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
+            {
+                total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
+            }
+        }
+
+        return total;
     },
 
     /**
@@ -99,6 +118,24 @@ var UtilityContainer = {
             "city" : $("#shippingCity").val(),
             "phone" : $("#shippingTel").val()
         };
+    },
+
+    /**
+     * parse the information from a buy button into a readable json format
+     *
+     * @param item
+     * @returns {{product: *, name: *, price: *, thumbnail: *, thumbnail_lg: *, quantity: number}}
+     */
+    buyButton_to_Json : function(item) {
+        return {
+            "product" : item.data("product"),
+            "name" : item.data("name"),
+            "price" : item.data("price"),
+            "thumbnail" : item.data("thumbnail"),
+            "thumbnail_lg" : item.data("thumbnail_lg"),
+            "quantity" : parseInt(item.data("quantity")),
+            "link" : item.data("link")
+        }
     },
 
     /**

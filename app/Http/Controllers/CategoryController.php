@@ -40,17 +40,35 @@ class CategoryController extends Controller {
 
         }
 
-
-
         return View::make("site.category.index")->with([
             "name" => $category->name,
             "featured" => $category->featured,
             "products" => $category->products,
             "children" => $category->children,
             "presentation" => $category->presentation,
+            "background" => $this->sanitizeBackground($category->presentation->background->image, "1500", "200"),
             "paginator" => $paginator
         ]);
     }
+
+    /**
+     * Utility function to replace {width} and {height} placeholders with actual values.
+     *
+     * @param $background
+     * @param $width
+     * @param $height
+     * @return mixed
+     */
+    private function sanitizeBackground($background, $width, $height)
+    {
+        $sanitizedBackground = $background;
+
+        $sanitizedBackground = str_replace("{width}", $width, $sanitizedBackground);
+        $sanitizedBackground = str_replace("{height}", $height, $sanitizedBackground);
+
+        return $sanitizedBackground;
+    }
+
 }
 
 

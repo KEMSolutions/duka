@@ -202,5 +202,9 @@ return [
     "brands"            =>"Brands",
     "health_issues"     =>"Health Issues",
     "featured_products" =>"Featured Products",
-    "your"              =>"Your"
+    "your"              =>"Your",
+    "wishlist"          =>"Your Wish List",
+    "wishlist_number"   =>"You have <span id='quantity-wishlist'>0 item</span> in your wishlist.",
+    "wishlist_saved"    =>"Your wishlist will be saved while your browser session lasts.",
+    "wishlist_remove"   =>"Remove from wishlist"
 ];

@@ -1,3 +1,8 @@
+/**
+ * Container responsible for initializing the cart drawer feature.
+ *
+ * @type {{buyButtonClick: Function, getEstimateClick: Function, init: Function}}
+ */
 var cartDrawerInitContainer = {
 
     /**
@@ -5,10 +10,10 @@ var cartDrawerInitContainer = {
      *
      */
     buyButtonClick : function () {
-        $(".buybutton").click(function() {
+        $("body").on("click", ".buybutton", function() {
             cartDisplayContainer.animateIn();
-            cartLogicContainer.addItem(cartLogicContainer.button_to_Json($(this)));
-            cartLogicContainer.storeItem(cartLogicContainer.button_to_Json($(this)));
+            cartLogicContainer.addItem(UtilityContainer.buyButton_to_Json($(this)));
+            cartLogicContainer.storeItem(UtilityContainer.buyButton_to_Json($(this)));
 
             //We remove the "Your cart is empty" message at the top every time we add an item.
             //TODO : Maybe improve it?

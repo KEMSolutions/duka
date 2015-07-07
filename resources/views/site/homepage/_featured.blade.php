@@ -4,16 +4,21 @@
     @endif
 
     <div class="w-section inverse blog-grid">
-        <div class="container">
+        <div class="container full-width">
             <div class="row">
 
                 {{--Include the appropriate layout (dense or regular cards) according to the layoutDense boolean--}}
                 @if($layoutData["featured"]["layoutDense"])
                     @include("product.layout._product_card_dense",
-                    ["products" => array_slice($layoutData["featured"]["products"], 0, $layoutData["featured"]["limit"])])
+                    [
+                        "products" => array_slice($layoutData["featured"]["products"], 0, $layoutData["featured"]["limit"]),
+                        "border" => false
+                    ])
                 @elseif(!$layoutData["featured"]["layoutDense"])
                     @include("product.layout._product_card",
-                    ["products" => array_slice($layoutData["featured"]["products"], 0, $layoutData["featured"]["limit"])])
+                    [
+                        "products" => array_slice($layoutData["featured"]["products"], 0, $layoutData["featured"]["limit"])
+                    ])
                 @endif
 
             </div>
