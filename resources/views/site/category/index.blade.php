@@ -11,7 +11,10 @@
         @include("site.category._header")
 
         {{-- Include results --}}
-        @include('site.category._results', ['results' => $products])
+        @include('site.category._results', [
+            'results' => $products,
+            'featured' => $featured
+        ])
     @endsection
 
 

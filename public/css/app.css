@@ -4733,6 +4733,10 @@ section.slice {
   border: none !important;
 }
 
+.border-all {
+  border: 1px solid #CCC !important;
+}
+
 .vertical-align {
   position: relative;
   top: 25%;
@@ -4842,6 +4846,10 @@ Breadcrumbs
 /*
 Custom colors.
 */
+.color-dark {
+  color: #656565 !important;
+}
+
 .color-one {
   background: #F28963;
   color: #fff;
@@ -5077,6 +5085,21 @@ Custom colors.
   padding: 50px;
 }
 
+#featured-wrapper {
+  margin-bottom: 3em;
+}
+
+#featured-wrapper ul {
+  list-style: none;
+}
+
+#featured-wrapper .dense_product {
+  border-bottom: 0;
+}
+
+#featured-wrapper li:last-child .dense_product {
+  border-right: 0;
+}
     /*-----------------------------------*/
 
     /* Style for Category page refining bar */
