@@ -55,7 +55,8 @@ class AuthController extends Controller
             $request->input('postcode')
         );
 
-        // Check for errors.
+        // TODO: Check for errors.
+        // ...
 
         // Add our new user ID.
         $request->merge(['id' => $user->id]);
