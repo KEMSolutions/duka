@@ -12,6 +12,29 @@ class Customers extends KemApiObject
 
     public function __construct() { parent::__construct('customers'); }
 
+    /**
+     * Overwrite base method to prevent caching.
+     *
+     * @param mixed $id     ID or email of customer.
+     * @return object       Requested object.
+     */
+    public function get($id)
+    {
+        // Performance check.
+        if ((is_numeric($id) && $id < 0) || preg_replace($this->slugInvalidCharacters, '', $id) != $id) {
+            return $this->badRequest('Invalid identifier [req: '. $this->baseRequest .'].');
+        }
+
+        return KemAPI::get($this->baseRequest .'/'. $id);
+    }
+
+    /**
+     * @param $email
+     * @param null $name
+     * @param null $postcode
+     * @param null $language
+     * @return mixed
+     */
     public function create($email, $name = null, $postcode = null, $language = null)
     {
         $user = $this->getCustomerObject($email, $name, $postcode, $language);
@@ -23,6 +46,14 @@ class Customers extends KemApiObject
         return KemAPI::post($this->baseRequest, $user);
     }
 
+    /**
+     * @param $id
+     * @param $email
+     * @param null $name
+     * @param null $postcode
+     * @param null $language
+     * @return mixed
+     */
     public function update($id, $email, $name = null, $postcode = null, $language = null)
     {
         $user = $this->getCustomerObject($email, $name, $postcode, $language);
@@ -34,6 +65,13 @@ class Customers extends KemApiObject
         return KemAPI::put($this->baseRequest .'/'. $id, $user);
     }
 
+    /**
+     * @param $email
+     * @param null $name
+     * @param null $postcode
+     * @param null $language
+     * @return \stdClass
+     */
     private function getCustomerObject($email, $name = null, $postcode = null, $language = null)
     {
         // TODO: validate data.
@@ -49,3 +87,4 @@ class Customers extends KemApiObject
         return $user;
     }
 }
+

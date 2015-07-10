@@ -87,7 +87,6 @@ abstract class KemApiObject
     public function get($id, $requestParams = [])
     {
         // Check that $id is either a valid number or a valid slug.
-//        if ((is_numeric($id) && $id < 0) || preg_replace('/[^a-z0-9_-]/i', '', $id) != $id) {
         if ((is_numeric($id) && $id < 0) || preg_replace($this->slugInvalidCharacters, '', $id) != $id) {
             return $this->badRequest('Invalid identifier [req: '. $this->baseRequest .'].');
         }
