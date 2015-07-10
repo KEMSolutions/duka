@@ -83,6 +83,14 @@ class KemApiHttpClient
         return $this->makeRequest('POST', $request, [], $body, $returnResponse);
     }
 
+    /**
+     * Makes a PUT request to KEM's API.
+     *
+     * @param $request              Request being made, e.g. "customers/123".
+     * @param $body                 Body of the request.
+     * @param bool $returnResponse  Whether to return the response object itself instead of a JSON-decoded object.
+     * @return mixed                JSON-decoded response object or instance of \GuzzleHttp\Http\Response.
+     */
     public function put($request, $body, $returnResponse = false) {
         return $this->makeRequest('PUT', $request, [], $body, $returnResponse);
     }
@@ -91,7 +99,7 @@ class KemApiHttpClient
      * @param string $method        Request method.
      * @param string $endpoint      Request being made, e.g. "layouts".
      * @param array $params         Parameters to include with request.
-     * @param string $body          Body of request.
+     * @param mixed $body           Body of request.
      * @param bool $returnResponse  Whether to return the response object itself instead of a JSON-decoded object.
      * @return mixed                JSON-decoded response object or instance of \GuzzleHttp\Http\Response.
      */
@@ -149,6 +157,14 @@ class KemApiHttpClient
         return $returnResponse ? $response : $response->json(['object' => true]);
     }
 
+    /**
+     * Checks request data to make sure it's valid.
+     *
+     * @param string $request       Request being made, e.g. "categories/1234".
+     * @param array $params         Parameters to include with request.
+     * @param mixed $body           Body of request.
+     * @return false|string         Error message, or false if there are no errors.
+     */
     private function checkRequest($request, $params, $body)
     {
         // Make sure we have a valid request.
@@ -167,7 +183,7 @@ class KemApiHttpClient
             return 'Invalid body in API request.';
         }
 
-        return null;
+        return false;
     }
 
     /**
