@@ -1,6 +1,6 @@
 <?php namespace App\ApiObjects;
 
-class Categories extends KemApiObject
+class Categories extends BaseObject
 {
     public function __construct() { parent::__construct('categories'); }
 

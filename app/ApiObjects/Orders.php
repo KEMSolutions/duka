@@ -7,7 +7,7 @@ use Cache;
 use KemAPI;
 use Carbon\Carbon;
 
-class Orders extends KemApiObject
+class Orders extends BaseObject
 {
     public function __construct() { parent::__construct('orders'); }
 

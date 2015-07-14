@@ -5,7 +5,7 @@ use Cache;
 use Products;
 use Carbon\Carbon;
 
-class Layouts extends KemApiObject
+class Layouts extends BaseObject
 {
     public function __construct() { parent::__construct('layouts'); }
 

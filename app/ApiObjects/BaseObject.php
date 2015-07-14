@@ -97,9 +97,7 @@ abstract class BaseObject
             $object = KemAPI::get($this->baseRequest .'/'. $id, $requestParams);
 
             // Check for errors.
-            if (!$object ||
-                (is_object($object) && property_exists($object, 'error')) ||
-                (!is_object($object) && !is_array($object))) {
+            if ($this->isError($object)) {
                 return $object;
             }
 
@@ -180,10 +178,27 @@ abstract class BaseObject
     }
 
     /**
-     * @return string Namespace to be used with cache.
+     * @return string   Namespace to be used with cache.
      */
     public function getCacheNamespace() {
         return $this->cacheNamespace;
+    }
+
+    public function isError($obj)
+    {
+        // Check that we have an object.
+        if (!$obj || (!is_array($obj) && !is_object($obj))) {
+            return true;
+        }
+
+        // Cast to array and check known keys for errors.
+        $obj = (array) $obj;
+
+        if (isset($obj['error'])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -193,6 +208,8 @@ abstract class BaseObject
      * @return mixed        Bad request response.
      */
     protected function badRequest($msg = 'Bad Request.') {
-        return JsonResponse::create(['status' => 400, 'error' => $msg], 400)->getData();
+        return ['status' => 400, 'error' => $msg];
+//        return JsonResponse::create(['status' => 400, 'error' => $msg], 400)->getData();
     }
 }
+
