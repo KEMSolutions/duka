@@ -20,10 +20,9 @@
 
 	<!-- Required -->
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-	<link href="//kle-en-main.com/assets/fancybox/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" rel="stylesheet">
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="//cdn.kem.guru/boukem/spirit/css/fancybox-fraction-concat.css"/>
 	<link href="//cdn.kem.guru/css/outdatedBrowser.min.css" rel="stylesheet">
+	<link href="{{ asset('/css/semantic-ui/dropdown.min.css') }}" rel="stylesheet">
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
 
 	<!-- Custom Css -->
@@ -57,6 +56,7 @@
 	<script src="/js_assets/mixitup/jquery.mixitup.init.js"></script>
 	<script src="/js_assets/blur/blur.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<script src="/js_assets/semantic-ui/dropdown.min.js"></script>
 
 	@include("_dynamic_resources")
 

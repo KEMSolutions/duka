@@ -44,8 +44,6 @@
         <div class="col-md-7 col-sm-6" id="searchBarWrapper">
             <div class="form-group form-inline">
                 <div class="col-md-12 col-sm-12">
-                    <p class="inline-block hidden-xs hidden-sm col-md-1 text-center" id="search_in">{{ Lang::get("boukem.search_in") }}</p>
-
                     <form class="inline-block searchBar-form col-md-11" method="get" action="{{ route('search') }}">
                         <div class="btn-group search-filter hidden-sm hidden-xs">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -73,6 +71,7 @@
                         </button>
                     </form>
 
+
                 </div>
 
             </div>
@@ -83,7 +82,7 @@
             <ul>
                 <li>
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ Lang::get("boukem.your") }} <span><strong>{{ Lang::get("boukem.account") }}</strong></span> <span class="caret"></span>
+                        {{ Lang::get("boukem.my") }} <span><strong>{{ Lang::get("boukem.account") }}</strong></span> <span class="caret"></span>
                     </button>
                     <span class="sr-only">Toggle Dropdown</span>
                     </button>
