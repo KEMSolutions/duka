@@ -54,27 +54,50 @@ Route::group([
         Route::get('list-conditions', function() {
             return Illuminate\Support\Collection::make(Categories::getAllConditions());
         });
+
+        Route::get('list-customers', function() {
+            return Illuminate\Support\Collection::make(Customers::all());
+        });
+
+        Route::get('get-customer', function() {
+            return Illuminate\Support\Collection::make(Customers::get(base64_encode('a@a.com')));
+        });
+
+        Route::get('update-customer', function() {
+            return Illuminate\Support\Collection::make(Customers::update(1357,
+                'a@a.com',
+                'Joey',
+                'H1G 5F7',
+                'es'
+            ));
+        });
     });
 });
 
 // API endpoints.
 Route::group(['prefix' => 'api'], function()
 {
-    Route::get('brands/{id}',     ['as' => 'api.brands', 'uses' => 'ApiController@getBrand']);
-    Route::get('categories/{id}', ['as' => 'api.categories', 'uses' => 'ApiController@getCategory']);
-    Route::get('layouts/{id?}',   ['as' => 'api.layouts', 'uses' => 'ApiController@getLayout']);
-    Route::get('products/{id}',   ['as' => 'api.products', 'uses' => 'ApiController@getProduct']);
-    Route::get('search/{query}',  ['as' => 'api.search', 'uses' => 'ApiController@searchProducts']);
+    // Category endpoints.
+    Route::get('brands/{id}',       ['as' => 'api.brands', 'uses' => 'ApiController@getBrand']);
+    Route::get('categories/{id}',   ['as' => 'api.categories', 'uses' => 'ApiController@getCategory']);
 
-    Route::post('estimate',       ['as' => 'api.estimate', 'uses' => 'ApiController@getOrderEstimate']);
-    Route::post('orders',         ['as' => 'api.orders', 'uses' => 'ApiController@placeOrder']);
-    Route::get('orders/{id}/{verification}',
-        ['as' => 'api.orders.view', 'uses' => 'ApiController@getOrderDetails']);
+    // Layout endpoints.
+    Route::get('layouts/{id?}',     ['as' => 'api.layouts', 'uses' => 'ApiController@getLayout']);
+
+    // Orders endpoints.
+    Route::post('orders',           ['as' => 'api.orders', 'uses' => 'ApiController@placeOrder']);
+    Route::get('orders/{id}/{verification}', ['as' => 'api.orders.view', 'uses' => 'ApiController@getOrderDetails']);
     Route::get('orders/pay/{id}/{verification}',
         ['as' => 'api.orders.pay', 'uses' => 'ApiController@redirectToPaymentPage']);
-    Route::get('orders/success',  ['as' => 'api.orders.success', 'uses' => 'ApiController@handleSuccessfulPayment']);
-    Route::get('orders/failure',  ['as' => 'api.orders.failure', 'uses' => 'ApiController@handleFailedPayment']);
-    Route::get('orders/cancel',   ['as' => 'api.orders.cancel', 'uses' => 'ApiController@handleCancelledPayment']);
+    Route::get('orders/success',    ['as' => 'api.orders.success', 'uses' => 'ApiController@handleSuccessfulPayment']);
+    Route::get('orders/failure',    ['as' => 'api.orders.failure', 'uses' => 'ApiController@handleFailedPayment']);
+    Route::get('orders/cancel',     ['as' => 'api.orders.cancel', 'uses' => 'ApiController@handleCancelledPayment']);
+
+    // Product endpoints.
+    Route::get('products/{id}',     ['as' => 'api.products', 'uses' => 'ApiController@getProduct']);
+    Route::get('search/{query}',    ['as' => 'api.search', 'uses' => 'ApiController@searchProducts']);
+    Route::post('estimate',         ['as' => 'api.estimate', 'uses' => 'ApiController@getOrderEstimate']);
+
 
     // Return '400 Bad Request' on all other requests.
     Route::any('/{catchAll?}', function($catchAll = null) {

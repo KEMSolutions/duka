@@ -11,19 +11,24 @@ use Illuminate\Http\JsonResponse;
 abstract class KemApiObject
 {
     /**
-     * @var string Base API request for this object, e.g. "products" or "layouts".
+     * @var string  Base API request for this object, e.g. "products" or "layouts".
      */
     public $baseRequest = '';
 
     /**
-     * @var string Current locale. Used for caching purposes.
+     * @var string  Current locale. Used for caching purposes.
      */
     public $locale = 'en';
 
     /**
-     * @var string Namespace used to cache individual objects, e.g. "en.api.products.1234".
+     * @var string  Namespace used to cache individual objects, e.g. "en.api.products.1234".
      */
     public $cacheNamespace = 'api.';
+
+    /**
+     * @var string  Regular expression used to validate slug.
+     */
+    protected $slugInvalidCharacters = '/[^a-z0-9_-]/i';
 
     /**
      * Constructor.
@@ -58,6 +63,7 @@ abstract class KemApiObject
             if (!$object ||
                 (is_object($object) && property_exists($object, 'error')) ||
                 (!is_object($object) && !is_array($object))) {
+
                 return $object;
             }
 
@@ -81,7 +87,7 @@ abstract class KemApiObject
     public function get($id, $requestParams = [])
     {
         // Check that $id is either a valid number or a valid slug.
-        if ((is_numeric($id) && $id < 0) || preg_replace('/[^a-z0-9_-]/i', '', $id) != $id) {
+        if ((is_numeric($id) && $id < 0) || preg_replace($this->slugInvalidCharacters, '', $id) != $id) {
             return $this->badRequest('Invalid identifier [req: '. $this->baseRequest .'].');
         }
 
@@ -158,10 +164,10 @@ abstract class KemApiObject
         foreach ($list as $item)
         {
             if (empty($item) || !isset($item->id) || empty($item->id) || Cache::has($namespace . $item->id)) {
-                Log::info('Skipping object...');
-                Log::info('Is empty? '. (empty($item) ? 'yes' : 'no'));
-                Log::info('Is ID set? '. (isset($item->id) ? 'yes' : 'no'));
-                Log::info('Is ID empty? '. (empty($item->id) ? 'yes' : 'no'));
+                Log::debug('Skipping object...');
+                Log::debug('Is empty? '. (empty($item) ? 'yes' : 'no'));
+                Log::debug('Is ID set? '. (isset($item->id) ? 'yes' : 'no'));
+                Log::debug('Is ID empty? '. (empty($item->id) ? 'yes' : 'no'));
                 continue;
             }
 
