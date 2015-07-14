@@ -11,11 +11,11 @@ Most named routes are defined in "app\Http\routes.php" and can be used through t
 	// Returns something like "https://example.com/en"
 	$url = route( 'home' );
 
-	// Returns something like "https://example.com/en/prod/616"
-    $url = route( 'product', [ 'id' => 616 ] );
+	// Returns something like "https://example.com/en/prod/1234"
+    $url = route( 'product', [ 'id' => 1234 ] );
 	
-	// Returns something like "https://example.com/api/products/616"
-    $url = route( 'api.products', [ 'id' => 616 ] );
+	// Returns something like "https://example.com/en/prod/en-some-slug"
+    $url = route( 'product', [ 'slug' => 'en-some-slug' ] );
     
 For a list of all available routes, run `php artisan route:list` from the root folder.
 
