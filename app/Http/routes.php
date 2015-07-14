@@ -63,14 +63,6 @@ Route::group([
     //
     Route::group(['prefix' => 'dev'], function()
     {
-        Route::get('list-categories', function() {
-            return Illuminate\Support\Collection::make(Categories::getAllCategories());
-        });
-
-        Route::get('list-conditions', function() {
-            return Illuminate\Support\Collection::make(Categories::getAllConditions());
-        });
-
         Route::get('list-customers', function() {
             return Illuminate\Support\Collection::make(Customers::all());
         });
@@ -86,6 +78,10 @@ Route::group([
                 'H1G 5F7',
                 'es'
             ));
+        });
+
+        Route::get('store-info', function() {
+            return Illuminate\Support\Collection::make(Store::info());
         });
     });
 });
