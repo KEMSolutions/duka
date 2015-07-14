@@ -2158,7 +2158,7 @@ fieldset[disabled] .btn-default.active {
 }
 .btn-default .badge {
   color: #ffffff;
-  background-color: #333333;
+  background-color: #C9423C;
 }
 .btn-primary {
   color: #ffffff;
@@ -3028,7 +3028,7 @@ a.label:focus {
   vertical-align: baseline;
   white-space: nowrap;
   text-align: center;
-  background-color: #777777;
+  background-color: #C9423C;
   border-radius: 10px;
 }
 .badge:empty {
@@ -4881,18 +4881,13 @@ Custom colors.
 /*-----------------------------------*/
 /*-----------------------------------*/
 .header {
-  height: 117px;
+  height: 120px;
   border-bottom: 1px solid #E7E7E7;
+}
 
-  background: #ffffff; /* Old browsers */
-  background: -moz-linear-gradient(top,  #ffffff 0%, #f9fbfc 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f9fbfc)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  #ffffff 0%,#f9fbfc 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top,  #ffffff 0%,#f9fbfc 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top,  #ffffff 0%,#f9fbfc 100%); /* IE10+ */
-  background: linear-gradient(to bottom,  #ffffff 0%,#f9fbfc 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9fbfc',GradientType=0 ); /* IE6-9 */
-
+.header-banner {
+  height: 53px;
+  background-color: #961924;
 }
 
 @media (max-width: 935px) {

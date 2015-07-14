@@ -62,15 +62,12 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
 	<!-- Semantic ui dependencies -->
-	<script src="js_assets/semantic-ui/transition.min.js"></script>
+	<script src="/js_assets/semantic-ui/transition.min.js"></script>
 	<script src="/js_assets/semantic-ui/dropdown.min.js"></script>
 
 	@include("_dynamic_resources")
 
 	<script src="/js/prod/boukem2.js"></script>
-	<script>
-		$(".ui.dropdown").dropdown();
-	</script>
 	@yield("scripts")
 </body>
 

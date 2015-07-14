@@ -151,7 +151,7 @@
     </div>
 
 
-    <div class="row hidden-xs">
+    <div class="row hidden-xs header-banner">
         <div class="col-md-2 col-sm-3">
             <div class="btn-group shop-filter">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

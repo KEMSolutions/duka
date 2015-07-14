@@ -46,6 +46,24 @@ var headerContainer = {
     },
 
     /**
+     * Object responsible for handling all semantic ui modules (to be refactored eventually into its own object).
+     *
+     */
+    semanticUI: {
+
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule : function() {
+            $(".ui.dropdown").dropdown({
+                    action: "select"
+                }
+            );
+        }
+    },
+
+    /**
      * Register functions in event handler (onload, onresize) to be called outside of this object.
      *
      */
@@ -58,5 +76,8 @@ var headerContainer = {
         });
 
         self.changeTextFromDropdown(".search-filter");
+
+        //Initialize Semantic UI component
+        self.semanticUI.initDropdownModule();
     }
 }
