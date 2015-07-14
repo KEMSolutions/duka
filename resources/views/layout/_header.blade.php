@@ -8,7 +8,7 @@
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Menu <span class="caret"></span>
                 </button>
-                <span class="sr-only">Toggle Dropdown</span>
+                <span class="sr-only">{{ Lang::get("boukem.toggle_nav") }}</span>
                 </button>
                 <ul class="dropdown-menu">
                     <li><a href="#">{{ Lang::get("boukem.categories") }}</a></li>
@@ -23,13 +23,21 @@
 
         <a href="{{ url("/") }}">
             <div class="col-md-2 col-sm-3 col-xs-8" id="nav-left">
+                <span class="sr-only">{{ Lang::get("boukem.back_to_home") }}</span>
                 &nbsp; &nbsp;
             </div>
         </a>
 
         <div class="col-xs-2 visible-xs-block pull-right view-cart-wrapper-xs">
             <button class="btn btn-default">
-                <a href="#" class="view-cart"><i class="fa fa-shopping-cart icon-cart"></i> <span class="badge cart_badge">0</span></a>
+                <a href="#" class="view-cart">
+                    <i class="fa fa-shopping-cart icon-cart"></i>
+                    <span class="badge cart_badge">0</span>
+
+                    <span class="sr-only">elements</span>
+                </a>
+
+                <span class="sr-only">View cart</span>
             </button>
         </div>
 
@@ -39,26 +47,30 @@
                     <p class="inline-block hidden-xs hidden-sm col-md-1 text-center" id="search_in">{{ Lang::get("boukem.search_in") }}</p>
 
                     <form class="inline-block searchBar-form col-md-11" method="get" action="{{ route('search') }}">
-                    <div class="btn-group search-filter hidden-sm hidden-xs">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ Lang::get("boukem.all") }} <span class="caret"></span>
-                        </button>
-                        <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">{{ Lang::get("boukem.all") }}</a></li>
-                            <li><a href="#">{{ Lang::get("boukem.categories") }}</a></li>
-                            <li><a href="#">{{ Lang::get("boukem.brands") }}</a></li>
-                            <li><a href="#">{{ Lang::get("boukem.health_issues") }}</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">{{ Lang::get("boukem.featured_products") }}</a></li>
-                            <li><a href="#">{{ Lang::get("boukem.deals") }}</a></li>
-                        </ul>
-                    </div>
+                        <div class="btn-group search-filter hidden-sm hidden-xs">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ Lang::get("boukem.all") }} <span class="caret"></span>
+                            </button>
+                            <span class="sr-only">{{ Lang::get("boukem.toggle_nav") }}</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">{{ Lang::get("boukem.all") }}</a></li>
+                                <li><a href="#">{{ Lang::get("boukem.categories") }}</a></li>
+                                <li><a href="#">{{ Lang::get("boukem.brands") }}</a></li>
+                                <li><a href="#">{{ Lang::get("boukem.health_issues") }}</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="#">{{ Lang::get("boukem.featured_products") }}</a></li>
+                                <li><a href="#">{{ Lang::get("boukem.deals") }}</a></li>
+                            </ul>
+                        </div>
 
-
+                        <span class="sr-only">Search bar</span>
                         <input type="search" class="form-control" name="q" id="searchBar" value="" autocomplete="off" spellcheck="false">
-                        <button class="btn btn-primary search" type="submit"><i class="fa fa-search"></i><span class="sr-only">{{ Lang::get("boukem.search") }}</span></button>
+                        <button class="btn btn-primary search" type="submit"><i class="fa fa-search"></i>
+		                             <span class="sr-only">
+		                                 {{ Lang::get("boukem.search") }}
+		                             </span>
+                        </button>
                     </form>
 
                 </div>
@@ -75,24 +87,18 @@
                     </button>
                     <span class="sr-only">Toggle Dropdown</span>
                     </button>
-
-                    {{-- Dropdown menu --}}
                     <ul class="dropdown-menu">
-
-                        {{-- Guest menu --}}
                         @if (Auth::guest())
-                            <li><a href="{{ action("WishlistController@index") }}">Your Wish List  <span class="badge wishlist_badge">0</span></a></li>
+                            <li><a href="{{ action("WishlistController@index") }}">{{ Lang::get("boukem.wishlist") }}  <span class="badge wishlist_badge">0</span></a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="{{ route('auth.register') }}">{{ Lang::get("boukem.sign_up") }}</a></li>
-                            <li><a href="{{ route('auth.login') }}">{{ Lang::get("boukem.sign_in") }}</a></li>
-
-                        {{-- Authenticated user menu --}}
+                            <li><a href="#">{{ Lang::get("boukem.sign_up") }}</a></li>
+                            <li><a href="#">{{ Lang::get("boukem.sign_in") }}</a></li>
                         @else
                             <li><a href="#">Your orders</a></li>
-                            <li><a href="{{ action("WishlistController@index") }}">Your Wish List  <span class="badge wishlist_badge">0</span></a></li>
+                            <li><a href="{{ action("WishlistController@index") }}"> {{ Lang::get("boukem.wishlist") }}  <span class="badge wishlist_badge">0</span></a></li>
                             <li><a href="#">Account Settings</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="{{ route('auth.logout') }}">{{ Lang::get("boukem.sign_out") }}</a></li>
+                            <li><a href="{{ url('/auth/logout') }}">{{ Lang::get("boukem.sign_out") }}</a></li>
                         @endif
 
                     </ul>
@@ -100,7 +106,10 @@
                 <li>
                     <a class="view-cart">
                         <button class="btn btn-default" id="view-cart-wrapper">
-                            <i class="fa fa-shopping-cart icon-cart"></i> <span id="cart-description">{{ " " . Lang::get("boukem.cart") . " " }}</span> <span class="badge cart_badge">0</span>
+                            <i class="fa fa-shopping-cart icon-cart"></i>
+                            <span id="cart-description">{{ " " . Lang::get("boukem.cart") . " " }}</span>
+                            <span class="badge cart_badge">0</span>
+                            <span class="sr-only">items</span>
                         </button>
                     </a>
                 </li>

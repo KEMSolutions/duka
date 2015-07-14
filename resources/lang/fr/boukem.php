@@ -175,6 +175,7 @@ return [
     "stock_left"        =>"Seulement :quantity restant en expédition express.",
     "shipping_time"     =>"Expédition prévue dans les 3 à 7 jours.",
     "back_to_main"      =>"Retour au site principal",
+    "back_to_home"      =>"Retour sur la page d'accueil",
     "please_wait"       =>"Veuillez patienter",
     "paypal_payment"    =>"Votre paiement est présentement en train d'être traitée par Paypal. Ne quittez et ne rechargez pas cette page au risque de voir votre commande annulée ou chargée plus d'une fois.",
     "contact_email"     => "En cas de problème, contactez nous au  <a href=mailto: :email>:email</a> or :phone.",

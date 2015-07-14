@@ -28,7 +28,7 @@ var productLayoutFavoriteLogicContainer = {
             else
             //Has a favorited class. We remove it, then delete the element from local Storage.
             {
-                self.removeFromFavorite($(this));
+                self.removeFromFavorite($(this), selfLayout);
             }
         });
     },
@@ -57,9 +57,10 @@ var productLayoutFavoriteLogicContainer = {
      *
      * @param context
      */
-    removeFromFavorite: function (context) {
-        context.removeClass("favorited");
-        localStorage.removeItem("_wish_product " + context.data("product"));
+    removeFromFavorite: function (element, context) {
+        element.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + element.data("product"));
+        context.setWishlistBadgeQuantity();
     },
 
     init: function () {

@@ -39,11 +39,15 @@
 <body>
 
 	@include('layout._header')
+
+	@include("layout._drawer")
+
 	@include('layout._messages')
+
 
 	@yield("content")
 
-	@include("layout._drawer")
+
 	@include('layout._footer')
 
 	<!-- Scripts -->

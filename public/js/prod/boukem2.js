@@ -1423,9 +1423,11 @@ var cartLogicContainer = {
             '<div class="col-xs-3 text-center"><img src=' + item.thumbnail_lg + ' class="img-responsive"></div>' +
             '<div class="col-xs-9 no-padding-left">' +
             '<div class="row"><div class="col-xs-10"><h3 class="product-name">' + item.name + '</h3></div><div class="col-xs-2"><h4 class="text-right"><i class="fa fa-trash fa-1 close-button"><span class="sr-only">Remove Item</span></i></h4></div></div>' +
-            '<div class="row"><div class="col-xs-8"><div class="input-group"><input type="number" class="quantity form-control input-sm" min="1" step="1" value="' + item.quantity + '" name="products[' + item.product + '][quantity]">' +
+            '<div class="row"><div class="col-xs-8">' +
+            '<div class="input-group"><label for="products[' + item.product + '][quantity]" class="sr-only">'+ item.name + ":" + item.price +'</label>' +
+            '<input type="number" class="quantity form-control input-sm" min="1" step="1" value="' + item.quantity + '" name="products[' + item.product + '][quantity]">' +
             '<span class="input-group-addon update_quantity_indicator"><i class="fa" hidden><span class="sr-only">' + "Update quantity" + '</span></i></span></div></div>' +
-            '<div class="col-xs-4 product-price text-right" data-price="' + item.price + '">$' + price  + '</div></div>' +
+            '<div class="col-xs-4 product-price text-right" data-price="' + item.price + '">$' + price  + '<span class="sr-only">' + $ + item.price + '</span></div></div>' +
             '<input type="hidden" name="products[' + item.product + '][id]" value="' + item.product + '"/> ' +
             '</div>' +
             '</li>';
@@ -1673,6 +1675,7 @@ var cartLogicContainer = {
         cartLogicContainer.setCartSubtotal();
     }
 };
+
 /**
  * Container responsible for initializing the cart drawer feature.
  *
@@ -1763,7 +1766,7 @@ var productLayoutFavoriteLogicContainer = {
             else
             //Has a favorited class. We remove it, then delete the element from local Storage.
             {
-                self.removeFromFavorite($(this));
+                self.removeFromFavorite($(this), selfLayout);
             }
         });
     },
@@ -1792,9 +1795,10 @@ var productLayoutFavoriteLogicContainer = {
      *
      * @param context
      */
-    removeFromFavorite: function (context) {
-        context.removeClass("favorited");
-        localStorage.removeItem("_wish_product " + context.data("product"));
+    removeFromFavorite: function (element, context) {
+        element.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + element.data("product"));
+        context.setWishlistBadgeQuantity();
     },
 
     init: function () {

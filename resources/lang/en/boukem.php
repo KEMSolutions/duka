@@ -175,6 +175,7 @@ return [
     "stock_left"        =>"Only :quantity left in stock (more on the way).",
     "shipping_time"     =>"Usually ships within 3 to 7 days.",
     "back_to_main"      =>"Back to main site",
+    "back_to_home"      =>"Back to homepage",
     "please_wait"       =>"Please wait",
     "paypal_payment"    =>"Your payment is currently being processed by Paypal. Please do not leave or refresh this page.",
     "contact_email"     => "If you encounter a problem, you can always contact us at <a href=mailto: :email>:email</a> or :phone.",
