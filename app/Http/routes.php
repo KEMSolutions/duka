@@ -89,6 +89,9 @@ Route::group([
 // API endpoints.
 Route::group(['prefix' => 'api'], function()
 {
+    // Set locale.
+    Localization::setLocale(Request::input('locale', 'en'));
+
     // Category endpoints.
     Route::get('brands/{id}',       ['as' => 'api.brands', 'uses' => 'ApiController@getBrand']);
     Route::get('categories/{id}',   ['as' => 'api.categories', 'uses' => 'ApiController@getCategory']);
