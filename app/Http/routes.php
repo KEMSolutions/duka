@@ -1,7 +1,5 @@
 <?php
 
-use \Localization;
-
 //dd(\Auth::user());
 //dd(\App\User::all());
 
@@ -11,15 +9,15 @@ Route::group([
     'middleware' => ['localeSessionRedirect', 'localizationRedirect']], function() {
 
     // Homepage.
-    Route::get('home', 'HomeController@index');
-    Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
+    Route::get('home',      'HomeController@index');
+    Route::get('/',         ['as' => 'home', 'uses' => 'HomeController@index']);
 
     // Products.
     Route::get('prod/{slug}', ['as' => 'product', 'uses' => 'ProductController@display']);
-    Route::get('search', ['as' => 'search', 'uses' => 'SearchController@index']);
+    Route::get('search',    ['as' => 'search', 'uses' => 'SearchController@index']);
 
     // Cart & checkout.
-    Route::get('cart', ['as' => 'cart', 'uses' => 'CheckoutController@index']);
+    Route::get('cart',      ['as' => 'cart', 'uses' => 'CheckoutController@index']);
 
     // Custom pages.
     Route::get('pages/{slug}', ['as' => 'page', 'uses' => 'PagesController@display']);

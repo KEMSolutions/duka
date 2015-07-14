@@ -1,24 +1,28 @@
 <?php namespace App\Http\Controllers;
 
-use App\Facades\KemAPI;
-use App\Facades\Products;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
 use View;
+use Products;
 use Localization;
 
-class ProductController extends Controller {
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
-    public function display($slug){
+class ProductController extends Controller
+{
+    /**
+     * Displays a product page.
+     *
+     * @param mixed $id     The ID or slug of the product to be displayed.
+     * @return mixed
+     */
+    public function display($id)
+    {
         return View::make("product.view")->with([
-           "product" => Products::get($slug),
+            "product" => Products::get($id),
             "locale" => Localization::getCurrentLocale(),
             "supported_countries" => array("US", "FR", "BE", "IT", "CH", "GB", "IE", "ES", "DE"),
-            // TODO: Find the current user's country code!
-            "country_code" => "US"
+            "country_code" => "US" // TODO: Find the current user's country code!
         ]);
     }
-
 }
+
