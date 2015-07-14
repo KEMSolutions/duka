@@ -18,6 +18,7 @@ return [
     'search_in'     =>'Rechercher dans: ',
     'toggle_nav'    =>'Afficher le menu',
     'cart'          =>'Panier',
+    'view_cart'     =>'Voir panier',
     'go'            =>'Go!',
     'sign_up'       =>'S\'inscrire',
     "sign_in"       =>"Se connecter",
@@ -206,6 +207,7 @@ return [
     "your"              =>"Votre",
     "my"                =>"Mon",
     "wishlist"          =>"Votre liste d'envies",
+    "wishlist_has"      =>"Votre liste d'envies a",
     "wishlist_number"   =>"Vous avez <span id='quantity-wishlist'>0 item</span> dans votre liste d'envies.",
     "wishlist_saved"    =>"Votre liste d'envies sera sauvegardée tant que votre historique ne sera pas effacée.",
     "wishlist_remove"   =>"Retirer de la liste"

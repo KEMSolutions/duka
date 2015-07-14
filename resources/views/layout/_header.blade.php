@@ -37,7 +37,7 @@
                     <span class="sr-only">elements</span>
                 </a>
 
-                <span class="sr-only">View cart</span>
+                <span class="sr-only">{{ Lang::get("boukem.view_cart") }}</span>
             </button>
         </div>
 
@@ -82,70 +82,59 @@
             <ul>
                 <li>
                     <div class="ui dropdown">
-                        <div class="text">File</div>
+                        <div class="text">
+                            <i class="icon fa fa-user"></i> {{ Lang::get("boukem.my") }} {{ Lang::get("boukem.account") }}
+                        </div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
-                            <div class="item">New</div>
-                            <div class="item">
-                                <span class="description">ctrl + o</span>
-                                Open...
-                            </div>
-                            <div class="item">
-                                <span class="description">ctrl + s</span>
-                                Save as...
-                            </div>
-                            <div class="item">
-                                <span class="description">ctrl + r</span>
-                                Rename
-                            </div>
-                            <div class="item">Make a copy</div>
-                            <div class="item">
-                                <i class="folder icon"></i>
-                                Move to folder
-                            </div>
-                            <div class="item">
-                                <i class="trash icon"></i>
-                                Move to trash
-                            </div>
-                            <div class="divider"></div>
-                            <div class="item">Download As...</div>
-                            <div class="item">
-                                <i class="dropdown icon"></i>
-                                Publish To Web
-                                <div class="menu">
-                                    <div class="item">Google Docs</div>
-                                    <div class="item">Google Drive</div>
-                                    <div class="item">Dropbox</div>
-                                    <div class="item">Adobe Creative Cloud</div>
-                                    <div class="item">Private FTP</div>
-                                    <div class="item">Another Service...</div>
+
+                            @if(Auth::guest())
+                                <div class="item">
+                                    <button class="btn btn-success color-one text-center center-block full-width">
+                                        {{ Lang::get("boukem.sign_in") }}
+                                    </button>
                                 </div>
+
+                                <div class="item no-hover">
+                                    <div class="description">
+                                        {{ Lang::get("boukem.no_account") }} <a href="#">{{ Lang::get("boukem.sign_up") }} !</a>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="item">
+                                    <a href="#">Your orders</a>
+                                </div>
+
+                                <div class="item">
+                                    <a href="#">Settings</a>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <div class="item">
+                                    <button class="btn btn-default color-one text-center center-block full-width">
+                                        {{ Lang::get("boukem.sign_out") }}
+                                    </button>
+                                </div>
+                            @endif
+
+                            <div class="divider"></div>
+
+                            <div class="item">
+                                <a href="{{ action("WishlistController@index") }}" class="wishlist-button">
+                                    <div class="text-center center-block">
+                                        {{ Lang::get("boukem.wishlist_has") }}
+                                    </div>
+                                    <span class="text-center center-block no-decoration" style="padding:0.5em 0 ">
+                                        <span class="badge wishlist_badge">0</span> items.
+                                    </span>
+                                </a>
                             </div>
-                            <div class="item">E-mail Collaborators</div>
+
                         </div>
                     </div>
-                    {{--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
-                        {{--{{ Lang::get("boukem.my") }} <span><strong>{{ Lang::get("boukem.account") }}</strong></span> <span class="caret"></span>--}}
-                    {{--</button>--}}
-                    {{--<span class="sr-only">Toggle Dropdown</span>--}}
-                    {{--</button>--}}
-                    {{--<ul class="dropdown-menu">--}}
-                        {{--@if (Auth::guest())--}}
-                            {{--<li><a href="{{ action("WishlistController@index") }}">{{ Lang::get("boukem.wishlist") }}  <span class="badge wishlist_badge">0</span></a></li>--}}
-                            {{--<li role="separator" class="divider"></li>--}}
-                            {{--<li><a href="#">{{ Lang::get("boukem.sign_up") }}</a></li>--}}
-                            {{--<li><a href="#">{{ Lang::get("boukem.sign_in") }}</a></li>--}}
-                        {{--@else--}}
-                            {{--<li><a href="#">Your orders</a></li>--}}
-                            {{--<li><a href="{{ action("WishlistController@index") }}"> {{ Lang::get("boukem.wishlist") }}  <span class="badge wishlist_badge">0</span></a></li>--}}
-                            {{--<li><a href="#">Account Settings</a></li>--}}
-                            {{--<li role="separator" class="divider"></li>--}}
-                            {{--<li><a href="{{ url('/auth/logout') }}">{{ Lang::get("boukem.sign_out") }}</a></li>--}}
-                        {{--@endif--}}
-
-                    {{--</ul>--}}
                 </li>
-                <li>
+                <li class="border color-one">
                     <a class="view-cart">
                         <button class="btn btn-default" id="view-cart-wrapper">
                             <i class="fa fa-shopping-cart icon-cart"></i>

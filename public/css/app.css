@@ -4733,6 +4733,10 @@ section.slice {
   border: none !important;
 }
 
+.border {
+  border: 1px solid #333;
+}
+
 .vertical-align {
   position: relative;
   top: 25%;
@@ -4923,6 +4927,15 @@ Custom colors.
   padding: 5px 5px;
 }
 
+.wishlist-button{
+  color: #333;
+}
+
+.wishlist-button:hover {
+  text-decoration: none;
+  text-color: #222;
+}
+
 .header ul {
   list-style: none;
   padding: 0;
@@ -4931,6 +4944,10 @@ Custom colors.
 
 #nav-right > ul > li {
   display: inline-block;
+}
+
+#nav-right > ul > li:not(:first-child) {
+  margin-left: 5%;
 }
 
 #nav-left {
