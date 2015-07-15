@@ -4865,16 +4865,17 @@ section.slice {
 
 /*-----------------------------------*/
 .color-one {
-  background: #961924;
+  /*KEM red: #961924*/
+  background: #5A419B;
   color: #fff;
 }
 
 .border-color-one {
-  border-color: #961924;
+  border-color: #5A419B;
 }
 
 .color-one-text {
-  color: #961924;
+  color: #5A419B;
 }
 
 .color-two {
@@ -4900,15 +4901,16 @@ section.slice {
 }
 
 .btn-one {
-  background-color: #961924;
+  /*KEM border red : #77121a */
+  background-color: #5A419B;
   color: #fff;
-  border-color: #77121a;
+  border-color: #48337B;
 }
 
 .btn-one:hover, .btn-one:focus, .btn-one:active, .btn-one.active, .open .dropdown-toggle.btn-one {
-  background-color: #77121a;
+  background-color: #48337B;
   color: #fff;
-  border-color: #77121a;
+  border-color: #48337B;
 }
 
 .btn-three {
@@ -4998,9 +5000,6 @@ section.slice {
 #nav-left {
   min-height: 1px;
   padding-top: 3%;
-  background-image: url("https://kle-en-main.com/images/header-logo-fr.png");
-  background-repeat: no-repeat;
-  background-position: center;
 }
 
 #searchBarWrapper,
