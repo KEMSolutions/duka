@@ -4535,9 +4535,11 @@ label,
   cursor: pointer;
 }
 
-/*
-FOOTER
-*/
+/*-----------------------------------*/
+
+/* FOOTER */
+
+/*-----------------------------------*/
 footer{padding-bottom:20px; min-height:30px; font-size:12px;}
 footer:before, footer:after {display:table; content:" ";}
 footer:after{clear:both;}
@@ -4557,9 +4559,11 @@ footer form{margin-top:20px;}
 footer hr{border-top:1px solid #444;}
 footer .copyright{color:#EEE;}
 
-/*
-HEADLINE
-*/
+/*-----------------------------------*/
+
+/* HEADLINE */
+
+/*-----------------------------------*/
 .carousel-1 .item-dark {
   color: #fff;
 }
@@ -4587,15 +4591,19 @@ HEADLINE
   height: 260px;
 }
 
-/*
-TAB
-*/
+/*-----------------------------------*/
+
+/* TAB */
+
+/*-----------------------------------*/
 .section-title{position:absolute; top:-53px; left:50%; margin-left:-130px; width:260px; padding:18px 0; text-align:center; border-top-left-radius:3px; border-top-right-radius:3px; }
 .section-title h3{margin:0; padding:0; font-size:16px; font-weight:600; text-transform:uppercase;}
 
-/*
-TAB INDICATOR
-*/
+      /*-----------------------------------*/
+
+      /* TAB INDICATOR */
+
+      /*-----------------------------------*/
 .indicator-down {
   position: absolute;
   bottom: -12px;
@@ -4609,9 +4617,11 @@ TAB INDICATOR
   z-index: 900;
 }
 
-/*
-MIXED
-*/
+/*-----------------------------------*/
+
+/* MIXED */
+
+/*-----------------------------------*/
 .home_mixed .row .col-xs-12:last-child {
   margin-bottom: 30px;
 }
@@ -4626,9 +4636,12 @@ MIXED
   padding: 1%;
 }
 
-/*
-GLOBAL
-*/
+/*-----------------------------------*/
+
+/* GLOBAL */
+
+/*-----------------------------------*/
+
 .one-half {
   width: 50% !important;
 }
@@ -4833,9 +4846,11 @@ section.slice {
   display: block !important;
 }
 
-/*
-Breadcrumbs
-*/
+/*-----------------------------------*/
+
+/* Breadcrumbs */
+
+/*-----------------------------------*/
 .breadcrumb {
   float: right;
   margin: 0;
@@ -4844,9 +4859,11 @@ Breadcrumbs
   border-radius: 0;
 }
 
-/*
-Custom colors.
-*/
+/*-----------------------------------*/
+
+/* Custom colors. */
+
+/*-----------------------------------*/
 .color-one {
   background: #961924;
   color: #fff;
