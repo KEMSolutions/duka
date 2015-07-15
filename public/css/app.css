@@ -4741,6 +4741,14 @@ section.slice {
   border: 1px solid #333;
 }
 
+.border-right {
+  border-right: 1px solid #fff;
+}
+
+.border-left {
+  border-left: 1px solid #fff;
+}
+
 .vertical-align {
   position: relative;
   top: 25%;
@@ -4863,6 +4871,10 @@ Custom colors.
   color: #fff;
 }
 
+.border-color-one {
+  border-color: #F28963;
+}
+
 .color-two {
   color: #2b5f8c;
 }
@@ -4900,6 +4912,10 @@ Custom colors.
 .header-banner {
   height: 53px;
   background-color: #961924;
+  color: #fff;
+}
+
+.header-banner a {
   color: #fff;
 }
 

@@ -206,6 +206,7 @@ return [
     "featured_products" =>"Produits recommandés",
     "your"              =>"Votre",
     "my"                =>"Mon",
+    "shop_by"           =>"Magasiner par ",
     "wishlist"          =>"Votre liste d'envies",
     "wishlist_has"      =>"Votre liste d'envies a",
     "wishlist_number"   =>"Vous avez <span id='quantity-wishlist'>0 item</span> dans votre liste d'envies.",

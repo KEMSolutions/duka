@@ -134,7 +134,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="border color-one">
+                <li class="border color-one border-color-one">
                     <a class="view-cart">
                         <button class="btn btn-default" id="view-cart-wrapper">
                             <i class="fa fa-shopping-cart icon-cart"></i>
@@ -152,10 +152,10 @@
 
 
     <div class="row hidden-xs header-banner">
-        <div class="col-md-2 col-sm-3">
+        <div class="col-md-2 col-sm-3 border-right">
             <div class="ui pointing dropdown link item fluid text-center">
                 <span class="text header-banner-align">
-                    <span class="light">Shop by</span><strong class="bold"> Categories</strong>
+                    <span class="light">{{ Lang::get("boukem.shop_by") }}</span><strong class="bold"> {{ Lang::get("boukem.categories") }}</strong>
                     <i class="fa fa-caret-down pull-right" style="line-height: 53px"></i>
                 </span>
                 <div class="menu fluid">
@@ -183,27 +183,12 @@
                     <div class="item">Cancellations</div>
                 </div>
             </div>
-
-            {{--<div class="btn-group shop-filter">--}}
-                {{--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
-                    {{--Shop by <span> <strong> Categories </strong> </span><span class="caret "></span>--}}
-                {{--</button>--}}
-                {{--<ul class="dropdown-menu">--}}
-                    {{--<li><a href="# ">Alimentation</a></li>--}}
-                    {{--<li><a href="# ">Antioxydants</a></li>--}}
-                    {{--<li><a href="# ">Aromathératpie</a></li>--}}
-                    {{--<li><a href="# ">Cosmétique</a></li>--}}
-                    {{--<li><a href="# ">Enzymes</a></li>--}}
-                    {{--<li><a href="# ">Genmothérapie</a></li>--}}
-                    {{--<li><a href="# ">Homeopathie</a></li>--}}
-                {{--</ul>--}}
-            {{--</div>--}}
         </div>
 
 
-        <ul class="col-md-10">
+        <ul class="col-md-10 header-banner-align">
             <li class="inline-block ">
-                <button type="button " class="btn btn-link "><a href="# ">Back to store</a></button>
+                <button type="button " class="btn btn-link "><a href="# ">Back to site</a></button>
             </li>
             <li class="inline-block ">
                 <button type="button " class="btn btn-link "><a href="# ">Today's deal</a></button>

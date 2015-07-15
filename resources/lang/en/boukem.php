@@ -206,6 +206,7 @@ return [
     "featured_products" =>"Featured Products",
     "your"              =>"Your",
     "my"                =>"My",
+    "shop_by"           =>"Shop by ",
     "wishlist"          =>"Your Wish List",
     "wishlist_has"      =>"Your Wish List has",
     "wishlist_number"   =>"You have <span id='quantity-wishlist'>0 item</span> in your wishlist.",
