@@ -4751,6 +4751,14 @@ section.slice {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+.border-bottom-hover {
+  transition: all 0.1s ease-in;
+}
+
+.border-bottom-hover:hover, .border-bottom-hover:active, .border-bottom-hover:focus {
+  border-bottom: 1px solid #8c8c8c;
+}
+
 .widget {
   margin-bottom: 20px;
 }
@@ -4912,6 +4920,10 @@ Custom colors.
 
 #cart-description {
   color: #333;
+}
+
+.header-account-button {
+  padding-bottom: 7px;
 }
 
 .icon-cart {

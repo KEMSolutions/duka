@@ -80,7 +80,7 @@
 
         <div class="col-md-3 col-sm-3 hidden-xs" id="nav-right">
             <ul>
-                <li>
+                <li class="border-bottom-hover header-account-button">
                     <div class="ui dropdown">
                         <div class="text">
                             <i class="icon fa fa-user"></i> {{ Lang::get("boukem.my") }} {{ Lang::get("boukem.account") }}
