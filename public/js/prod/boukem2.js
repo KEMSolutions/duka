@@ -568,7 +568,6 @@ var headerContainer = {
          *
          */
         initDropdownModule : function() {
-
             //Enable selection on clicked items
             $(".ui.dropdown-select").dropdown();
 
@@ -577,8 +576,6 @@ var headerContainer = {
                     action: "select"
                 }
             );
-
-
         }
     },
 

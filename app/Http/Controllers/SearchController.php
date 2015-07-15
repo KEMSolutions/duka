@@ -43,7 +43,8 @@ class SearchController extends Controller
             'page' => $page,
             'perPage' => $perPage,
             'results' => $results,
-            'paginator' => $paginator
+            'paginator' => $paginator,
+            'border' => false
         ]);
     }
 }

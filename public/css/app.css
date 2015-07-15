@@ -4826,9 +4826,9 @@ section.slice {
   height: 160px;
 }
 
-.blog-grid {
-  margin-top: -36px;
-}
+/*.blog-grid {*/
+  /*margin-top: -36px;*/
+/*}*/
 
 .favorite-heart {
   padding: 5px;
