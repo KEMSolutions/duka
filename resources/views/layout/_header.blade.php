@@ -153,20 +153,51 @@
 
     <div class="row hidden-xs header-banner">
         <div class="col-md-2 col-sm-3">
-            <div class="btn-group shop-filter">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Shop by <span> <strong> Categories </strong> </span><span class="caret "></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="# ">Alimentation</a></li>
-                    <li><a href="# ">Antioxydants</a></li>
-                    <li><a href="# ">Aromathératpie</a></li>
-                    <li><a href="# ">Cosmétique</a></li>
-                    <li><a href="# ">Enzymes</a></li>
-                    <li><a href="# ">Genmothérapie</a></li>
-                    <li><a href="# ">Homeopathie</a></li>
-                </ul>
+            <div class="ui pointing dropdown link item fluid text-center">
+                <span class="text header-banner-align">
+                    <span class="light">Shop by</span><strong class="bold"> Categories</strong>
+                    <i class="fa fa-caret-down pull-right" style="line-height: 53px"></i>
+                </span>
+                <div class="menu fluid">
+                    <div class="item">
+                        <span class="text">Clothing</span>
+                        <i class="fa fa-caret-right pull-right"></i>
+                        <div class="menu">
+                            <div class="semantic-header">Mens</div>
+                            <div class="item">Shirts</div>
+                            <div class="item">Pants</div>
+                            <div class="item">Jeans</div>
+                            <div class="item">Shoes</div>
+                            <div class="divider"></div>
+                            <div class="semantic-header">Womens</div>
+                            <div class="item">Dresses</div>
+                            <div class="item">Shoes</div>
+                            <div class="item">Bags</div>
+                        </div>
+                    </div>
+                    <div class="item">Home Goods</div>
+                    <div class="item">Bedroom</div>
+                    <div class="divider"></div>
+                    <div class="semantic-header">Order</div>
+                    <div class="item">Status</div>
+                    <div class="item">Cancellations</div>
+                </div>
             </div>
+
+            {{--<div class="btn-group shop-filter">--}}
+                {{--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                    {{--Shop by <span> <strong> Categories </strong> </span><span class="caret "></span>--}}
+                {{--</button>--}}
+                {{--<ul class="dropdown-menu">--}}
+                    {{--<li><a href="# ">Alimentation</a></li>--}}
+                    {{--<li><a href="# ">Antioxydants</a></li>--}}
+                    {{--<li><a href="# ">Aromathératpie</a></li>--}}
+                    {{--<li><a href="# ">Cosmétique</a></li>--}}
+                    {{--<li><a href="# ">Enzymes</a></li>--}}
+                    {{--<li><a href="# ">Genmothérapie</a></li>--}}
+                    {{--<li><a href="# ">Homeopathie</a></li>--}}
+                {{--</ul>--}}
+            {{--</div>--}}
         </div>
 
 

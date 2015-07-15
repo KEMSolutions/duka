@@ -41,6 +41,7 @@
   display: none;
   outline: none;
   top: 150%;
+  width: 100%;
   min-width: -webkit-max-content;
   min-width: -moz-max-content;
   min-width: max-content;
@@ -151,7 +152,7 @@
   Menu Divider
 ---------------*/
 
-.ui.dropdown .menu > .header {
+.ui.dropdown .menu > .semantic-header {
   margin: 1rem 0rem 0.75rem;
   padding: 0em 1.14285714rem;
   color: rgba(0, 0, 0, 0.85);
@@ -173,7 +174,7 @@
   margin: 1.14285714rem 0.71428571rem;
   min-width: 10rem;
 }
-.ui.dropdown .menu > .header + .input {
+.ui.dropdown .menu > .semantic-header + .input {
   margin-top: 0em;
 }
 .ui.dropdown .menu > .input:not(.transparent) input {
