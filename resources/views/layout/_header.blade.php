@@ -61,7 +61,7 @@
 
                         <span class="sr-only">Search bar</span>
                         <input type="search" class="form-control" name="q" id="searchBar" value="" autocomplete="off" spellcheck="false">
-                        <button class="btn btn-primary search" type="submit"><i class="fa fa-search"></i>
+                        <button class="btn btn-one search" type="submit"><i class="fa fa-search"></i>
 		                             <span class="sr-only">
 		                                 {{ Lang::get("boukem.search") }}
 		                             </span>
@@ -131,7 +131,7 @@
                 <li class="border color-one border-color-one" style="border-radius: 3px">
                     <a class="view-cart">
                         <button class="btn btn-default" id="view-cart-wrapper">
-                            <i class="fa fa-shopping-cart icon-cart"></i>
+                            <i class="fa fa-shopping-cart icon-cart color-one-text"></i>
                             <span id="cart-description">{{ " " . Lang::get("boukem.cart") . " " }}</span>
                             <span class="badge cart_badge">0</span>
                             <span class="sr-only">items</span>
@@ -145,7 +145,7 @@
     {{--End of first row--}}
 
 
-    <div class="row hidden-xs header-banner">
+    <div class="row hidden-xs header-banner color-one">
         <div class="col-md-2 col-sm-3 border-right">
             <div class="ui pointing dropdown dropdown-no-select link item fluid text-center">
                 <span class="text header-banner-align">

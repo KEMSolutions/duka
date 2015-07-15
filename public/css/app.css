@@ -4696,25 +4696,6 @@ GLOBAL
   margin-right: 4px;
 }
 
-.btn-one {
-  color: #31363A;
-  background-color: #FFF;
-  border: 0;
-  border-bottom: 4px solid #DDD;
-}
-
-.btn-one:hover, .btn-one:focus, .btn-one:active, .btn-one.active, .open .dropdown-toggle.btn-one {
-  color: #FFF;
-  background-color: #999;
-  border-color: #828181;
-}
-
-.btn-three {
-  color: #FFF;
-  background-color: #F28963;
-  border: 0;
-  border-bottom: 4px solid #B10000;
-}
 
 .w-section .aside-feature p {
   margin-right: 30px;
@@ -4867,12 +4848,16 @@ Breadcrumbs
 Custom colors.
 */
 .color-one {
-  background: #F28963;
+  background: #961924;
   color: #fff;
 }
 
 .border-color-one {
-  border-color: #F28963;
+  border-color: #961924;
+}
+
+.color-one-text {
+  color: #961924;
 }
 
 .color-two {
@@ -4880,7 +4865,7 @@ Custom colors.
 }
 
 .color-three {
-  background: #FFF;
+  background: #fff;
   color: #4C4C4C;
 }
 
@@ -4897,6 +4882,25 @@ Custom colors.
   color: #fff;
 }
 
+.btn-one {
+  background-color: #F28963;
+  color: #fff;
+  border-color: #dd7661;
+}
+
+.btn-one:hover, .btn-one:focus, .btn-one:active, .btn-one.active, .open .dropdown-toggle.btn-one {
+  background-color: #dd7661;
+  color: #fff;
+  border-color: #dd7661;
+}
+
+.btn-three {
+  color: #FFF;
+  background-color: #F28963;
+  border: 0;
+  border-bottom: 4px solid #B10000;
+}
+
 /*-----------------------------------*/
 /*-----------------------------------*/
 /*-----------------------------------*/
@@ -4911,8 +4915,6 @@ Custom colors.
 
 .header-banner {
   height: 53px;
-  background-color: #961924;
-  color: #fff;
 }
 
 .header-banner a {
@@ -4944,17 +4946,10 @@ Custom colors.
   vertical-align: middle;
 }
 
-#cart-description {
-  color: #333;
-}
-
 .header-account-button {
   padding-bottom: 7px;
 }
 
-.icon-cart {
-  color: #F28963;
-}
 
 .btn-xs-btn-sm-height {
   padding: 5px 5px;
