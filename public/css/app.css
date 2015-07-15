@@ -4900,15 +4900,15 @@ section.slice {
 }
 
 .btn-one {
-  background-color: #F28963;
+  background-color: #961924;
   color: #fff;
-  border-color: #dd7661;
+  border-color: #77121a;
 }
 
 .btn-one:hover, .btn-one:focus, .btn-one:active, .btn-one.active, .open .dropdown-toggle.btn-one {
-  background-color: #dd7661;
+  background-color: #77121a;
   color: #fff;
-  border-color: #dd7661;
+  border-color: #77121a;
 }
 
 .btn-three {
