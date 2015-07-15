@@ -56,7 +56,11 @@ var headerContainer = {
          *
          */
         initDropdownModule : function() {
-            $(".ui.dropdown").dropdown({
+            //Enable selection on clicked items
+            $(".ui.dropdown-select").dropdown();
+
+            //Prevent selection on clicked items
+            $(".ui.dropdown-no-select").dropdown({
                     action: "select"
                 }
             );

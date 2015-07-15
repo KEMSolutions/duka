@@ -33,7 +33,6 @@
                 <a href="#" class="view-cart">
                     <i class="fa fa-shopping-cart icon-cart"></i>
                     <span class="badge cart_badge">0</span>
-
                     <span class="sr-only">elements</span>
                 </a>
 
@@ -46,20 +45,18 @@
                 <div class="col-md-12 col-sm-12">
                     <form class="inline-block searchBar-form col-md-11" method="get" action="{{ route('search') }}">
                         <div class="btn-group search-filter hidden-sm hidden-xs">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {{ Lang::get("boukem.all") }} <span class="caret"></span>
-                            </button>
-                            <span class="sr-only">{{ Lang::get("boukem.toggle_nav") }}</span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">{{ Lang::get("boukem.all") }}</a></li>
-                                <li><a href="#">{{ Lang::get("boukem.categories") }}</a></li>
-                                <li><a href="#">{{ Lang::get("boukem.brands") }}</a></li>
-                                <li><a href="#">{{ Lang::get("boukem.health_issues") }}</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="#">{{ Lang::get("boukem.featured_products") }}</a></li>
-                                <li><a href="#">{{ Lang::get("boukem.deals") }}</a></li>
-                            </ul>
+                            <div class="ui dropdown dropdown-select top left pointing">
+                                <div class="text">{{ Lang::get("boukem.all") }} </div>
+                                <i class="fa fa-caret-down"></i>
+                                <div class="menu">
+                                    <div class="item">{{ Lang::get("boukem.categories") }}</div>
+                                    <div class="item">{{ Lang::get("boukem.brands") }}</div>
+                                    <div class="item">{{ Lang::get("boukem.health_issues") }}</div>
+                                    <div class="divider"></div>
+                                    <div class="item">{{ Lang::get("boukem.featured_products") }}</div>
+                                    <div class="item">{{ Lang::get("boukem.deals") }}</div>
+                                </div>
+                            </div>
                         </div>
 
                         <span class="sr-only">Search bar</span>
@@ -70,18 +67,15 @@
 		                             </span>
                         </button>
                     </form>
-
-
                 </div>
-
             </div>
-
         </div>
+        {{--End of searchBarWrapper--}}
 
         <div class="col-md-3 col-sm-3 hidden-xs" id="nav-right">
             <ul>
                 <li class="border-bottom-hover header-account-button">
-                    <div class="ui dropdown">
+                    <div class="ui top left pointing dropdown dropdown-no-select">
                         <div class="text">
                             <i class="icon fa fa-user"></i> {{ Lang::get("boukem.my") }} {{ Lang::get("boukem.account") }}
                         </div>
@@ -134,7 +128,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="border color-one border-color-one">
+                <li class="border color-one border-color-one" style="border-radius: 3px">
                     <a class="view-cart">
                         <button class="btn btn-default" id="view-cart-wrapper">
                             <i class="fa fa-shopping-cart icon-cart"></i>
@@ -145,15 +139,15 @@
                     </a>
                 </li>
             </ul>
-
-
         </div>
+        {{--End of nav right--}}
     </div>
+    {{--End of first row--}}
 
 
     <div class="row hidden-xs header-banner">
         <div class="col-md-2 col-sm-3 border-right">
-            <div class="ui pointing dropdown link item fluid text-center">
+            <div class="ui pointing dropdown dropdown-no-select link item fluid text-center">
                 <span class="text header-banner-align">
                     <span class="light">{{ Lang::get("boukem.shop_by") }}</span><strong class="bold"> {{ Lang::get("boukem.categories") }}</strong>
                     <i class="fa fa-caret-down pull-right" style="line-height: 53px"></i>
@@ -197,7 +191,8 @@
                 <button type="button " class="btn btn-link "><a href="# ">Contact</a></button>
             </li>
         </ul>
-
     </div>
+    {{--End of second row--}}
 
 </div>
+{{--End of header--}}
