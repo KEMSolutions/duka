@@ -29,8 +29,10 @@
 
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
 
-	<!-- Custom Css -->
+	<!-- Custom css -->
 	@yield("custom_css")
+	<!-- Color specific css -->
+	@include("_color_css")
 
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -41,17 +43,17 @@
 </head>
 <body>
 
-	@include('layout._header')
+	@include("layout._header")
 
 	@include("layout._drawer")
 
-	@include('layout._messages')
+	@include("layout._messages")
 
 
 	@yield("content")
 
 
-	@include('layout._footer')
+	@include("layout._footer")
 
 	<!-- Scripts -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>

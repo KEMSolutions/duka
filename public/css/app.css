@@ -4546,7 +4546,7 @@ footer:after{clear:both;}
 footer .col.reset{margin:0;}
 footer h4{margin-top:20px; color:#EEE; margin-bottom:20px; text-transform:capitalize;}
 footer .col p{color:#999; font-size:13px; margin-bottom:10px;}
-footer a{color:#999; text-decoration:none;}
+footer a{text-decoration:none;}
 footer a:hover{text-decoration:none;}
 footer .col ul{margin:0; padding:0; list-style:none;}
 footer .col ul li{color:#999;}
@@ -4611,7 +4611,6 @@ footer .copyright{color:#EEE;}
   margin-left: -12px;
   width: 0;
   height: 0;
-  border-top: 12px solid #8BD9BC;
   border-left: 12px solid rgba(0, 0, 0, 0);
   border-right: 12px solid rgba(0, 0, 0, 0);
   z-index: 900;
@@ -4684,6 +4683,7 @@ footer .copyright{color:#EEE;}
   user-select: none;
 }
 
+/* ---- Used in Wishlist remove button ---- */
 .btn-outline {
   background: none;
 }
@@ -4859,70 +4859,6 @@ section.slice {
   border-radius: 0;
 }
 
-/*-----------------------------------*/
-
-/* Custom colors. */
-
-/*-----------------------------------*/
-.color-one {
-  /*KEM red: #961924*/
-  background: #5A419B;
-  color: #fff;
-}
-
-.border-color-one {
-  border-color: #5A419B;
-}
-
-.color-one-text {
-  color: #5A419B;
-}
-
-.color-two {
-  color: #2b5f8c;
-}
-
-.color-three {
-  background: #fff;
-  color: #4C4C4C;
-}
-
-.color-four {
-  background: #2d2d2d;
-}
-
-.section-title.color-five {
-  background:#8BD9BC;
-  color:#FFF;
-}
-
-.color-one a {
-  color: #fff;
-}
-
-.dark {
-  color: #333 !important;
-}
-
-.btn-one {
-  /*KEM border red : #77121a */
-  background-color: #5A419B;
-  color: #fff;
-  border-color: #48337B;
-}
-
-.btn-one:hover, .btn-one:focus, .btn-one:active, .btn-one.active, .open .dropdown-toggle.btn-one {
-  background-color: #48337B;
-  color: #fff;
-  border-color: #48337B;
-}
-
-.btn-three {
-  color: #FFF;
-  background-color: #F28963;
-  border: 0;
-  border-bottom: 4px solid #B10000;
-}
 
 /*-----------------------------------*/
 /*-----------------------------------*/
@@ -4940,10 +4876,6 @@ section.slice {
   height: 53px;
 }
 
-.header-banner a {
-  color: #fff;
-}
-
 @media (max-width: 935px) {
   .header {
     height: 100px;
@@ -4954,15 +4886,6 @@ section.slice {
   display: inline-block;
 }
 
-.header .btn-primary {
-  background-color: #F28963;
-  border-color: #dd7661;
-}
-
-.header .btn-primary:hover, .header .btn-primary:active {
-  background-color: #dd7661;
-  border-color: #dd7661;
-}
 
 .header-banner-align {
   line-height: 53px;
