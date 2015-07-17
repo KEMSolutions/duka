@@ -126,6 +126,14 @@ class KemApiHttpClient
         $sig = $body . $this->secret;
         $sig = base64_encode(hash('sha512', $sig, true));
 
+        // Log requrest.
+        Log::debug(
+            "\n\nMaking API request:".
+            "\n\tMethod: $method" .
+            "\n\tEndpoint: $endpoint" .
+            "\n\tBody: $body\n"
+        );
+
         // Create request.
         $request = $this->client->createRequest($method, $endpoint, [
             'body' => $body,
