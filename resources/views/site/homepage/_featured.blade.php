@@ -3,7 +3,7 @@
         @include("site.homepage._tab", ["tabTitle" => $layoutData["featured"]["tabTitle"]])
     @endif
 
-    <div class="w-section inverse blog-grid">
+    <div class="w-section inverse blog-grid" style="margin-top: -36px">
         <div class="container full-width">
             <div class="row">
 
