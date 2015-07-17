@@ -69,12 +69,7 @@ class CategoryController extends Controller
      */
     private function sanitizeBackground($background, $width, $height)
     {
-        $sanitizedBackground = $background;
-
-        $sanitizedBackground = str_replace("{width}", $width, $sanitizedBackground);
-        $sanitizedBackground = str_replace("{height}", $height, $sanitizedBackground);
-
-        return $sanitizedBackground;
+        return str_replace(["{width}", "{height}"], [$width, $height], $background);
     }
 
 }
