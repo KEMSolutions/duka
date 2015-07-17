@@ -83,7 +83,7 @@
                         <div class="menu">
 
                             @if(Auth::guest())
-                                <div class="item">
+                                <div class="item no-hover">
                                     <button class="btn btn-success color-one text-center center-block full-width">
                                         {{ Lang::get("boukem.sign_in") }}
                                     </button>
