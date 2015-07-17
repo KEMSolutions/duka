@@ -21,8 +21,8 @@
             </div>
         </div>
 
-        <a href="{{ url("/") }}">
-            <div class="col-md-2 col-sm-3 col-xs-8" id="nav-left" style="background: url({{ url('/') . "/img/logo_new_chapter.png"}})  no-repeat center">
+        <a href="{{ route("home") }}">
+            <div class="col-md-2 col-sm-3 col-xs-8" id="nav-left" style="background: url({{ Store::logo() }})  no-repeat center">
                 <span class="sr-only">{{ Lang::get("boukem.back_to_home") }}</span>
                 &nbsp; &nbsp;
             </div>
