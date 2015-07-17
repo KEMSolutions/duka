@@ -4,11 +4,39 @@ use Log;
 use Cache;
 use KemAPI;
 use Request;
-use Carbon\Carbon;
 
-class Products extends KemApiObject
+use Carbon\Carbon;
+use cebe\markdown\MarkdownExtra;
+
+class Products extends BaseObject
 {
-    public function __construct() { parent::__construct('products'); }
+    public function __construct(MarkdownExtra $parser)
+    {
+        parent::__construct('products');
+
+        $this->markdown = $parser;
+    }
+
+    /**
+     * Retrieves a product by ID or slug.
+     *
+     * @param mixed $id             ID or slug of product to fetch.
+     * @param array $requestParams  Parameters to include in API request.
+     * @return object               Product details.
+     */
+    public function get($id, $requestParams = [])
+    {
+        // Retrieve product details.
+        $product = parent::get($id, $requestParams);
+        if ($this->isError($product)) {
+            return $product;
+        }
+
+        // Parse description.
+        $product->localization->long_description = $this->markdown->parse($product->localization->long_description);
+
+        return $product;
+    }
 
     /**
      * Searches KEM's database for products.

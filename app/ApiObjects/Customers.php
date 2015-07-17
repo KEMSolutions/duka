@@ -3,7 +3,7 @@
 use KemAPI;
 use Localization;
 
-class Customers extends KemApiObject
+class Customers extends BaseObject
 {
     /**
      * @var string  Validating base64 encoded emails.

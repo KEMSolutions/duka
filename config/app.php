@@ -205,6 +205,7 @@ return [
         'Orders'    => 'App\Facades\Orders',
         'Pages'     => 'App\Facades\Pages',
         'Products'  => 'App\Facades\Products',
+        'Store'     => 'App\Facades\Store',
         'Utilities' => 'App\Facades\Utilities',
 
 	],

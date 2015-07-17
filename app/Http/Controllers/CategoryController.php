@@ -2,9 +2,9 @@
 
 use View;
 use Request;
+use Categories;
 use Localization;
 
-use App\Facades\Categories;
 use App\Http\Requests;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -12,34 +12,45 @@ class CategoryController extends Controller
 {
     public function display($slug)
     {
-        // Retrieve category details.
-        $category = Categories::get($slug);
-
         // Retrieve query details.
         $page = (int) Request::input('page', 1);
         $perPage = (int) Request::input('per_page', 8);
 
+        // Retrieve category details.
+        $category = Categories::get($slug, [
+            'page' => $page,
+            'per_page' => $perPage,
+            'embed' => ['products', 'presentation'],
+            'filters' => Request::input('filters'),
+            'order' => Request::input('order')
+        ]);
+
+        // Handle errors.
+        if (Categories::isError($category)) {
+            abort(404);
+        }
+
         // Create a paginator instance.
         $paginator = null;
-        if (count($category->products))
+        if ($category->paginationTotal > 1)
         {
             // Make sure we have valid query settings.
             $perPage = max(4, min(40, $perPage));
-            $page = max(1, min($page, ceil(count($category->products) / $perPage)));
+            $page = max(1, min($page, ceil($category->paginationTotal / $perPage)));
 
             // Retrieve the requested products, depending on the query details.
-            $results = array_slice($category->products, ($page - 1) * $perPage, $perPage);
+            //$results = array_slice($category->products, ($page - 1) * $perPage, $perPage);
+            $results = $category->products;
 
             // Setup the paginator.
-            $paginator = new LengthAwarePaginator($category->products, count($category->products), $perPage, $page);
-            $paginator->setPath(route('category', ["slug" => $slug]));
+            $paginator = new LengthAwarePaginator($category->products, $category->paginationTotal, $perPage, $page);
+            $paginator->setPath(route('category', ['slug' => $slug]));
             $paginator->appends(['per_page' => $perPage]);
-
         }
 
         return View::make("site.category.index")->with([
             "name" => $category->name,
-            "featured" => $category->featured,
+            "featured" => isset($category->featured) ? $category->featured : null,
             "products" => $results,
             "children" => $category->children,
             "presentation" => $category->presentation,

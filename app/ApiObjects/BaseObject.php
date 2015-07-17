@@ -8,7 +8,7 @@ use Localization;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 
-abstract class KemApiObject
+abstract class BaseObject
 {
     /**
      * @var string  Base API request for this object, e.g. "products" or "layouts".
@@ -88,29 +88,84 @@ abstract class KemApiObject
     {
         // Check that $id is either a valid number or a valid slug.
         if ((is_numeric($id) && $id < 0) || preg_replace($this->slugInvalidCharacters, '', $id) != $id) {
-            return $this->badRequest('Invalid identifier [req: '. $this->baseRequest .'].');
+            return $this->badRequest('Invalid identifier [req: ' . $this->baseRequest . '].');
         }
 
-        // Retrieve object from cache, or make an API call.
-        if (!$object = Cache::get($this->cacheNamespace . $id))
-        {
-            $object = KemAPI::get($this->baseRequest .'/'. $id, $requestParams);
+        // Validate request parameters.
+        $requestParams = $this->validateRequestParams($requestParams);
 
-            // Check for errors.
-            if (!$object ||
-                (is_object($object) && property_exists($object, 'error')) ||
-                (!is_object($object) && !is_array($object))) {
+        // Retrieve object from cache, or make an API call.
+        $cacheKey = $id .'.'. json_encode($requestParams);
+        if (!$object = Cache::get($this->cacheNamespace . $cacheKey))
+        {
+            // Use the response object, so that we may retrieve more information
+            // about the response later if necessary.
+            $response = KemAPI::get($this->baseRequest .'/'. $id, $requestParams, true);
+            $object = json_decode($response->getBody());
+
+            // If we have an error, skip the cache and return the result.
+            if ($this->isError($object) || $response->getStatusCode() != 200) {
                 return $object;
             }
 
+            // If we have a results set, try to add pagination information.
+            if (isset($requestParams['page']) && isset($requestParams['per_page']))
+            {
+                $object->paginationLinks = $response->getHeader('Links');
+                $object->paginationTotal = $response->getHeader('X-Total-Count');
+            }
+
             // Cache result.
-            $this->cache($object, $id);
+            $this->cache($object, $cacheKey);
 
             // Look for products to cache within results.
             $this->findAndCache($object);
         }
 
         return $object;
+    }
+
+    /**
+     * Formats and validates request parameters.
+     *
+     * @param array $params     Request parameters to format and validate.
+     * @return array            Validated parameters.
+     */
+    public function validateRequestParams(array $params)
+    {
+        // The "embed" parameter is a comma-seperated list of words.
+        if (isset($params['embed']))
+        {
+            if (is_array($params['embed']) && count($params['embed'])) {
+                $params['embed'] = implode(',', $params['embed']);
+            } elseif (!is_string($params['embed'])) {
+                $params['embed'] = '';
+            }
+        }
+
+        // TODO: filters parameter.
+        $availableFilters = ['brand', 'min_price', 'max_price'];
+        if (isset($params['filters']))
+        {
+
+        }
+
+        // The "order" parameter can take one of 6 values.
+        if (isset($params['order']) && !in_array($params['order'], ['name', '-name', 'price', '-price', 'added', '-added'])) {
+            $params['order'] = '';
+        }
+
+        // The page parameters should be integers, and the per_page should not exceed 40.
+        if (isset($params['page']) || isset($params['per_page']))
+        {
+            $params['page'] = max(1, (int) $params['page']);
+            $params['per_page'] = max(1, min(40, (int) $params['per_page']));
+        }
+
+        // Sort alphabetically, to help with caching.
+        ksort($params);
+
+        return $params;
     }
 
     /**
@@ -164,14 +219,12 @@ abstract class KemApiObject
         foreach ($list as $item)
         {
             if (empty($item) || !isset($item->id) || empty($item->id) || Cache::has($namespace . $item->id)) {
-                Log::debug('Skipping object...');
-                Log::debug('Is empty? '. (empty($item) ? 'yes' : 'no'));
-                Log::debug('Is ID set? '. (isset($item->id) ? 'yes' : 'no'));
-                Log::debug('Is ID empty? '. (empty($item->id) ? 'yes' : 'no'));
+                empty($item) ? Log::debug('Skipping empty object...') : null;
+                (!isset($item->id) || empty($item->id)) ? Log::debug('Skipping object without ID...') : null;
                 continue;
             }
 
-            Log::info('Caching "'. $namespace . $item->id .'" until "'. $expires .'"');
+            Log::debug('Caching "'. $namespace . $item->id .'" until "'. $expires .'"');
             Cache::put($namespace . $item->id, $item, $expires);
             if (isset($item->slug) && strlen($item->slug)) {
                 Cache::put($namespace . $item->slug, $item, $expires);
@@ -180,10 +233,27 @@ abstract class KemApiObject
     }
 
     /**
-     * @return string Namespace to be used with cache.
+     * @return string   Namespace to be used with cache.
      */
     public function getCacheNamespace() {
         return $this->cacheNamespace;
+    }
+
+    public function isError($obj)
+    {
+        // Check that we have an object.
+        if (!$obj || (!is_array($obj) && !is_object($obj))) {
+            return true;
+        }
+
+        // Cast to array and check known keys for errors.
+        $obj = (array) $obj;
+
+        if (isset($obj['error'])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -193,6 +263,8 @@ abstract class KemApiObject
      * @return mixed        Bad request response.
      */
     protected function badRequest($msg = 'Bad Request.') {
-        return JsonResponse::create(['status' => 400, 'error' => $msg], 400)->getData();
+        return ['status' => 400, 'error' => $msg];
+//        return JsonResponse::create(['status' => 400, 'error' => $msg], 400)->getData();
     }
 }
+

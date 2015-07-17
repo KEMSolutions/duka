@@ -1,7 +1,5 @@
 <?php
 
-use \Localization;
-
 //dd(\Auth::user());
 //dd(\App\User::all());
 
@@ -11,15 +9,18 @@ Route::group([
     'middleware' => ['localeSessionRedirect', 'localizationRedirect']], function() {
 
     // Homepage.
-    Route::get('home', 'HomeController@index');
-    Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
+    Route::get('home',      'HomeController@index');
+    Route::get('/',         ['as' => 'home', 'uses' => 'HomeController@index']);
+
+    // Categories.
+    Route::get('cat/{slug}.html',   ['as' => 'category', 'uses' => 'CategoryController@display']);
 
     // Products.
-    Route::get('prod/{slug}', ['as' => 'product', 'uses' => 'ProductController@display']);
-    Route::get('search', ['as' => 'search', 'uses' => 'SearchController@index']);
+    Route::get('search',    ['as' => 'search', 'uses' => 'ProductController@search']);
+    Route::get('prod/{slug}.html',  ['as' => 'product', 'uses' => 'ProductController@display']);
 
     // Cart & checkout.
-    Route::get('cart', ['as' => 'cart', 'uses' => 'CheckoutController@index']);
+    Route::get('cart',      ['as' => 'cart', 'uses' => 'CheckoutController@index']);
 
     // Custom pages.
     Route::get('pages/{slug}', ['as' => 'page', 'uses' => 'PagesController@display']);
@@ -41,20 +42,27 @@ Route::group([
     // Wish list.
     Route::get("wishlist","WishlistController@index");
 
-    // Categories.
-    Route::get('cat/{slug}', ['as' => 'category', 'uses' => 'CategoryController@display']);
 
+    //
+    // Here, we try to catch some invalid URLs and redirect the user to the right page.
+    //
+
+    // Category pages should end with ".html"
+    Route::get('cat/{slug}', function($slug) {
+        return Redirect::to(route('category', ['slug' => $slug]));
+    });
+
+    // Product pages should end with ".html"
+    Route::get('prod/{slug}', function($slug) {
+        return Redirect::to(route('product', ['slug' => $slug]));
+    });
+
+
+    //
     // Temporary routes, used for development.
+    //
     Route::group(['prefix' => 'dev'], function()
     {
-        Route::get('list-categories', function() {
-            return Illuminate\Support\Collection::make(Categories::getAllCategories());
-        });
-
-        Route::get('list-conditions', function() {
-            return Illuminate\Support\Collection::make(Categories::getAllConditions());
-        });
-
         Route::get('list-customers', function() {
             return Illuminate\Support\Collection::make(Customers::all());
         });
@@ -71,12 +79,19 @@ Route::group([
                 'es'
             ));
         });
+
+        Route::get('store-info', function() {
+            return Illuminate\Support\Collection::make(Store::info());
+        });
     });
 });
 
 // API endpoints.
 Route::group(['prefix' => 'api'], function()
 {
+    // Set locale.
+    Localization::setLocale(Request::input('locale', 'en'));
+
     // Category endpoints.
     Route::get('brands/{id}',       ['as' => 'api.brands', 'uses' => 'ApiController@getBrand']);
     Route::get('categories/{id}',   ['as' => 'api.categories', 'uses' => 'ApiController@getCategory']);
