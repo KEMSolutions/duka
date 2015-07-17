@@ -50,7 +50,7 @@ class ProductController extends Controller
         {
             $paginator = new \Illuminate\Pagination\LengthAwarePaginator(
                 $results->organic_results,
-                $results->total,
+                $results->paginationTotal,
                 $perPage,
                 $page
             );
@@ -64,7 +64,8 @@ class ProductController extends Controller
             'page' => $page,
             'perPage' => $perPage,
             'results' => $results,
-            'paginator' => $paginator
+            'paginator' => $paginator,
+            'border' => true
         ]);
     }
 }

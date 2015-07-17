@@ -8,7 +8,7 @@
 
             {{-- Suggested results (tags) --}}
             {{-- Hey @Rob, the tags are in $results->tags --}}
-            @if (count($results->tags))
+            @if (isset($results->tags) && count($results->tags))
                 <h3>Testing tags...</h3>
                 @include(
                     'product.layout._product_card_dense', [
