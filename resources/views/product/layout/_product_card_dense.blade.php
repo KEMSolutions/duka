@@ -7,7 +7,7 @@
     }
     ?>
 
-    @if(is_object($product))
+    @if(is_object($product) && isset($product->id))
         <div class="col-xs-6 col-sm-4 col-md-3 text-center dense_product
                 @if ($border)
                     {!! 'no-border' !!}

@@ -41,12 +41,13 @@ class Products extends BaseObject
     /**
      * Searches KEM's database for products.
      *
-     * @param string $query Search term.
-     * @param int $page     The page to start from (see: https://developer.github.com/v3/#pagination).
-     * @param int $perPage  The number of products to display per page (see: https://developer.github.com/v3/#pagination).
-     * @return mixed        Search results.
+     * @param string $query         Search term.
+     * @param int $page             The page to start from (see: https://developer.github.com/v3/#pagination).
+     * @param int $perPage          The number of products to display per page (see: https://developer.github.com/v3/#pagination).
+     * @param array $requestParams  Other parameters to include in API request.
+     * @return mixed                Search results.
      */
-    public function search($query, $page = 1, $perPage = 40)
+    public function search($query, $page = 1, $perPage = 40, $requestParams = [])
     {
         // Performance check
         $query = trim(strip_tags($query));
@@ -56,17 +57,18 @@ class Products extends BaseObject
             $perPage = 40;
         }
 
+        // Update request parameters.
+        $requestParams['q'] = $query;
+        $requestParams['page'] = (int) $page;
+        $requestParams['per_page'] = $perPage;
+        $requestParams['embed'] = isset($requestParams['embed']) ?: 'tags';
+
         // Retrieve search results
-        $key = $this->cacheNamespace .'.search.'. $query;
+        $key = $this->cacheNamespace .'.search.'. $query .'.'. json_encode($requestParams);
         if (!$results = Cache::get($key))
         {
             // Make the API call.
-            $response = KemAPI::get('products/search', [
-                'q' => $query,
-                'embed' => 'tags',
-                'page' => $page,
-                'per_page' => $perPage
-            ], true);
+            $response = KemAPI::get('products/search', $requestParams, true);
 
             $results = json_decode($response->getBody());
 
@@ -77,19 +79,22 @@ class Products extends BaseObject
 
             // Retrieve the details related to this search, and save them in the search object.
 //            $links = $response->getHeader('links');
-            $results->total = $response->getHeader('x-total-count');
+            $results->paginationTotal = $response->getHeader('x-total-count');
 
             // Cache results and product details
             Log::info('Caching results for "'. $query .'" until '. Carbon::now()->addMinutes(15));
             Cache::put($key, $results, Carbon::now()->addMinutes(15));
 
             // Extract product details from results, and cache those too.
-            $this->extractAndCache($results->organic_results, \Products::getCacheNamespace());
-            foreach ($results->tags as $tag) {
-                $this->extractAndCache($tag->products, \Products::getCacheNamespace());
+            $this->extractAndCache($results->organic_results, $this->getCacheNamespace());
+            if (property_exists($results, 'tags')) {
+                foreach ($results->tags as $tag) {
+                    $this->extractAndCache($tag->products, $this->getCacheNamespace());
+                }
             }
         }
 
         return $results;
     }
 }
+
