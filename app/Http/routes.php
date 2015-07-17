@@ -83,7 +83,7 @@ Route::group([
         Route::get('store-info', function() {
             return Illuminate\Support\Collection::make(Store::info());
         });
-        
+
         Route::get('error/{status}', function($status) {
             abort($status);
         });
