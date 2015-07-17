@@ -13,7 +13,7 @@ class Store extends BaseObject
         return parent::get('');
     }
 
-    public function getLogo($width = 200, $height = 60, $mode = 'fit')
+    public function logo($width = 200, $height = 60, $mode = 'fit')
     {
         // Format mode.
         if (is_array($mode))
