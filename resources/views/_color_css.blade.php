@@ -18,11 +18,6 @@
         $color_five_light = Utilities::adjustBrightness($color_five, +50);
 ?>
 
-{{-- To be included:
------------- footer
------------- .header .btn-primary
---}}
-
 <style>
     .color-one {
         background: {{ $color_one }};
