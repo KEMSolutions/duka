@@ -18,7 +18,7 @@
             </span>
 
             <a href="/{{ $locale }}/prod/{{ $product->slug }}" class="strong">
-                <img src="//static.boutiquekem.com/productimg-160-160-{{ count($product->images) > 0 ? $product->images[0]->id . "-h." . $product->images[0]->extension : "0000.png" }}" class="img-responsive center-block"/>
+                <img src="//static.boutiquekem.com/productimg-160-160-{{ count($product->images) > 0 ? $product->images[0]->id . "-h." . $product->images[0]->extension : "0000.png" }}" class="img-responsive center-block" alt="{{ $product->localization->name }}"/>
             </a>
 
             {{-- Link to product brand --}}

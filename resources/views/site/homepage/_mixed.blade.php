@@ -15,7 +15,7 @@
                                     <div class="col-md-2">
                                         <div class="img-feature">
                                             <a href="/{{ $locale }}/prod/{{ $product->slug }}">
-                                                <img src="//static.boutiquekem.com/productimg-120-120-{{ $product->images[0]->id . "." . $product->images[0]->extension }}" class="img-thumbnail center-block"/>
+                                                <img src="//static.boutiquekem.com/productimg-120-120-{{ $product->images[0]->id . "." . $product->images[0]->extension }}" class="img-thumbnail center-block" alt="{{ $product->localization->name }}"/>
                                             </a>
                                         </div>
                                     </div>
