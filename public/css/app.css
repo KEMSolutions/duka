@@ -5036,7 +5036,7 @@ section.slice {
 .search-filter {
   border: 1px solid #e5e5e5;
   padding: 6px;
-  border: 3px 0 0 3px
+  border-radius: 3px 0 0 3px;
   border-right: none;
   margin-right: -5px;
 }
