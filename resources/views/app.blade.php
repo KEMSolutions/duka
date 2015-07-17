@@ -10,7 +10,7 @@
 	<link rel="icon" href="{{ url('/') . "/img/favicon.png"}}"/>
 
 	{{-- TODO : include dynamic name based on each store name--}}
-	<title>Boukem 2</title>
+	<title>{{ Store::info()->name }}</title>
 
 	{{-- TODO: include page description if any--}}
 
