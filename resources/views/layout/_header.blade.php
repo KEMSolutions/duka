@@ -200,6 +200,27 @@
                     </li>
                 @endforeach
             @endif
+
+            {{-- Store contact info --}}
+            <li class="inline-block ">
+                <div class="ui pointing dropdown-select dropdown top left item fluid text-center">
+                <span class="text">
+                    {{ Lang::get("boukem.contact") }}
+                    <i class="fa fa-caret-down pull-right" style="line-height: 53px"></i>
+                </span>
+                    <div class="menu fluid">
+                        <div class="item">
+                            <i class="fa fa-phone icon"></i>
+                            {{ Store::info()->support->phone }}
+                        </div>
+                        <div class="divider"></div>
+                        <div class="item">
+                            <i class="fa fa-envelope-o icon"></i>
+                            <a href="mailto:{{ Store::info()->support->email }}" class="dark">{{ Store::info()->support->email }}</a>
+                        </div>
+                    </div>
+                </div>
+            </li>
         </ul>
     </div>
     {{--End of second row--}}

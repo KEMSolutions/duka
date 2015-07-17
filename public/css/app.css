@@ -4900,6 +4900,10 @@ section.slice {
   color: #fff;
 }
 
+.dark {
+  color: #333 !important;
+}
+
 .btn-one {
   /*KEM border red : #77121a */
   background-color: #5A419B;
