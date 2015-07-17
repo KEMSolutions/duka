@@ -68,14 +68,20 @@ var paymentOverlayContainer = {
             '</h2>'+
             '<h4>'+ Localization.what_to_do +'</h4>'+
             '<br />'+
+            '<ul class="list-inline">' +
+            '<li>' +
             '<a href="'+
             ApiEndpoints.orders.pay.replace(':id', order.id)
                 .replace(':verification', order.verification) +'">'+
             '<button class="btn btn-success" id="payOrder">'+ Localization.pay_now +'</button>'+
             '</a>'+
+            '</li>' +
+            '<li>' +
             '<button class="btn btn-danger" id="cancelOrder">'+
             Localization.cancel_order +
             '</button>'+
+            '</li>'+
+            '</ul>'+
             '</div>'+
             '</div>'+
             '</div>'
