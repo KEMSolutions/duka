@@ -79,6 +79,18 @@
         border-color: {{ $color_one_light }};
     }
 
+    .btn-two {
+        background-color: #fff;
+        color: {{ $color_two }};
+        border-color: {{ $color_two_dark }};
+    }
+
+    .btn-two:hover, .btn-two:focus, .btn-two:active, .btn-two.active, .open .dropdown-toggle.btn-two {
+        background-color: {{ $color_two_light }};
+        color: #fff;
+        border-color: {{ $color_two_light }};
+    }
+
     .btn-three {
         color: #FFF;
         background-color: {{ $color_three }};
@@ -90,6 +102,30 @@
         background-color: {{ $color_three_light }};
         color: #fff;
         border-color: {{ $color_three_light }};
+    }
+
+    .btn-four {
+        background-color: #fff;
+        color: {{ $color_four }};
+        border-color: {{ $color_four_dark }};
+    }
+
+    .btn-four:hover, .btn-four:focus, .btn-four:active, .btn-four.active, .open .dropdown-toggle.btn-four{
+        background-color: {{ $color_four_light }};
+        color: #fff;
+        border-color: {{ $color_four_light }};
+    }
+
+    .btn-five {
+        background-color: #fff;
+        color: {{ $color_five }};
+        border-color: {{ $color_five_dark }};
+    }
+
+    .btn-five:hover, .btn-five:focus, .btn-five:active, .btn-five.active, .open .dropdown-toggle.btn-five {
+        background-color: {{ $color_five_light }};
+        color: #fff;
+        border-color: {{ $color_five_light }};
     }
 
     .indicator-down {
