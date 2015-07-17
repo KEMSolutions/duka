@@ -147,7 +147,7 @@ abstract class BaseObject
         $availableFilters = ['brand', 'min_price', 'max_price'];
         if (isset($params['filters']))
         {
-
+//            if (is_array())
         }
 
         // The "order" parameter can take one of 6 values.
