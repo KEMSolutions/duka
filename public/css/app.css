@@ -4599,11 +4599,11 @@ footer .copyright{color:#EEE;}
 .section-title{position:absolute; top:-53px; left:50%; margin-left:-130px; width:260px; padding:18px 0; text-align:center; border-top-left-radius:3px; border-top-right-radius:3px; }
 .section-title h3{margin:0; padding:0; font-size:16px; font-weight:600; text-transform:uppercase;}
 
-      /*-----------------------------------*/
+        /*-----------------------------------*/
 
-      /* TAB INDICATOR */
+        /* TAB INDICATOR */
 
-      /*-----------------------------------*/
+        /*-----------------------------------*/
 .indicator-down {
   position: absolute;
   bottom: -12px;
@@ -4635,12 +4635,19 @@ footer .copyright{color:#EEE;}
   padding: 1%;
 }
 
-/*-----------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+/* GLOBAL                                 */
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
 
-/* GLOBAL */
+/*----------------------------------------*/
 
-/*-----------------------------------*/
+/* Layout */
 
+/*----------------------------------------*/
 .one-half {
   width: 50% !important;
 }
@@ -4665,6 +4672,25 @@ footer .copyright{color:#EEE;}
   padding: 10px 40px;
 }
 
+.vertical-align {
+  position: relative;
+  top: 25%;
+  transform: translateY(-25%);
+}
+
+.fullScreen {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: 10000;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/*----------------------------------------*/
+
+/* Button */
+
+/*----------------------------------------*/
 .btn {
   font-size: 14px;
   font-weight: normal;
@@ -4683,7 +4709,11 @@ footer .copyright{color:#EEE;}
   user-select: none;
 }
 
-/* ---- Used in Wishlist remove button ---- */
+        /*----------------------------------------*/
+
+        /* Wishlist specific button               */
+
+        /*----------------------------------------*/
 .btn-outline {
   background: none;
 }
@@ -4743,19 +4773,6 @@ section.slice {
   border-left: 1px solid #fff;
 }
 
-.vertical-align {
-  position: relative;
-  top: 25%;
-  transform: translateY(-25%);
-}
-
-.fullScreen {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  z-index: 10000;
-  background-color: rgba(0, 0, 0, 0.5);
-}
 
 .border-bottom-hover {
   transition: all 0.1s ease-in;
@@ -4820,10 +4837,11 @@ section.slice {
   height: 160px;
 }
 
-/*.blog-grid {*/
-  /*margin-top: -36px;*/
-/*}*/
+/*-----------------------------------*/
 
+/* FAVORITE ICON */
+
+/*-----------------------------------*/
 .favorite-heart {
   padding: 5px;
   color: #F45D5D;
