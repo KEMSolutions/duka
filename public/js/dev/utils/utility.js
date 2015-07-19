@@ -139,11 +139,21 @@ var UtilityContainer = {
     },
 
     /**
-     * Utility function to populate a select list (#country) with a list of country (json formatted).
+     * Utility object used to populate a select list (#country) with a list of country (json formatted) in the appropriate language.
      *
      */
-    populateCountry : function () {
-        $.getJSON("/js/data/country-list.en.json", function(data) {
+    populateCountry : {
+
+        getLocalizedCountryList : function() {
+            if ($("html").data("lang") === "fr") {
+                $.getJSON("/js/data/country-list.fr.json", populateCountry.loadCountryList(data));
+            }
+            else {
+                $.getJSON("/js/data/country-list.en.json", populateCountry.loadCountryList(data));
+            }
+        },
+
+        loadCountryList: function (data) {
             var listItems = '',
                 $country = $("#country");
 
@@ -156,7 +166,28 @@ var UtilityContainer = {
                 }
             });
             $country.append(listItems);
-        });
+        }
+        //if ($("html").data("lang") == "en") {
+        //    UtilityContainer.jsonLoader("/js/data/country-list.en.json", )
+        //}
+        //$.getJSON("/js/data/country-list.en.json", function(data) {
+        //    var listItems = '',
+        //        $country = $("#country");
+        //
+        //    $.each(data, function(key, val) {
+        //        if (key == "CA") {
+        //            listItems += "<option value='" + key + "' selected>" + val + "</option>";
+        //        }
+        //        else {
+        //            listItems += "<option value='" + key + "'>" + val + "</option>";
+        //        }
+        //    });
+        //    $country.append(listItems);
+        //});
+    },
+
+    jsonLoader: function() {
+
     },
 
     /**
