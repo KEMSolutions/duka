@@ -29,7 +29,6 @@ elixir(function(mix) {
         "../../../public/js/dev/actions/checkout/checkout-validation.js",
         "../../../public/js/dev/actions/layout/cart-drawer-logic.js",
         "../../../public/js/dev/actions/layout/cart-drawer-init.js",
-        "../../../public/js/dev/actions/products/layout/layout-favorite-logic.js",
         "../../../public/js/dev/actions/site/wishlist-logic.js",
         "../../../public/js/dev/actions/init.js"
     ], "public/js/prod/boukem2.js");
