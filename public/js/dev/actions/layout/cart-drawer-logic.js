@@ -2,7 +2,7 @@
  * Object responsible for the overall logic (CRUD) of the cart drawer.
  * Layout handled in dev/components/layout/cart-drawer.js
  *
- * @type {{$el: {$list: (*|jQuery|HTMLElement)}, addItem: Function, storeItem: Function, loadItem: Function, deleteItem: Function, modifyQuantity: Function, modifyQuantityBeforeBuying: Function, setBadgeQuantity: Function, setQuantityCookie: Function, setCartSubtotal: Function, setCartShipping: Function, setCartTaxes: Function, setCartTotal: Function, button_to_Json: Function, ajaxCall: Function, updateAjaxCall: Function, init: Function}}
+ * @type {{$el: {$list: (*|jQuery|HTMLElement)}, addItem: Function, storeItem: Function, loadItem: Function, deleteItem: Function, modifyQuantity: Function, modifyQuantityBeforeBuying: Function, setBadgeQuantity: Function, setQuantityCookie: Function, setCartSubtotal: Function, setCartShipping: Function, setCartTaxes: Function, setCartTotal: Function, ajaxCall: Function, updateAjaxCall: Function, init: Function}}
  */
 var cartLogicContainer = {
     /**
@@ -222,10 +222,10 @@ var cartLogicContainer = {
                 cartLogicContainer.setCartTaxes(UtilityContainer.getCartTaxes(UtilityContainer.getCheapestShippingMethod(data).method, data));
                 cartLogicContainer.setCartTotal(UtilityContainer.getCartTotal(UtilityContainer.getCheapestShippingMethod(data), data));
             },
-            error: function(e, status) {
+            error: function(e) {
                 console.log(e);
             },
-            complete : function(data) {
+            complete : function() {
                 $(".price-estimate").fadeOut(300, function() {
                     $(".calculation.hidden").fadeIn().removeClass("hidden");
                     $(".cart-total.hidden").fadeIn().removeClass("hidden");

@@ -1,7 +1,7 @@
 /**
  * Object responsible for building the select list populating countries, provinces and states on checkout page.
  *
- * @type {{populateCountry: {getLocalizedCountryList: Function, loadCountryList: Function}, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, init: Function}}
+ * @type {{populateCountry: Function, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, init: Function}}
  */
 var locationContainer = {
 
@@ -43,7 +43,8 @@ var locationContainer = {
                 var listItems = '',
                     $province = $(".province").find("[data-country='" + country[i] +"']");
 
-                $.each(data, function(key, val) {
+                $.each(data, function(key)
+                {
                     if (data[key].country === country[i] && data[key].short == "QC" ){
                         listItems += "<option value='" + data[key].short + "' selected>" + data[key].name + "</option>";
                     }
