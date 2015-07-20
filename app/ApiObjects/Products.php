@@ -1,5 +1,6 @@
 <?php namespace App\ApiObjects;
 
+use App\Utilities\Utilities;
 use Log;
 use Cache;
 use KemAPI;
@@ -34,6 +35,16 @@ class Products extends BaseObject
 
         // Parse description.
         $product->localization->long_description = $this->markdown->parse($product->localization->long_description);
+
+        // Set images size.
+        if (count($product->images) > 0) {
+            $product->images[0]->thumbnail_lg = Utilities::setImageSizeAndMode(70, 110, "fit", $product->images[0]->url);
+            $product->images[0]->thumbnail = Utilities::setImageSizeAndMode(60, 60, "fit", $product->images[0]->url);
+        }
+        else {
+            $product->images[0]->thumbnail_lg = "https://static.boutiquekem.com/productimg-70-110-0000.png";
+            $product->images[0]->thumbnail = "https://static.boutiquekem.com/productimg-60-60-0000.png";
+        }
 
         return $product;
     }
