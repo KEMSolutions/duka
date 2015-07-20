@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "33cb8ba4922fcb26e4ebdc1a4eb6dcc7",
+    "hash": "374fc5075cf25a6d4d704155af2e3cdf",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -564,7 +564,7 @@
                     "name": "Jeremy Lindblom",
                     "email": "jeremeamia@gmail.com",
                     "homepage": "https://github.com/jeremeamia",
-                    "role": "Developer"
+                    "role": "developer"
                 }
             ],
             "description": "Serialize Closure objects, including their context and binding",
