@@ -79,15 +79,15 @@
                                                             <button class="btn btn-three buybutton visible-lg-inline"
                                                                     data-product="{{ $product->id }}"
                                                                     data-price="{{ number_format((float)$product->price, 2, '.', '') }}"
-                                                                    data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
-                                                                    data-thumbnail_lg="//static.boutiquekem.com/productimg-70-110-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
+                                                                    data-thumbnail="{{ $product->images[0]->thumbnail }}"
+                                                                    data-thumbnail_lg="{{ $product->images[0]->thumbnail_lg }}"
                                                                     data-name="{{ $product->localization->name }}"
                                                                     data-quantity="1">
                                                                 <i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
                                                             <button class="btn btn-block btn-three center-block buybutton hidden-lg" data-product="{{ $product->id }}"
                                                                     data-price="{{ number_format((float)$product->price, 2, '.', '') }}"
-                                                                    data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
-                                                                    data-thumbnail_lg="//static.boutiquekem.com/productimg-70-110-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
+                                                                    data-thumbnail="{{ $product->images[0]->thumbnail }}"
+                                                                    data-thumbnail_lg="{{ $product->images[0]->thumbnail_lg }}"
                                                                     data-name="{{ $product->localization->name }}"
                                                                     data-quantity="1">
                                                                 <i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>

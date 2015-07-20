@@ -19,7 +19,15 @@ class Utilities
         return include __DIR__ .'/Countries/'. Localization::getCurrentLocale() .'.php';
     }
 
-    // Courtesy of http://stackoverflow.com/a/11951022
+
+    /**
+     * Returns a color brighter or darker according to a base color (hex formatted).
+     *
+     * Courtesy of http://stackoverflow.com/a/11951022
+     * @param $hex
+     * @param $steps
+     * @return string
+     */
     public function adjustBrightness($hex, $steps) {
         // Steps should be between -255 and 255. Negative = darker, positive = lighter
         $steps = max(-255, min(255, $steps));
@@ -41,6 +49,22 @@ class Utilities
         }
 
         return $return;
+    }
+
+    public static function setImageSizeAndMode($width, $height, $mode, $source)
+    {
+        // Format mode.
+        if (is_array($mode))
+        {
+            $modes = [];
+            foreach ($mode as $key => $value) {
+                $modes[] = is_integer($key) ? $value : $key .':'. $value;
+            }
+
+            $mode = implode(',', $modes);
+        }
+
+        return str_replace(['{width}', '{height}', '{mode}'], [$width, $height, $mode], $source);
     }
 }
 
