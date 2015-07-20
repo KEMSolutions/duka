@@ -15,7 +15,7 @@ var cartDisplayContainer = {
     },
 
     displayOn: function() {
-        _width = cartDisplayContainer.$el.$container.width();
+        var _width = cartDisplayContainer.$el.$container.width();
         cartDisplayContainer.$el.$container.css( {
             "margin-right" : -_width
         });
@@ -26,7 +26,6 @@ var cartDisplayContainer = {
     },
 
     displayOff : function() {
-        _width = cartDisplayContainer.$el.$container.width();
         cartDisplayContainer.$el.$back.click(function() {
             cartDisplayContainer.animateOut();
         });
@@ -44,7 +43,7 @@ var cartDisplayContainer = {
     },
 
     animateOut: function() {
-        _width = cartDisplayContainer.$el.$container.width();
+        var _width = cartDisplayContainer.$el.$container.width();
         cartDisplayContainer.$el.$container.animate( {
             "margin-right" : -_width
         }, 400, function() {
