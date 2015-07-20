@@ -230,7 +230,7 @@ var estimateContainer = {
 /**
  * Object responsible for building the select list populating countries, provinces and states on checkout page.
  *
- * @type {{populateCountry: {getLocalizedCountryList: Function, loadCountryList: Function}, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, init: Function}}
+ * @type {{populateCountry: Function, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, init: Function}}
  */
 var locationContainer = {
 
@@ -272,7 +272,8 @@ var locationContainer = {
                 var listItems = '',
                     $province = $(".province").find("[data-country='" + country[i] +"']");
 
-                $.each(data, function(key, val) {
+                $.each(data, function(key)
+                {
                     if (data[key].country === country[i] && data[key].short == "QC" ){
                         listItems += "<option value='" + data[key].short + "' selected>" + data[key].name + "</option>";
                     }
@@ -442,7 +443,7 @@ var cartDisplayContainer = {
     },
 
     displayOn: function() {
-        _width = cartDisplayContainer.$el.$container.width();
+        var _width = cartDisplayContainer.$el.$container.width();
         cartDisplayContainer.$el.$container.css( {
             "margin-right" : -_width
         });
@@ -453,7 +454,6 @@ var cartDisplayContainer = {
     },
 
     displayOff : function() {
-        _width = cartDisplayContainer.$el.$container.width();
         cartDisplayContainer.$el.$back.click(function() {
             cartDisplayContainer.animateOut();
         });
@@ -471,7 +471,7 @@ var cartDisplayContainer = {
     },
 
     animateOut: function() {
-        _width = cartDisplayContainer.$el.$container.width();
+        var _width = cartDisplayContainer.$el.$container.width();
         cartDisplayContainer.$el.$container.animate( {
             "margin-right" : -_width
         }, 400, function() {
@@ -702,10 +702,9 @@ var paymentOverlayContainer = {
 }
 
 /**
- * Object responsible for the view component of the favorite feature.
- * Logic handled in dev/actions/products/layout-favorite-logic.js
+ * Object responsible for adding products to a user's wishlist.
  *
- * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, init: Function}}
+ * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
  */
 var productLayoutFavoriteContainer = {
     /**
@@ -730,9 +729,68 @@ var productLayoutFavoriteContainer = {
         $(".wishlist_badge").text(total);
     },
 
+    /**
+     * Add the clicked product to the wish list.
+     *
+     */
+    addToFavorite: function() {
+        var self = productLayoutFavoriteContainer,
+            item;
+
+        $(".favorite-wrapper").on("click", function() {
+            //No favorited class.
+            if (!$(this).hasClass("favorited")) {
+                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
+                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+
+                $(this).addClass("favorited");
+
+                self.setWishlistBadgeQuantity();
+            }
+            else
+            //Has a favorited class. We remove it, then delete the element from local Storage.
+            {
+                self.removeFromFavorite($(this), self);
+            }
+        });
+    },
+
+    /**
+     * Persist the heart icon next to products already marked as wished.
+     *
+     */
+    persistFavorite: function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
+                for(var j = 0; j<$(".favorite-wrapper").length; j++)
+                {
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === parseInt($(".favorite-wrapper")[j].dataset.product))
+                    {
+                        $(".favorite-wrapper")[j].className += " favorited";
+                    }
+                }
+            }
+        };
+    },
+
+    /**
+     * Delete the clicked element from the wish list.
+     *
+     * @param context
+     */
+    removeFromFavorite: function (element, context) {
+        element.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + element.data("product"));
+        context.setWishlistBadgeQuantity();
+    },
+
     init: function () {
         var self = productLayoutFavoriteContainer;
 
+
+        self.addToFavorite();
+        self.persistFavorite();
         self.fadeInFavoriteIcon();
         self.setWishlistBadgeQuantity();
     }
@@ -1434,7 +1492,7 @@ var checkoutValidationContainer = {
  * Object responsible for the overall logic (CRUD) of the cart drawer.
  * Layout handled in dev/components/layout/cart-drawer.js
  *
- * @type {{$el: {$list: (*|jQuery|HTMLElement)}, addItem: Function, storeItem: Function, loadItem: Function, deleteItem: Function, modifyQuantity: Function, modifyQuantityBeforeBuying: Function, setBadgeQuantity: Function, setQuantityCookie: Function, setCartSubtotal: Function, setCartShipping: Function, setCartTaxes: Function, setCartTotal: Function, button_to_Json: Function, ajaxCall: Function, updateAjaxCall: Function, init: Function}}
+ * @type {{$el: {$list: (*|jQuery|HTMLElement)}, addItem: Function, storeItem: Function, loadItem: Function, deleteItem: Function, modifyQuantity: Function, modifyQuantityBeforeBuying: Function, setBadgeQuantity: Function, setQuantityCookie: Function, setCartSubtotal: Function, setCartShipping: Function, setCartTaxes: Function, setCartTotal: Function, ajaxCall: Function, updateAjaxCall: Function, init: Function}}
  */
 var cartLogicContainer = {
     /**
@@ -1654,10 +1712,10 @@ var cartLogicContainer = {
                 cartLogicContainer.setCartTaxes(UtilityContainer.getCartTaxes(UtilityContainer.getCheapestShippingMethod(data).method, data));
                 cartLogicContainer.setCartTotal(UtilityContainer.getCartTotal(UtilityContainer.getCheapestShippingMethod(data), data));
             },
-            error: function(e, status) {
+            error: function(e) {
                 console.log(e);
             },
-            complete : function(data) {
+            complete : function() {
                 $(".price-estimate").fadeOut(300, function() {
                     $(".calculation.hidden").fadeIn().removeClass("hidden");
                     $(".cart-total.hidden").fadeIn().removeClass("hidden");
@@ -1769,82 +1827,6 @@ var cartDrawerInitContainer = {
 
 }
 
-/**
- * Container responsible for handling the logic of adding products to a user's wishlist.
- * Layout handled in dev/components/products/layout/product-layout-favorite.js
- *
- * @type {{addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
- */
-var productLayoutFavoriteLogicContainer = {
-
-    /**
-     * Add the clicked product to the wish list.
-     *
-     */
-    addToFavorite: function() {
-        var self = productLayoutFavoriteLogicContainer,
-            selfLayout = productLayoutFavoriteContainer,
-            item;
-
-        $(".favorite-wrapper").on("click", function() {
-            //No favorited class.
-            if (!$(this).hasClass("favorited")) {
-                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
-                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
-
-                $(this).addClass("favorited");
-
-                selfLayout.setWishlistBadgeQuantity();
-            }
-            else
-            //Has a favorited class. We remove it, then delete the element from local Storage.
-            {
-                self.removeFromFavorite($(this), selfLayout);
-            }
-        });
-    },
-
-    /**
-     * Persist the heart icon next to products already marked as wished.
-     *
-     */
-    persistFavorite: function() {
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
-                for(var j = 0; j<$(".favorite-wrapper").length; j++)
-                {
-                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === parseInt($(".favorite-wrapper")[j].dataset.product))
-                    {
-                        $(".favorite-wrapper")[j].className += " favorited";
-                    }
-                }
-            }
-        };
-    },
-
-    /**
-     * Delete the clicked element from the wish list.
-     *
-     * @param context
-     */
-    removeFromFavorite: function (element, context) {
-        element.removeClass("favorited");
-        localStorage.removeItem("_wish_product " + element.data("product"));
-        context.setWishlistBadgeQuantity();
-    },
-
-    init: function () {
-        var self = productLayoutFavoriteLogicContainer;
-
-        //Calls the layout container (productLayoutFavoriteContainer).
-        productLayoutFavoriteContainer.init();
-
-        //Initialize the logic.
-        self.addToFavorite();
-        self.persistFavorite();
-    }
-}
 /**
  * Container responsible for handling the logic of the wish list page.
  * Layout handled in dev/components/site/wishlist.js
@@ -1994,7 +1976,7 @@ $(document).ready(function () {
      * Initialize favorite products feature.
      *
      */
-    productLayoutFavoriteLogicContainer.init();
+    productLayoutFavoriteContainer.init();
 
     /**
      * Initialize wishlist page.
