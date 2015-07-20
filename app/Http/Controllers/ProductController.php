@@ -42,7 +42,7 @@ class ProductController extends Controller
         $perPage = (int) Request::input('per_page', 40);
 
         // Retrieve search results.
-        $results = Products::search($query, $page, $perPage);
+        $results = Products::search($query, $page, $perPage, ['filters' => Request::input('filters')]);
 
         // Create a paginator instance.
         $paginator = null;

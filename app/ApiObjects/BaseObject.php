@@ -133,21 +133,38 @@ abstract class BaseObject
      */
     public function validateRequestParams(array $params)
     {
-        // The "embed" parameter is a comma-seperated list of words.
+        // The "embed" parameter is a comma-separated list of words.
         if (isset($params['embed']))
         {
+            // Convert arrays to strings.
             if (is_array($params['embed']) && count($params['embed'])) {
                 $params['embed'] = implode(',', $params['embed']);
-            } elseif (!is_string($params['embed'])) {
+            }
+
+            // Ignore any other data type.
+            elseif (!is_string($params['embed'])) {
                 $params['embed'] = '';
             }
         }
 
-        // TODO: filters parameter.
-        $availableFilters = ['brand', 'min_price', 'max_price'];
+        // The "filers" parameter is comma-separated list of words, which can be themselves separated by semi-colons.
         if (isset($params['filters']))
         {
-//            if (is_array())
+            // Convert arrays to strings.
+            if (is_array($params['filters']))
+            {
+                $filters = [];
+                foreach ($params['filters'] as $key => $filter) {
+                    $filters[] = $key .':'. (is_array($filter) ? implode(';', $filter) : $filter);
+                }
+
+                $params['filters'] = implode(',', $filters);
+            }
+
+            // Ignore any other data type.
+            elseif (!is_string($params['filters'])) {
+                $params['filters'] = '';
+            }
         }
 
         // The "order" parameter can take one of 6 values.
