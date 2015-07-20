@@ -228,9 +228,9 @@ var estimateContainer = {
 
 }
 /**
- * Object responsible for building the select list populating countries, provinces and states.
+ * Object responsible for building the select list populating countries, provinces and states on checkout page.
  *
- * @type {{populateCountry: Function, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, autoFillBillingAddress: Function, init: Function}}
+ * @type {{populateCountry: {getLocalizedCountryList: Function, loadCountryList: Function}, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, init: Function}}
  */
 var locationContainer = {
 
@@ -239,11 +239,12 @@ var locationContainer = {
      * Activates the chosen plugin on the country select list.
      *
      */
-    populateCountry : function() {
-        $.getJSON("/js/data/country-list.en.json", function(data) {
-            var listItems = '',
-                $country = $(".country");
+    populateCountry : function (lang) {
+        var file = "/js/data/country-list." + lang + ".json",
+            listItems = '',
+            $country = $(".country");
 
+        $.getJSON(file, function(data) {
             $.each(data, function(key, val) {
                 if (key == "CA") {
                     listItems += "<option value='" + key + "' selected>" + val + "</option>";
@@ -330,7 +331,7 @@ var locationContainer = {
     init : function() {
         var self = locationContainer;
 
-        self.populateCountry();
+        self.populateCountry($("html").attr("lang"));
         self.populateProvincesAndStates(["CA", "US", "MX"], function() {
             $(".province").chosen();
         });
@@ -500,7 +501,7 @@ var cartDisplayContainer = {
     init : function() {
         cartDisplayContainer.displayOn();
         cartDisplayContainer.displayOff();
-        UtilityContainer.populateCountry();
+        UtilityContainer.populateCountry($("html").attr("lang"));
 
         if (sessionStorage.isDisplayed == "true")
         {
@@ -926,14 +927,15 @@ var UtilityContainer = {
     },
 
     /**
-     * Utility function to populate a select list (#country) with a list of country (json formatted).
+     * Utility object used to populate a select list (#country) with a list of country (json formatted) in the appropriate language.
      *
      */
-    populateCountry : function () {
-        $.getJSON("/js/data/country-list.en.json", function(data) {
-            var listItems = '',
-                $country = $("#country");
+    populateCountry : function (lang) {
+        var file = "/js/data/country-list." + lang + ".json",
+            listItems = '',
+            $country = $("#country");
 
+        $.getJSON(file, function(data) {
             $.each(data, function(key, val) {
                 if (key == "CA") {
                     listItems += "<option value='" + key + "' selected>" + val + "</option>";
@@ -1953,7 +1955,8 @@ $(document).ready(function () {
      */
     $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'locale': $('html').attr('lang')
         }
     });
 

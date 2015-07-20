@@ -10,26 +10,12 @@ var locationContainer = {
      * Activates the chosen plugin on the country select list.
      *
      */
-    populateCountry : {
-        getLocalizedCountryList : function() {
-            if ($("html").data("lang") === "fr") {
-                $.getJSON("/js/data/country-list.fr.json", populateCountry.loadCountryList(data))
-                    .done(function() {
-                        $(".country").chosen();
-                    });
-            }
-            else {
-                $.getJSON("/js/data/country-list.en.json", populateCountry.loadCountryList(data))
-                    .done(function() {
-                        $(".country").chosen();
-                    });
-            }
-        },
+    populateCountry : function (lang) {
+        var file = "/js/data/country-list." + lang + ".json",
+            listItems = '',
+            $country = $(".country");
 
-        loadCountryList: function(data) {
-            var listItems = '',
-                $country = $(".country");
-
+        $.getJSON(file, function(data) {
             $.each(data, function(key, val) {
                 if (key == "CA") {
                     listItems += "<option value='" + key + "' selected>" + val + "</option>";
@@ -39,27 +25,10 @@ var locationContainer = {
                 }
             });
             $country.append(listItems);
-        }
+        }).done(function() {
+            $(".country").chosen();
+        });
     },
-
-    //populateCountry : function() {
-    //    $.getJSON("/js/data/country-list.en.json", function(data) {
-    //        var listItems = '',
-    //            $country = $(".country");
-    //
-    //        $.each(data, function(key, val) {
-    //            if (key == "CA") {
-    //                listItems += "<option value='" + key + "' selected>" + val + "</option>";
-    //            }
-    //            else {
-    //                listItems += "<option value='" + key + "'>" + val + "</option>";
-    //            }
-    //        });
-    //        $country.append(listItems);
-    //    }).done(function() {
-    //        $(".country").chosen();
-    //    });
-    //},
 
     /**
      * Function to populate provinces and states
@@ -133,7 +102,7 @@ var locationContainer = {
     init : function() {
         var self = locationContainer;
 
-        self.populateCountry.getLocalizedCountryList();
+        self.populateCountry($("html").attr("lang"));
         self.populateProvincesAndStates(["CA", "US", "MX"], function() {
             $(".province").chosen();
         });

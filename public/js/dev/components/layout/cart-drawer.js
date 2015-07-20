@@ -74,7 +74,7 @@ var cartDisplayContainer = {
     init : function() {
         cartDisplayContainer.displayOn();
         cartDisplayContainer.displayOff();
-        UtilityContainer.populateCountry.getLocalizedCountryList();
+        UtilityContainer.populateCountry($("html").attr("lang"));
 
         if (sessionStorage.isDisplayed == "true")
         {
