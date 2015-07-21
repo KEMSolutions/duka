@@ -129,5 +129,10 @@ class Products extends BaseObject
     {
         return Utilities::setImageSizeAndMode(160, 160, "",  $this->get($id)->images[0]->url);
     }
+
+    public function mainImage($id)
+    {
+        return Utilities::setImageSizeAndMode(300, 550, "",  $this->get($id)->images[0]->url);
+    }
 }
 
