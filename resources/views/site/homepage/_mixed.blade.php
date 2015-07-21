@@ -1,12 +1,3 @@
-{{-- Set products thumbnails. --}}
-<?php
-    foreach($layoutData[ "mixed" ]["products"] as $product) {
-        $product->images[0]->thumbnail_lg = Utilities::setImageSizeAndMode(70, 110, "fit", $product->images[0]->url);
-        $product->images[0]->thumbnail = Utilities::setImageSizeAndMode(60, 60, "fit", $product->images[0]->url);
-        $product->images[0]->img_featured = Utilities::setImageSizeAndMode(80, 120, "fit", $product->images[0]->url);
-    }
-?>
-
 <section class="slice color-one home_mixed">
     @if ($showTab)
         @include("site.homepage._tab", ["tabTitle" => $layoutData["mixed"]["tabTitle"]])
