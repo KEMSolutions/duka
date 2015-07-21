@@ -1,15 +1,16 @@
 <?php namespace App\Http\Controllers\Auth;
 
 use Log;
-use Redirect;
+use Auth;
 use Session;
-use Validator;
+use Redirect;
 use Customers;
+use Validator;
 use Localization;
 
 use App\User;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
@@ -60,14 +61,14 @@ class AuthController extends Controller
         }
 
         // Validate user details.
-        $user = Customers::getCustomerObject(
+        $details = Customers::getCustomerObject(
             $request->input('email'),
             $request->input('name'),
             $request->input('postcode')
         );
 
         // Check if user already exists on the main server.
-        $record = Customers::get($user->email);
+        $record = Customers::get($details->email);
         if (!Customers::isError($record))
         {
             $request->merge([
@@ -82,10 +83,10 @@ class AuthController extends Controller
         // If not, create them and retrieve their unique ID.
         else
         {
-            $user = Customers::create($user->email, $user->name, $user->postcode);
+            $details = Customers::create($details->email, $details->name, $details->postcode);
 
             // Catch any errors from the server.
-            if (Customers::isError($user))
+            if (Customers::isError($details))
             {
                 Log::error('Could not create user on main server.');
                 abort(500);
@@ -93,16 +94,22 @@ class AuthController extends Controller
 
             // Update new user details with validated data & user ID.
             $request->merge([
-                'id' => $user->id,
-                'email' => $user->email,
-                'name' => $user->name,
-                'postcode' => $user->postcode,
-                'language' => $user->language
+                'id' => $details->id,
+                'email' => $details->email,
+                'name' => $details->name,
+                'postcode' => $details->postcode,
+                'language' => $details->language
             ]);
         }
 
-        // Register the user locally.
-        return $this->registerNewUser($request);
+        // Add a record for our new user in the local database.
+        $user = $this->create($request->all());
+
+        // Log them in.
+        Auth::login($user);
+//        Auth::attempt($request->only());
+
+        return redirect($this->redirectPath());
     }
 
     /**
