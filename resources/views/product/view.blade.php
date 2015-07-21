@@ -46,7 +46,7 @@
 
                                                             <ul>
                                                                 <li> <i class="fa fa-fw"><img src="https://cdn.kem.guru/boukem/spirit/flags/CA.png" width="17" alt="CA"></i>
-                                                                    {{ \Illuminate\Support\Facades\Lang::get("boukem.world_shipping") }}
+                                                                    {{ Lang::get("boukem.world_shipping") }}
                                                                 </li>
 
                                                                 @if($product->inventory->count > 5)
@@ -60,7 +60,7 @@
                                                                     <li><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.shipping_time") }}</li>
                                                                 @endif
 
-                                                                <li><i class="fa fa-lock fa-fw"></i>{{ \Illuminate\Support\Facades\Lang::get("boukem.secure_payment") }}</li>
+                                                                <li><i class="fa fa-lock fa-fw"></i>{{ Lang::get("boukem.secure_payment") }}</li>
 
                                                             </ul>
                                                         </span>
@@ -83,14 +83,14 @@
                                                                     data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
                                                                     data-name="{{ $product->localization->name }}"
                                                                     data-quantity="1">
-                                                                <i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
+                                                                <i class="fa fa-check-circle"></i>  {{ Lang::get("boukem.add_cart") }}</button>
                                                             <button class="btn btn-block btn-three center-block buybutton hidden-lg" data-product="{{ $product->id }}"
                                                                     data-price="{{ number_format((float)$product->price, 2, '.', '') }}"
                                                                     data-thumbnail="{{ Products::thumbnail($product->id) }}"
                                                                     data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
                                                                     data-name="{{ $product->localization->name }}"
                                                                     data-quantity="1">
-                                                                <i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
+                                                                <i class="fa fa-check-circle"></i>  {{ Lang::get("boukem.add_cart") }}</button>
                                                         </div>
                                                         </p>
                                                     @endif
@@ -118,20 +118,20 @@
 
 
                                             <div class="widget">
-                                                <h4 class="widget-heading">{{ \Illuminate\Support\Facades\Lang::get("boukem.share") }}</h4>
+                                                <h4 class="widget-heading">{{ Lang::get("boukem.share") }}</h4>
 
                                                 <ul class="categories highlight">
 
                                                     <li class="facebook_share_button">
                                                         {{-- TODO: INTEGREATE REAL LINKS FOR SHARING OPTIONS--}}
                                                         <a href="https://www.facebook.com/sharer/sharer.php?u=http://dev.boutiquekem.com/en/prod/en-probiotic-plus-120-capsules.html">
-                                                            <span class="fa fa-facebook fa-fw"></span> {{ \Illuminate\Support\Facades\Lang::get("boukem.share_fb") }}
+                                                            <span class="fa fa-facebook fa-fw"></span> {{ Lang::get("boukem.share_fb") }}
                                                         </a>
                                                     </li>
 
                                                     {{-- TODO: ICI AUSSI!--}}
                                                     <li class="pinterest_share_button"><a href="http://www.pinterest.com/pin/create/button/?url=http://dev.boutiquekem.com/en/prod/en-probiotic-plus-120-capsules.html&amp;media=//static.boutiquekem.com/productimg-8-700-700-83.jpg&amp;description=PROBIOTIC+Plus+-+120+capsules%0ARelief+from+urinary+tract+infections+%28UTIs%29Control+candida+yeast+infectionsStops+burning+during+urinationProtects+against+the+effects+of+antibioticsReduces+candida+during+antibiotic+therapyStops+bacteria+from+sticking+to+the+bladder+wallReduces+the+risk+of+recurring+bladder+infectionsPreviously+called+URIsmart" data-pin-do="buttonPin" data-pin-config="above">
-                                                            <span class="fa fa-pinterest fa-fw"></span> {{ \Illuminate\Support\Facades\Lang::get("boukem.share_pin") }}
+                                                            <span class="fa fa-pinterest fa-fw"></span> {{ Lang::get("boukem.share_pin") }}
                                                         </a>
                                                     </li>
 
@@ -175,19 +175,19 @@
                                                 <div class="col-md-12">
                                                     <div class="w-box blog-post">
                                                         <figure>
-                                                            <img alt="" itemprop="image" src="//static.boutiquekem.com/productimg-8-700-500-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}" class="img-responsive center-block hidden-xs">
+                                                            <img alt="" itemprop="image" src="{{ Products::mainImage($product->id) }}" class="img-responsive center-block hidden-xs">
 
                                                             <div id="product_long_description">
                                                                 <span>{!! $product->localization->long_description !!}</span>
                                                                 <ul class="meta-list text-center">
 
                                                                     <li>
-                                                                        <span>{{ \Illuminate\Support\Facades\Lang::get("boukem.CUP/EAN") }}</span>
+                                                                        <span>{{ Lang::get("boukem.CUP/EAN") }}</span>
                                                                         <span class="bold" itemprop="gtin13">{{ isset($product->barcode) }}</span>
                                                                     </li>
 
                                                                     <li itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
-                                                                        <span>{{ \Illuminate\Support\Facades\Lang::get("boukem.brand") }}</span>
+                                                                        <span>{{ Lang::get("boukem.brand") }}</span>
                                                                         <span class="bold" itemprop="name">{{ $product->brand->name }}</span>
                                                                     </li>
 
