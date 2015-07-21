@@ -1,13 +1,14 @@
 <?php namespace App\ApiObjects;
 
-use App\Utilities\Utilities;
 use Log;
 use Cache;
 use KemAPI;
 use Request;
 
 use Carbon\Carbon;
+use App\Utilities\Utilities;
 use cebe\markdown\MarkdownExtra;
+
 
 class Products extends BaseObject
 {
