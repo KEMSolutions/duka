@@ -18,7 +18,7 @@
             </span>
 
             <a href="/{{ $locale }}/prod/{{ $product->slug }}" class="strong">
-                <img src="{{ $product->images[0]->img_featured_lg }}" class="img-responsive center-block" alt="{{ $product->localization->name }}"/>
+                <img src="{{ Products::imgFeaturedLg($product->id) }}" class="img-responsive center-block" alt="{{ $product->localization->name }}"/>
             </a>
 
             {{-- Link to product brand --}}
@@ -36,8 +36,8 @@
                 <button class="btn btn-two btn-sm buybutton"
                         data-product="{{ $product->id }}"
                         data-price="{{ $product->price }}"
-                        data-thumbnail="{{ $product->images[0]->thumbnail }}"
-                        data-thumbnail_lg="{{ $product->images[0]->thumbnail_lg }}"
+                        data-thumbnail="{{ Products::thumbnail($product->id) }}"
+                        data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
                         data-name="{{ $product->localization->name }}"
                         data-quantity="1"
                         data-link="prod/{{ $product->slug }}">
