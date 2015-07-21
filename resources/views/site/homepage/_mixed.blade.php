@@ -1,3 +1,12 @@
+{{-- Set products thumbnails. --}}
+<?php
+    foreach($layoutData["mixed"]["products"] as $product) {
+        $product->images[0]->thumbnail_lg = Utilities::setImageSizeAndMode(70, 110, "fit", $product->images[0]->url);
+        $product->images[0]->thumbnail = Utilities::setImageSizeAndMode(60, 60, "fit", $product->images[0]->url);
+        $product->images[0]->img_featured = Utilities::setImageSizeAndMode(80, 120, "fit", $product->images[0]->url);
+    }
+?>
+
 <section class="slice color-one home_mixed">
     @if ($showTab)
         @include("site.homepage._tab", ["tabTitle" => $layoutData["mixed"]["tabTitle"]])
@@ -15,7 +24,7 @@
                                     <div class="col-md-2">
                                         <div class="img-feature">
                                             <a href="/{{ $locale }}/prod/{{ $product->slug }}">
-                                                <img src="//static.boutiquekem.com/productimg-120-120-{{ $product->images[0]->id . "." . $product->images[0]->extension }}" class="img-thumbnail center-block" alt="{{ $product->localization->name }}"/>
+                                                <img src="{{ $product->images[0]->img_featured }}" class="img-thumbnail center-block" alt="{{ $product->localization->name }}"/>
                                             </a>
                                         </div>
                                     </div>
@@ -36,8 +45,8 @@
                                             <button class="btn btn-one btn-sm buybutton"
                                                     data-product="{{ $product->id }}"
                                                     data-price="{{ number_format((float)$product->price, 2, '.', '') }}"
-                                                    data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
-                                                    data-thumbnail_lg="//static.boutiquekem.com/productimg-70-110-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
+                                                    data-thumbnail="{{ $product->images[0]->thumbnail }}"
+                                                    data-thumbnail_lg="{{ $product->images[0]->thumbnail_lg }}"
                                                     data-name="{{ $product->localization->name }}"
                                                     data-quantity="1">
                                                 <i class="fa fa-shopping-cart"></i>{{ number_format((float)$product->price, 2, '.', '') }} $
