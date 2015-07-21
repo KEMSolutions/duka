@@ -153,28 +153,28 @@
                     <i class="fa fa-caret-down pull-right" style="line-height: 53px"></i>
                 </span>
                 <div class="menu fluid">
-                    <div class="item">
-                        <span class="text">Clothing</span>
-                        <i class="fa fa-caret-right pull-right"></i>
-                        <div class="menu">
-                            <div class="semantic-header">Mens</div>
-                            <div class="item">Shirts</div>
-                            <div class="item">Pants</div>
-                            <div class="item">Jeans</div>
-                            <div class="item">Shoes</div>
-                            <div class="divider"></div>
-                            <div class="semantic-header">Womens</div>
-                            <div class="item">Dresses</div>
-                            <div class="item">Shoes</div>
-                            <div class="item">Bags</div>
-                        </div>
-                    </div>
-                    <div class="item">Home Goods</div>
-                    <div class="item">Bedroom</div>
-                    <div class="divider"></div>
-                    <div class="semantic-header">Order</div>
-                    <div class="item">Status</div>
-                    <div class="item">Cancellations</div>
+                    @foreach(Categories::getAllCategories() as $category)
+                        {{-- If there are any children category, list them under the main category --}}
+
+                            @if(count($category->children) > 0)
+                            <div class="item">
+                                <span class="text">{{ $category->name }}</span>
+                                <i class="fa fa-caret-right pull-right"></i>
+                                <div class="menu">
+                                    @foreach($category->children as $children)
+                                        <div class="item">
+                                            <a class="dark" href="/{{ Localization::getCurrentLocale() }}/cat/{{ $children->slug }}">{{ $children->name }}</a>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @else
+                                <div class="item">
+                                    <a class="dark" href="/{{ Localization::getCurrentLocale() }}/cat/{{ $children->name }}">{{ $children->name }}</a>
+                                </div>
+                            @endif
+                    @endforeach
+
                 </div>
             </div>
         </div>
@@ -212,3 +212,4 @@
 
 </div>
 {{--End of header--}}
+{{ var_dump(Categories::getAllCategories()) }}
