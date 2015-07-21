@@ -128,9 +128,9 @@
                         </div>
                     </div>
                 </li>
-                <li class="border color-one border-color-one" style="border-radius: 3px">
+                <li class="color-one border-color-one" style="border-radius: 3px">
                     <a class="view-cart">
-                        <button class="btn btn-default" id="view-cart-wrapper">
+                        <button class="btn btn-one" id="view-cart-wrapper">
                             <i class="fa fa-shopping-cart icon-cart color-one-text"></i>
                             <span id="cart-description">{{ " " . Lang::get("boukem.cart") . " " }}</span>
                             <span class="badge cart_badge">0</span>
