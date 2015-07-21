@@ -7,6 +7,9 @@ use Layouts;
 use Categories;
 use Localization;
 
+use App\Utilities\Utilities;
+
+
 class HomeController extends Controller {
 
 	/**
@@ -22,13 +25,13 @@ class HomeController extends Controller {
 		$layoutData = [];
 
 
-		//get all the data types presented on the api call
+		// Get all the data types presented on the api call.
 		for($i = 0; $i < count($apiData); $i++)
 		{
 			array_push($elementType, $apiData[$i]->type);
 		}
 
-		//for all the data types, create an array containing its relevant information, according to the current locale.
+		// For all the data types, create an array containing its relevant information, according to the current locale.
 		for($i = 0; $i < count($elementType); $i++)
 		{
 			$layoutData[$elementType[$i]] = $this->getData($apiData, $currentLocale, $i);
@@ -39,8 +42,11 @@ class HomeController extends Controller {
 			}
 		}
 
-		//return the homepage view.
-		//To access data on each section, do {{ $LayoutData["name_of_section"]["property"]  }}
+		// Add images of relevant sizes to products.
+		$this->extendProductImagesArray($layoutData, $elementType);
+
+		// Return the homepage view.
+		// To access data on each section, do {{ $LayoutData["name_of_section"]["property"]  }}
 		return View::make("site.homepage.home")->with([
 			"sites" => $elementType,
 
@@ -94,4 +100,46 @@ class HomeController extends Controller {
 		];
 	}
 
+	/**
+	 * Private method to extend the images array in every product with the following keys:
+	 * 		-thumbnail
+	 * 		-thumbnail_lg
+	 * 		-img_featured
+	 * 		-img_featured_lg
+	 *
+	 * @param $layoutData
+	 * @param $elementType
+	 */
+	private function extendProductImagesArray($layoutData, $elementType)
+	{
+		// Loop through all the layoutData sections.
+		for($i = 0; $i<count($layoutData); $i++)
+		{
+			// Cache current section (remember that $layoutData takes the current section name as a key)
+			$section = $layoutData[$elementType[$i]];
+
+			// Loop through the current section and check if there is a "products" array.
+			for($j = 0; $j<count($section); $j++)
+			{
+				if (array_key_exists("products", $section))
+				{
+					// Cache the current products array.
+					$products = $section["products"];
+
+					// Loop through the products array and add the relevant keys/values.
+					for ($k = 0; $k<count($products); $k++)
+					{
+						//Some products can be null (bug or feature?), check them here.
+						if ($products[$k] != null)
+						{
+							$products[$k]->images[0]->thumbnail_lg = Utilities::setImageSizeAndMode(70, 110, "fit", $products[$k]->images[0]->url);
+							$products[$k]->images[0]->thumbnail = Utilities::setImageSizeAndMode(60, 60, "fit", $products[$k]->images[0]->url);
+							$products[$k]->images[0]->img_featured = Utilities::setImageSizeAndMode(80, 120, "fit", $products[$k]->images[0]->url);
+							$products[$k]->images[0]->img_featured_lg = Utilities::setImageSizeAndMode(160, 160, "", $products[$k]->images[0]->url);
+						}
+					}
+				}
+			}
+		}
+	}
 }
