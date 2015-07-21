@@ -1,7 +1,7 @@
 <aside id="cart-container" style="margin-right: 0">
     <div class="cart">
         <header class="cart-header">
-            <i class="fa fa-angle-left fa-2x" id="back"></i>
+            <button class="pull-left no-border fa-2x" id="back">&times;</button>
             <h2>{{ Lang::get("boukem.cart") }}</h2>
         </header>
 
