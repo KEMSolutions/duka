@@ -79,15 +79,15 @@
                                                             <button class="btn btn-three buybutton visible-lg-inline"
                                                                     data-product="{{ $product->id }}"
                                                                     data-price="{{ number_format((float)$product->price, 2, '.', '') }}"
-                                                                    data-thumbnail="{{ $product->images[0]->thumbnail }}"
-                                                                    data-thumbnail_lg="{{ $product->images[0]->thumbnail_lg }}"
+                                                                    data-thumbnail="{{ Products::thumbnail($product->id) }}"
+                                                                    data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
                                                                     data-name="{{ $product->localization->name }}"
                                                                     data-quantity="1">
                                                                 <i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
                                                             <button class="btn btn-block btn-three center-block buybutton hidden-lg" data-product="{{ $product->id }}"
                                                                     data-price="{{ number_format((float)$product->price, 2, '.', '') }}"
-                                                                    data-thumbnail="{{ $product->images[0]->thumbnail }}"
-                                                                    data-thumbnail_lg="{{ $product->images[0]->thumbnail_lg }}"
+                                                                    data-thumbnail="{{ Products::thumbnail($product->id) }}"
+                                                                    data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
                                                                     data-name="{{ $product->localization->name }}"
                                                                     data-quantity="1">
                                                                 <i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>

@@ -109,5 +109,26 @@ class Products extends BaseObject
 
         return $results;
     }
+
+
+    public function thumbnail($id)
+    {
+        return Utilities::setImageSizeAndMode(60, 60, "fit", $this->get($id)->images[0]->url);
+    }
+
+    public function thumbnailLg($id)
+    {
+        return Utilities::setImageSizeAndMode(70, 110, "fit",  $this->get($id)->images[0]->url);
+    }
+
+    public function imgFeatured($id)
+    {
+        return Utilities::setImageSizeAndMode(80, 120, "fit",  $this->get($id)->images[0]->url);
+    }
+
+    public function imgFeaturedLg($id)
+    {
+        return Utilities::setImageSizeAndMode(160, 160, "",  $this->get($id)->images[0]->url);
+    }
 }
 

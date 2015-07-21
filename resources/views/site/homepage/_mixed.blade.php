@@ -15,7 +15,7 @@
                                     <div class="col-md-2">
                                         <div class="img-feature">
                                             <a href="/{{ $locale }}/prod/{{ $product->slug }}">
-                                                <img src="{{ $product->images[0]->img_featured }}" class="img-thumbnail center-block" alt="{{ $product->localization->name }}"/>
+                                                <img src="{{ Products::imgFeatured($product->id) }}" class="img-thumbnail center-block" alt="{{ $product->localization->name }}"/>
                                             </a>
                                         </div>
                                     </div>
@@ -36,8 +36,8 @@
                                             <button class="btn btn-one btn-sm buybutton"
                                                     data-product="{{ $product->id }}"
                                                     data-price="{{ number_format((float)$product->price, 2, '.', '') }}"
-                                                    data-thumbnail="{{ $product->images[0]->thumbnail }}"
-                                                    data-thumbnail_lg="{{ $product->images[0]->thumbnail_lg }}"
+                                                    data-thumbnail="{{ Products::thumbnail($product->id) }}"
+                                                    data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
                                                     data-name="{{ $product->localization->name }}"
                                                     data-quantity="1">
                                                 <i class="fa fa-shopping-cart"></i>{{ number_format((float)$product->price, 2, '.', '') }} $
