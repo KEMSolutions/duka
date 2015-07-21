@@ -51,6 +51,16 @@ class Utilities
         return $return;
     }
 
+    /**
+     * Returns an image path according to the width, height, mode and source entered as arguments.
+     *
+     *
+     * @param $width
+     * @param $height
+     * @param $mode
+     * @param $source
+     * @return mixed
+     */
     public static function setImageSizeAndMode($width, $height, $mode, $source)
     {
         // Format mode.
