@@ -14,12 +14,10 @@ class Layouts extends BaseObject
      *
      * @param object $object    Layouts array.
      * @param string $requestID Layout name, or an empty string for the homepage.
+     * @param object $expires   \Carbon\Carbon object representing when the cache should expire.
      */
-    protected function cache($object, $requestID = 'home')
-    {
-        $expires = Carbon::now()->addHours(3);
-        Cache::put($this->cacheNamespace . $requestID, $object, $expires);
-        Log::info('Caching "'. $this->cacheNamespace . $requestID .'" until "'. $expires .'"');
+    protected function cache($object, $requestID = 'home', $expires = null) {
+        parent::cache($object, $requestID, $expires);
     }
 
     /**
