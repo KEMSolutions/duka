@@ -170,7 +170,7 @@
                             @else
                                 <div class="item">
                                     @if(isset($category->slug) && isset($category->name))
-                                        <a class="dark"
+                                        <a class="dark no-decoration"
                                            href="/{{ Localization::getCurrentLocale() }}/cat/{{ $category->slug }}">
                                             <div class="item">
                                                 {{ $category->name }}
