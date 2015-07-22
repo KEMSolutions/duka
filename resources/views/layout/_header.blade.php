@@ -155,7 +155,6 @@
                 <div class="menu fluid">
                     @foreach(Categories::getAllCategories() as $category)
                         {{-- If there are any children category, list them under the main category --}}
-
                             @if(count($category->children) > 0)
                             <div class="item">
                                 <span class="text">{{ $category->name }}</span>
@@ -170,7 +169,10 @@
                             </div>
                             @else
                                 <div class="item">
-                                    <a class="dark" href="/{{ Localization::getCurrentLocale() }}/cat/{{ $children->name }}">{{ $children->name }}</a>
+                                    {{--<a class="dark"--}}
+                                       {{--href="/{{ Localization::getCurrentLocale() }}/cat/{{ $category->slug }}">--}}
+                                        {{--{{ $category->name }}--}}
+                                    {{--</a>--}}
                                 </div>
                             @endif
                     @endforeach
@@ -212,4 +214,13 @@
 
 </div>
 {{--End of header--}}
-{{ var_dump(Categories::getAllCategories()) }}
+@foreach(Categories::getAllCategories() as $c)
+    @if(count($c->children) > 0)
+       @foreach($c->children as $child)
+           {{ var_dump($child) }}
+       @endforeach
+    @else
+        {{ var_dump($child->slug) }}
+    @endif
+
+@endforeach
