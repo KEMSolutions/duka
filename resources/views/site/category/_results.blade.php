@@ -1,4 +1,4 @@
-<div class="col-md-12">
+<div class="col-md-10">
     @include(
         'product.layout._product_card_dense', [
             'showTag' => false,

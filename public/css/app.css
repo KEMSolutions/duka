@@ -5091,11 +5091,11 @@ section.slice {
 }
 
 #refine-search-container {
-  border: 1px solid #3E3F4C;
+  background:#EBEBEB;
 }
 
 .refine-search-title {
-  border-bottom: 1px solid #3E3F4C;
+  font-weight: 900;
 }
 
 .refine-search-component:last-child {
