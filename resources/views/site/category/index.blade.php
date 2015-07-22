@@ -13,11 +13,15 @@
             <div class="container-fluid">
                 {{-- Include breadcrumbs --}}
                 @include('site.category._breadcrumbs')
+
                 {{-- Include filter sidebar --}}
+                @include('site.category._filter_sidebar')
 
                 {{-- Include filter summary container --}}
 
+
                 {{-- Include sorting topbar --}}
+
 
                 {{-- Include results --}}
                 @include('site.category._results', ['results' => $products])

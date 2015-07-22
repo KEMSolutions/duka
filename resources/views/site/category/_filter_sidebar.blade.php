@@ -1,5 +1,5 @@
 <div class="col-md-2" id="refine-search-container">
-    <h4>Refine By</h4>
+    <h4 class="text-center">607 results found</h4>
     <hr/>
 
     <nav class="hidden-print hidden-xs hidden-sm">
@@ -65,12 +65,22 @@
             <li>
                 <div class="refine-search-component">
                     <h5 class="refine-search-title">Gamme de prix</h5>
-                                <span>
-                                    Min $
-                                    <input type="number" min="0" max="100" placeholder="0"/>
-                                    Max $
-                                    <input type="number" min="0" max="100" placeholder="100"/>
-                                </span>
+                    <div class="center-block">
+                        <div>
+                            $
+                            <input type="number" min="0" placeholder="Min"/>
+                        </div>
+
+                        <div>
+                            $
+                            <input type="number" min="0" placeholder="max"/>
+                        </div>
+
+                        <button>Update!</button>
+
+                    </div>
+
+
                 </div>
 
 
