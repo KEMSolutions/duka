@@ -4773,6 +4773,14 @@ section.slice {
   border-left: 1px solid #fff;
 }
 
+.no-decoration {
+  text-decoration: none;
+}
+
+.no-decoration:hover, .no-decoration:active, .no-decoration:focus {
+  text-decoration: none;
+}
+
 .widget {
   margin-bottom: 20px;
 }
