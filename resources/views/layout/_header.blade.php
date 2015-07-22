@@ -169,10 +169,12 @@
                             </div>
                             @else
                                 <div class="item">
-                                    {{--<a class="dark"--}}
-                                       {{--href="/{{ Localization::getCurrentLocale() }}/cat/{{ $category->slug }}">--}}
-                                        {{--{{ $category->name }}--}}
-                                    {{--</a>--}}
+                                    @if(isset($category->slug) && isset($category->name))
+                                        <a class="dark"
+                                           href="/{{ Localization::getCurrentLocale() }}/cat/{{ $category->slug }}">
+                                            {{ $category->name }}
+                                        </a>
+                                    @endif
                                 </div>
                             @endif
                     @endforeach
@@ -229,13 +231,3 @@
 
 </div>
 {{--End of header--}}
-@foreach(Categories::getAllCategories() as $c)
-    @if(count($c->children) > 0)
-       @foreach($c->children as $child)
-           {{ var_dump($child) }}
-       @endforeach
-    @else
-        {{ var_dump($child->slug) }}
-    @endif
-
-@endforeach
