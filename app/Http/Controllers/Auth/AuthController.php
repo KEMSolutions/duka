@@ -105,9 +105,13 @@ class AuthController extends Controller
         // Add a record for our new user in the local database.
         $user = $this->create($request->all());
 
+        // Because the ID is the primary key, it will be incremented in this instance of $user.
+        // We'll have to change it back just so we can log them in. The database record, however,
+        // has the right information.
+        $user->id = $request->input('id');
+
         // Log them in.
         Auth::login($user);
-//        Auth::attempt($request->only());
 
         return redirect($this->redirectPath());
     }

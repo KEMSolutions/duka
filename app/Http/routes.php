@@ -1,8 +1,5 @@
 <?php
 
-//dd(\Auth::user());
-//dd(\App\User::all());
-
 // Set all localized routes here.
 Route::group([
     'prefix' => Localization::setLocale(),
@@ -116,7 +113,6 @@ Route::group(['prefix' => 'api'], function()
     Route::get('products/{id}',     ['as' => 'api.products', 'uses' => 'ApiController@getProduct']);
     Route::get('search/{query}',    ['as' => 'api.search', 'uses' => 'ApiController@searchProducts']);
     Route::post('estimate',         ['as' => 'api.estimate', 'uses' => 'ApiController@getOrderEstimate']);
-
 
     // Return '400 Bad Request' on all other requests.
     Route::any('/{catchAll?}', function($catchAll = null) {
