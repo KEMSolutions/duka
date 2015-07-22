@@ -8,12 +8,23 @@
 
     @section("content")
         {{-- Include header --}}
-        @include("site.category._header")
+        @include("site.category._header", ['name' => $name])
 
-        {{-- Include results --}}
-        @include('site.category._results', ['results' => $products])
+            <div class="container-fluid">
+                {{-- Include breadcrumbs --}}
+                @include('site.category._breadcrumbs')
+                {{-- Include filter sidebar --}}
+
+                {{-- Include filter summary container --}}
+
+                {{-- Include sorting topbar --}}
+
+                {{-- Include results --}}
+                @include('site.category._results', ['results' => $products])
+            </div>
+
     @endsection
 
 
 
-@endsection
+@stop

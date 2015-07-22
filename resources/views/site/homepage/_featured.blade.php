@@ -12,7 +12,7 @@
                     @include("product.layout._product_card_dense",
                     [
                         "products" => array_slice($layoutData["featured"]["products"], 0, $layoutData["featured"]["limit"]),
-                        "border" => false
+                        "border" => true
                     ])
                 @elseif(!$layoutData["featured"]["layoutDense"])
                     @include("product.layout._product_card",
