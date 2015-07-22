@@ -49,13 +49,14 @@ class CategoryController extends Controller
         }
 
         return View::make("site.category.index")->with([
-            "name" => $category->name,
-            "featured" => isset($category->featured) ? $category->featured : null,
-            "products" => $results,
-            "children" => $category->children,
-            "presentation" => $category->presentation,
             "background" => $this->sanitizeBackground($category->presentation->background->image, "1500", "200"),
-            "paginator" => $paginator
+            "children" => $category->children,
+            "featured" => isset($category->featured) ? $category->featured : null,
+            "locale" => Localization::getCurrentLocale(),
+            "name" => $category->name,
+            "paginator" => $paginator,
+            "presentation" => $category->presentation,
+            "products" => $results
         ]);
     }
 
