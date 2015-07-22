@@ -74,7 +74,7 @@
 
         <div class="col-md-3 col-sm-3 hidden-xs" id="nav-right">
             <ul>
-                <li class="border-bottom-hover header-account-button">
+                <li class="btn btn-five">
                     <div class="ui top left pointing dropdown dropdown-no-select">
                         <div class="text">
                             <i class="icon fa fa-user"></i> {{ Lang::get("boukem.my") }} {{ Lang::get("boukem.account") }}

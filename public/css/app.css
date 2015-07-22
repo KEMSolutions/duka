@@ -4773,15 +4773,6 @@ section.slice {
   border-left: 1px solid #fff;
 }
 
-
-.border-bottom-hover {
-  transition: all 0.1s ease-in;
-}
-
-.border-bottom-hover:hover, .border-bottom-hover:active, .border-bottom-hover:focus {
-  border-bottom: 1px solid #8c8c8c;
-}
-
 .widget {
   margin-bottom: 20px;
 }
@@ -4909,11 +4900,6 @@ section.slice {
   line-height: 53px;
   vertical-align: middle;
 }
-
-.header-account-button {
-  padding-bottom: 7px;
-}
-
 
 .btn-xs-btn-sm-height {
   padding: 5px 5px;
