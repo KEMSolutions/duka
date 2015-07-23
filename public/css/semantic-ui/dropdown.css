@@ -41,7 +41,7 @@
   display: none;
   outline: none;
   top: 150%;
-  width: 100%;
+  width: auto;
   min-width: -webkit-max-content;
   min-width: -moz-max-content;
   min-width: max-content;
