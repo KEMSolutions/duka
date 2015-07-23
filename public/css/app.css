@@ -4891,18 +4891,7 @@ section.slice {
 
 /* Temporary hack fix for Firefox shifting the background image. */
 /* Courtesy of http://www.paulirish.com/2009/browser-specific-css-hacks/ */
-/* Firefox only. 1+ */
-.header,  x:-moz-any-link  {
-  height: 117px;
-}
-
-/* Firefox 3.0+ */
-.header,  x:-moz-any-link, x:default  {
-  height: 117px;
-}
-
-/* Firefox 3.5+ */
-body:not(:-moz-handler-blocked) .header {
+_:-moz-tree-row(hover), .header {
   height: 117px;
 }
 
