@@ -4885,8 +4885,11 @@ section.slice {
 /*-----------------------------------*/
 /*-----------------------------------*/
 .header {
-  height: 121px;
-  margin-bottom: -2px;
+  height: 117px;
+
+  /* Temp fix for the white stroke under the header? */
+  /*height: 121px;*/
+  /*margin-bottom: -2px;*/
 }
 
 .header-banner {
