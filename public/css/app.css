@@ -4885,11 +4885,25 @@ section.slice {
 /*-----------------------------------*/
 /*-----------------------------------*/
 .header {
-  height: 117px;
+  height: 116px;
+}
 
-  /* Temp fix for the white stroke under the header? */
-  /*height: 121px;*/
-  /*margin-bottom: -2px;*/
+
+/* Temporary hack fix for Firefox shifting the background image. */
+/* Courtesy of http://www.paulirish.com/2009/browser-specific-css-hacks/ */
+/* Firefox only. 1+ */
+.header,  x:-moz-any-link  {
+  height: 117px;
+}
+
+/* Firefox 3.0+ */
+.header,  x:-moz-any-link, x:default  {
+  height: 117px;
+}
+
+/* Firefox 3.5+ */
+body:not(:-moz-handler-blocked) .header {
+  height: 117px;
 }
 
 .header-banner {
