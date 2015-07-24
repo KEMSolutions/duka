@@ -26,6 +26,7 @@
 	<!-- Semantic UI css dependencies -->
 	<link rel="stylesheet" href="{{ asset('css/semantic-ui/transition.min.css') }}"/>
 	<link href="{{ asset('/css/semantic-ui/dropdown.css') }}" rel="stylesheet">
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/label.css') }}"/>
 
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
 

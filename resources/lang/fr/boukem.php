@@ -213,4 +213,8 @@ return [
     "wishlist_saved"    =>"Votre liste d'envies sera sauvegardée tant que votre historique ne sera pas effacée.",
     "wishlist_remove"   =>"Retirer de la liste",
     "payment_successful" => "Merci pour votre paiement.",
+    "filter_by"         =>"Filtrer par",
+    "reset"             =>"Tout effacer",
+
 ];
+

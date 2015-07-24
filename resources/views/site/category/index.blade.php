@@ -18,7 +18,7 @@
                 @include('site.category._filter_sidebar')
 
                 {{-- Include filter summary container --}}
-
+                @include('site.category._filter_summary')
 
                 {{-- Include sorting topbar --}}
 

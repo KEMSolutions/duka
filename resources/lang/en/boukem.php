@@ -213,4 +213,8 @@ return [
     "wishlist_saved"    =>"Your wishlist will be saved while your browser session lasts.",
     "wishlist_remove"   =>"Remove from wishlist",
     "payment_successful" => "Thank you for your payment.",
+    "filter_by"   =>"Filter by",
+    "reset"             =>"Reset",
+
 ];
+
