@@ -82,9 +82,10 @@ abstract class BaseObject
      *
      * @param mixed $id             ID or slug of requested object.
      * @param array $requestParams  Parameters to include with API request.
+     * @param int $expires          Hours to keep object in cache.
      * @return object               Requested object.
      */
-    public function get($id, $requestParams = [])
+    public function get($id, $requestParams = [], $expires = 3)
     {
         // Check that $id is either a valid number or a valid slug.
         if ((is_numeric($id) && $id < 0) || preg_replace($this->slugInvalidCharacters, '', $id) != $id) {
@@ -94,29 +95,39 @@ abstract class BaseObject
         // Validate request parameters.
         $requestParams = $this->validateRequestParams($requestParams);
 
-        // Retrieve object from cache, or make an API call.
+        // Check to see if object has already been cached.
         $cacheKey = $id .'.'. json_encode($requestParams);
-        if (!$object = Cache::get($this->cacheNamespace . $cacheKey))
+        if ($expires && $object = Cache::get($this->cacheNamespace . $cacheKey)) {
+            return $object;
+        }
+
+        // If not, retrieve the data from the API. We use the response object so that
+        // we may retrieve more information about the response later if necessary.
+        $response = KemAPI::get($this->baseRequest .'/'. $id, $requestParams, true);
+
+        // Catch any errors without throwing them back.
+        if (!$response) {
+            return $this->badRequest('Received null [req: ' . $this->baseRequest . '].');
+        }
+
+        $object = json_decode($response->getBody());
+
+        // If we have an error, skip the cache and return the result.
+        if ($this->isError($object) || $response->getStatusCode() != 200) {
+            return $object;
+        }
+
+        // If we have a results set, try to add pagination information.
+        if (isset($requestParams['page']) && isset($requestParams['per_page']))
         {
-            // Use the response object, so that we may retrieve more information
-            // about the response later if necessary.
-            $response = KemAPI::get($this->baseRequest .'/'. $id, $requestParams, true);
-            $object = json_decode($response->getBody());
+            $object->paginationLinks = $response->getHeader('Links');
+            $object->paginationTotal = $response->getHeader('X-Total-Count');
+        }
 
-            // If we have an error, skip the cache and return the result.
-            if ($this->isError($object) || $response->getStatusCode() != 200) {
-                return $object;
-            }
-
-            // If we have a results set, try to add pagination information.
-            if (isset($requestParams['page']) && isset($requestParams['per_page']))
-            {
-                $object->paginationLinks = $response->getHeader('Links');
-                $object->paginationTotal = $response->getHeader('X-Total-Count');
-            }
-
-            // Cache result.
-            $this->cache($object, $cacheKey);
+        // Cache result.
+        if ($expires > 0)
+        {
+            $this->cache($object, $cacheKey, Carbon::now()->addHours($expires));
 
             // Look for products to cache within results.
             $this->findAndCache($object);
@@ -190,13 +201,16 @@ abstract class BaseObject
      *
      * @param object $object    Object to be cached.
      * @param mixed $requestID  Original ID used to make API call.
+     * @param object $expires   \Carbon\Carbon object representing when the cache should expire.
      */
-    protected function cache($object, $requestID = null)
+    protected function cache($object, $requestID = null, $expires = null)
     {
-        // Cache object by ID and by slug.
-        $expires = Carbon::now()->addHours(3);
+        // Cache object by ID.
+        $expires = $expires ?: Carbon::now()->addHours(3);
         $requestID = $requestID ?: $object->id;
         Cache::put($this->cacheNamespace . $requestID, $object, $expires);
+
+        // If the object has a slug, cache it under that name too.
         if (is_object($object) && property_exists($object, 'slug')) {
             Cache::put($this->cacheNamespace . $object->slug, $object, $expires);
         }

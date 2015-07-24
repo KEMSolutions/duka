@@ -13,19 +13,22 @@ class Customers extends BaseObject
     public function __construct() { parent::__construct('customers'); }
 
     /**
-     * Overwrite base method to prevent caching.
+     * Retrieves a customer record.
      *
-     * @param mixed $id     ID or email of customer.
-     * @return object       Requested object.
+     * @param mixed $id             ID or email of customer.
+     * @param array $requestParams  Parameters to include with API request.
+     * @param int $expires          Hours to keep object in cache.
+     * @return object               Customer record.
      */
-    public function get($id)
+    public function get($id, $requestParams = [], $expires = 0)
     {
-        // Performance check.
-        if ((is_numeric($id) && $id < 0) || preg_replace($this->slugInvalidCharacters, '', $id) != $id) {
-            return $this->badRequest('Invalid identifier [req: '. $this->baseRequest .'].');
+        // If we're retrieving a record by email and it hasn't already been base64 encoded,
+        // we need to handle that.
+        if (!is_numeric($id) && strpos($id, '@')) {
+            $id = base64_encode($id);
         }
 
-        return KemAPI::get($this->baseRequest .'/'. $id);
+        return parent::get($id, $requestParams, $expires);
     }
 
     /**
@@ -67,12 +70,12 @@ class Customers extends BaseObject
 
     /**
      * @param $email
-     * @param null $name
-     * @param null $postcode
-     * @param null $language
+     * @param mixed $name
+     * @param mixed $postcode
+     * @param mixed $language
      * @return \stdClass
      */
-    private function getCustomerObject($email, $name = null, $postcode = null, $language = null)
+    public function getCustomerObject($email, $name = null, $postcode = null, $language = null)
     {
         // TODO: validate data.
         // ...

@@ -24,12 +24,13 @@ class Products extends BaseObject
      *
      * @param mixed $id             ID or slug of product to fetch.
      * @param array $requestParams  Parameters to include in API request.
+     * @param int $expires          Hours to keep object in cache.
      * @return object               Product details.
      */
-    public function get($id, $requestParams = [])
+    public function get($id, $requestParams = [], $expires = 3)
     {
         // Retrieve product details.
-        $product = parent::get($id, $requestParams);
+        $product = parent::get($id, $requestParams, $expires);
         if ($this->isError($product)) {
             return $product;
         }

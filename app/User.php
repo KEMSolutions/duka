@@ -6,8 +6,8 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
-
+class User extends Model implements AuthenticatableContract, CanResetPasswordContract
+{
 	use Authenticatable, CanResetPassword;
 
 	/**
@@ -22,7 +22,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['id', 'name', 'email', 'password'];
+	protected $fillable = ['id', 'name', 'email', 'password', 'language'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -31,4 +31,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	protected $hidden = ['password', 'remember_token'];
 
+    /**
+     * @param string $email
+     * @return mixed
+     */
+    public static function findByEmail($email) {
+        return static::where(['email' => $email])->first();
+    }
 }
+

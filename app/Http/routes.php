@@ -1,8 +1,5 @@
 <?php
 
-//dd(\Auth::user());
-//dd(\App\User::all());
-
 // Set all localized routes here.
 Route::group([
     'prefix' => Localization::setLocale(),
@@ -31,8 +28,8 @@ Route::group([
     Route::get('logout',    ['as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout']);
 
     // Registration routes.
-    Route::get('register',  ['as' => 'auth.register', 'uses' => 'Auth\AuthController@getRegister']);
-    Route::post('register', ['as' => 'auth.register.action', 'uses' => 'Auth\AuthController@postRegister']);
+    Route::get('signup',    ['as' => 'auth.register', 'uses' => 'Auth\AuthController@getRegister']);
+    Route::post('signup',   ['as' => 'auth.register.action', 'uses' => 'Auth\AuthController@postRegister']);
 
     Route::controllers([
 //        'auth' => 'Auth\AuthController',
@@ -83,6 +80,10 @@ Route::group([
         Route::get('store-info', function() {
             return Illuminate\Support\Collection::make(Store::info());
         });
+
+        Route::get('error/{status}', function($status) {
+            abort($status);
+        });
     });
 });
 
@@ -90,7 +91,7 @@ Route::group([
 Route::group(['prefix' => 'api'], function()
 {
     // Set locale.
-    Localization::setLocale(Request::input('locale', 'en'));
+    Request::has('locale') ? Localization::setLocale(Request::input('locale', 'en')) : null;
 
     // Category endpoints.
     Route::get('brands/{id}',       ['as' => 'api.brands', 'uses' => 'ApiController@getBrand']);
@@ -112,7 +113,6 @@ Route::group(['prefix' => 'api'], function()
     Route::get('products/{id}',     ['as' => 'api.products', 'uses' => 'ApiController@getProduct']);
     Route::get('search/{query}',    ['as' => 'api.search', 'uses' => 'ApiController@searchProducts']);
     Route::post('estimate',         ['as' => 'api.estimate', 'uses' => 'ApiController@getOrderEstimate']);
-
 
     // Return '400 Bad Request' on all other requests.
     Route::any('/{catchAll?}', function($catchAll = null) {

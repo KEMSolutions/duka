@@ -172,6 +172,7 @@ class ApiController extends Controller
     public function handleSuccessfulPayment()
     {
         // Redirect to homepage with a message.
+        // TODO: localize this text.
         Session::push('messages', '[test] Payment successful.');
         return Redirect::to('home');
     }
