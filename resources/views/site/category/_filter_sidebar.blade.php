@@ -1,8 +1,10 @@
 <div class="col-md-2" id="refine-search-container">
-    <h4 class="text-center">607 results found</h4>
-    <hr/>
+    <div class="row">
+        <h4 class="text-center">607 results found</h4>
+    </div>
 
-    <nav class="hidden-print hidden-xs hidden-sm">
+    <div class="row padding-5">
+        <nav class="hidden-print hidden-xs hidden-sm">
         <ul class="nav list-unstyled">
             <li>
                 <div class="refine-search-component">
@@ -87,4 +89,5 @@
             </li>
         </ul>
     </nav>
+    </div>
 </div>

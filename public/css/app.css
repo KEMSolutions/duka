@@ -4668,6 +4668,10 @@ footer .copyright{color:#EEE;}
   padding: 0;
 }
 
+.padding-5 {
+  padding: 5%;
+}
+
 .padding-side-lg {
   padding: 10px 40px;
 }
@@ -4771,6 +4775,10 @@ section.slice {
 
 .border-left {
   border-left: 1px solid #fff;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #888;
 }
 
 .no-decoration {

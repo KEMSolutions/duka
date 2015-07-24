@@ -130,5 +130,20 @@
     footer a {
         color: {{ $color_five_light  }}
     }
+
+    .btn-black {
+        color: #ffffff;
+        background-color: #000000;
+    }
+
+    .btn-black:hover,
+    .btn-black:focus,
+    .btn-black:active,
+    .btn-black.active {
+        color: #ffffff;
+        background-color: #616161;
+        border-color: #398439;
+    }
+
 </style>
 
