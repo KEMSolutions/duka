@@ -84,14 +84,16 @@
 
                             @if(Auth::guest())
                                 <div class="item no-hover">
-                                    <button class="btn btn-success color-one text-center center-block full-width">
-                                        {{ Lang::get("boukem.sign_in") }}
-                                    </button>
+                                    <a href="{{ route("auth.login") }}">
+                                        <button class="btn btn-success color-one text-center center-block full-width">
+                                            {{ Lang::get("boukem.log_in") }}
+                                        </button>
+                                    </a>
                                 </div>
 
                                 <div class="item no-hover">
                                     <div class="description">
-                                        {{ Lang::get("boukem.no_account") }} <a href="#">{{ Lang::get("boukem.sign_up") }} !</a>
+                                        {{ Lang::get("boukem.no_account") }} <a href="{{ route("auth.register") }}">{{ Lang::get("boukem.sign_up") }} !</a>
                                     </div>
                                 </div>
                             @else
@@ -106,9 +108,11 @@
                                 <div class="divider"></div>
 
                                 <div class="item">
-                                    <button class="btn btn-default color-one text-center center-block full-width">
-                                        {{ Lang::get("boukem.sign_out") }}
-                                    </button>
+                                    <a href="{{ route("auth.logout") }}">
+                                        <button class="btn btn-default color-one text-center center-block full-width">
+                                            {{ Lang::get("boukem.log_out") }}
+                                        </button>
+                                    </a>
                                 </div>
                             @endif
 
