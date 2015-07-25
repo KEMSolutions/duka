@@ -21,7 +21,7 @@
                 @include('site.category._filter_summary')
 
                 {{-- Include sorting topbar --}}
-
+                @include('site.category._sorting_topbar')
 
                 {{-- Include results --}}
                 @include('site.category._results', ['results' => $products])
