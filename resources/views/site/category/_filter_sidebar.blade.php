@@ -68,17 +68,23 @@
                 <div class="refine-search-component">
                     <h5 class="refine-search-title">Gamme de prix</h5>
                     <div class="center-block">
-                        <div>
-                            $
-                            <input type="number" min="0" placeholder="Min"/>
+                        <div class="ui labeled input refine-search-input">
+                            <div class="ui label">
+                                $
+                            </div>
+                            <input type="number" placeholder="Min" min="0">
                         </div>
 
-                        <div>
-                            $
-                            <input type="number" min="0" placeholder="max"/>
+                        <div class="ui labeled input refine-search-input">
+                            <div class="ui label">
+                                $
+                            </div>
+                            <input type="number" placeholder="Max" min="0">
                         </div>
 
-                        <button>Update!</button>
+                        <button class="ui button large center-block">
+                            Update
+                        </button>
 
                     </div>
 
