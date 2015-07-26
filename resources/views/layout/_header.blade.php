@@ -49,6 +49,7 @@
                                 <div class="text">{{ Lang::get("boukem.all") }} </div>
                                 <i class="fa fa-caret-down"></i>
                                 <div class="menu">
+                                    <div class="item">{{ Lang::get("boukem.all") }}</div>
                                     <div class="item">{{ Lang::get("boukem.categories") }}</div>
                                     <div class="item">{{ Lang::get("boukem.brands") }}</div>
                                     <div class="item">{{ Lang::get("boukem.health_issues") }}</div>
