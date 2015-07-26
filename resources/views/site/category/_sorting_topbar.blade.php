@@ -53,7 +53,7 @@
         <li class="pull-right">
             <span>
               Layout:
-              <ul class="list-unstyled list-inline inline-block">
+              <ul class="list-unstyled list-inline inline-block" id="category-result-layout">
                   <li>
                       <button class="ui labeled icon button large active">
                           <i class="fa fa-th-large icon"></i>

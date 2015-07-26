@@ -4281,9 +4281,9 @@ button.close {
   clear: both;
 }
 .center-block {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 .pull-right {
   float: right !important;
@@ -4786,7 +4786,7 @@ section.slice {
 }
 
 .border-bottom {
-  border-bottom: 1px solid #888;
+  border-bottom: 1px solid #E0E0E0;
 }
 
 .no-decoration {
@@ -5106,14 +5106,12 @@ _:-moz-tree-row(hover), .header {
     /*-----------------------------------*/
 
 .absolute-scrollable {
-  height: 130px;
-  border: 1px solid #eee;
   padding: 0 5px;
   overflow: auto;
 }
 
 #refine-search-container {
-  background:#EBEBEB;
+  border-right: 1px solid #EBEBEB;
 }
 
 .refine-search-title {
@@ -5124,6 +5122,10 @@ _:-moz-tree-row(hover), .header {
   padding-bottom: 20px;
 }
 
+.refine-search-input {
+  margin-bottom: 5%;
+  width: 75%;
+}
     /*-----------------------------------*/
 
     /* Style for Category page sorting topbar */
