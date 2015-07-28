@@ -223,7 +223,7 @@
                     <div class="menu fluid">
                         <div class="item">
                             <i class="fa fa-phone icon"></i>
-                            {{ Store::info()->support->phone }}
+                            {{ Store::info()->support->phone->number }}
                         </div>
                         <div class="divider"></div>
                         <div class="item">
