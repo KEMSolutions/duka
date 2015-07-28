@@ -16,6 +16,7 @@ var categoryContainer = {
     },
 
 
+    // SORTING FEATURE
     /**
      * TODO: REFACTOR ALL LOGIC INTO ITS OWN CONTAINER
      *
@@ -32,6 +33,14 @@ var categoryContainer = {
         })
     },
 
+
+    // FILTERING FEATURE
+    priceUpdate: function() {
+
+    },
+
+
+    // HELPER FUNCTION : TO BE MOVED IN UTILITYCONTAINER
     // Courtesy of http://stackoverflow.com/a/1917916
     URL_add_parameter: function(key, value){
         key = escape(key); value = escape(value);

@@ -72,17 +72,17 @@
                             <div class="ui label">
                                 $
                             </div>
-                            <input type="number" placeholder="Min" min="0">
+                            <input type="number" placeholder="Min" min="0" id="min-price">
                         </div>
 
                         <div class="ui labeled input refine-search-input">
                             <div class="ui label">
                                 $
                             </div>
-                            <input type="number" placeholder="Max" min="0">
+                            <input type="number" placeholder="Max" min="0" id="max-price">
                         </div>
 
-                        <button class="ui button large center-block">
+                        <button class="ui button large center-block" id="price-update">
                             Update
                         </button>
 
