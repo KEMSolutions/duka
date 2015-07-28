@@ -25,7 +25,7 @@ class Products extends BaseObject
      * @param int $expires          Hours to keep object in cache.
      * @return object               Product details.
      */
-    public function get($id, $requestParams = [], $expires = 3)
+    public function get($id, array $requestParams = [], $expires = 3)
     {
         // Retrieve product details.
         $product = parent::get($id, $requestParams, $expires);

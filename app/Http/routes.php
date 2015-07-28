@@ -85,6 +85,8 @@ Route::group([
         Route::get('error/{status}', function($status) {
             abort($status);
         });
+
+        Route::get('categories/{id}', 'ApiController@getCategory');
     });
 });
 

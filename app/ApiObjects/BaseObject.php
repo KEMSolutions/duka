@@ -85,7 +85,7 @@ abstract class BaseObject
      * @param int $expires          Hours to keep object in cache.
      * @return object               Requested object.
      */
-    public function get($id, $requestParams = [], $expires = 3)
+    public function get($id, array $requestParams = [], $expires = 3)
     {
         // Check that $id is either a valid number or a valid slug.
         if ((is_numeric($id) && $id < 0) || preg_replace($this->slugInvalidCharacters, '', $id) != $id) {

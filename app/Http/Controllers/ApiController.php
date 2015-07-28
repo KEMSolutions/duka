@@ -29,27 +29,37 @@ class ApiController extends Controller
 
 
     /**
+     * Retrieves the details for a brand.
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response|static
      */
     public function getBrand($id)
     {
-        return $this->send(Brands::get($id,
-            Request::input('page', 1),
-            Request::input('perPage', 40)
-        ));
+        return $this->send(Brands::get($id, [
+            'page' => Request::input('page', 1),
+            'per_page' => Request::input('per_page', 40),
+            'embed' => ['products', 'presentation'],
+            'filters' => Request::input('filters'),
+            'order' => Request::input('order')
+        ]));
     }
 
     /**
+     * Retrieves the details for a category.
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response|static
      */
     public function getCategory($id)
     {
-        return $this->send(Categories::get($id,
-            Request::input('page', 1),
-            Request::input('perPage', 40)
-        ));
+        return $this->send(Categories::get($id, [
+            'page' => Request::input('page', 1),
+            'per_page' => Request::input('per_page', 40),
+            'embed' => ['products', 'presentation'],
+            'filters' => Request::input('filters'),
+            'order' => Request::input('order')
+        ]));
     }
 
 
