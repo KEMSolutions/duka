@@ -9,7 +9,7 @@
             <li>
                 <div class="refine-search-component">
                     <h5 class="refine-search-title">{{ Lang::get("boukem.categories") }}</h5>
-                    <ul class="list-unstyled absolute-scrollable">
+                    <ul class="list-unstyled absolute-scrollable" id="refine-by-category">
 
                         @foreach(Categories::getAllCategories() as $category)
                             <li>
@@ -26,7 +26,7 @@
             <li>
                 <div class="refine-search-component">
                     <h5 class="refine-search-title">Marques</h5>
-                    <ul class="list-unstyled absolute-scrollable">
+                    <ul class="list-unstyled absolute-scrollable" id="refine-by-brand">
                         <li>
                             <label><input type="checkbox"/> Lorna Vanderhaeghe</label>
                         </li>
