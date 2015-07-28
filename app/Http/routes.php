@@ -9,6 +9,10 @@ Route::group([
     Route::get('home',      'HomeController@index');
     Route::get('/',         ['as' => 'home', 'uses' => 'HomeController@index']);
 
+    // Other pages.
+    Route::get('pages/{slug}', ['as' => 'page', 'uses' => 'PageController@getPage']);
+    Route::get('contracts/{slug}', ['as' => 'contract', 'uses' => 'PageController@getContract']);
+
     // Categories.
     Route::get('cat/{slug}.html',   ['as' => 'category', 'uses' => 'CategoryController@display']);
 
@@ -18,10 +22,6 @@ Route::group([
 
     // Cart & checkout.
     Route::get('cart',      ['as' => 'cart', 'uses' => 'CheckoutController@index']);
-
-    // Custom pages.
-    Route::get('pages/{slug}', ['as' => 'page', 'uses' => 'PageController@display']);
-
     // Authentication routes.
     Route::get('login',     ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
     Route::post('login',    ['as' => 'auth.login.action', 'uses' => 'Auth\AuthController@postLogin']);

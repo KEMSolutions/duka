@@ -18,6 +18,11 @@ class Store extends BaseObject
         return parent::get('');
     }
 
+    /**
+     * Retrieves the supported locales for the current store.
+     *
+     * @return array
+     */
     public function locales()
     {
         $locales = Cache::remember('store.locales', Carbon::now()->addDay(), function()
@@ -39,6 +44,37 @@ class Store extends BaseObject
         return $locales;
     }
 
+    /**
+     * Retrieves the contract pages for the current store.
+     *
+     * @return mixed
+     */
+    public function contracts()
+    {
+        $contracts = Cache::remember('store.contracts', Carbon::now()->addWeek(), function()
+        {
+            $results = KemAPI::get('store', ['embed' => 'contracts']);
+
+            // Create an easily accessible array before caching it.
+            $data = [];
+            foreach ($results->contracts as $contract) {
+                $data[$contract->slug] = $contract;
+            }
+
+            return $data;
+        });
+
+        return $contracts;
+    }
+
+    /**
+     * Gets the URL to the stores logo.
+     *
+     * @param int $width
+     * @param int $height
+     * @param string $mode
+     * @return string
+     */
     public function logo($width = 200, $height = 60, $mode = 'fit')
     {
         // Format mode.

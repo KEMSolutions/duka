@@ -2,7 +2,9 @@
 
 use Lang;
 use Pages;
+use Store;
 
+use Illuminate\Support\Arr;
 use cebe\markdown\MarkdownExtra;
 
 /**
@@ -25,10 +27,12 @@ class PageController extends Controller
     }
 
     /**
-     * @param $slug
+     * Renders a custom page.
+     *
+     * @param string $slug
      * @return \Illuminate\View\View
      */
-	public function display($slug)
+	public function getPage($slug)
     {
         // Retrieve page content.
         $page = Pages::get($slug);
@@ -47,7 +51,25 @@ class PageController extends Controller
                 $html = $page->content;
         }
 
-        return view('site.pages.index', ['html' => $html]);
+        return view('site.custom_pages.index', ['html' => $html]);
+    }
+
+    /**
+     * Renders a contract page.
+     *
+     * @param string $slug
+     * @return \Illuminate\View\View
+     */
+    public function getContract($slug)
+    {
+        if (!$contract = Arr::get(Store::contracts(), $slug, false)) {
+            abort(404, Lang::get('boukem.error_occurred'));
+        }
+
+        // Convert contract content to HTML.
+        $html = $this->parser->parse($contract->content);
+
+        return view('site.custom_pages.index', ['html' => $html]);
     }
 }
 
