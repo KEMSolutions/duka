@@ -5087,6 +5087,7 @@ _:-moz-tree-row(hover), .header {
 
 .category-header {
   background-size: cover;
+  margin-top: 9px;
 }
 
 .category-title, .category-subtitle {
