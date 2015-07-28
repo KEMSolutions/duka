@@ -26,6 +26,12 @@ var categoryContainer = {
         });
     },
 
+    sortBy: function () {
+        $(".sort-by .item").on("click", function() {
+            categoryContainer.URL_add_parameter("order", $(this).data("sort"));
+        })
+    },
+
     // Courtesy of http://stackoverflow.com/a/1917916
     URL_add_parameter: function(key, value){
         key = escape(key); value = escape(value);
@@ -58,6 +64,7 @@ var categoryContainer = {
 
         self.blurBackground();
         self.itemsPerPage();
+        self.sortBy();
     }
 
 }
