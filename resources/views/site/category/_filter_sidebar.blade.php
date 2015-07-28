@@ -5,19 +5,19 @@
 
     <div class="row padding-5">
         <nav class="hidden-print hidden-xs hidden-sm">
-            <ul class="nav list-unstyled">
-                <li>
-                    <div class="refine-search-component">
-                        <h5 class="refine-search-title">{{ Lang::get("boukem.categories") }}</h5>
-                        <ul class="list-unstyled absolute-scrollable">
+        <ul class="nav list-unstyled">
+            <li>
+                <div class="refine-search-component">
+                    <h5 class="refine-search-title">{{ Lang::get("boukem.categories") }}</h5>
+                    <ul class="list-unstyled absolute-scrollable" id="refine-by-category">
 
-                            @foreach(Categories::getAllCategories() as $category)
-                                <li>
-                                    <label>
-                                        <input type="checkbox" data-filter="{{ $category->id }}"/> {{ $category->name }}
-                                    </label>
-                                </li>
-                            @endforeach
+                        @foreach(Categories::getAllCategories() as $category)
+                            <li>
+                                <label>
+                                    <input type="checkbox" data-filter="{{ $category->id }}"/> {{ $category->name }}
+                                </label>
+                            </li>
+                        @endforeach
 
                         </ul>
                     </div>
@@ -51,25 +51,25 @@
                                 <input type="number" placeholder="Min" min="0" id="min-price">
                             </div>
 
-                            <div class="ui labeled input refine-search-input">
-                                <div class="ui label">
-                                    $
-                                </div>
-                                <input type="number" placeholder="Max" min="0" id="max-price">
+                        <div class="ui labeled input refine-search-input">
+                            <div class="ui label">
+                                $
                             </div>
-
-                            <button class="ui button large center-block" id="price-update">
-                                Update
-                            </button>
-
+                            <input type="number" placeholder="Max" min="0" id="max-price">
                         </div>
 
+                        <button class="ui button large center-block" id="price-update">
+                            Update
+                        </button>
 
                     </div>
 
 
-                </li>
-            </ul>
-        </nav>
+                </div>
+
+
+            </li>
+        </ul>
+    </nav>
     </div>
 </div>

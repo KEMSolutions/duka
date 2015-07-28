@@ -2,7 +2,7 @@
     <ul class="list-unstyled list-inline">
         <li>
             <span>
-              <div class="ui inline dropdown dropdown-select top left pointing button labeled large">
+              <div class="ui inline dropdown dropdown-select top left pointing button labeled large" id="sort-by-box">
                   Sort by:
                   <div class="text">
                       <i class="fa fa-link"></i>
@@ -29,7 +29,7 @@
 
         <li>
             <span>
-                <div class="ui inline dropdown dropdown-select top right pointing button labeled large">
+                <div class="ui inline dropdown dropdown-select top right pointing button labeled large" id="items-per-page-box">
                     Items per page:
                     <div class="text">
                         8

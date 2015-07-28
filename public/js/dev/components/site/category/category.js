@@ -6,6 +6,20 @@
 var categoryContainer = {
 
     /**
+     * Contains the updated URL parameters,
+     *
+     */
+    searchParameters: {
+        page: 1,
+        per_page: 8,
+        order: 'relevance',
+        min_price: null,
+        max_price: null,
+        brands: '',
+        categories: ''
+    },
+
+    /**
      * Blurs the background of each category's page header.
      *
      */
@@ -25,18 +39,35 @@ var categoryContainer = {
         $(".items-per-page .item").on("click", function() {
             categoryContainer.URL_add_parameter("per_page", $(this).data("sort"));
         });
+
+        // Set the selected option.
+        $('#items-per-page-box').dropdown('set selected', this.searchParameters.per_page);
     },
 
     sortBy: function () {
         $(".sort-by .item").on("click", function() {
             categoryContainer.URL_add_parameter("order", $(this).data("sort"));
-        })
+        });
+
+        // Set the selected option.
+        $('#sort-by-box').dropdown('set selected', this.searchParameters.order);
     },
 
 
-    // FILTERING FEATURE
+    // FILTERING FEATURE.
     priceUpdate: function() {
+        $("#price-update").on("click", function() {
+            categoryContainer.URL_add_parameter("min_price", $("#min-price").val());
+            categoryContainer.URL_add_parameter("max_price", $("#max-price").val());
+        });
 
+        // Set the specified price range.
+        if (this.searchParameters.min_price) {
+            $('#min-price').val(this.searchParameters.min_price);
+        }
+        if (this.searchParameters.max_price) {
+            $('#max-price').val(this.searchParameters.max_price);
+        }
     },
 
     toggleLayout: function () {
@@ -44,6 +75,7 @@ var categoryContainer = {
             $product = $(".dense_product"),
             $product_img = $(".product-image"),
             $product_buybutton = $(".dense_product .buybutton");
+    categoriesUpdate: function() {
 
         $("#list-layout, #grid-layout").on("click", function () {
 
@@ -80,6 +112,13 @@ var categoryContainer = {
     },
 
 
+    },
+
+    brandsUpdate: function() {
+
+    },
+
+
     // HELPER FUNCTION : TO BE MOVED IN UTILITYCONTAINER
     // Courtesy of http://stackoverflow.com/a/1917916
     URL_add_parameter: function(key, value){
@@ -108,13 +147,53 @@ var categoryContainer = {
         }
     },
 
+    /**
+     * Retrieves the query parameters from the URL and stores them locally.
+     * Inspired by http://stackoverflow.com/a/1917916
+     *
+     */
+    retrieveSearchParameters: function() {
+
+        // Performance check.
+        var query = document.location.search.substr(1);
+        if (query.length < 1) {
+            return;
+        }
+
+        // Loop through query elements.
+        var kvp = query.split('&'), index, pair, key, value;
+        for (index in kvp)
+        {
+            // Skip parameters without any values.
+            if (kvp[index].indexOf('=') < 1) {
+                continue;
+            }
+
+            pair = kvp[index].split('=');
+            key = pair[0];
+            value = pair[1];
+
+            // Save the search parameter if it's valid.
+            if (typeof this.searchParameters[key] != 'undefined') {
+                this.searchParameters[key] = value;
+                //this.searchParameters[key] = ['brands', 'categories'].includes(key) ?
+                //    value.split(';') :
+                //    value;
+            }
+        }
+    },
+
     init: function () {
         var self = categoryContainer;
 
+        self.retrieveSearchParameters();
         self.blurBackground();
         self.itemsPerPage();
         self.sortBy();
         self.toggleLayout();
+        self.priceUpdate();
+        self.categoriesUpdate();
+        self.brandsUpdate();
     }
 
-}
+};
