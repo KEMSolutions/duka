@@ -70,12 +70,20 @@ var categoryContainer = {
         }
     },
 
+    categoriesUpdate: function() {
+
+    },
+
+    brandsUpdate: function() {
+
+    },
+
     toggleLayout: function () {
         var $container = $(".layout-toggle-container"),
             $product = $(".dense_product"),
             $product_img = $(".product-image"),
             $product_buybutton = $(".dense_product .buybutton");
-    categoriesUpdate: function() {
+
 
         $("#list-layout, #grid-layout").on("click", function () {
 
@@ -110,14 +118,6 @@ var categoryContainer = {
             }
         })
     },
-
-
-    },
-
-    brandsUpdate: function() {
-
-    },
-
 
     // HELPER FUNCTION : TO BE MOVED IN UTILITYCONTAINER
     // Courtesy of http://stackoverflow.com/a/1917916
