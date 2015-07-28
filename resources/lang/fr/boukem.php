@@ -196,7 +196,7 @@ return [
     "calculate"         =>"Calculer",
     "or"                =>"ou",
     "change_location"   =>"Changer destination",
-    "pending_order"  =>"Votre commande #:command n'a pas été finalisée.",
+    "pending_order"     =>"Votre commande #:command n'a pas été finalisée.",
     "what_to_do"        =>"Que souhaitez vous faire?",
     "pay_now"           =>"Payer cette commande.",
     "cancel_order"      =>"Annuler cette commande.",
@@ -212,6 +212,7 @@ return [
     "wishlist_number"   =>"Vous avez <span id='quantity-wishlist'>0 item</span> dans votre liste d'envies.",
     "wishlist_saved"    =>"Votre liste d'envies sera sauvegardée tant que votre historique ne sera pas effacée.",
     "wishlist_remove"   =>"Retirer de la liste",
-    "filter_by"   =>"Filtrer par",
-    "reset"             =>"Tout effacer"
+    "filter_by"         =>"Filtrer par",
+    "reset"             =>"Tout effacer",
+    "results_found"     =>":total résultats trouvés"
 ];

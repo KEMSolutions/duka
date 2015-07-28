@@ -15,7 +15,7 @@
                 @include('site.category._breadcrumbs')
 
                 {{-- Include filter sidebar --}}
-                @include('site.category._filter_sidebar')
+                @include('site.category._filter_sidebar', ['total' => $total])
 
                 {{-- Include filter summary container --}}
                 @include('site.category._filter_summary')

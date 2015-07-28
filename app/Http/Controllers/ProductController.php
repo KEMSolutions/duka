@@ -65,7 +65,7 @@ class ProductController extends Controller
             'perPage' => $perPage,
             'results' => $results,
             'paginator' => $paginator,
-            'border' => true
+            'border' => false
         ]);
     }
 }
