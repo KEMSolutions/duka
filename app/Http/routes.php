@@ -22,6 +22,7 @@ Route::group([
 
     // Cart & checkout.
     Route::get('cart',      ['as' => 'cart', 'uses' => 'CheckoutController@index']);
+
     // Authentication routes.
     Route::get('login',     ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
     Route::post('login',    ['as' => 'auth.login.action', 'uses' => 'Auth\AuthController@postLogin']);
@@ -37,7 +38,7 @@ Route::group([
     ]);
 
     // Wish list.
-    Route::get("wishlist","WishlistController@index");
+    Route::get('wishlist', 'WishlistController@index');
 
 
     //
