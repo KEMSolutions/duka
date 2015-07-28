@@ -78,7 +78,7 @@ class Store extends BaseObject
      */
     public function logo($width = 200, $height = 60, $mode = 'fit')
     {
-        return Utilities::setImageSizeAndMode($width, $height, $mode, $this->info()->logo->url);
+        return Utilities::setImageSizeAndMode($width, $height, '', $this->info()->logo->url);
     }
 }
 
