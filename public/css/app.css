@@ -4900,10 +4900,6 @@ section.slice {
 /*-----------------------------------*/
 /*-----------------------------------*/
 /*-----------------------------------*/
-.header {
-  height: 116px;
-}
-
 
 /* Temporary hack fix for Firefox shifting the background image. */
 /* Courtesy of http://www.paulirish.com/2009/browser-specific-css-hacks/ */
