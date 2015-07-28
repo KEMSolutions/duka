@@ -20,7 +20,7 @@ Route::group([
     Route::get('cart',      ['as' => 'cart', 'uses' => 'CheckoutController@index']);
 
     // Custom pages.
-    Route::get('pages/{slug}', ['as' => 'page', 'uses' => 'PagesController@display']);
+    Route::get('pages/{slug}', ['as' => 'page', 'uses' => 'PageController@display']);
 
     // Authentication routes.
     Route::get('login',     ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);

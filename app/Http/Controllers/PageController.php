@@ -3,12 +3,31 @@
 use Lang;
 use Pages;
 
+use cebe\markdown\MarkdownExtra;
+
 /**
  * Class PagesController
  * @package App\Http\Controllers
  */
-class PagesController extends Controller
+class PageController extends Controller
 {
+    /**
+     * @var MarkdownExtra   Markdown parser.
+     */
+    protected $parser;
+
+    /**
+     * @param MarkdownExtra $parser
+     */
+    public function __construct(MarkdownExtra $parser)
+    {
+        $this->parser = $parser;
+    }
+
+    /**
+     * @param $slug
+     * @return \Illuminate\View\View
+     */
 	public function display($slug)
     {
         // Retrieve page content.
@@ -21,8 +40,7 @@ class PagesController extends Controller
         switch ($page->type)
         {
             case 'markdown':
-                $parser = new \cebe\markdown\MarkdownExtra;
-                $html = $parser->parse($page->content);
+                $html = $this->parser->parse($page->content);
                 break;
 
             default:
@@ -32,3 +50,4 @@ class PagesController extends Controller
         return view('site.pages.index', ['html' => $html]);
     }
 }
+
