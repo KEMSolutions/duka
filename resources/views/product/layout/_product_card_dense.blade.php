@@ -18,7 +18,7 @@
             </span>
 
             <a href="/{{ $locale }}/prod/{{ $product->slug }}" class="strong">
-                <img src="{{ Products::imgFeaturedLg($product->id) }}" class="img-responsive center-block" alt="{{ $product->localization->name }}"/>
+                <img src="{{ Products::imgFeaturedLg($product->id) }}" class="product-image img-responsive center-block" alt="{{ $product->localization->name }}"/>
             </a>
 
             {{-- Link to product brand --}}
@@ -30,6 +30,10 @@
 
             <div class="name">
                 <a href="/{{ $locale }}/prod/{{ $product->slug }}">{{ $product->localization->name }}</a>
+            </div>
+
+            <div class="short-description hidden">
+                <p>{{ $product->localization->short_description }}</p>
             </div>
 
             <div class="price">

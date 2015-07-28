@@ -214,6 +214,6 @@ return [
     "wishlist_remove"   =>"Remove from wishlist",
     "payment_successful" => "Thank you for your payment.",
     "results_found"     =>":total results found",
-    
+
 ];
 

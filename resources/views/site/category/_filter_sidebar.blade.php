@@ -5,83 +5,70 @@
 
     <div class="row padding-5">
         <nav class="hidden-print hidden-xs hidden-sm">
-        <ul class="nav list-unstyled">
-            <li>
-                <div class="refine-search-component">
-                    <h5 class="refine-search-title">{{ Lang::get("boukem.categories") }}</h5>
-                    <ul class="list-unstyled absolute-scrollable" id="refine-by-category">
+            <ul class="nav list-unstyled">
+                <li>
+                    <div class="refine-search-component">
+                        <h5 class="refine-search-title">{{ Lang::get("boukem.categories") }}</h5>
+                        <ul class="list-unstyled absolute-scrollable" id="refine-by-category">
 
-                        @foreach(Categories::getAllCategories() as $category)
-                            <li>
-                                <label>
-                                    <input type="checkbox" data-filter="{{ $category->id }}"/> {{ $category->name }}
-                                </label>
-                            </li>
-                        @endforeach
+                            @foreach(Categories::getAllCategories() as $category)
+                                <li>
+                                    <label>
+                                        <input type="checkbox" data-filter="{{ $category->id }}"/> {{ $category->name }}
+                                    </label>
+                                </li>
+                            @endforeach
 
-                    </ul>
-                </div>
-            </li>
+                        </ul>
+                    </div>
+                </li>
 
-            <li>
-                <div class="refine-search-component">
-                    <h5 class="refine-search-title">Marques</h5>
-                    <ul class="list-unstyled absolute-scrollable" id="refine-by-brand">
-                        <li>
-                            <label><input type="checkbox"/> Lorna Vanderhaeghe</label>
-                        </li>
-                        <li>
-                            <label><input type="checkbox"/> Folie</label>
-                        </li>
-                        <li>
-                            <label><input type="checkbox"/> Folie</label>
-                        </li>
-                        <li>
-                            <label><input type="checkbox"/> Folie</label>
-                        </li>
-                        <li>
-                            <label><input type="checkbox"/> Folie</label>
-                        </li>
-                        <li>
-                            <label><input type="checkbox"/> Folie</label>
-                        </li>
-                        <li>
-                            <label><input type="checkbox"/> Folie</label>
-                        </li>
-                    </ul>
-                </div>
-            </li>
+                <li>
+                    <div class="refine-search-component">
+                        <h5 class="refine-search-title">Marques</h5>
+                        <ul class="list-unstyled absolute-scrollable" id="refine-by-brand">
+                            @foreach(Brands::getAllBrands() as $category)
+                                @if($category)
+                                    <li>
+                                        <label>
+                                            <input type="checkbox" data-filter="{{ $category->id }}"/> {{ $category->name }}
+                                        </label>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                </li>
 
-            <li>
-                <div class="refine-search-component">
-                    <h5 class="refine-search-title">Gamme de prix</h5>
-                    <div class="center-block">
-                        <div class="ui labeled input refine-search-input">
-                            <div class="ui label">
-                                $
+                <li>
+                    <div class="refine-search-component">
+                        <h5 class="refine-search-title">Gamme de prix</h5>
+                        <div class="center-block">
+                            <div class="ui labeled input refine-search-input">
+                                <div class="ui label">
+                                    $
+                                </div>
+                                <input type="number" placeholder="Min" min="0" id="min-price">
                             </div>
-                            <input type="number" placeholder="Min" min="0" id="min-price">
+
+                            <div class="ui labeled input refine-search-input">
+                                <div class="ui label">
+                                    $
+                                </div>
+                                <input type="number" placeholder="Max" min="0" id="max-price">
+                            </div>
+
+                            <button class="ui button large center-block" id="price-update">
+                                Update
+                            </button>
+
                         </div>
 
-                        <div class="ui labeled input refine-search-input">
-                            <div class="ui label">
-                                $
-                            </div>
-                            <input type="number" placeholder="Max" min="0" id="max-price">
-                        </div>
-
-                        <button class="ui button large center-block" id="price-update">
-                            Update
-                        </button>
 
                     </div>
 
-
-                </div>
-
-
-            </li>
-        </ul>
-    </nav>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>

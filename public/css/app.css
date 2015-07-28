@@ -4676,6 +4676,10 @@ footer .copyright{color:#EEE;}
   margin-bottom: 0;
 }
 
+.padding-1 {
+  padding: 1%;
+}
+
 .padding-5 {
   padding: 5%;
 }
@@ -4812,7 +4816,7 @@ section.slice {
 /*----------------------------------------*/
 /*----------------------------------------*/
 /*----------------------------------------*/
-/* Style for list layout                  */
+/* Style for list layout (wishlist page)  */
 /*----------------------------------------*/
 /*----------------------------------------*/
 /*----------------------------------------*/
@@ -4826,19 +4830,19 @@ section.slice {
 /*----------------------------------------*/
 /*----------------------------------------*/
 /* Style for product tiles (dense layout) */
+/* Grid and list layout                   */
 /*----------------------------------------*/
 /*----------------------------------------*/
-/*----------------------------------------*/
-.dense_product .name, .dense_product .brand, .dense_product .price {
+.grid-layout .dense_product .name, .grid-layout .dense_product .brand, .grid-layout .dense_product .price {
   padding: 3px;
 }
 
-.dense_product .btn {
+.grid-layout .dense_product .btn {
   border: 1px solid lightgray;
   border-radius: 5px;
 }
 
-.dense_product {
+.grid-layout .dense_product {
   height: 320px;
   border: 1px solid #CCC;
   border-left: 0;
@@ -4846,11 +4850,12 @@ section.slice {
   padding: 25px;
 }
 
-.dense_product img {
+.grid-layout .dense_product img {
   margin-bottom: 1.3rem;
   max-width: 20em;
   height: 160px;
 }
+
 
 /*-----------------------------------*/
 

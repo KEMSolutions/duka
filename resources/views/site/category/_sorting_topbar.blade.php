@@ -58,14 +58,14 @@
               Layout:
               <ul class="list-unstyled list-inline inline-block" id="category-result-layout">
                   <li>
-                      <button class="ui labeled icon button large active">
+                      <button class="ui labeled icon button large" id="grid-layout">
                           <i class="fa fa-th-large icon"></i>
-                          Thumbnails
+                          Grid
                       </button>
                   </li>
 
                   <li>
-                      <button class="ui labeled icon button large">
+                      <button class="ui labeled icon button large" id="list-layout">
                           <i class="fa fa-bars icon"></i>
                           List
                       </button>
