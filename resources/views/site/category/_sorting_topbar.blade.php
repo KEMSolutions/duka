@@ -9,16 +9,16 @@
                       Relevance
                   </div>
                   <i class="dropdown icon"></i>
-                  <div class="menu">
-                      <div class="item">
+                  <div class="menu sort-by">
+                      <div class="item" data-sort="relevance">
                           <i class="fa fa-link"></i>
                           Relevance
                       </div>
-                      <div class="item">
+                      <div class="item" data-sort="price-+">
                           <i class="fa fa-usd"></i>
                           Price: Low to High
                       </div>
-                      <div class="item">
+                      <div class="item" data-sort="price+-">
                           <i class="fa fa-usd"></i>
                           Price: High to Low
                       </div>
@@ -35,14 +35,14 @@
                         8
                     </div>
                     <i class="dropdown icon"></i>
-                    <div class="menu">
-                        <div class="item">
+                    <div class="menu items-per-page">
+                        <div class="item" data-sort="24">
                             24
                         </div>
-                        <div class="item">
+                        <div class="item" data-sort="40">
                             40
                         </div>
-                        <div class="item">
+                        <div class="item" data-sort="80">
                             80
                         </div>
                     </div>
