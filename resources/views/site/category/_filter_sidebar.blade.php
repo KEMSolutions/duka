@@ -8,29 +8,17 @@
         <ul class="nav list-unstyled">
             <li>
                 <div class="refine-search-component">
-                    <h5 class="refine-search-title">Sous-catégories</h5>
+                    <h5 class="refine-search-title">{{ Lang::get("boukem.categories") }}</h5>
                     <ul class="list-unstyled absolute-scrollable">
-                        <li>
-                            <label><input type="checkbox"/> Tisanes thérapeutiques</label>
-                        </li>
-                        <li>
-                            <label><input type="checkbox"/> Fatigue</label>
-                        </li>
-                        <li>
-                            <label><input type="checkbox"/> Stress</label>
-                        </li>
-                        <li>
-                            <label><input type="checkbox"/> Folie</label>
-                        </li>
-                        <li>
-                            <label><input type="checkbox"/> Folie</label>
-                        </li>
-                        <li>
-                            <label><input type="checkbox"/> Folie</label>
-                        </li>
-                        <li>
-                            <label><input type="checkbox"/> Folie</label>
-                        </li>
+
+                        @foreach(Categories::getAllCategories() as $category)
+                            <li>
+                                <label>
+                                    <input type="checkbox" data-filter="{{ $category->id }}"/> {{ $category->name }}
+                                </label>
+                            </li>
+                        @endforeach
+
                     </ul>
                 </div>
             </li>
