@@ -10,15 +10,15 @@
                   </div>
                   <i class="dropdown icon"></i>
                   <div class="menu sort-by">
-                      <div class="item" data-sort="relevance">
+                      <div class="item" data-sort="-relevance">
                           <i class="fa fa-link"></i>
                           Relevance
                       </div>
-                      <div class="item" data-sort="price-+">
+                      <div class="item" data-sort="price">
                           <i class="fa fa-usd"></i>
                           Price: Low to High
                       </div>
-                      <div class="item" data-sort="price+-">
+                      <div class="item" data-sort="-price">
                           <i class="fa fa-usd"></i>
                           Price: High to Low
                       </div>
