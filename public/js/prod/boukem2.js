@@ -991,6 +991,7 @@ var categoryContainer = {
         self.blurBackground();
         self.itemsPerPage();
         self.sortBy();
+        self.toggleLayout();
         self.priceUpdate();
         self.categoriesUpdate();
         self.brandsUpdate();

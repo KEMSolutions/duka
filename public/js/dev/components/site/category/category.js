@@ -118,7 +118,6 @@ var categoryContainer = {
         })
     },
 
-
     // HELPER FUNCTION : TO BE MOVED IN UTILITYCONTAINER
     // Courtesy of http://stackoverflow.com/a/1917916
     URL_add_parameter: function(key, value){
