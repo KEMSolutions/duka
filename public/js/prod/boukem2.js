@@ -813,6 +813,7 @@ var categoryContainer = {
     },
 
 
+    // SORTING FEATURE
     /**
      * TODO: REFACTOR ALL LOGIC INTO ITS OWN CONTAINER
      *
@@ -829,6 +830,54 @@ var categoryContainer = {
         })
     },
 
+
+    // FILTERING FEATURE
+    priceUpdate: function() {
+
+    },
+
+    toggleLayout: function () {
+        var $container = $(".layout-toggle-container"),
+            $product = $(".dense_product"),
+            $product_img = $(".product-image"),
+            $product_buybutton = $(".dense_product .buybutton");
+
+        $("#list-layout, #grid-layout").on("click", function () {
+
+            if($container.hasClass("grid-layout"))
+            {
+                // List layout
+                $container.removeClass("grid-layout").addClass("list-layout");
+
+                $product.removeClass("col-xs-6 col-sm-4 col-md-3 text-center no-border")
+                    .addClass("col-xs-12 col-sm-12 col-md-12 border-bottom padding-1");
+
+                $product_img.removeClass("img-responsive center-block").addClass("pull-left").css("margin-right", "5%");
+
+                $product_buybutton.css("margin-top", "3%");
+
+
+                $(this).toggleClass("active");
+            }
+            else if ($container.hasClass("list-layout"))
+            {
+                // Grid layout
+                $container.removeClass("list-layout").addClass("grid-layout");
+
+                $product.removeClass("col-xs-12 col-sm-12 col-md-12 border-bottom padding-1").
+                    addClass("col-xs-6 col-sm-4 col-md-3 text-center no-border");
+
+                $product_img.addClass("img-responsive center-block").removeClass("pull-left").css("margin-right", "0");
+
+                $product_buybutton.css("margin-top", "0");
+
+                $(this).toggleClass("active");
+            }
+        })
+    },
+
+
+    // HELPER FUNCTION : TO BE MOVED IN UTILITYCONTAINER
     // Courtesy of http://stackoverflow.com/a/1917916
     URL_add_parameter: function(key, value){
         key = escape(key); value = escape(value);
@@ -862,6 +911,7 @@ var categoryContainer = {
         self.blurBackground();
         self.itemsPerPage();
         self.sortBy();
+        self.toggleLayout();
     }
 
 }
