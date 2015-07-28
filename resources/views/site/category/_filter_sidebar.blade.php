@@ -1,6 +1,6 @@
 <div class="col-md-2" id="refine-search-container">
     <div class="row">
-        <h4 class="text-center">607 results found</h4>
+        <h4 class="text-center">{{ Lang::get('boukem.results_found', ['total' => $total]) }}</h4>
     </div>
 
     <div class="row padding-5">

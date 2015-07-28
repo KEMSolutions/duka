@@ -56,7 +56,8 @@ class CategoryController extends Controller
             "name" => $category->name,
             "paginator" => $paginator,
             "presentation" => $category->presentation,
-            "products" => $results
+            "products" => $results,
+            "total" => $category->paginationTotal
         ]);
     }
 

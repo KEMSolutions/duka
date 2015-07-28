@@ -196,7 +196,7 @@ return [
     "calculate"         =>"Calculate",
     "or"                =>"or",
     "change_location"   =>"Change location",
-    "pending_order"  =>"Your order #:command has not been paid.",
+    "pending_order"     =>"Your order #:command has not been paid.",
     "what_to_do"        =>"What would you like to do?",
     "pay_now"           =>"Pay now!",
     "cancel_order"      =>"Cancel this order.",
@@ -213,8 +213,7 @@ return [
     "wishlist_saved"    =>"Your wishlist will be saved while your browser session lasts.",
     "wishlist_remove"   =>"Remove from wishlist",
     "payment_successful" => "Thank you for your payment.",
-    "filter_by"   =>"Filter by",
-    "reset"             =>"Reset",
-
+    "results_found"     =>":total results found",
+    
 ];
 
