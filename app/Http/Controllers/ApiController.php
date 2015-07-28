@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use Lang;
 use Brands;
 use Categories;
 use Layouts;
@@ -9,8 +10,8 @@ use Request;
 use Redirect;
 use Session;
 use Cookie;
-use App\User;
 
+use App\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -164,8 +165,9 @@ class ApiController extends Controller
     /**
      * Redirects user to payment URL for a given order.
      *
-     * @param int $id   Order ID.
-     * @return void
+     * @param int $id               Order ID.
+     * @param string $verification  Order verification.
+     * @return mixed
      */
     public function redirectToPaymentPage($id, $verification)
     {
@@ -173,7 +175,7 @@ class ApiController extends Controller
         $order = Orders::get($id, $verification);
 
         // Redirect to payment URL.
-        return Redirect::to($order->payment_details->payment_url);
+        return redirect($order->payment_details->payment_url);
     }
 
     /**
@@ -182,9 +184,8 @@ class ApiController extends Controller
     public function handleSuccessfulPayment()
     {
         // Redirect to homepage with a message.
-        // TODO: localize this text.
-        Session::push('messages', '[test] Payment successful.');
-        return Redirect::to('home');
+        Session::push('messages', Lang::get('boukem.payment_successful'));
+        return redirect(route('home'));
     }
 
     /**

@@ -211,5 +211,6 @@ return [
     "wishlist_has"      =>"Your Wish List has",
     "wishlist_number"   =>"You have <span id='quantity-wishlist'>0 item</span> in your wishlist.",
     "wishlist_saved"    =>"Your wishlist will be saved while your browser session lasts.",
-    "wishlist_remove"   =>"Remove from wishlist"
+    "wishlist_remove"   =>"Remove from wishlist",
+    "payment_successful" => "Thank you for your payment.",
 ];
