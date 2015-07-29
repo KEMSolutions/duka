@@ -5,7 +5,7 @@
 
     <div class="w-section inverse blog-grid" style="margin-top: -36px">
         <div class="container full-width">
-            <div class="row">
+            <div class="row grid-layout">
 
                 {{--Include the appropriate layout (dense or regular cards) according to the layoutDense boolean--}}
                 @if($layoutData["featured"]["layoutDense"])
