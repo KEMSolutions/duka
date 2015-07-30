@@ -175,7 +175,7 @@ class ApiController extends Controller
     public function redirectToPaymentPage($id, $verification)
     {
         // Retrieve order details.
-        $order = Orders::get($id, $verification);
+        $order = Orders::details($id, $verification);
 
         // Redirect to payment URL.
         return redirect($order->payment_details->payment_url);
