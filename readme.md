@@ -2,6 +2,20 @@
 
 TODO: include a nice & short description... :)
 
+# Setup
+
+Boukem 2 is built on the popular PHP framework Laravel. To get started, make sure
+[composer is installed](https://getcomposer.org/) on your machine and install the dependencies by running
+`composer install` from the root folder.
+
+Next, copy the sample environment file: `cp .env.sample .env`. You will probably have some changes to make, so we
+recommend you review the contents of the file.
+
+Finally, setup the database by copying the sample included in this project:
+`cp storage/database.sqlite.sample storage/database.sqlite`.
+
+You're now ready to go.
+
 # Quick Reference
 
 ## Front-end 
@@ -57,7 +71,7 @@ Coming later...
 
 ## Routing
 
-Most named routes are defined in "app\Http\routes.php" and can be used through the [route()](http://laravel.com/docs/5.0/routing#named-routes) shortcut in Laravel:
+Most named routes are defined in "app/Http/routes.php" and can be used through the [route()](http://laravel.com/docs/5.0/routing#named-routes) shortcut in Laravel:
 
 	// Returns something like "https://example.com/en"
 	$url = route( 'home' );
@@ -77,8 +91,9 @@ The `KemAPI` facade is defined in "app/Http/KemApiHttpClient.php" and has two us
 	$foo = KemAPI::get( $request );
     $bar = KemAPI::post( $request );
 
-Generally, interactions with the API should be done through the other facades, defined in "app\ApiObjects":
+Generally, interactions with the API should be done through the other facades, defined in "app/ApiObjects":
 
+    // Some examples of how the facades can be used.
 	$brand = Brands::get( 444 );
     $category = Categories::get( 300 );
 	$homepage = Layouts::get( '' );
