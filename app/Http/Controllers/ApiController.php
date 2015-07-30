@@ -1,17 +1,19 @@
 <?php namespace App\Http\Controllers;
 
+use Log;
 use Lang;
 use Brands;
-use Categories;
-use Layouts;
 use Orders;
-use Products;
-use Request;
-use Redirect;
-use Session;
 use Cookie;
+use Layouts;
+use Request;
+use Session;
+use Products;
+use Redirect;
+use Categories;
+use Localization;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -118,11 +120,11 @@ class ApiController extends Controller
 
         // Retrieve other details.
         $email = Request::input('email');
-        $products = Request::input('products');
+        $items = Request::input('products');
         $shipping = json_decode(base64_decode(Request::input('shipping')), true);
 
         // Place order.
-        $response = Orders::placeOrder($shipping, $products, $email, $shipAddress, $billAddress);
+        $response = Orders::placeOrder($shipping, $items, $email, $shipAddress, $billAddress);
 
         // If we have errors, redirect to cart and display an error message.
         if (property_exists($response, 'error'))
@@ -144,7 +146,8 @@ class ApiController extends Controller
                 User::create([
                     'id' => $customer->id,
                     'name' => $shipAddress['name'],
-                    'email' => $customer->email
+                    'email' => $email,
+                    'locale' => Localization::getCurrentLocale()
                 ]);
 
                 Cookie::queue('unregistered_user', $customer->id, 2628000);
@@ -157,7 +160,7 @@ class ApiController extends Controller
     public function getOrderDetails($id, $verification)
     {
         // Retrieve order details.
-        $order = Orders::get($id, $verification);
+        $order = Orders::details($id, $verification);
 
         return Request::ajax() ? $this->send($order) : $order;
     }
@@ -179,27 +182,13 @@ class ApiController extends Controller
     }
 
     /**
-     * Handles a successfull payment.
+     * Handles customers returning from the payment page.
      */
-    public function handleSuccessfulPayment()
+    public function returningFromPayment()
     {
         // Redirect to homepage with a message.
         Session::push('messages', Lang::get('boukem.payment_successful'));
         return redirect(route('home'));
-    }
-
-    /**
-     * Handles a failed payment. Currently ignored and redirected to successful payment page.
-     */
-    public function handleFailedPayment() {
-        return $this->handleSuccessfulPayment();
-    }
-
-    /**
-     * Handles a cancelled payment. Currently ignored and redirected to successful payment page.
-     */
-    public function handleCancelledPayment() {
-        return $this->handleSuccessfulPayment();
     }
 
 

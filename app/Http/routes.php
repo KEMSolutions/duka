@@ -108,9 +108,7 @@ Route::group(['prefix' => 'api'], function()
     Route::get('orders/{id}/{verification}', ['as' => 'api.orders.view', 'uses' => 'ApiController@getOrderDetails']);
     Route::get('orders/pay/{id}/{verification}',
         ['as' => 'api.orders.pay', 'uses' => 'ApiController@redirectToPaymentPage']);
-    Route::get('orders/success',    ['as' => 'api.orders.success', 'uses' => 'ApiController@handleSuccessfulPayment']);
-    Route::get('orders/failure',    ['as' => 'api.orders.failure', 'uses' => 'ApiController@handleFailedPayment']);
-    Route::get('orders/cancel',     ['as' => 'api.orders.cancel', 'uses' => 'ApiController@handleCancelledPayment']);
+    Route::get('orders/return',     ['as' => 'api.orders.return', 'uses' => 'ApiController@returningFromPayment']);
 
     // Product endpoints.
     Route::get('products/{id}',     ['as' => 'api.products', 'uses' => 'ApiController@getProduct']);

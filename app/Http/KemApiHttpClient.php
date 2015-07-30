@@ -119,7 +119,7 @@ class KemApiHttpClient
 
         // Make sure $body is a string.
         if (!is_string($body)) {
-            $body = json_encode($body);
+            $body = json_encode($body, JSON_UNESCAPED_SLASHES);
         }
 
         // Build signature string.
@@ -131,6 +131,7 @@ class KemApiHttpClient
             "\n\nMaking API request:".
             "\n\tMethod: $method" .
             "\n\tEndpoint: $endpoint" .
+            "\n\tSignature: $sig" .
             "\n\tBody: $body\n"
         );
 
