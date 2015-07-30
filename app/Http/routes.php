@@ -6,31 +6,30 @@ Route::group([
     'middleware' => ['localeSessionRedirect', 'localizationRedirect']], function() {
 
     // Homepage.
-    Route::get('home',      'HomeController@index');
-    Route::get('/',         ['as' => 'home', 'uses' => 'HomeController@index']);
+    Route::get('/',                 ['as' => 'home', 'uses' => 'HomeController@index']);
 
     // Other pages.
-    Route::get('pages/{slug}', ['as' => 'page', 'uses' => 'PageController@getPage']);
-    Route::get('contracts/{slug}', ['as' => 'contract', 'uses' => 'PageController@getContract']);
+    Route::get('pages/{slug}',      ['as' => 'page', 'uses' => 'PageController@getPage']);
+    Route::get('contracts/{slug}',  ['as' => 'contract', 'uses' => 'PageController@getContract']);
 
     // Categories.
     Route::get('cat/{slug}.html',   ['as' => 'category', 'uses' => 'CategoryController@display']);
 
     // Products.
-    Route::get('search',    ['as' => 'search', 'uses' => 'ProductController@search']);
+    Route::get('search',            ['as' => 'search', 'uses' => 'ProductController@search']);
     Route::get('prod/{slug}.html',  ['as' => 'product', 'uses' => 'ProductController@display']);
 
     // Cart & checkout.
-    Route::get('cart',      ['as' => 'cart', 'uses' => 'CheckoutController@index']);
+    Route::get('cart',              ['as' => 'cart', 'uses' => 'CheckoutController@index']);
 
     // Authentication routes.
-    Route::get('login',     ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
-    Route::post('login',    ['as' => 'auth.login.action', 'uses' => 'Auth\AuthController@postLogin']);
-    Route::get('logout',    ['as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout']);
+    Route::get('login',             ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
+    Route::post('login',            ['as' => 'auth.login.action', 'uses' => 'Auth\AuthController@postLogin']);
+    Route::get('logout',            ['as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout']);
 
     // Registration routes.
-    Route::get('signup',    ['as' => 'auth.register', 'uses' => 'Auth\AuthController@getRegister']);
-    Route::post('signup',   ['as' => 'auth.register.action', 'uses' => 'Auth\AuthController@postRegister']);
+    Route::get('signup',            ['as' => 'auth.register', 'uses' => 'Auth\AuthController@getRegister']);
+    Route::post('signup',           ['as' => 'auth.register.action', 'uses' => 'Auth\AuthController@postRegister']);
 
     Route::controllers([
 //        'auth' => 'Auth\AuthController',
@@ -38,27 +37,34 @@ Route::group([
     ]);
 
     // Wish list.
-    Route::get('wishlist', 'WishlistController@index');
+    Route::get('wishlist',          ['as' => 'wishlist', 'uses' => 'WishlistController@index']);
 
 
     //
     // Here, we try to catch some invalid URLs and redirect the user to the right page.
     //
 
+    // There is no page called "home"
+    Route::get('home', function() {
+        return redirect(route('home'));
+    });
+
     // Category pages should end with ".html"
     Route::get('cat/{slug}', function($slug) {
-        return Redirect::to(route('category', ['slug' => $slug]));
+        return redirect(route('category', ['slug' => $slug]));
     });
 
     // Product pages should end with ".html"
     Route::get('prod/{slug}', function($slug) {
-        return Redirect::to(route('product', ['slug' => $slug]));
+        return redirect(route('product', ['slug' => $slug]));
     });
 
 
     //
-    // Temporary routes, used for development.
+    // Temporary routes (used for development).
     //
+
+
     Route::group(['prefix' => 'dev'], function()
     {
         Route::get('list-customers', function() {
@@ -70,7 +76,8 @@ Route::group([
         });
 
         Route::get('update-customer', function() {
-            return Illuminate\Support\Collection::make(Customers::update(1357,
+            return Illuminate\Support\Collection::make(Customers::update(
+                1357,
                 'a@a.com',
                 'Joey',
                 'H1G 5F7',

@@ -147,7 +147,7 @@ class ApiController extends Controller
                     'id' => $customer->id,
                     'name' => $shipAddress['name'],
                     'email' => $email,
-                    'locale' => Localization::getCurrentLocale()
+                    'language' => Localization::getCurrentLocale()
                 ]);
 
                 Cookie::queue('unregistered_user', $customer->id, 2628000);
