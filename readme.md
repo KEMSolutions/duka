@@ -4,17 +4,15 @@ TODO: include a nice & short description... :)
 
 # Setup
 
-Boukem 2 is built on the popular PHP framework Laravel. To get started, make sure
-[composer is installed](https://getcomposer.org/) on your machine and install the dependencies by running
-`composer install` from the root folder.
+Boukem 2 is built on the popular PHP framework [Laravel](http://laravel.com). To get started, make sure
+[composer is installed](https://getcomposer.org/) on your machine and run the following commands from the root folder.
 
-Next, copy the sample environment file: `cp .env.sample .env`. You will probably have some changes to make, so we
-recommend you review the contents of the file.
+1. Install the dependencies: `composer install`.
+2. Create an environement file: `cp .env.sample .env`. You will probably have some changes to make, so we recommend
+you review the contents of the file.
+3. Setup the database: `cp storage/database.sqlite.sample storage/database.sqlite`.
 
-Finally, setup the database by copying the sample included in this project:
-`cp storage/database.sqlite.sample storage/database.sqlite`.
-
-You're now ready to go.
+You're now ready to go!
 
 # Quick Reference
 
