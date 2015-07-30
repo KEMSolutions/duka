@@ -179,17 +179,27 @@
             </div>
         </div>
 
-
         <ul class="col-md-10 header-banner-align">
-            <li class="inline-block ">
-                <button type="button " class="btn btn-link "><a href="# ">Back to site</a></button>
-            </li>
-            <li class="inline-block ">
-                <button type="button " class="btn btn-link "><a href="# ">Today's deal</a></button>
-            </li>
-            <li class="inline-block ">
-                <button type="button " class="btn btn-link "><a href="# ">Contact</a></button>
-            </li>
+
+            {{-- Back to Store's website --}}
+            @if (strlen(Store::info()->url))
+                <li class="inline-block ">
+                    <button type="button" class="btn btn-link">
+                        <a href="{{ Store::info()->url }}">Back to site</a>
+                    </button>
+                </li>
+            @endif
+
+            {{-- Links to custom pages --}}
+            @if (count(Pages::all()))
+                @foreach (Pages::all() as $page)
+                    <li class="inline-block ">
+                        <button type="button" class="btn btn-link">
+                            <a href="{{ route('page', ['slug' => $page->slug]) }}">{{ $page->title }}</a>
+                        </button>
+                    </li>
+                @endforeach
+            @endif
         </ul>
     </div>
     {{--End of second row--}}

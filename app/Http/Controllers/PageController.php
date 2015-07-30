@@ -36,7 +36,7 @@ class PageController extends Controller
     {
         // Retrieve page content.
         $page = Pages::get($slug);
-        if (Pages::isError($page)) {
+        if (Pages::isError($page) || !$page->visible) {
             abort(404, Lang::get('boukem.error_occurred'));
         }
 

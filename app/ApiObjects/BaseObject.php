@@ -28,7 +28,7 @@ abstract class BaseObject
     /**
      * @var string  Regular expression used to validate slug.
      */
-    protected $slugInvalidCharacters = '/[^a-z0-9_-]/i';
+    protected $slugInvalidCharacters = '/[^a-z0-9_\-]/i';
 
     /**
      * Constructor.
