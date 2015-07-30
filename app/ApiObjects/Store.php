@@ -51,7 +51,7 @@ class Store extends BaseObject
      */
     public function contracts()
     {
-        $contracts = Cache::remember('store.contracts', Carbon::now()->addWeek(), function()
+        $contracts = Cache::remember($this->locale .'.store.contracts', Carbon::now()->addWeek(), function()
         {
             $results = KemAPI::get('store', ['embed' => 'contracts']);
 

@@ -36,7 +36,7 @@ class PageController extends Controller
     {
         // Retrieve page content.
         $page = Pages::get($slug);
-        if (empty($page) || (property_exists($page, 'status') && $page->status != 200)) {
+        if (Pages::isError($page)) {
             abort(404, Lang::get('boukem.error_occurred'));
         }
 
@@ -51,7 +51,10 @@ class PageController extends Controller
                 $html = $page->content;
         }
 
-        return view('site.custom_pages.index', ['html' => $html]);
+        return view('site.custom_pages.index', [
+            'title' => $page->title,
+            'html' => $html
+        ]);
     }
 
     /**
@@ -69,7 +72,10 @@ class PageController extends Controller
         // Convert contract content to HTML.
         $html = $this->parser->parse($contract->content);
 
-        return view('site.custom_pages.index', ['html' => $html]);
+        return view('site.custom_pages.index', [
+            'title' => $contract->title,
+            'html' => $html
+        ]);
     }
 }
 
