@@ -1,13 +1,7 @@
-<?php foreach($products as $product): ?>
 
-    {{-- Performance check --}}
-    <?php
-    if (empty($product)) {
-        continue;
-    }
-    ?>
+@foreach($products as $product)
 
-    @if(is_object($product) && isset($product->id))
+    @if (is_object($product) && isset($product->id))
         <div class="col-xs-6 col-sm-4 col-md-3 text-center dense_product
                 @if (!$border)
                     {!! 'no-border' !!}
@@ -53,6 +47,6 @@
 
     @endif
 
-<?php endforeach; ?>
+@endforeach
 
 

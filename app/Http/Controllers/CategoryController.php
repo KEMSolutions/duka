@@ -12,18 +12,18 @@ class CategoryController extends Controller
 {
     public function display($slug)
     {
+        // Prepare API request parameters.
+        $params = [];
+        $params['embed'] = ['products', 'presentation'];
+
         // Retrieve query details.
-        $page = (int) Request::input('page', 1);
-        $perPage = (int) Request::input('per_page', 8);
+        $params['page'] = $page = (int) Request::input('page', 1);
+        $params['per_page'] = $perPage = (int) Request::input('per_page', 8);
+        $params['filters'] = Request::input('filters', null);
+        $params['order'] = Request::input('order', null);
 
         // Retrieve category details.
-        $category = Categories::get($slug, [
-            'page' => $page,
-            'per_page' => $perPage,
-            'embed' => ['products', 'presentation'],
-            'filters' => Request::input('filters'),
-            'order' => Request::input('order')
-        ]);
+        $category = Categories::get($slug, $params);
 
         // Handle errors.
         if (Categories::isError($category)) {

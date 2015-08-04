@@ -24,11 +24,9 @@
                 @include('site.category._sorting_topbar')
 
                 {{-- Include results --}}
-                @include('site.category._results', ['results' => $products])
+                @include('site.category._results', ['products' => $products])
             </div>
 
     @endsection
-
-
 
 @stop
