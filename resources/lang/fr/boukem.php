@@ -214,6 +214,8 @@ return [
     "wishlist_remove"   =>"Retirer de la liste",
     "payment_successful" => "Merci pour votre paiement.",
     "results_found"     =>":total résultats trouvés",
+    "filter_by"         =>"Filtrer par",
+    "reset"             =>"Tout effacer",
 
 ];
 

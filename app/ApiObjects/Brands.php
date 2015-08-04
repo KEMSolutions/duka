@@ -13,4 +13,13 @@ class Brands extends BaseObject
         return parent::all();
     }
 
+    /**
+     * Retrieves a nested list of brands.
+     *
+     * @return array    List of categories.
+     */
+    public function getAllBrands() {
+        return parent::all();
+    }
+
 }
