@@ -20,7 +20,7 @@ class Customers extends BaseObject
      * @param int $expires          Hours to keep object in cache.
      * @return object               Customer record.
      */
-    public function get($id, $requestParams = [], $expires = 0)
+    public function get($id, array $requestParams = [], $expires = 0)
     {
         // If we're retrieving a record by email and it hasn't already been base64 encoded,
         // we need to handle that.
