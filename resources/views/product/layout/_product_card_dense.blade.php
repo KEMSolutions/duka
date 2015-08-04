@@ -39,14 +39,14 @@
             <div class="price">
                 <button class="btn btn-two btn-sm buybutton"
                         data-product="{{ $product->id }}"
-                        data-price="{{ $product->price }}"
+                        data-price="{{ $product->formats[0]->price }}"
                         data-thumbnail="{{ Products::thumbnail($product->id) }}"
                         data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
                         data-name="{{ $product->localization->name }}"
                         data-quantity="1"
                         data-link="prod/{{ $product->slug }}">
                     <i class="fa fa-shopping-cart"></i>
-                    $ {{ number_format((float)$product->price, 2, '.', '') }}
+                    $ {{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
                 </button>
             </div>
         </div>
