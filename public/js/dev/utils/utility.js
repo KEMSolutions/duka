@@ -430,10 +430,12 @@ var UtilityContainer = {
 
         // We either accept a key-value pair, or a query object.
         var params = {};
-        if (typeof key == 'object') {
+        if (typeof key == "object") {
             params = key;
-        } else {
+        } else if (typeof key == "string" && typeof value != "undefined") {
             params[key] = value;
+        } else {
+            return console.log("Invalid query parameters.");
         }
 
         // Add query parameters to existing ones.
@@ -442,15 +444,39 @@ var UtilityContainer = {
             query[index] = params[index];
         }
 
+        // Build query string and reload the page.
+        document.location.search = this.urlBuildQuery(query);
+    },
+
+    urlRemoveParameters : function(key) {
+
+        key = typeof key == "string" ? [key] : key;
+
+        // Try to remove one or more query parameters.
+        var query = this.urlGetParameters();
+        key.forEach(function(param, index, keys)
+        {
+            if (typeof query[param] != "undefined") {
+                delete query[param];
+            }
+        });
+
+        // Update the URL query.
+        document.location.search = this.urlBuildQuery(query);
+    },
+
+    urlBuildQuery : function(query) {
+
         // Build query string.
         // We use encodeURIComponent() instead of the deprecated escape() function.
         var newQuery = [];
-        for (index in query) {
-            newQuery.push(encodeURIComponent(index) +'='+ encodeURIComponent(query[index]));
+        for (var index in query) {
+            if (typeof query[index] != "undefined" && query[index] != null) {
+                newQuery.push(encodeURIComponent(index) +'='+ encodeURIComponent(query[index]));
+            }
         }
 
-        // Reload the page.
-        document.location.search = '?'+ newQuery.join('&');
+        return "?"+ (newQuery.length > 1 ? newQuery.join('&') : newQuery[0]);
     }
 };
 

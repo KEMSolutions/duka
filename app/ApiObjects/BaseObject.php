@@ -196,6 +196,24 @@ abstract class BaseObject
         return $params;
     }
 
+    protected function sortBy($property, $array)
+    {
+        // Create temporary array.
+        $temp = [];
+        foreach ($array as $item)
+        {
+            if (!$item) {
+                continue;
+            }
+
+            $temp[$item->{$property}] = $item;
+        }
+
+        ksort($temp, SORT_NATURAL);
+
+        return $temp;
+    }
+
     /**
      * Caches an object. This method can be overridden in child classes to reflect whatever makes sense.
      *

@@ -80,14 +80,75 @@ var categoryContainer = {
      * Adds the category filter to the search query.
      */
     categoriesUpdate: function() {
-
+        this.filterListUpdate($("#refine-by-category"), "categories");
     },
 
     /**
      * Adds the brands filter to the search query.
      */
     brandsUpdate: function() {
+        this.filterListUpdate($("#refine-by-brand"), "brands");
+    },
 
+    /**
+     * Shortcut to handle filter lists such as brands and categories.
+     */
+    filterListUpdate : function(el, type)
+    {
+        // Performance check.
+        if (!el) {
+            return;
+        }
+
+        // Add the event listeners to each child element.
+        el.find(".item").on("change",
+            {
+                filter : type || "brands"
+            },
+
+            function(event)
+            {
+                var ID = $(this).data("filter"), filterList = categoryContainer.searchParameters[event.data.filter];
+
+                // Add brand to filter.
+                if ($(this).prop("checked")) {
+                    filterList.push(ID);
+                }
+
+                // Or remove it.
+                else
+                {
+                    var newList = [];
+
+                    if (filterList.length > 1) {
+                        for (var index in filterList) {
+                            if (filterList[index] != ID) {
+                                newList.push(filterList[index]);
+                            }
+                        }
+                    }
+
+                    filterList = newList;
+                }
+
+                // Reorder filter list.
+                filterList.sort(function(a, b) {
+                    return a - b;
+                });
+
+                // Update page.
+                if (filterList.length > 0) {
+                    var filter = filterList.length > 1 ? filterList.join(';') : filterList[0];
+                    UtilityContainer.urlAddParameters(event.data.filter, filter);
+                } else {
+                    UtilityContainer.urlRemoveParameters(event.data.filter);
+                }
+        });
+
+        // Update selected checkboxes. IDs are stored as strings in "categoryContainer.searchParameters".
+        el.find(".item").each(function() {
+            $(this).prop("checked", categoryContainer.searchParameters[type].indexOf(""+ $(this).data("filter")) > -1);
+        });
     },
 
     toggleLayout: function () {
@@ -138,9 +199,17 @@ var categoryContainer = {
 
         var query = UtilityContainer.urlGetParameters();
 
-        for (var key in query) {
+        for (var key in query)
+        {
             this.searchParameters[key] = query[key];
+
+            // For brands and categories, the value should be an array.
+            if (["brands", "categories"].indexOf(key) > -1 && typeof query[key] != 'object') {
+                this.searchParameters[key] = [query[key]];
+            }
         }
+
+        console.log(this.searchParameters);
     },
 
     init: function () {
@@ -155,5 +224,5 @@ var categoryContainer = {
         self.brandsUpdate();
         self.toggleLayout();
     }
-
 };
+

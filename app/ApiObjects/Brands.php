@@ -10,7 +10,7 @@ class Brands extends BaseObject
      * @return array    List of categories.
      */
     public function getAllBrands() {
-        return parent::all();
+        return $this->sortBy('name', parent::all());
     }
 }
 

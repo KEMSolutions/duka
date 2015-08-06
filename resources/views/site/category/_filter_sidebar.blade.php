@@ -6,40 +6,48 @@
     <div class="row padding-5">
         <nav class="hidden-print hidden-xs hidden-sm">
             <ul class="nav list-unstyled">
-                <li>
-                    <div class="refine-search-component">
-                        <h5 class="refine-search-title">{{ Lang::get("boukem.categories") }}</h5>
-                        <ul class="list-unstyled absolute-scrollable" id="refine-by-category">
 
-                            @foreach(Categories::getAllCategories() as $category)
-                                <li>
-                                    <label>
-                                        <input type="checkbox" data-filter="{{ $category->id }}"/> {{ $category->name }}
-                                    </label>
-                                </li>
-                            @endforeach
+                {{-- Only display category filter on brand page --}}
+                @if ($isBrand)
+                    <li>
+                        <div class="refine-search-component">
+                            <h5 class="refine-search-title">@lang('boukem.categories')</h5>
+                            <ul class="list-unstyled absolute-scrollable" id="refine-by-category">
 
-                        </ul>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="refine-search-component">
-                        <h5 class="refine-search-title">Marques</h5>
-                        <ul class="list-unstyled absolute-scrollable" id="refine-by-brand">
-                            @foreach(Brands::getAllBrands() as $category)
-                                @if($category)
+                                @foreach(Categories::getAllCategories() as $category)
                                     <li>
                                         <label>
                                             <input type="checkbox" data-filter="{{ $category->id }}"/> {{ $category->name }}
                                         </label>
                                     </li>
-                                @endif
-                            @endforeach
-                        </ul>
-                    </div>
-                </li>
+                                @endforeach
 
+                            </ul>
+                        </div>
+                    </li>
+                @endif
+
+                {{-- Only show brands filter on category page --}}
+                @if (!$isBrand)
+                    <li>
+                        <div class="refine-search-component">
+                            <h5 class="refine-search-title">@lang('boukem.brands')</h5>
+                            <ul class="list-unstyled absolute-scrollable" id="refine-by-brand">
+
+                                @foreach(Brands::getAllBrands() as $brand)
+                                    <li>
+                                        <label>
+                                            <input type="checkbox" class="item" data-filter="{{ $brand->id }}"/> {{ $brand->name }}
+                                        </label>
+                                    </li>
+                                @endforeach
+
+                            </ul>
+                        </div>
+                    </li>
+                @endif
+
+                {{-- Price filter --}}
                 <li>
                     <div class="refine-search-component">
                         <h5 class="refine-search-title">Gamme de prix</h5>
@@ -61,13 +69,10 @@
                             <button class="ui button large center-block" id="price-update">
                                 Update
                             </button>
-
                         </div>
-
-
                     </div>
-
                 </li>
+
             </ul>
         </nav>
     </div>

@@ -877,14 +877,75 @@ var categoryContainer = {
      * Adds the category filter to the search query.
      */
     categoriesUpdate: function() {
-
+        this.filterListUpdate($("#refine-by-category"), "categories");
     },
 
     /**
      * Adds the brands filter to the search query.
      */
     brandsUpdate: function() {
+        this.filterListUpdate($("#refine-by-brand"), "brands");
+    },
 
+    /**
+     * Shortcut to handle filter lists such as brands and categories.
+     */
+    filterListUpdate : function(el, type)
+    {
+        // Performance check.
+        if (!el) {
+            return;
+        }
+
+        // Add the event listeners to each child element.
+        el.find(".item").on("change",
+            {
+                filter : type || "brands"
+            },
+
+            function(event)
+            {
+                var ID = $(this).data("filter"), filterList = categoryContainer.searchParameters[event.data.filter];
+
+                // Add brand to filter.
+                if ($(this).prop("checked")) {
+                    filterList.push(ID);
+                }
+
+                // Or remove it.
+                else
+                {
+                    var newList = [];
+
+                    if (filterList.length > 1) {
+                        for (var index in filterList) {
+                            if (filterList[index] != ID) {
+                                newList.push(filterList[index]);
+                            }
+                        }
+                    }
+
+                    filterList = newList;
+                }
+
+                // Reorder filter list.
+                filterList.sort(function(a, b) {
+                    return a - b;
+                });
+
+                // Update page.
+                if (filterList.length > 0) {
+                    var filter = filterList.length > 1 ? filterList.join(';') : filterList[0];
+                    UtilityContainer.urlAddParameters(event.data.filter, filter);
+                } else {
+                    UtilityContainer.urlRemoveParameters(event.data.filter);
+                }
+        });
+
+        // Update selected checkboxes. IDs are stored as strings in "categoryContainer.searchParameters".
+        el.find(".item").each(function() {
+            $(this).prop("checked", categoryContainer.searchParameters[type].indexOf(""+ $(this).data("filter")) > -1);
+        });
     },
 
     toggleLayout: function () {
@@ -935,9 +996,17 @@ var categoryContainer = {
 
         var query = UtilityContainer.urlGetParameters();
 
-        for (var key in query) {
+        for (var key in query)
+        {
             this.searchParameters[key] = query[key];
+
+            // For brands and categories, the value should be an array.
+            if (["brands", "categories"].indexOf(key) > -1 && typeof query[key] != 'object') {
+                this.searchParameters[key] = [query[key]];
+            }
         }
+
+        console.log(this.searchParameters);
     },
 
     init: function () {
@@ -952,8 +1021,8 @@ var categoryContainer = {
         self.brandsUpdate();
         self.toggleLayout();
     }
-
 };
+
 
 /**
  * Object responsible for the view component of the wish list page.
@@ -1412,10 +1481,12 @@ var UtilityContainer = {
 
         // We either accept a key-value pair, or a query object.
         var params = {};
-        if (typeof key == 'object') {
+        if (typeof key == "object") {
             params = key;
-        } else {
+        } else if (typeof key == "string" && typeof value != "undefined") {
             params[key] = value;
+        } else {
+            return console.log("Invalid query parameters.");
         }
 
         // Add query parameters to existing ones.
@@ -1424,15 +1495,39 @@ var UtilityContainer = {
             query[index] = params[index];
         }
 
+        // Build query string and reload the page.
+        document.location.search = this.urlBuildQuery(query);
+    },
+
+    urlRemoveParameters : function(key) {
+
+        key = typeof key == "string" ? [key] : key;
+
+        // Try to remove one or more query parameters.
+        var query = this.urlGetParameters();
+        key.forEach(function(param, index, keys)
+        {
+            if (typeof query[param] != "undefined") {
+                delete query[param];
+            }
+        });
+
+        // Update the URL query.
+        document.location.search = this.urlBuildQuery(query);
+    },
+
+    urlBuildQuery : function(query) {
+
         // Build query string.
         // We use encodeURIComponent() instead of the deprecated escape() function.
         var newQuery = [];
-        for (index in query) {
-            newQuery.push(encodeURIComponent(index) +'='+ encodeURIComponent(query[index]));
+        for (var index in query) {
+            if (typeof query[index] != "undefined" && query[index] != null) {
+                newQuery.push(encodeURIComponent(index) +'='+ encodeURIComponent(query[index]));
+            }
         }
 
-        // Reload the page.
-        document.location.search = '?'+ newQuery.join('&');
+        return "?"+ (newQuery.length > 1 ? newQuery.join('&') : newQuery[0]);
     }
 };
 
