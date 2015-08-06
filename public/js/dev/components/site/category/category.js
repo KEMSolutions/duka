@@ -37,7 +37,7 @@ var categoryContainer = {
      */
     itemsPerPage: function () {
         $(".items-per-page .item").on("click", function() {
-            categoryContainer.URL_add_parameter("per_page", $(this).data("sort"));
+            UtilityContainer.urlAddParameters("per_page", $(this).data("sort"));
         });
 
         // Set the selected option.
@@ -46,19 +46,24 @@ var categoryContainer = {
 
     sortBy: function () {
         $(".sort-by .item").on("click", function() {
-            categoryContainer.URL_add_parameter("order", $(this).data("sort"));
+            UtilityContainer.urlAddParameters("order", $(this).data("sort"));
         });
 
         // Set the selected option.
         $('#sort-by-box').dropdown('set selected', this.searchParameters.order);
     },
 
-
-    // FILTERING FEATURE.
+    /**
+     * Adds the price filter to the search query.
+     */
     priceUpdate: function() {
-        $("#price-update").on("click", function() {
-            categoryContainer.URL_add_parameter("min_price", $("#min-price").val());
-            categoryContainer.URL_add_parameter("max_price", $("#max-price").val());
+
+        $("#price-update").on("click", function()
+        {
+            UtilityContainer.urlAddParameters({
+                min_price : $("#min-price").val(),
+                max_price : $("#max-price").val()
+            });
         });
 
         // Set the specified price range.
@@ -71,10 +76,16 @@ var categoryContainer = {
         }
     },
 
+    /**
+     * Adds the category filter to the search query.
+     */
     categoriesUpdate: function() {
 
     },
 
+    /**
+     * Adds the brands filter to the search query.
+     */
     brandsUpdate: function() {
 
     },
@@ -117,34 +128,6 @@ var categoryContainer = {
                 $(this).toggleClass("active");
             }
         })
-    },
-
-    // HELPER FUNCTION : TO BE MOVED IN UTILITYCONTAINER
-    // Courtesy of http://stackoverflow.com/a/1917916
-    URL_add_parameter: function(key, value){
-        key = escape(key); value = escape(value);
-
-        var kvp = document.location.search.substr(1).split('&');
-        if (kvp == '') {
-            document.location.search = '?' + key + '=' + value;
-        }
-        else {
-
-            var i = kvp.length; var x; while (i--) {
-                x = kvp[i].split('=');
-
-                if (x[0] == key) {
-                    x[1] = value;
-                    kvp[i] = x.join('=');
-                    break;
-                }
-            }
-
-            if (i < 0) { kvp[kvp.length] = [key, value].join('='); }
-
-            //this will reload the page, it's likely better to store this until finished
-            document.location.search = kvp.join('&');
-        }
     },
 
     /**

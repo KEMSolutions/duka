@@ -834,7 +834,7 @@ var categoryContainer = {
      */
     itemsPerPage: function () {
         $(".items-per-page .item").on("click", function() {
-            categoryContainer.URL_add_parameter("per_page", $(this).data("sort"));
+            UtilityContainer.urlAddParameters("per_page", $(this).data("sort"));
         });
 
         // Set the selected option.
@@ -843,19 +843,24 @@ var categoryContainer = {
 
     sortBy: function () {
         $(".sort-by .item").on("click", function() {
-            categoryContainer.URL_add_parameter("order", $(this).data("sort"));
+            UtilityContainer.urlAddParameters("order", $(this).data("sort"));
         });
 
         // Set the selected option.
         $('#sort-by-box').dropdown('set selected', this.searchParameters.order);
     },
 
-
-    // FILTERING FEATURE.
+    /**
+     * Adds the price filter to the search query.
+     */
     priceUpdate: function() {
-        $("#price-update").on("click", function() {
-            categoryContainer.URL_add_parameter("min_price", $("#min-price").val());
-            categoryContainer.URL_add_parameter("max_price", $("#max-price").val());
+
+        $("#price-update").on("click", function()
+        {
+            UtilityContainer.urlAddParameters({
+                min_price : $("#min-price").val(),
+                max_price : $("#max-price").val()
+            });
         });
 
         // Set the specified price range.
@@ -868,10 +873,16 @@ var categoryContainer = {
         }
     },
 
+    /**
+     * Adds the category filter to the search query.
+     */
     categoriesUpdate: function() {
 
     },
 
+    /**
+     * Adds the brands filter to the search query.
+     */
     brandsUpdate: function() {
 
     },
@@ -914,34 +925,6 @@ var categoryContainer = {
                 $(this).toggleClass("active");
             }
         })
-    },
-
-    // HELPER FUNCTION : TO BE MOVED IN UTILITYCONTAINER
-    // Courtesy of http://stackoverflow.com/a/1917916
-    URL_add_parameter: function(key, value){
-        key = escape(key); value = escape(value);
-
-        var kvp = document.location.search.substr(1).split('&');
-        if (kvp == '') {
-            document.location.search = '?' + key + '=' + value;
-        }
-        else {
-
-            var i = kvp.length; var x; while (i--) {
-                x = kvp[i].split('=');
-
-                if (x[0] == key) {
-                    x[1] = value;
-                    kvp[i] = x.join('=');
-                    break;
-                }
-            }
-
-            if (i < 0) { kvp[kvp.length] = [key, value].join('='); }
-
-            //this will reload the page, it's likely better to store this until finished
-            document.location.search = kvp.join('&');
-        }
     },
 
     /**
@@ -1421,29 +1404,31 @@ var UtilityContainer = {
      * Adds one or more query parameters to the URL and reloads the page.
      * Courtesy of http://stackoverflow.com/a/1917916
      *
-     * @param mixed keys    Query key, or array of keys.
-     * @param mixed values  Query value, or array of values.
+     * @param mixed key     Either a query key, or an object representing all the key-pair values to be added.
+     * @param mixed value   Query value, or null if key is an object.
      * @constructor
      */
-    urlAddParameters : function(keys, values) {
+    urlAddParameters : function(key, value) {
 
-        // Cast arguments to arrays.
-        keys = typeof keys == 'object' ? keys : [keys];
-        values = typeof values == 'object' ? values : [values];
-
-        // Build query object.
-        var query = this.urlGetParameters();
-        console.log(query);
-        for (var index in keys) {
-            query[keys[index]] = values[index];
+        // We either accept a key-value pair, or a query object.
+        var params = {};
+        if (typeof key == 'object') {
+            params = key;
+        } else {
+            params[key] = value;
         }
-        console.log(query)
+
+        // Add query parameters to existing ones.
+        var query = this.urlGetParameters(), index;
+        for (index in params) {
+            query[index] = params[index];
+        }
 
         // Build query string.
         // We use encodeURIComponent() instead of the deprecated escape() function.
-        var newQuery = [], key;
-        for (key in query) {
-            newQuery.push(encodeURIComponent(key) +'='+ encodeURIComponent(query[key]));
+        var newQuery = [];
+        for (index in query) {
+            newQuery.push(encodeURIComponent(index) +'='+ encodeURIComponent(query[index]));
         }
 
         // Reload the page.
