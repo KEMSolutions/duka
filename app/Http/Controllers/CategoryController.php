@@ -19,8 +19,14 @@ class CategoryController extends Controller
         // Retrieve query details.
         $params['page'] = $page = (int) Request::input('page', 1);
         $params['per_page'] = $perPage = (int) Request::input('per_page', 8);
-        $params['filters'] = Request::input('filters', null);
         $params['order'] = Request::input('order', null);
+
+        // Retrieve query filters.
+        $params['filters'] = implode(',', [
+            'min_price:'. Request::input('min_price', ''),
+            'max_price:'. Request::input('max_price', ''),
+            'brands:'. Request::input('brands', '')
+        ]);
 
         // Retrieve category details.
         $category = Categories::get($slug, $params);
@@ -38,10 +44,6 @@ class CategoryController extends Controller
             $perPage = max(4, min(40, $perPage));
             $page = max(1, min($page, ceil($category->paginationTotal / $perPage)));
 
-            // Retrieve the requested products, depending on the query details.
-            //$results = array_slice($category->products, ($page - 1) * $perPage, $perPage);
-            $results = $category->products;
-
             // Setup the paginator.
             $paginator = new LengthAwarePaginator($category->products, $category->paginationTotal, $perPage, $page);
             $paginator->setPath(route('category', ['slug' => $slug]));
@@ -56,7 +58,7 @@ class CategoryController extends Controller
             "name" => $category->name,
             "paginator" => $paginator,
             "presentation" => $category->presentation,
-            "products" => $results,
+            "products" => $category->products,
             "total" => $category->paginationTotal
         ]);
     }

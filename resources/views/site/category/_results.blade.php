@@ -10,5 +10,7 @@
 
 {{--Pagination --}}
 <div class="row text-center">
-    {!! $paginator->render() !!}
+    @if ($paginator)
+        {!! $paginator->render() !!}
+    @endif
 </div>
