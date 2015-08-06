@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers;
 
-use View;
+use Brands;
 use Request;
 use Categories;
 use Localization;
@@ -29,6 +29,12 @@ class CategoryController extends Controller
         // Handle errors.
         if (Categories::isError($category)) {
             abort(404);
+        }
+
+        // If we have a brand, redirect to proper route.
+        if (array_key_exists($category->name, Brands::getAllBrands())) {
+            dd(route('brand', ['slug', $category->slug]));
+            return redirect(route('brand', ['slug', $category->slug]));
         }
 
         // Create a paginator instance.

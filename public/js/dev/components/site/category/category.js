@@ -208,8 +208,6 @@ var categoryContainer = {
                 this.searchParameters[key] = [query[key]];
             }
         }
-
-        console.log(this.searchParameters);
     },
 
     init: function () {

@@ -1005,8 +1005,6 @@ var categoryContainer = {
                 this.searchParameters[key] = [query[key]];
             }
         }
-
-        console.log(this.searchParameters);
     },
 
     init: function () {
@@ -1522,7 +1520,13 @@ var UtilityContainer = {
         // We use encodeURIComponent() instead of the deprecated escape() function.
         var newQuery = [];
         for (var index in query) {
-            if (typeof query[index] != "undefined" && query[index] != null) {
+            if (typeof query[index] != "undefined" && query[index] != null)
+            {
+                // Concatenate arrays.
+                if (typeof query[index] == 'object') {
+                    query[index] = query[index].join(';');
+                }
+
                 newQuery.push(encodeURIComponent(index) +'='+ encodeURIComponent(query[index]));
             }
         }

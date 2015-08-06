@@ -17,7 +17,7 @@
                                 @foreach(Categories::getAllCategories() as $category)
                                     <li>
                                         <label>
-                                            <input type="checkbox" data-filter="{{ $category->id }}"/> {{ $category->name }}
+                                            <input type="checkbox" class="item" data-filter="{{ $category->id }}"/> {{ $category->name }}
                                         </label>
                                     </li>
                                 @endforeach
