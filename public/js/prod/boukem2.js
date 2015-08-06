@@ -812,8 +812,8 @@ var categoryContainer = {
         order: 'relevance',
         min_price: null,
         max_price: null,
-        brands: '',
-        categories: ''
+        brands: [],
+        categories: []
     },
 
     /**
@@ -862,6 +862,7 @@ var categoryContainer = {
         if (this.searchParameters.min_price) {
             $('#min-price').val(this.searchParameters.min_price);
         }
+
         if (this.searchParameters.max_price) {
             $('#max-price').val(this.searchParameters.max_price);
         }
@@ -945,37 +946,14 @@ var categoryContainer = {
 
     /**
      * Retrieves the query parameters from the URL and stores them locally.
-     * Inspired by http://stackoverflow.com/a/1917916
      *
      */
     retrieveSearchParameters: function() {
 
-        // Performance check.
-        var query = document.location.search.substr(1);
-        if (query.length < 1) {
-            return;
-        }
+        var query = UtilityContainer.urlGetParameters();
 
-        // Loop through query elements.
-        var kvp = query.split('&'), index, pair, key, value;
-        for (index in kvp)
-        {
-            // Skip parameters without any values.
-            if (kvp[index].indexOf('=') < 1) {
-                continue;
-            }
-
-            pair = kvp[index].split('=');
-            key = pair[0];
-            value = pair[1];
-
-            // Save the search parameter if it's valid.
-            if (typeof this.searchParameters[key] != 'undefined') {
-                this.searchParameters[key] = value;
-                //this.searchParameters[key] = ['brands', 'categories'].includes(key) ?
-                //    value.split(';') :
-                //    value;
-            }
+        for (var key in query) {
+            this.searchParameters[key] = query[key];
         }
     },
 
@@ -1400,8 +1378,78 @@ var UtilityContainer = {
             total = (taxes + shipping + subtotal).toFixed(2);
 
         return total;
+    },
+
+    /**
+     * Retrieves the query parameters from the URL.
+     * Courtesy of http://stackoverflow.com/a/1917916
+     *
+     * @returns object
+     */
+    urlGetParameters : function() {
+
+        // Performance check.
+        var query = document.location.search.substr(1);
+        if (query.length < 1) {
+            return {};
+        }
+
+        // Loop through query elements.
+        var kvp = query.split('&'), index, pair, key, value, pairs = {};
+        for (index in kvp)
+        {
+            // Skip parameters without any values.
+            if (kvp[index].indexOf('=') < 1) {
+                continue;
+            }
+
+            // Save query value.
+            pair = kvp[index].split('=');
+            key = decodeURIComponent(pair[0]), value = decodeURIComponent(pair[1]);
+            pairs[key] = value;
+
+            // Split up queries with a ";" in the value.
+            if (value.indexOf(';') > -1) {
+                pairs[key] = value.split(';');
+            }
+        }
+
+        return pairs;
+    },
+
+    /**
+     * Adds one or more query parameters to the URL and reloads the page.
+     * Courtesy of http://stackoverflow.com/a/1917916
+     *
+     * @param mixed keys    Query key, or array of keys.
+     * @param mixed values  Query value, or array of values.
+     * @constructor
+     */
+    urlAddParameters : function(keys, values) {
+
+        // Cast arguments to arrays.
+        keys = typeof keys == 'object' ? keys : [keys];
+        values = typeof values == 'object' ? values : [values];
+
+        // Build query object.
+        var query = this.urlGetParameters();
+        console.log(query);
+        for (var index in keys) {
+            query[keys[index]] = values[index];
+        }
+        console.log(query)
+
+        // Build query string.
+        // We use encodeURIComponent() instead of the deprecated escape() function.
+        var newQuery = [], key;
+        for (key in query) {
+            newQuery.push(encodeURIComponent(key) +'='+ encodeURIComponent(query[key]));
+        }
+
+        // Reload the page.
+        document.location.search = '?'+ newQuery.join('&');
     }
-}
+};
 
 
 /**

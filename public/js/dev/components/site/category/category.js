@@ -15,8 +15,8 @@ var categoryContainer = {
         order: 'relevance',
         min_price: null,
         max_price: null,
-        brands: '',
-        categories: ''
+        brands: [],
+        categories: []
     },
 
     /**
@@ -65,6 +65,7 @@ var categoryContainer = {
         if (this.searchParameters.min_price) {
             $('#min-price').val(this.searchParameters.min_price);
         }
+
         if (this.searchParameters.max_price) {
             $('#max-price').val(this.searchParameters.max_price);
         }
@@ -148,37 +149,14 @@ var categoryContainer = {
 
     /**
      * Retrieves the query parameters from the URL and stores them locally.
-     * Inspired by http://stackoverflow.com/a/1917916
      *
      */
     retrieveSearchParameters: function() {
 
-        // Performance check.
-        var query = document.location.search.substr(1);
-        if (query.length < 1) {
-            return;
-        }
+        var query = UtilityContainer.urlGetParameters();
 
-        // Loop through query elements.
-        var kvp = query.split('&'), index, pair, key, value;
-        for (index in kvp)
-        {
-            // Skip parameters without any values.
-            if (kvp[index].indexOf('=') < 1) {
-                continue;
-            }
-
-            pair = kvp[index].split('=');
-            key = pair[0];
-            value = pair[1];
-
-            // Save the search parameter if it's valid.
-            if (typeof this.searchParameters[key] != 'undefined') {
-                this.searchParameters[key] = value;
-                //this.searchParameters[key] = ['brands', 'categories'].includes(key) ?
-                //    value.split(';') :
-                //    value;
-            }
+        for (var key in query) {
+            this.searchParameters[key] = query[key];
         }
     },
 
