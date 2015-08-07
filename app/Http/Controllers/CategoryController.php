@@ -27,7 +27,14 @@ class CategoryController extends Controller
         $category = Categories::get($slug, $this->getRequestParams());
 
         // Handle errors.
-        if (Categories::isError($category)) {
+        if (Categories::isError($category))
+        {
+            // Check to see if category is not actually a brand.
+            $brand = Brands::get($slug, $this->getRequestParams());
+            if (!Brands::isError($brand)) {
+                return redirect(route('brand', ['slug' => $brand->slug]));
+            }
+
             abort(404);
         }
 

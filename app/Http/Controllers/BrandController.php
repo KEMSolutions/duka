@@ -16,13 +16,20 @@ class BrandController extends CategoryController
         $brand = Brands::get($slug, $this->getRequestParams());
 
         // Handle errors.
-        if (Brands::isError($brand)) {
+        if (Brands::isError($brand))
+        {
+            // Check that requested brand is not actually a category.
+            $cat = Categories::get($slug, $this->getRequestParams());
+            if (!Categories::isError($cat)) {
+                return redirect(route('category', ['slug' => $cat->slug]));
+            }
+
             abort(404);
         }
 
         // If we have a category, redirect to proper route.
         if (array_key_exists($brand->name, Categories::getAllCategories())) {
-            return redirect(route('category', ['slug', $brand->slug]));
+            return redirect(route('category', ['slug' => $brand->slug]));
         }
 
         // Create a paginator instance.
