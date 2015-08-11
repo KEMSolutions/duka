@@ -8,8 +8,7 @@ Boukem 2 is built on the popular PHP framework [Laravel](http://laravel.com). To
 [composer is installed](https://getcomposer.org/) on your machine and run the following commands from the root folder.
 
 1. Install the dependencies: `composer install`.
-2. Create an environement file: `cp .env.sample .env`. You will probably have some changes to make, so we recommend
-you review the contents of the file.
+2. Create an environment file: `cp .env.sample .env` and update the relevant parameters.
 3. Setup the database: `cp storage/database.sqlite.sample storage/database.sqlite`.
 
 You're now ready to go!
