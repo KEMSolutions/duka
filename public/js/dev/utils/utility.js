@@ -139,14 +139,15 @@ var UtilityContainer = {
     },
 
     /**
-     * Utility function to populate a select list (#country) with a list of country (json formatted).
+     * Utility object used to populate a select list (#country) with a list of country (json formatted) in the appropriate language.
      *
      */
-    populateCountry : function () {
-        $.getJSON("/js/data/country-list.en.json", function(data) {
-            var listItems = '',
-                $country = $("#country");
+    populateCountry : function (lang) {
+        var file = "/js/data/country-list." + lang + ".json",
+            listItems = '',
+            $country = $("#country");
 
+        $.getJSON(file, function(data) {
             $.each(data, function(key, val) {
                 if (key == "CA") {
                     listItems += "<option value='" + key + "' selected>" + val + "</option>";
@@ -378,6 +379,110 @@ var UtilityContainer = {
             total = (taxes + shipping + subtotal).toFixed(2);
 
         return total;
+    },
+
+    /**
+     * Retrieves the query parameters from the URL.
+     * Courtesy of http://stackoverflow.com/a/1917916
+     *
+     * @returns object
+     */
+    urlGetParameters : function() {
+
+        // Performance check.
+        var query = document.location.search.substr(1);
+        if (query.length < 1) {
+            return {};
+        }
+
+        // Loop through query elements.
+        var kvp = query.split('&'), index, pair, key, value, pairs = {};
+        for (index in kvp)
+        {
+            // Skip parameters without any values.
+            if (kvp[index].indexOf('=') < 1) {
+                continue;
+            }
+
+            // Save query value.
+            pair = kvp[index].split('=');
+            key = decodeURIComponent(pair[0]), value = decodeURIComponent(pair[1]);
+            pairs[key] = value;
+
+            // Split up queries with a ";" in the value.
+            if (value.indexOf(';') > -1) {
+                pairs[key] = value.split(';');
+            }
+        }
+
+        return pairs;
+    },
+
+    /**
+     * Adds one or more query parameters to the URL and reloads the page.
+     * Courtesy of http://stackoverflow.com/a/1917916
+     *
+     * @param mixed key     Either a query key, or an object representing all the key-pair values to be added.
+     * @param mixed value   Query value, or null if key is an object.
+     * @constructor
+     */
+    urlAddParameters : function(key, value) {
+
+        // We either accept a key-value pair, or a query object.
+        var params = {};
+        if (typeof key == "object") {
+            params = key;
+        } else if (typeof key == "string" && typeof value != "undefined") {
+            params[key] = value;
+        } else {
+            return console.log("Invalid query parameters.");
+        }
+
+        // Add query parameters to existing ones.
+        var query = this.urlGetParameters(), index;
+        for (index in params) {
+            query[index] = params[index];
+        }
+
+        // Build query string and reload the page.
+        document.location.search = this.urlBuildQuery(query);
+    },
+
+    urlRemoveParameters : function(key) {
+
+        key = typeof key == "string" ? [key] : key;
+
+        // Try to remove one or more query parameters.
+        var query = this.urlGetParameters();
+        key.forEach(function(param, index, keys)
+        {
+            if (typeof query[param] != "undefined") {
+                delete query[param];
+            }
+        });
+
+        // Update the URL query.
+        document.location.search = this.urlBuildQuery(query);
+    },
+
+    urlBuildQuery : function(query) {
+
+        // Build query string.
+        // We use encodeURIComponent() instead of the deprecated escape() function.
+        var newQuery = [];
+        for (var index in query) {
+            if (typeof query[index] != "undefined" && query[index] != null)
+            {
+                // Concatenate arrays.
+                if (typeof query[index] == 'object') {
+                    query[index] = query[index].join(';');
+                }
+
+                newQuery.push(encodeURIComponent(index) +'='+ encodeURIComponent(query[index]));
+            }
+        }
+
+        return "?"+ (newQuery.length > 1 ? newQuery.join('&') : newQuery[0]);
     }
-}
+};
 

@@ -21,7 +21,7 @@ elixir(function(mix) {
         "../../../public/js/dev/components/layout/header.js",
         "../../../public/js/dev/components/layout/payment-overlay.js",
         "../../../public/js/dev/components/products/layout/product-layout-favorite.js",
-        "../../../public/js/dev/components/site/category.js",
+        "../../../public/js/dev/components/site/category/category.js",
         "../../../public/js/dev/components/site/wishlist.js",
         "../../../public/js/dev/utils/utility.js",
         "../../../public/js/dev/actions/checkout/checkout-init.js",
@@ -29,7 +29,6 @@ elixir(function(mix) {
         "../../../public/js/dev/actions/checkout/checkout-validation.js",
         "../../../public/js/dev/actions/layout/cart-drawer-logic.js",
         "../../../public/js/dev/actions/layout/cart-drawer-init.js",
-        "../../../public/js/dev/actions/products/layout/layout-favorite-logic.js",
         "../../../public/js/dev/actions/site/wishlist-logic.js",
         "../../../public/js/dev/actions/init.js"
     ], "public/js/prod/boukem2.js");

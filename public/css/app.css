@@ -320,7 +320,7 @@ img {
   transition: all 0.2s ease-in-out;
   display: block;
   max-width: 100%;
-  height: auto;
+  height: 100%;
 }
 .img-circle {
   border-radius: 50%;
@@ -4281,9 +4281,9 @@ button.close {
   clear: both;
 }
 .center-block {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 .pull-right {
   float: right !important;
@@ -4546,7 +4546,7 @@ footer:after{clear:both;}
 footer .col.reset{margin:0;}
 footer h4{margin-top:20px; color:#EEE; margin-bottom:20px; text-transform:capitalize;}
 footer .col p{color:#999; font-size:13px; margin-bottom:10px;}
-footer a{color:#999; text-decoration:none;}
+footer a{text-decoration:none;}
 footer a:hover{text-decoration:none;}
 footer .col ul{margin:0; padding:0; list-style:none;}
 footer .col ul li{color:#999;}
@@ -4599,11 +4599,11 @@ footer .copyright{color:#EEE;}
 .section-title{position:absolute; top:-53px; left:50%; margin-left:-130px; width:260px; padding:18px 0; text-align:center; border-top-left-radius:3px; border-top-right-radius:3px; }
 .section-title h3{margin:0; padding:0; font-size:16px; font-weight:600; text-transform:uppercase;}
 
-      /*-----------------------------------*/
+        /*-----------------------------------*/
 
-      /* TAB INDICATOR */
+        /* TAB INDICATOR */
 
-      /*-----------------------------------*/
+        /*-----------------------------------*/
 .indicator-down {
   position: absolute;
   bottom: -12px;
@@ -4611,7 +4611,6 @@ footer .copyright{color:#EEE;}
   margin-left: -12px;
   width: 0;
   height: 0;
-  border-top: 12px solid #8BD9BC;
   border-left: 12px solid rgba(0, 0, 0, 0);
   border-right: 12px solid rgba(0, 0, 0, 0);
   z-index: 900;
@@ -4636,12 +4635,19 @@ footer .copyright{color:#EEE;}
   padding: 1%;
 }
 
-/*-----------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+/* GLOBAL                                 */
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
 
-/* GLOBAL */
+/*----------------------------------------*/
 
-/*-----------------------------------*/
+/* Layout */
 
+/*----------------------------------------*/
 .one-half {
   width: 50% !important;
 }
@@ -4662,10 +4668,45 @@ footer .copyright{color:#EEE;}
   padding: 0;
 }
 
+.no-margin {
+  margin: 0;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0;
+}
+
+.padding-1 {
+  padding: 1%;
+}
+
+.padding-5 {
+  padding: 5%;
+}
+
 .padding-side-lg {
   padding: 10px 40px;
 }
 
+.vertical-align {
+  position: relative;
+  top: 25%;
+  transform: translateY(-25%);
+}
+
+.fullScreen {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: 10000;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/*----------------------------------------*/
+
+/* Button */
+
+/*----------------------------------------*/
 .btn {
   font-size: 14px;
   font-weight: normal;
@@ -4684,6 +4725,11 @@ footer .copyright{color:#EEE;}
   user-select: none;
 }
 
+        /*----------------------------------------*/
+
+        /* Wishlist specific button               */
+
+        /*----------------------------------------*/
 .btn-outline {
   background: none;
 }
@@ -4743,26 +4789,16 @@ section.slice {
   border-left: 1px solid #fff;
 }
 
-.vertical-align {
-  position: relative;
-  top: 25%;
-  transform: translateY(-25%);
+.border-bottom {
+  border-bottom: 1px solid #E0E0E0;
 }
 
-.fullScreen {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  z-index: 10000;
-  background-color: rgba(0, 0, 0, 0.5);
+.no-decoration {
+  text-decoration: none;
 }
 
-.border-bottom-hover {
-  transition: all 0.1s ease-in;
-}
-
-.border-bottom-hover:hover, .border-bottom-hover:active, .border-bottom-hover:focus {
-  border-bottom: 1px solid #8c8c8c;
+.no-decoration:hover, .no-decoration:active, .no-decoration:focus {
+  text-decoration: none;
 }
 
 .widget {
@@ -4780,7 +4816,7 @@ section.slice {
 /*----------------------------------------*/
 /*----------------------------------------*/
 /*----------------------------------------*/
-/* Style for list layout                  */
+/* Style for list layout (wishlist page)  */
 /*----------------------------------------*/
 /*----------------------------------------*/
 /*----------------------------------------*/
@@ -4794,19 +4830,19 @@ section.slice {
 /*----------------------------------------*/
 /*----------------------------------------*/
 /* Style for product tiles (dense layout) */
+/* Grid and list layout                   */
 /*----------------------------------------*/
 /*----------------------------------------*/
-/*----------------------------------------*/
-.dense_product .name, .dense_product .brand, .dense_product .price {
+.grid-layout .dense_product .name, .grid-layout .dense_product .brand, .grid-layout .dense_product .price {
   padding: 3px;
 }
 
-.dense_product .btn {
+.grid-layout .dense_product .btn {
   border: 1px solid lightgray;
   border-radius: 5px;
 }
 
-.dense_product {
+.grid-layout .dense_product {
   height: 320px;
   border: 1px solid #CCC;
   border-left: 0;
@@ -4814,16 +4850,18 @@ section.slice {
   padding: 25px;
 }
 
-.dense_product img {
+.grid-layout .dense_product img {
   margin-bottom: 1.3rem;
   max-width: 20em;
   height: 160px;
 }
 
-/*.blog-grid {*/
-  /*margin-top: -36px;*/
-/*}*/
 
+/*-----------------------------------*/
+
+/* FAVORITE ICON */
+
+/*-----------------------------------*/
 .favorite-heart {
   padding: 5px;
   color: #F45D5D;
@@ -4859,66 +4897,6 @@ section.slice {
   border-radius: 0;
 }
 
-/*-----------------------------------*/
-
-/* Custom colors. */
-
-/*-----------------------------------*/
-.color-one {
-  /*KEM red: #961924*/
-  background: #5A419B;
-  color: #fff;
-}
-
-.border-color-one {
-  border-color: #5A419B;
-}
-
-.color-one-text {
-  color: #5A419B;
-}
-
-.color-two {
-  color: #2b5f8c;
-}
-
-.color-three {
-  background: #fff;
-  color: #4C4C4C;
-}
-
-.color-four {
-  background: #2d2d2d;
-}
-
-.section-title.color-five {
-  background:#8BD9BC;
-  color:#FFF;
-}
-
-.color-one a {
-  color: #fff;
-}
-
-.btn-one {
-  /*KEM border red : #77121a */
-  background-color: #5A419B;
-  color: #fff;
-  border-color: #48337B;
-}
-
-.btn-one:hover, .btn-one:focus, .btn-one:active, .btn-one.active, .open .dropdown-toggle.btn-one {
-  background-color: #48337B;
-  color: #fff;
-  border-color: #48337B;
-}
-
-.btn-three {
-  color: #FFF;
-  background-color: #F28963;
-  border: 0;
-  border-bottom: 4px solid #B10000;
-}
 
 /*-----------------------------------*/
 /*-----------------------------------*/
@@ -4927,17 +4905,15 @@ section.slice {
 /*-----------------------------------*/
 /*-----------------------------------*/
 /*-----------------------------------*/
-.header {
-  height: 120px;
-  margin-bottom: -2px;
+
+/* Temporary hack fix for Firefox shifting the background image. */
+/* Courtesy of http://www.paulirish.com/2009/browser-specific-css-hacks/ */
+_:-moz-tree-row(hover), .header {
+  height: 117px;
 }
 
 .header-banner {
   height: 53px;
-}
-
-.header-banner a {
-  color: #fff;
 }
 
 @media (max-width: 935px) {
@@ -4950,25 +4926,11 @@ section.slice {
   display: inline-block;
 }
 
-.header .btn-primary {
-  background-color: #F28963;
-  border-color: #dd7661;
-}
-
-.header .btn-primary:hover, .header .btn-primary:active {
-  background-color: #dd7661;
-  border-color: #dd7661;
-}
 
 .header-banner-align {
   line-height: 53px;
   vertical-align: middle;
 }
-
-.header-account-button {
-  padding-bottom: 7px;
-}
-
 
 .btn-xs-btn-sm-height {
   padding: 5px 5px;
@@ -5032,7 +4994,7 @@ section.slice {
 .search-filter {
   border: 1px solid #e5e5e5;
   padding: 6px;
-  border: 3px 0 0 3px
+  border-radius: 3px 0 0 3px;
   border-right: none;
   margin-right: -5px;
 }
@@ -5126,8 +5088,7 @@ section.slice {
 
 .category-header {
   background-size: cover;
-
-  margin-bottom: 5%;
+  margin-top: 0px;
 }
 
 .category-title, .category-subtitle {
@@ -5147,20 +5108,34 @@ section.slice {
     /*-----------------------------------*/
 
 .absolute-scrollable {
-  height: 130px;
-  border: 1px solid #eee;
   padding: 0 5px;
   overflow: auto;
 }
 
 #refine-search-container {
-  border: 1px solid #3E3F4C;
+  border-right: 1px solid #EBEBEB;
 }
 
 .refine-search-title {
-  border-bottom: 1px solid #3E3F4C;
+  font-weight: 900;
 }
 
 .refine-search-component:last-child {
   padding-bottom: 20px;
 }
+
+.refine-search-input {
+  margin-bottom: 5%;
+  width: 75%;
+}
+    /*-----------------------------------*/
+
+    /* Style for Category page sorting topbar */
+
+    /*-----------------------------------*/
+.sorting-topbar {
+  height: 50px;
+  line-height: 50px;
+}
+
+

@@ -7,6 +7,9 @@ use Layouts;
 use Categories;
 use Localization;
 
+use App\Utilities\Utilities;
+
+
 class HomeController extends Controller {
 
 	/**
@@ -22,13 +25,13 @@ class HomeController extends Controller {
 		$layoutData = [];
 
 
-		//get all the data types presented on the api call
+		// Get all the data types presented on the api call.
 		for($i = 0; $i < count($apiData); $i++)
 		{
 			array_push($elementType, $apiData[$i]->type);
 		}
 
-		//for all the data types, create an array containing its relevant information, according to the current locale.
+		// For all the data types, create an array containing its relevant information, according to the current locale.
 		for($i = 0; $i < count($elementType); $i++)
 		{
 			$layoutData[$elementType[$i]] = $this->getData($apiData, $currentLocale, $i);
@@ -39,8 +42,8 @@ class HomeController extends Controller {
 			}
 		}
 
-		//return the homepage view.
-		//To access data on each section, do {{ $LayoutData["name_of_section"]["property"]  }}
+		// Return the homepage view.
+		// To access data on each section, do {{ $LayoutData["name_of_section"]["property"]  }}
 		return View::make("site.homepage.home")->with([
 			"sites" => $elementType,
 

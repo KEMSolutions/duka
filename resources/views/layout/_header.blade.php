@@ -21,8 +21,8 @@
             </div>
         </div>
 
-        <a href="{{ url("/") }}">
-            <div class="col-md-2 col-sm-3 col-xs-8" id="nav-left" style="background: url({{ url('/') . "/img/logo_new_chapter.png"}})  no-repeat center">
+        <a href="{{ route("home") }}">
+            <div class="col-md-2 col-sm-3 col-xs-8" id="nav-left" style="background: url({{ Store::logo() }})  no-repeat center">
                 <span class="sr-only">{{ Lang::get("boukem.back_to_home") }}</span>
                 &nbsp; &nbsp;
             </div>
@@ -49,6 +49,7 @@
                                 <div class="text">{{ Lang::get("boukem.all") }} </div>
                                 <i class="fa fa-caret-down"></i>
                                 <div class="menu">
+                                    <div class="item">{{ Lang::get("boukem.all") }}</div>
                                     <div class="item">{{ Lang::get("boukem.categories") }}</div>
                                     <div class="item">{{ Lang::get("boukem.brands") }}</div>
                                     <div class="item">{{ Lang::get("boukem.health_issues") }}</div>
@@ -74,7 +75,7 @@
 
         <div class="col-md-3 col-sm-3 hidden-xs" id="nav-right">
             <ul>
-                <li class="border-bottom-hover header-account-button">
+                <li class="btn btn-five">
                     <div class="ui top left pointing dropdown dropdown-no-select">
                         <div class="text">
                             <i class="icon fa fa-user"></i> {{ Lang::get("boukem.my") }} {{ Lang::get("boukem.account") }}
@@ -84,14 +85,16 @@
 
                             @if(Auth::guest())
                                 <div class="item no-hover">
-                                    <button class="btn btn-success color-one text-center center-block full-width">
-                                        {{ Lang::get("boukem.sign_in") }}
-                                    </button>
+                                    <a href="{{ route("auth.login") }}">
+                                        <button class="btn btn-success color-one text-center center-block full-width">
+                                            {{ Lang::get("boukem.log_in") }}
+                                        </button>
+                                    </a>
                                 </div>
 
                                 <div class="item no-hover">
                                     <div class="description">
-                                        {{ Lang::get("boukem.no_account") }} <a href="#">{{ Lang::get("boukem.sign_up") }} !</a>
+                                        {{ Lang::get("boukem.no_account") }} <a href="{{ route("auth.register") }}">{{ Lang::get("boukem.sign_up") }} !</a>
                                     </div>
                                 </div>
                             @else
@@ -106,9 +109,11 @@
                                 <div class="divider"></div>
 
                                 <div class="item">
-                                    <button class="btn btn-default color-one text-center center-block full-width">
-                                        {{ Lang::get("boukem.sign_out") }}
-                                    </button>
+                                    <a href="{{ route("auth.logout") }}">
+                                        <button class="btn btn-default color-one text-center center-block full-width">
+                                            {{ Lang::get("boukem.log_out") }}
+                                        </button>
+                                    </a>
                                 </div>
                             @endif
 
@@ -128,9 +133,9 @@
                         </div>
                     </div>
                 </li>
-                <li class="border color-one border-color-one" style="border-radius: 3px">
+                <li class="color-one border-color-one" style="border-radius: 3px">
                     <a class="view-cart">
-                        <button class="btn btn-default" id="view-cart-wrapper">
+                        <button class="btn btn-one" id="view-cart-wrapper">
                             <i class="fa fa-shopping-cart icon-cart color-one-text"></i>
                             <span id="cart-description">{{ " " . Lang::get("boukem.cart") . " " }}</span>
                             <span class="badge cart_badge">0</span>
@@ -153,28 +158,35 @@
                     <i class="fa fa-caret-down pull-right" style="line-height: 53px"></i>
                 </span>
                 <div class="menu fluid">
-                    <div class="item">
-                        <span class="text">Clothing</span>
-                        <i class="fa fa-caret-right pull-right"></i>
-                        <div class="menu">
-                            <div class="semantic-header">Mens</div>
-                            <div class="item">Shirts</div>
-                            <div class="item">Pants</div>
-                            <div class="item">Jeans</div>
-                            <div class="item">Shoes</div>
-                            <div class="divider"></div>
-                            <div class="semantic-header">Womens</div>
-                            <div class="item">Dresses</div>
-                            <div class="item">Shoes</div>
-                            <div class="item">Bags</div>
-                        </div>
-                    </div>
-                    <div class="item">Home Goods</div>
-                    <div class="item">Bedroom</div>
-                    <div class="divider"></div>
-                    <div class="semantic-header">Order</div>
-                    <div class="item">Status</div>
-                    <div class="item">Cancellations</div>
+                    @foreach(Categories::getAllCategories() as $category)
+                        {{-- If there are any children category, list them under the main category --}}
+                            @if(count($category->children) > 0)
+                            <div class="item">
+                                <span class="text">{{ $category->name }}</span>
+                                <i class="fa fa-caret-right pull-right"></i>
+                                <div class="menu">
+                                    @foreach($category->children as $children)
+                                        <div class="item">
+                                            <a class="dark" href="/{{ Localization::getCurrentLocale() }}/cat/{{ $children->slug }}">{{ $children->name }}</a>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @else
+                                <div class="item">
+                                    @if(isset($category->slug) && isset($category->name))
+                                        <a class="dark no-decoration"
+                                           href="/{{ Localization::getCurrentLocale() }}/cat/{{ $category->slug }}">
+                                            <div class="item">
+                                                {{ $category->name }}
+                                            </div>
+
+                                        </a>
+                                    @endif
+                                </div>
+                            @endif
+                    @endforeach
+
                 </div>
             </div>
         </div>
@@ -200,6 +212,27 @@
                     </li>
                 @endforeach
             @endif
+
+            {{-- Store contact info --}}
+            <li class="inline-block ">
+                <div class="ui pointing dropdown-select dropdown top left item fluid text-center">
+                <span class="text">
+                    {{ Lang::get("boukem.contact") }}
+                    <i class="fa fa-caret-down pull-right" style="line-height: 53px"></i>
+                </span>
+                    <div class="menu fluid">
+                        <div class="item">
+                            <i class="fa fa-phone icon"></i>
+                            {{ Store::info()->support->phone->number }}
+                        </div>
+                        <div class="divider"></div>
+                        <div class="item">
+                            <i class="fa fa-envelope-o icon"></i>
+                            <a href="mailto:{{ Store::info()->support->email }}" class="dark">{{ Store::info()->support->email }}</a>
+                        </div>
+                    </div>
+                </div>
+            </li>
         </ul>
     </div>
     {{--End of second row--}}

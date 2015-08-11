@@ -30,7 +30,8 @@
                                                         {{ $product->localization->name }}
                                                     </h2>
 
-                                                    @if($product->discontinued)
+                                                    {{-- TODO ... --}}
+                                                    @if($product->formats[0]->discontinued)
                                                         <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                                                             <link itemprop="availability" href="http://schema.org/Discontinued">
                                                             <p class="text-center text-danger">
@@ -40,27 +41,29 @@
                                                     @else
                                                         <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 
+                                                            {{-- TODO: update price with details from format --}}
                                                             <h3 class="price-tag color-one">
-                                                                <meta itemprop="price" content="{{ $product->price }}"><span itemprop="priceCurrency" content="CAD">$</span>{{ number_format((float)$product->price, 2, '.', '') }}
+                                                                <meta itemprop="price" content="{{ $product->formats[0]->price }}"><span itemprop="priceCurrency" content="CAD">$</span>{{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
                                                             </h3>
 
                                                             <ul>
                                                                 <li> <i class="fa fa-fw"><img src="https://cdn.kem.guru/boukem/spirit/flags/CA.png" width="17" alt="CA"></i>
-                                                                    {{ \Illuminate\Support\Facades\Lang::get("boukem.world_shipping") }}
+                                                                    {{ Lang::get("boukem.world_shipping") }}
                                                                 </li>
 
-                                                                @if($product->inventory->count > 5)
+                                                                {{-- TODO: update price with details from format --}}
+                                                                @if($product->formats[0]->inventory->count > 5)
                                                                     <link itemprop="availability" href="http://schema.org/LimitedAvailability">
                                                                     <li class="text-success"><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.express_shipping") }}</li>
-                                                                @elseif($product->inventory->count > 0)
+                                                                @elseif($product->formats[0]->inventory->count > 0)
                                                                     <link itemprop="availability" href="http://schema.org/InStock" >
-                                                                    <li class="text-warning"><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.stock_left", array("quantity" => $product->inventory->count)) }}</li>
+                                                                    <li class="text-warning"><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.stock_left", array("quantity" => $product->formats[0]->inventory->count)) }}</li>
                                                                 @else
                                                                     <link itemprop="availability" href="http://schema.org/LimitedAvailability" >
                                                                     <li><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.shipping_time") }}</li>
                                                                 @endif
 
-                                                                <li><i class="fa fa-lock fa-fw"></i>{{ \Illuminate\Support\Facades\Lang::get("boukem.secure_payment") }}</li>
+                                                                <li><i class="fa fa-lock fa-fw"></i>{{ Lang::get("boukem.secure_payment") }}</li>
 
                                                             </ul>
                                                         </span>
@@ -69,7 +72,8 @@
 
                                                     <p class="plan-info" id="product_short_description" itemprop="description">{{ str_limit(strip_tags($product->localization->short_description), 200, "...") }}</p>
 
-                                                    @if(!$product->discontinued)
+                                                    {{-- TODO ... --}}
+                                                    @if(!$product->formats[0]->discontinued)
                                                         <p class="plan-select text-center">
                                                         <div class="input-qty-detail form-inline text-center">
                                                             <div class="form-group">
@@ -78,19 +82,19 @@
 
                                                             <button class="btn btn-three buybutton visible-lg-inline"
                                                                     data-product="{{ $product->id }}"
-                                                                    data-price="{{ number_format((float)$product->price, 2, '.', '') }}"
-                                                                    data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
-                                                                    data-thumbnail_lg="//static.boutiquekem.com/productimg-70-110-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
+                                                                    data-price="{{ number_format((float)$product->formats[0]->price, 2, '.', '') }}"
+                                                                    data-thumbnail="{{ Products::thumbnail($product->id) }}"
+                                                                    data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
                                                                     data-name="{{ $product->localization->name }}"
                                                                     data-quantity="1">
-                                                                <i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
+                                                                <i class="fa fa-check-circle"></i>  {{ Lang::get("boukem.add_cart") }}</button>
                                                             <button class="btn btn-block btn-three center-block buybutton hidden-lg" data-product="{{ $product->id }}"
-                                                                    data-price="{{ number_format((float)$product->price, 2, '.', '') }}"
-                                                                    data-thumbnail="//static.boutiquekem.com/productimg-50-50-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
-                                                                    data-thumbnail_lg="//static.boutiquekem.com/productimg-70-110-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}"
+                                                                    data-price="{{ number_format((float)$product->formats[0]->price, 2, '.', '') }}"
+                                                                    data-thumbnail="{{ Products::thumbnail($product->id) }}"
+                                                                    data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
                                                                     data-name="{{ $product->localization->name }}"
                                                                     data-quantity="1">
-                                                                <i class="fa fa-check-circle"></i>  {{ \Illuminate\Support\Facades\Lang::get("boukem.add_cart") }}</button>
+                                                                <i class="fa fa-check-circle"></i>  {{ Lang::get("boukem.add_cart") }}</button>
                                                         </div>
                                                         </p>
                                                     @endif
@@ -118,20 +122,20 @@
 
 
                                             <div class="widget">
-                                                <h4 class="widget-heading">{{ \Illuminate\Support\Facades\Lang::get("boukem.share") }}</h4>
+                                                <h4 class="widget-heading">{{ Lang::get("boukem.share") }}</h4>
 
                                                 <ul class="categories highlight">
 
                                                     <li class="facebook_share_button">
                                                         {{-- TODO: INTEGREATE REAL LINKS FOR SHARING OPTIONS--}}
                                                         <a href="https://www.facebook.com/sharer/sharer.php?u=http://dev.boutiquekem.com/en/prod/en-probiotic-plus-120-capsules.html">
-                                                            <span class="fa fa-facebook fa-fw"></span> {{ \Illuminate\Support\Facades\Lang::get("boukem.share_fb") }}
+                                                            <span class="fa fa-facebook fa-fw"></span> {{ Lang::get("boukem.share_fb") }}
                                                         </a>
                                                     </li>
 
                                                     {{-- TODO: ICI AUSSI!--}}
                                                     <li class="pinterest_share_button"><a href="http://www.pinterest.com/pin/create/button/?url=http://dev.boutiquekem.com/en/prod/en-probiotic-plus-120-capsules.html&amp;media=//static.boutiquekem.com/productimg-8-700-700-83.jpg&amp;description=PROBIOTIC+Plus+-+120+capsules%0ARelief+from+urinary+tract+infections+%28UTIs%29Control+candida+yeast+infectionsStops+burning+during+urinationProtects+against+the+effects+of+antibioticsReduces+candida+during+antibiotic+therapyStops+bacteria+from+sticking+to+the+bladder+wallReduces+the+risk+of+recurring+bladder+infectionsPreviously+called+URIsmart" data-pin-do="buttonPin" data-pin-config="above">
-                                                            <span class="fa fa-pinterest fa-fw"></span> {{ \Illuminate\Support\Facades\Lang::get("boukem.share_pin") }}
+                                                            <span class="fa fa-pinterest fa-fw"></span> {{ Lang::get("boukem.share_pin") }}
                                                         </a>
                                                     </li>
 
@@ -141,7 +145,7 @@
 
 
                                             <div class="widget tags-wr">
-                                                <h4 class="widget-heading">{{ \Illuminate\Support\Facades\Lang::get("boukem.categories") }}</h4>
+                                                <h4 class="widget-heading">{{ Lang::get("boukem.categories") }}</h4>
                                                 <ul class="tags-list">
 
                                                     {{-- TOOD: INTEGRATE THE RIGHT CATEGORIES--}}
@@ -175,19 +179,19 @@
                                                 <div class="col-md-12">
                                                     <div class="w-box blog-post">
                                                         <figure>
-                                                            <img alt="" itemprop="image" src="//static.boutiquekem.com/productimg-8-700-500-{{ count($product->images) > 0 ? $product->images[0]->id . "." . $product->images[0]->extension : "0000.png" }}" class="img-responsive center-block hidden-xs">
+                                                            <img alt="" itemprop="image" src="{{ Products::mainImage($product->id) }}" class="img-responsive center-block hidden-xs">
 
                                                             <div id="product_long_description">
                                                                 <span>{!! $product->localization->long_description !!}</span>
                                                                 <ul class="meta-list text-center">
 
                                                                     <li>
-                                                                        <span>{{ \Illuminate\Support\Facades\Lang::get("boukem.CUP/EAN") }}</span>
-                                                                        <span class="bold" itemprop="gtin13">{{ isset($product->barcode) }}</span>
+                                                                        <span>{{ Lang::get("boukem.CUP/EAN") }}</span>
+                                                                        <span class="bold" itemprop="gtin13">{{ isset($product->formats[0]->barcode) }}</span>
                                                                     </li>
 
                                                                     <li itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
-                                                                        <span>{{ \Illuminate\Support\Facades\Lang::get("boukem.brand") }}</span>
+                                                                        <span>{{ Lang::get("boukem.brand") }}</span>
                                                                         <span class="bold" itemprop="name">{{ $product->brand->name }}</span>
                                                                     </li>
 

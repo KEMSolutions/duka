@@ -49,7 +49,7 @@ $(document).ready(function () {
      * Initialize favorite products feature.
      *
      */
-    productLayoutFavoriteLogicContainer.init();
+    productLayoutFavoriteContainer.init();
 
     /**
      * Initialize wishlist page.

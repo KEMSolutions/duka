@@ -228,9 +228,9 @@ var estimateContainer = {
 
 }
 /**
- * Object responsible for building the select list populating countries, provinces and states.
+ * Object responsible for building the select list populating countries, provinces and states on checkout page.
  *
- * @type {{populateCountry: Function, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, autoFillBillingAddress: Function, init: Function}}
+ * @type {{populateCountry: Function, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, init: Function}}
  */
 var locationContainer = {
 
@@ -239,11 +239,12 @@ var locationContainer = {
      * Activates the chosen plugin on the country select list.
      *
      */
-    populateCountry : function() {
-        $.getJSON("/js/data/country-list.en.json", function(data) {
-            var listItems = '',
-                $country = $(".country");
+    populateCountry : function (lang) {
+        var file = "/js/data/country-list." + lang + ".json",
+            listItems = '',
+            $country = $(".country");
 
+        $.getJSON(file, function(data) {
             $.each(data, function(key, val) {
                 if (key == "CA") {
                     listItems += "<option value='" + key + "' selected>" + val + "</option>";
@@ -271,7 +272,8 @@ var locationContainer = {
                 var listItems = '',
                     $province = $(".province").find("[data-country='" + country[i] +"']");
 
-                $.each(data, function(key, val) {
+                $.each(data, function(key)
+                {
                     if (data[key].country === country[i] && data[key].short == "QC" ){
                         listItems += "<option value='" + data[key].short + "' selected>" + data[key].name + "</option>";
                     }
@@ -330,7 +332,7 @@ var locationContainer = {
     init : function() {
         var self = locationContainer;
 
-        self.populateCountry();
+        self.populateCountry($("html").attr("lang"));
         self.populateProvincesAndStates(["CA", "US", "MX"], function() {
             $(".province").chosen();
         });
@@ -441,7 +443,7 @@ var cartDisplayContainer = {
     },
 
     displayOn: function() {
-        _width = cartDisplayContainer.$el.$container.width();
+        var _width = cartDisplayContainer.$el.$container.width();
         cartDisplayContainer.$el.$container.css( {
             "margin-right" : -_width
         });
@@ -452,7 +454,6 @@ var cartDisplayContainer = {
     },
 
     displayOff : function() {
-        _width = cartDisplayContainer.$el.$container.width();
         cartDisplayContainer.$el.$back.click(function() {
             cartDisplayContainer.animateOut();
         });
@@ -470,7 +471,7 @@ var cartDisplayContainer = {
     },
 
     animateOut: function() {
-        _width = cartDisplayContainer.$el.$container.width();
+        var _width = cartDisplayContainer.$el.$container.width();
         cartDisplayContainer.$el.$container.animate( {
             "margin-right" : -_width
         }, 400, function() {
@@ -500,7 +501,7 @@ var cartDisplayContainer = {
     init : function() {
         cartDisplayContainer.displayOn();
         cartDisplayContainer.displayOff();
-        UtilityContainer.populateCountry();
+        UtilityContainer.populateCountry($("html").attr("lang"));
 
         if (sessionStorage.isDisplayed == "true")
         {
@@ -701,10 +702,9 @@ var paymentOverlayContainer = {
 }
 
 /**
- * Object responsible for the view component of the favorite feature.
- * Logic handled in dev/actions/products/layout-favorite-logic.js
+ * Object responsible for adding products to a user's wishlist.
  *
- * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, init: Function}}
+ * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
  */
 var productLayoutFavoriteContainer = {
     /**
@@ -729,9 +729,68 @@ var productLayoutFavoriteContainer = {
         $(".wishlist_badge").text(total);
     },
 
+    /**
+     * Add the clicked product to the wish list.
+     *
+     */
+    addToFavorite: function() {
+        var self = productLayoutFavoriteContainer,
+            item;
+
+        $(".favorite-wrapper").on("click", function() {
+            //No favorited class.
+            if (!$(this).hasClass("favorited")) {
+                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
+                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+
+                $(this).addClass("favorited");
+
+                self.setWishlistBadgeQuantity();
+            }
+            else
+            //Has a favorited class. We remove it, then delete the element from local Storage.
+            {
+                self.removeFromFavorite($(this), self);
+            }
+        });
+    },
+
+    /**
+     * Persist the heart icon next to products already marked as wished.
+     *
+     */
+    persistFavorite: function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
+                for(var j = 0; j<$(".favorite-wrapper").length; j++)
+                {
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === parseInt($(".favorite-wrapper")[j].dataset.product))
+                    {
+                        $(".favorite-wrapper")[j].className += " favorited";
+                    }
+                }
+            }
+        };
+    },
+
+    /**
+     * Delete the clicked element from the wish list.
+     *
+     * @param context
+     */
+    removeFromFavorite: function (element, context) {
+        element.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + element.data("product"));
+        context.setWishlistBadgeQuantity();
+    },
+
     init: function () {
         var self = productLayoutFavoriteContainer;
 
+
+        self.addToFavorite();
+        self.persistFavorite();
         self.fadeInFavoriteIcon();
         self.setWishlistBadgeQuantity();
     }
@@ -744,6 +803,20 @@ var productLayoutFavoriteContainer = {
 var categoryContainer = {
 
     /**
+     * Contains the updated URL parameters,
+     *
+     */
+    searchParameters: {
+        page: 1,
+        per_page: 8,
+        order: 'relevance',
+        min_price: null,
+        max_price: null,
+        brands: [],
+        categories: []
+    },
+
+    /**
      * Blurs the background of each category's page header.
      *
      */
@@ -753,13 +826,202 @@ var categoryContainer = {
         });
     },
 
+
+    // SORTING FEATURE
+    /**
+     * TODO: REFACTOR ALL LOGIC INTO ITS OWN CONTAINER
+     *
+     */
+    itemsPerPage: function () {
+        $(".items-per-page .item").on("click", function() {
+            UtilityContainer.urlAddParameters("per_page", $(this).data("sort"));
+        });
+
+        // Set the selected option.
+        $('#items-per-page-box').dropdown('set selected', this.searchParameters.per_page);
+    },
+
+    sortBy: function () {
+        $(".sort-by .item").on("click", function() {
+            UtilityContainer.urlAddParameters("order", $(this).data("sort"));
+        });
+
+        // Set the selected option.
+        $('#sort-by-box').dropdown('set selected', this.searchParameters.order);
+    },
+
+    /**
+     * Adds the price filter to the search query.
+     */
+    priceUpdate: function() {
+
+        $("#price-update").on("click", function()
+        {
+            UtilityContainer.urlAddParameters({
+                min_price : $("#min-price").val(),
+                max_price : $("#max-price").val()
+            });
+        });
+
+        // Set the specified price range.
+        if (this.searchParameters.min_price) {
+            $('#min-price').val(this.searchParameters.min_price);
+        }
+
+        if (this.searchParameters.max_price) {
+            $('#max-price').val(this.searchParameters.max_price);
+        }
+    },
+
+    /**
+     * Adds the category filter to the search query.
+     */
+    categoriesUpdate: function() {
+        this.filterListUpdate($("#refine-by-category"), "categories");
+    },
+
+    /**
+     * Adds the brands filter to the search query.
+     */
+    brandsUpdate: function() {
+        this.filterListUpdate($("#refine-by-brand"), "brands");
+    },
+
+    /**
+     * Shortcut to handle filter lists such as brands and categories.
+     */
+    filterListUpdate : function(el, type)
+    {
+        // Performance check.
+        if (!el) {
+            return;
+        }
+
+        // Add the event listeners to each child element.
+        el.find(".item").on("change",
+            {
+                filter : type || "brands"
+            },
+
+            function(event)
+            {
+                var ID = $(this).data("filter"), filterList = categoryContainer.searchParameters[event.data.filter];
+
+                // Add brand to filter.
+                if ($(this).prop("checked")) {
+                    filterList.push(ID);
+                }
+
+                // Or remove it.
+                else
+                {
+                    var newList = [];
+
+                    if (filterList.length > 1) {
+                        for (var index in filterList) {
+                            if (filterList[index] != ID) {
+                                newList.push(filterList[index]);
+                            }
+                        }
+                    }
+
+                    filterList = newList;
+                }
+
+                // Reorder filter list.
+                filterList.sort(function(a, b) {
+                    return a - b;
+                });
+
+                // Update page.
+                if (filterList.length > 0) {
+                    var filter = filterList.length > 1 ? filterList.join(';') : filterList[0];
+                    UtilityContainer.urlAddParameters(event.data.filter, filter);
+                } else {
+                    UtilityContainer.urlRemoveParameters(event.data.filter);
+                }
+        });
+
+        // Update selected checkboxes. IDs are stored as strings in "categoryContainer.searchParameters".
+        el.find(".item").each(function() {
+            $(this).prop("checked", categoryContainer.searchParameters[type].indexOf(""+ $(this).data("filter")) > -1);
+        });
+    },
+
+    toggleLayout: function () {
+        var $container = $(".layout-toggle-container"),
+            $product = $(".dense_product"),
+            $product_img = $(".product-image"),
+            $product_buybutton = $(".dense_product .buybutton");
+
+        $("#list-layout, #grid-layout").on("click", function () {
+
+            if($container.hasClass("grid-layout"))
+            {
+                // List layout
+                $container.removeClass("grid-layout").addClass("list-layout");
+
+                $product.removeClass("col-xs-6 col-sm-4 col-md-3 text-center no-border")
+                    .addClass("col-xs-12 col-sm-12 col-md-12 border-bottom padding-1");
+
+                $product_img.removeClass("img-responsive center-block").addClass("pull-left").css("margin-right", "5%");
+
+                $product_buybutton.css("margin-top", "3%");
+
+
+                $(this).toggleClass("active");
+            }
+            else if ($container.hasClass("list-layout"))
+            {
+                // Grid layout
+                $container.removeClass("list-layout").addClass("grid-layout");
+
+                $product.removeClass("col-xs-12 col-sm-12 col-md-12 border-bottom padding-1").
+                    addClass("col-xs-6 col-sm-4 col-md-3 text-center no-border");
+
+                $product_img.addClass("img-responsive center-block").removeClass("pull-left").css("margin-right", "0");
+
+                $product_buybutton.css("margin-top", "0");
+
+                $(this).toggleClass("active");
+            }
+        })
+    },
+
+    /**
+     * Retrieves the query parameters from the URL and stores them locally.
+     *
+     */
+    retrieveSearchParameters: function() {
+
+        var query = UtilityContainer.urlGetParameters();
+
+        for (var key in query)
+        {
+            this.searchParameters[key] = query[key];
+
+            // For brands and categories, the value should be an array.
+            if (["brands", "categories"].indexOf(key) > -1 && typeof query[key] != 'object') {
+                this.searchParameters[key] = [query[key]];
+            }
+        }
+    },
+
     init: function () {
         var self = categoryContainer;
 
+        self.retrieveSearchParameters();
         self.blurBackground();
+        self.itemsPerPage();
+        self.sortBy();
+        self.priceUpdate();
+        self.categoriesUpdate();
+        self.brandsUpdate();
+        self.toggleLayout();
     }
+};
 
-}
+
 /**
  * Object responsible for the view component of the wish list page.
  * Logic handled in dev/actions/site/wishlist-logic.js
@@ -926,14 +1188,15 @@ var UtilityContainer = {
     },
 
     /**
-     * Utility function to populate a select list (#country) with a list of country (json formatted).
+     * Utility object used to populate a select list (#country) with a list of country (json formatted) in the appropriate language.
      *
      */
-    populateCountry : function () {
-        $.getJSON("/js/data/country-list.en.json", function(data) {
-            var listItems = '',
-                $country = $("#country");
+    populateCountry : function (lang) {
+        var file = "/js/data/country-list." + lang + ".json",
+            listItems = '',
+            $country = $("#country");
 
+        $.getJSON(file, function(data) {
             $.each(data, function(key, val) {
                 if (key == "CA") {
                     listItems += "<option value='" + key + "' selected>" + val + "</option>";
@@ -1165,8 +1428,112 @@ var UtilityContainer = {
             total = (taxes + shipping + subtotal).toFixed(2);
 
         return total;
+    },
+
+    /**
+     * Retrieves the query parameters from the URL.
+     * Courtesy of http://stackoverflow.com/a/1917916
+     *
+     * @returns object
+     */
+    urlGetParameters : function() {
+
+        // Performance check.
+        var query = document.location.search.substr(1);
+        if (query.length < 1) {
+            return {};
+        }
+
+        // Loop through query elements.
+        var kvp = query.split('&'), index, pair, key, value, pairs = {};
+        for (index in kvp)
+        {
+            // Skip parameters without any values.
+            if (kvp[index].indexOf('=') < 1) {
+                continue;
+            }
+
+            // Save query value.
+            pair = kvp[index].split('=');
+            key = decodeURIComponent(pair[0]), value = decodeURIComponent(pair[1]);
+            pairs[key] = value;
+
+            // Split up queries with a ";" in the value.
+            if (value.indexOf(';') > -1) {
+                pairs[key] = value.split(';');
+            }
+        }
+
+        return pairs;
+    },
+
+    /**
+     * Adds one or more query parameters to the URL and reloads the page.
+     * Courtesy of http://stackoverflow.com/a/1917916
+     *
+     * @param mixed key     Either a query key, or an object representing all the key-pair values to be added.
+     * @param mixed value   Query value, or null if key is an object.
+     * @constructor
+     */
+    urlAddParameters : function(key, value) {
+
+        // We either accept a key-value pair, or a query object.
+        var params = {};
+        if (typeof key == "object") {
+            params = key;
+        } else if (typeof key == "string" && typeof value != "undefined") {
+            params[key] = value;
+        } else {
+            return console.log("Invalid query parameters.");
+        }
+
+        // Add query parameters to existing ones.
+        var query = this.urlGetParameters(), index;
+        for (index in params) {
+            query[index] = params[index];
+        }
+
+        // Build query string and reload the page.
+        document.location.search = this.urlBuildQuery(query);
+    },
+
+    urlRemoveParameters : function(key) {
+
+        key = typeof key == "string" ? [key] : key;
+
+        // Try to remove one or more query parameters.
+        var query = this.urlGetParameters();
+        key.forEach(function(param, index, keys)
+        {
+            if (typeof query[param] != "undefined") {
+                delete query[param];
+            }
+        });
+
+        // Update the URL query.
+        document.location.search = this.urlBuildQuery(query);
+    },
+
+    urlBuildQuery : function(query) {
+
+        // Build query string.
+        // We use encodeURIComponent() instead of the deprecated escape() function.
+        var newQuery = [];
+        for (var index in query) {
+            if (typeof query[index] != "undefined" && query[index] != null)
+            {
+                // Concatenate arrays.
+                if (typeof query[index] == 'object') {
+                    query[index] = query[index].join(';');
+                }
+
+                newQuery.push(encodeURIComponent(index) +'='+ encodeURIComponent(query[index]));
+            }
+        }
+
+        return "?"+ (newQuery.length > 1 ? newQuery.join('&') : newQuery[0]);
     }
-}
+};
 
 
 /**
@@ -1432,7 +1799,7 @@ var checkoutValidationContainer = {
  * Object responsible for the overall logic (CRUD) of the cart drawer.
  * Layout handled in dev/components/layout/cart-drawer.js
  *
- * @type {{$el: {$list: (*|jQuery|HTMLElement)}, addItem: Function, storeItem: Function, loadItem: Function, deleteItem: Function, modifyQuantity: Function, modifyQuantityBeforeBuying: Function, setBadgeQuantity: Function, setQuantityCookie: Function, setCartSubtotal: Function, setCartShipping: Function, setCartTaxes: Function, setCartTotal: Function, button_to_Json: Function, ajaxCall: Function, updateAjaxCall: Function, init: Function}}
+ * @type {{$el: {$list: (*|jQuery|HTMLElement)}, addItem: Function, storeItem: Function, loadItem: Function, deleteItem: Function, modifyQuantity: Function, modifyQuantityBeforeBuying: Function, setBadgeQuantity: Function, setQuantityCookie: Function, setCartSubtotal: Function, setCartShipping: Function, setCartTaxes: Function, setCartTotal: Function, ajaxCall: Function, updateAjaxCall: Function, init: Function}}
  */
 var cartLogicContainer = {
     /**
@@ -1652,10 +2019,10 @@ var cartLogicContainer = {
                 cartLogicContainer.setCartTaxes(UtilityContainer.getCartTaxes(UtilityContainer.getCheapestShippingMethod(data).method, data));
                 cartLogicContainer.setCartTotal(UtilityContainer.getCartTotal(UtilityContainer.getCheapestShippingMethod(data), data));
             },
-            error: function(e, status) {
+            error: function(e) {
                 console.log(e);
             },
-            complete : function(data) {
+            complete : function() {
                 $(".price-estimate").fadeOut(300, function() {
                     $(".calculation.hidden").fadeIn().removeClass("hidden");
                     $(".cart-total.hidden").fadeIn().removeClass("hidden");
@@ -1768,82 +2135,6 @@ var cartDrawerInitContainer = {
 }
 
 /**
- * Container responsible for handling the logic of adding products to a user's wishlist.
- * Layout handled in dev/components/products/layout/product-layout-favorite.js
- *
- * @type {{addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
- */
-var productLayoutFavoriteLogicContainer = {
-
-    /**
-     * Add the clicked product to the wish list.
-     *
-     */
-    addToFavorite: function() {
-        var self = productLayoutFavoriteLogicContainer,
-            selfLayout = productLayoutFavoriteContainer,
-            item;
-
-        $(".favorite-wrapper").on("click", function() {
-            //No favorited class.
-            if (!$(this).hasClass("favorited")) {
-                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
-                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
-
-                $(this).addClass("favorited");
-
-                selfLayout.setWishlistBadgeQuantity();
-            }
-            else
-            //Has a favorited class. We remove it, then delete the element from local Storage.
-            {
-                self.removeFromFavorite($(this), selfLayout);
-            }
-        });
-    },
-
-    /**
-     * Persist the heart icon next to products already marked as wished.
-     *
-     */
-    persistFavorite: function() {
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
-                for(var j = 0; j<$(".favorite-wrapper").length; j++)
-                {
-                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === parseInt($(".favorite-wrapper")[j].dataset.product))
-                    {
-                        $(".favorite-wrapper")[j].className += " favorited";
-                    }
-                }
-            }
-        };
-    },
-
-    /**
-     * Delete the clicked element from the wish list.
-     *
-     * @param context
-     */
-    removeFromFavorite: function (element, context) {
-        element.removeClass("favorited");
-        localStorage.removeItem("_wish_product " + element.data("product"));
-        context.setWishlistBadgeQuantity();
-    },
-
-    init: function () {
-        var self = productLayoutFavoriteLogicContainer;
-
-        //Calls the layout container (productLayoutFavoriteContainer).
-        productLayoutFavoriteContainer.init();
-
-        //Initialize the logic.
-        self.addToFavorite();
-        self.persistFavorite();
-    }
-}
-/**
  * Container responsible for handling the logic of the wish list page.
  * Layout handled in dev/components/site/wishlist.js
  *
@@ -1953,7 +2244,8 @@ $(document).ready(function () {
      */
     $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'locale': $('html').attr('lang')
         }
     });
 
@@ -1991,7 +2283,7 @@ $(document).ready(function () {
      * Initialize favorite products feature.
      *
      */
-    productLayoutFavoriteLogicContainer.init();
+    productLayoutFavoriteContainer.init();
 
     /**
      * Initialize wishlist page.

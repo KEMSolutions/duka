@@ -21,8 +21,8 @@ return [
     'view_cart'     =>'View cart',
     'go'            =>'Go!',
     'sign_up'       =>'Sign up',
-    "sign_in"       =>"Log in",
-    'sign_out'      =>'Log out',
+    "log_in"       =>"Log in",
+    'log_out'      =>'Log out',
     'copyrights'    =>'all rights reserved',
     'no_exist'      =>'The requested page does not exist.',
     "canada_post_estimate"=>"Canada Post cannot provide an estimate at this time. Please try again later.",
@@ -196,7 +196,7 @@ return [
     "calculate"         =>"Calculate",
     "or"                =>"or",
     "change_location"   =>"Change location",
-    "pending_order"  =>"Your order #:command has not been paid.",
+    "pending_order"     =>"Your order #:command has not been paid.",
     "what_to_do"        =>"What would you like to do?",
     "pay_now"           =>"Pay now!",
     "cancel_order"      =>"Cancel this order.",
@@ -213,4 +213,9 @@ return [
     "wishlist_saved"    =>"Your wishlist will be saved while your browser session lasts.",
     "wishlist_remove"   =>"Remove from wishlist",
     "payment_successful" => "Thank you for your payment.",
+    "results_found"     =>":total results found",
+    "filter_by"         =>"Filter by",
+    "reset"             =>"Reset",
+
 ];
+

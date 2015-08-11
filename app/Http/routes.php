@@ -14,6 +14,7 @@ Route::group([
 
     // Categories.
     Route::get('cat/{slug}.html',   ['as' => 'category', 'uses' => 'CategoryController@display']);
+    Route::get('brand/{slug}.html', ['as' => 'brand', 'uses' => 'BrandController@display']);
 
     // Products.
     Route::get('search',            ['as' => 'search', 'uses' => 'ProductController@search']);

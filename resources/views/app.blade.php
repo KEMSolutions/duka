@@ -10,7 +10,7 @@
 	<link rel="icon" href="{{ url('/') . "/img/favicon.png"}}"/>
 
 	{{-- TODO : include dynamic name based on each store name--}}
-	<title>Boukem 2</title>
+	<title>{{ Store::info()->name }}</title>
 
 	{{-- TODO: include page description if any--}}
 
@@ -25,12 +25,18 @@
 
 	<!-- Semantic UI css dependencies -->
 	<link rel="stylesheet" href="{{ asset('css/semantic-ui/transition.min.css') }}"/>
-	<link href="{{ asset('/css/semantic-ui/dropdown.css') }}" rel="stylesheet">
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/dropdown.css') }}">
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/label.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/button.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/icon.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/input.css') }}"/>
 
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
 
-	<!-- Custom Css -->
+	<!-- Custom css -->
 	@yield("custom_css")
+	<!-- Color specific css -->
+	@include("_color_css")
 
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -41,17 +47,17 @@
 </head>
 <body>
 
-	@include('layout._header')
+	@include("layout._header")
 
 	@include("layout._drawer")
 
-	@include('layout._messages')
+	@include("layout._messages")
 
 
 	@yield("content")
 
 
-	@include('layout._footer')
+	@include("layout._footer")
 
 	<!-- Scripts -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>

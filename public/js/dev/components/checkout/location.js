@@ -1,7 +1,7 @@
 /**
- * Object responsible for building the select list populating countries, provinces and states.
+ * Object responsible for building the select list populating countries, provinces and states on checkout page.
  *
- * @type {{populateCountry: Function, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, autoFillBillingAddress: Function, init: Function}}
+ * @type {{populateCountry: Function, populateProvincesAndStates: Function, updateChosenSelects: Function, callUpdateChosenSelects: Function, init: Function}}
  */
 var locationContainer = {
 
@@ -10,11 +10,12 @@ var locationContainer = {
      * Activates the chosen plugin on the country select list.
      *
      */
-    populateCountry : function() {
-        $.getJSON("/js/data/country-list.en.json", function(data) {
-            var listItems = '',
-                $country = $(".country");
+    populateCountry : function (lang) {
+        var file = "/js/data/country-list." + lang + ".json",
+            listItems = '',
+            $country = $(".country");
 
+        $.getJSON(file, function(data) {
             $.each(data, function(key, val) {
                 if (key == "CA") {
                     listItems += "<option value='" + key + "' selected>" + val + "</option>";
@@ -42,7 +43,8 @@ var locationContainer = {
                 var listItems = '',
                     $province = $(".province").find("[data-country='" + country[i] +"']");
 
-                $.each(data, function(key, val) {
+                $.each(data, function(key)
+                {
                     if (data[key].country === country[i] && data[key].short == "QC" ){
                         listItems += "<option value='" + data[key].short + "' selected>" + data[key].name + "</option>";
                     }
@@ -101,7 +103,7 @@ var locationContainer = {
     init : function() {
         var self = locationContainer;
 
-        self.populateCountry();
+        self.populateCountry($("html").attr("lang"));
         self.populateProvincesAndStates(["CA", "US", "MX"], function() {
             $(".province").chosen();
         });

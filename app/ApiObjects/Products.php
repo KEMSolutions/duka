@@ -6,7 +6,9 @@ use KemAPI;
 use Request;
 
 use Carbon\Carbon;
+use App\Utilities\Utilities;
 use cebe\markdown\MarkdownExtra;
+
 
 class Products extends BaseObject
 {
@@ -35,6 +37,16 @@ class Products extends BaseObject
 
         // Parse description.
         $product->localization->long_description = $this->markdown->parse($product->localization->long_description);
+
+        // Set images size.
+        if (count($product->images) > 0) {
+            $product->images[0]->thumbnail_lg = Utilities::setImageSizeAndMode(70, 110, "fit", $product->images[0]->url);
+            $product->images[0]->thumbnail = Utilities::setImageSizeAndMode(60, 60, "fit", $product->images[0]->url);
+        }
+        else {
+            $product->images[0]->thumbnail_lg = "https://static.boutiquekem.com/productimg-70-110-0000.png";
+            $product->images[0]->thumbnail = "https://static.boutiquekem.com/productimg-60-60-0000.png";
+        }
 
         return $product;
     }
@@ -96,6 +108,32 @@ class Products extends BaseObject
         }
 
         return $results;
+    }
+
+
+    public function thumbnail($id)
+    {
+        return Utilities::setImageSizeAndMode(60, 60, "fit", $this->get($id)->images[0]->url);
+    }
+
+    public function thumbnailLg($id)
+    {
+        return Utilities::setImageSizeAndMode(70, 110, "fit",  $this->get($id)->images[0]->url);
+    }
+
+    public function imgFeatured($id)
+    {
+        return Utilities::setImageSizeAndMode(80, 120, "fit",  $this->get($id)->images[0]->url);
+    }
+
+    public function imgFeaturedLg($id)
+    {
+        return Utilities::setImageSizeAndMode(160, 160, "",  $this->get($id)->images[0]->url);
+    }
+
+    public function mainImage($id)
+    {
+        return Utilities::setImageSizeAndMode(300, 550, "",  $this->get($id)->images[0]->url);
     }
 }
 
