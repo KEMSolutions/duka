@@ -1,4 +1,5 @@
 <section class="slice color-one home_mixed">
+
     @if ($showTab)
         @include("site.homepage._tab", ["tabTitle" => $layoutData["mixed"]["tabTitle"]])
     @endif
@@ -14,7 +15,7 @@
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="img-feature">
-                                            <a href="/{{ $locale }}/prod/{{ $product->slug }}">
+                                            <a href="{{ route('product', ['slug' => $product->slug]) }}">
                                                 <img src="{{ Products::imgFeatured($product->id) }}" class="img-thumbnail center-block" alt="{{ $product->localization->name }}"/>
                                             </a>
                                         </div>
@@ -22,6 +23,7 @@
                                     <div class="col-md-10">
                                         <p>
                                             <a href="/{{ $locale }}/prod/{{ $product->slug }}" class="strong">
+                                            <a href="{{ route('product', ['slug' => $product->slug]) }}" class="strong">
                                                 {{ $product->localization->name }}
                                             </a>
                                                 <span class="pull-right">
@@ -35,12 +37,12 @@
                                             <br/>
                                             <button class="btn btn-one btn-sm buybutton"
                                                     data-product="{{ $product->id }}"
-                                                    data-price="{{ number_format((float)$product->price, 2, '.', '') }}"
+                                                    data-price="{{ number_format((float)$product->formats[0]->price, 2, '.', '') }}"
                                                     data-thumbnail="{{ Products::thumbnail($product->id) }}"
                                                     data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
                                                     data-name="{{ $product->localization->name }}"
                                                     data-quantity="1">
-                                                <i class="fa fa-shopping-cart"></i>{{ number_format((float)$product->price, 2, '.', '') }} $
+                                                <i class="fa fa-shopping-cart"></i>{{ number_format((float)$product->formats[0]->price, 2, '.', '') }} $
                                             </button>
                                         </p>
                                     </div>
@@ -76,6 +78,5 @@
 
         </div> <!-- container -->
     </div> <!-- w-section inverse -->
-
 
 </section>
