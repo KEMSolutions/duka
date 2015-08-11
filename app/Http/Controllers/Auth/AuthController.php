@@ -61,11 +61,11 @@ class AuthController extends Controller
         }
 
         // Validate user details.
-        $details = Customers::getCustomerObject(
-            $request->input('email'),
-            $request->input('name'),
-            $request->input('postcode')
-        );
+        $details = Customers::getCustomerObject([
+            'email' => $request->input('email'),
+            'name' => $request->input('name'),
+            'postcode' => $request->input('postcode')
+        ]);
 
         // Check if user already exists on the main server.
         $record = Customers::get($details->email);
@@ -83,7 +83,7 @@ class AuthController extends Controller
         // If not, create them and retrieve their unique ID.
         else
         {
-            $details = Customers::create($details->email, $details->name, $details->postcode);
+            $details = Customers::create((array) $details);
 
             // Catch any errors from the server.
             if (Customers::isError($details))

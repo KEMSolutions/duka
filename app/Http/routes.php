@@ -67,22 +67,16 @@ Route::group([
 
     Route::group(['prefix' => 'dev'], function()
     {
+        Route::get('empty-customer', function() {
+            return Illuminate\Support\Collection::make(Customers::getCustomerObject());
+        });
+
         Route::get('list-customers', function() {
             return Illuminate\Support\Collection::make(Customers::all());
         });
 
         Route::get('get-customer', function() {
-            return Illuminate\Support\Collection::make(Customers::get(base64_encode('a@a.com')));
-        });
-
-        Route::get('update-customer', function() {
-            return Illuminate\Support\Collection::make(Customers::update(
-                1357,
-                'a@a.com',
-                'Joey',
-                'H1G 5F7',
-                'es'
-            ));
+            return Illuminate\Support\Collection::make(Customers::get(base64_encode('shirley@example.com')));
         });
 
         Route::get('store-info', function() {

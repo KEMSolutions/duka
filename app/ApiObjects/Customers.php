@@ -1,6 +1,7 @@
 <?php namespace App\ApiObjects;
 
 use KemAPI;
+use League\Flysystem\Adapter\Local;
 use Localization;
 
 class Customers extends BaseObject
@@ -20,7 +21,7 @@ class Customers extends BaseObject
      * @param int $expires          Hours to keep object in cache.
      * @return object               Customer record.
      */
-    public function get($id, $requestParams = [], $expires = 0)
+    public function get($id, array $requestParams = [], $expires = 0)
     {
         // If we're retrieving a record by email and it hasn't already been base64 encoded,
         // we need to handle that.
@@ -32,62 +33,99 @@ class Customers extends BaseObject
     }
 
     /**
-     * @param $email
-     * @param null $name
-     * @param null $postcode
-     * @param null $language
+     * @param array $details    Customer details.
+     * @param array $locale     Details of customer's selected locale.
      * @return mixed
      */
-    public function create($email, $name = null, $postcode = null, $language = null)
+    public function create(array $details = [], array $locale = [])
     {
-        $user = $this->getCustomerObject($email, $name, $postcode, $language);
+        $customer = $this->getCustomerObject($details, $locale);
 
-        // TODO: check for validation errors.
-        // ...
-
-        // Create user.
-        return KemAPI::post($this->baseRequest, $user);
+        // Create customer record.
+        return KemAPI::post($this->baseRequest, $customer);
     }
 
     /**
-     * @param $id
-     * @param $email
-     * @param null $name
-     * @param null $postcode
-     * @param null $language
+     * @param mixed $id         Either a customer ID or customer email.
+     * @param array $details    Customer details.
+     * @param array $locale     Details of customer's selected locale.
      * @return mixed
      */
-    public function update($id, $email, $name = null, $postcode = null, $language = null)
+    public function update($id, array $details = [], array $locale = [])
     {
-        $user = $this->getCustomerObject($email, $name, $postcode, $language);
+        $customer = $this->getCustomerObject($details, $locale);
 
-        // TODO: check for validation errors.
-        // ...
+        // Make sure email is base64 encoded.
+        if (!is_numeric($id) && strpos($id, '@')) {
+            $id = base64_encode($id);
+        }
 
-        // Create user.
-        return KemAPI::put($this->baseRequest .'/'. $id, $user);
+        // Update customer record.
+        return KemAPI::put($this->baseRequest .'/'. $id, $customer);
     }
 
     /**
-     * @param $email
-     * @param mixed $name
-     * @param mixed $postcode
-     * @param mixed $language
-     * @return \stdClass
+     * Creates a customer object with all the expected fields.
+     *
+     * @param array $details    Customer details.
+     * @param array $locale     Details of customer's selected locale.
+     * @return object
      */
-    public function getCustomerObject($email, $name = null, $postcode = null, $language = null)
+    public function getCustomerObject(array $details = [], array $locale = [])
     {
-        // TODO: validate data.
-        // ...
-
         // Build user object for API.
-        $user = new \stdClass;
-        $user->email = $email;
-        $user->name = $name;
-        $user->postcode = $postcode;
-        $user->language = $language ?: Localization::getCurrentLocale();
+        $customer = new \stdClass;
+        $customer->email = '';
+        $customer->phone = '';
+        $customer->postcode = '';
+        $customer->name = '';
+        $customer->language = '';
 
-        return $user;
+        // Fill in some attributes.
+        foreach (get_object_vars($customer) as $attribute)
+        {
+            if (isset($details[$attribute]) && strlen($details[$attribute]))
+            {
+                $customer->$attribute = $details[$attribute];
+            }
+        }
+
+        // Customer locale.
+        $customer->locale = new \stdClass;
+        $customer->locale->id = '';
+        $customer->locale->name = '';
+        $customer->locale->language = '';
+        $customer->locale->language_name = '';
+        $customer->locale->script = '';
+
+        if (!Localization::checkLocaleInSupportedLocales($customer->language))
+        {
+            $customer->language = Localization::getCurrentLocale();
+            $customer->locale->id = Localization::getCurrentLocale() .'-CA';
+            $customer->locale->name = Localization::getCurrentLocaleNativeReading();
+            $customer->locale->language = Localization::getCurrentLocale();
+            $customer->locale->language_name = Localization::getCurrentLocaleName();
+            $customer->locale->script = Localization::getCurrentLocaleScript();
+        }
+
+        // Fill in locale attributes.
+        else
+        {
+            foreach (get_object_vars($customer->locale) as $attribute)
+            {
+                if (isset($locale[$attribute]) && strlen($locale[$attribute]))
+                {
+                    $customer->locale->$attribute = $locale[$attribute];
+                }
+            }
+        }
+
+        // Validate some fields.
+        $customer->postcode = preg_replace('/[^a-z0-9\s]/i', '', $customer->postcode);
+
+        $customer->metadata = [];
+
+        return $customer;
     }
 }
 
