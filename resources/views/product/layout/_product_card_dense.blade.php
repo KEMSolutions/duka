@@ -12,7 +12,7 @@
             </span>
 
             <a href="{{ route('product', ['slug' => $product->slug]) }}" class="strong">
-                <img src="{{ Products::imgFeaturedLg($product->id) }}"
+                <img src="{{ Products::imgFeaturedLg($product) }}"
                     class="product-image img-responsive center-block"
                     alt="{{ $product->localization->name }}" />
             </a>
@@ -42,8 +42,8 @@
                 <button class="btn btn-two btn-sm buybutton"
                         data-product="{{ $product->id }}"
                         data-price="{{ $product->formats[0]->price }}"
-                        data-thumbnail="{{ Products::thumbnail($product->id) }}"
-                        data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
+                        data-thumbnail="{{ Products::thumbnail($product) }}"
+                        data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
                         data-name="{{ $product->localization->name }}"
                         data-quantity="1"
                         data-link="{{ route('product', ['slug' => $product->slug]) }}">

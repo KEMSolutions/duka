@@ -4,9 +4,9 @@ use Log;
 use Cache;
 use KemAPI;
 use Request;
+use Utilities;
 
 use Carbon\Carbon;
-use App\Utilities\Utilities;
 use cebe\markdown\MarkdownExtra;
 
 
@@ -40,8 +40,8 @@ class Products extends BaseObject
 
         // Set images size.
         if (count($product->images) > 0) {
-            $product->images[0]->thumbnail_lg = Utilities::setImageSizeAndMode(70, 110, "fit", $product->images[0]->url);
-            $product->images[0]->thumbnail = Utilities::setImageSizeAndMode(60, 60, "fit", $product->images[0]->url);
+            $product->images[0]->thumbnail_lg = Utilities::setImageSizeAndMode(70, 110, 'fit', $product->images[0]->url);
+            $product->images[0]->thumbnail = Utilities::setImageSizeAndMode(60, 60, 'fit', $product->images[0]->url);
         }
         else {
             $product->images[0]->thumbnail_lg = "https://static.boutiquekem.com/productimg-70-110-0000.png";
@@ -110,30 +110,54 @@ class Products extends BaseObject
         return $results;
     }
 
-
-    public function thumbnail($id)
-    {
-        return Utilities::setImageSizeAndMode(60, 60, "fit", $this->get($id)->images[0]->url);
+    /**
+     * Gets the thumbnail source for a product.
+     * 
+     * @param object|int $id    Product object, or ID of a product.
+     * @return string
+     */
+    public function thumbnail($id) {
+        return Utilities::setImageSizeAndMode(60, 60, 'fit', $this->get($id)->images[0]->url);
     }
 
-    public function thumbnailLg($id)
-    {
-        return Utilities::setImageSizeAndMode(70, 110, "fit",  $this->get($id)->images[0]->url);
+    /**
+     * Gets the large thumbnail source for a product.
+     *
+     * @param object|int $id    Product object, or ID of a product.
+     * @return string
+     */
+    public function thumbnailLg($id) {
+        return Utilities::setImageSizeAndMode(70, 110, 'fit',  $this->get($id)->images[0]->url);
     }
 
-    public function imgFeatured($id)
-    {
-        return Utilities::setImageSizeAndMode(80, 120, "fit",  $this->get($id)->images[0]->url);
+    /**
+     * Gets the featured image source for a product.
+     *
+     * @param object|int $id    Product object, or ID of a product.
+     * @return string
+     */
+    public function imgFeatured($id) {
+        return Utilities::setImageSizeAndMode(80, 120, 'fit',  $this->get($id)->images[0]->url);
     }
 
-    public function imgFeaturedLg($id)
-    {
-        return Utilities::setImageSizeAndMode(160, 160, "",  $this->get($id)->images[0]->url);
+    /**
+     * Gets the large featured image source for a product.
+     *
+     * @param object|int $id    Product object, or ID of a product.
+     * @return string
+     */
+    public function imgFeaturedLg($id) {
+        return Utilities::setImageSizeAndMode(160, 160, '',  $this->get($id)->images[0]->url);
     }
 
-    public function mainImage($id)
-    {
-        return Utilities::setImageSizeAndMode(300, 550, "",  $this->get($id)->images[0]->url);
+    /**
+     * Gets the image source for a product.
+     *
+     * @param object|int $id    Product object, or ID of a product.
+     * @return string
+     */
+    public function mainImage($id) {
+        return Utilities::setImageSizeAndMode(300, 550, '',  $this->get($id)->images[0]->url);
     }
 }
 

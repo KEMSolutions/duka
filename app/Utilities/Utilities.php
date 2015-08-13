@@ -19,6 +19,18 @@ class Utilities
         return include __DIR__ .'/Countries/'. Localization::getCurrentLocale() .'.php';
     }
 
+    /**
+     * Tries to guess the country code of the current user.
+     *
+     * @return string
+     */
+    public function getUserCountryCode()
+    {
+        // TODO
+
+        return 'CA';
+    }
+
 
     /**
      * Returns a color brighter or darker according to a base color (hex formatted).
@@ -28,23 +40,25 @@ class Utilities
      * @param $steps
      * @return string
      */
-    public function adjustBrightness($hex, $steps) {
+    public function adjustBrightness($hex, $steps)
+    {
         // Steps should be between -255 and 255. Negative = darker, positive = lighter
         $steps = max(-255, min(255, $steps));
 
         // Normalize into a six character long hex string
         $hex = str_replace('#', '', $hex);
         if (strlen($hex) == 3) {
-            $hex = str_repeat(substr($hex,0,1), 2).str_repeat(substr($hex,1,1), 2).str_repeat(substr($hex,2,1), 2);
+            $hex = str_repeat(substr($hex,0,1), 2) . str_repeat(substr($hex,1,1), 2) . str_repeat(substr($hex,2,1), 2);
         }
 
         // Split into three parts: R, G and B
-        $color_parts = str_split($hex, 2);
+        $colorParts = str_split($hex, 2);
         $return = '#';
 
-        foreach ($color_parts as $color) {
+        foreach ($colorParts as $color)
+        {
             $color   = hexdec($color); // Convert to decimal
-            $color   = max(0,min(255,$color + $steps)); // Adjust color
+            $color   = max(0, min(255, $color + $steps)); // Adjust color
             $return .= str_pad(dechex($color), 2, '0', STR_PAD_LEFT); // Make two char hex code
         }
 
@@ -54,14 +68,13 @@ class Utilities
     /**
      * Returns an image path according to the width, height, mode and source entered as arguments.
      *
-     *
-     * @param $width
-     * @param $height
-     * @param $mode
-     * @param $source
-     * @return mixed
+     * @param int|string $width     Desired width in pixels
+     * @param int|string $height    Desired height in pixels
+     * @param array|string $mode    An array or comma-separated list of filters.
+     * @param string $source        Image URI.
+     * @return string mixed
      */
-    public static function setImageSizeAndMode($width, $height, $mode, $source)
+    public function setImageSizeAndMode($width, $height, $mode, $source)
     {
         // Format mode.
         if (is_array($mode))

@@ -1,17 +1,16 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-
 use View;
 use Layouts;
+use Utilities;
 use Categories;
 use Localization;
 
-use App\Utilities\Utilities;
+use App\Http\Requests;
 
 
-class HomeController extends Controller {
-
+class HomeController extends Controller
+{
 	/**
 	 *Renders the homepage view.
 	 *

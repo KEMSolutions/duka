@@ -87,7 +87,13 @@ abstract class BaseObject
      */
     public function get($id, array $requestParams = [], $expires = 3)
     {
-        // Check that $id is either a valid number or a valid slug.
+        // We might pass objects to this method when we're not sure if we have an ID
+        // or the object itself.
+        if (is_object($id) && isset($id->id)) {
+            return $id;
+        }
+
+        // Check that $id is either a valid integer or a valid slug.
         if ((is_numeric($id) && $id < 0) || preg_replace($this->slugInvalidCharacters, '', $id) != $id) {
             return $this->badRequest('Invalid identifier [req: ' . $this->baseRequest . '].');
         }
@@ -97,7 +103,7 @@ abstract class BaseObject
 
         // Check to see if object has already been cached.
         $cacheKey = $id .'.'. json_encode($requestParams);
-        if ($expires && $object = Cache::get($this->cacheNamespace . $cacheKey)) {
+        if ($expires && $object = Cache::get($this->getCacheKey($cacheKey))) {
             return $object;
         }
 
@@ -282,10 +288,22 @@ abstract class BaseObject
     }
 
     /**
-     * @return string   Namespace to be used with cache.
+     * Gets the cache namespace for the current ApiObject.
+     *
+     * @return string
      */
     public function getCacheNamespace() {
         return $this->cacheNamespace;
+    }
+
+    /**
+     * Creates a cache key by appending a string to the cache namespace.
+     *
+     * @param string $append    Key to append to the namespace.
+     * @return string
+     */
+    public function getCacheKey($append = '') {
+        return $this->cacheNamespace . $append;
     }
 
     public function isError($obj)
