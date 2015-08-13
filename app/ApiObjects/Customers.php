@@ -82,7 +82,7 @@ class Customers extends BaseObject
         $customer->language = '';
 
         // Fill in some attributes.
-        foreach (get_object_vars($customer) as $attribute)
+        foreach (get_object_vars($customer) as $attribute => $empty)
         {
             if (isset($details[$attribute]) && strlen($details[$attribute]))
             {
