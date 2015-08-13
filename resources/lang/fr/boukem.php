@@ -217,6 +217,8 @@ return [
     "filter_by"         =>"Filtrer par",
     "reset"             =>"Tout effacer",
     "account_exists"    =>"Un compte avec cet courriel existe déjà.",
+    "account_does_not_exists"    => "Le compte associé à ce courriel n'existe pas",
+    "please_create_password"    => "Veuillez créer un nouveau mot de passe pour votre compte existant.",
 
 ];
 

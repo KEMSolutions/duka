@@ -112,8 +112,6 @@ class AuthController extends Controller
      */
     public function postLogin(Request $request)
     {
-        // TODO: make sure the form fields have the attribute "required."
-
         $username = $request->input($this->loginUsername());
 
         // Check if the user is in our database.
@@ -121,23 +119,21 @@ class AuthController extends Controller
         {
             // If the user does not exist in our database, or on the main server, redirect
             // them to the registration page.
-            // TODO: localize.
             $record = Customers::get($username);
             if (Customers::isError($record))
             {
                 return redirect(route('auth.register'))
                     ->withInput($request->only($this->loginUsername()))
-                    ->withMessages(['[test] That account does not exist.']);
+                    ->withMessages([Lang::get('boukem.account_does_not_exists')]);
             }
 
             // If the user does not exist in our database but has an account on the main server,
             // invite them to create a new password here. Maybe the database was reset...
-            // TODO: localize.
             else
             {
                 return redirect(route('auth.register'))
                     ->withInput(['name' => $record->name, $this->loginUsername() => $record->email])
-                    ->withMessages(['[test] Please create a new password.']);
+                    ->withMessages([Lang::get('boukem.please_create_password')]);
             }
         }
 
