@@ -4,6 +4,8 @@ use Localization;
 
 class Utilities
 {
+    private $userCountryCode;
+
     public function __construct()
     {
         // Build the cache namespace.
@@ -28,7 +30,12 @@ class Utilities
     {
         // TODO
 
-        return 'CA';
+        if (is_null($this->userCountryCode))
+        {
+            $this->userCountryCode = 'CA';
+        }
+
+        return $this->userCountryCode;
     }
 
 
