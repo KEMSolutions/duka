@@ -2,6 +2,7 @@
 
 use Log;
 use Auth;
+use Lang;
 use Session;
 use Redirect;
 use Customers;
@@ -54,10 +55,9 @@ class AuthController extends Controller
         // Performance check.
         if (User::findByEmail($request->input('email')))
         {
-            // TODO: localize.
             return redirect(route('auth.login'))
                 ->withInput($request->only('email'))
-                ->withMessages('[test] Account already exists.');
+                ->withMessages([Lang::get('boukem.account_exists')]);
         }
 
         // Validate user details.
@@ -69,38 +69,26 @@ class AuthController extends Controller
 
         // Check if user already exists on the main server.
         $record = Customers::get($details->email);
-        if (!Customers::isError($record))
+        if (Customers::isError($record))
         {
-            $request->merge([
-                'id' => $record->id,
-                'email' => $record->email,
-                'name' => $record->name,
-                'postcode' => $record->postcode,
-                'language' => $record->language
-            ]);
-        }
-
-        // If not, create them and retrieve their unique ID.
-        else
-        {
-            $details = Customers::create((array) $details);
+            $record = Customers::create((array) $details);
 
             // Catch any errors from the server.
-            if (Customers::isError($details))
+            if (Customers::isError($record))
             {
-                Log::error('Could not create user on main server.');
+                Log::error('Could not create customer record on main server.');
                 abort(500);
             }
-
-            // Update new user details with validated data & user ID.
-            $request->merge([
-                'id' => $details->id,
-                'email' => $details->email,
-                'name' => $details->name,
-                'postcode' => $details->postcode,
-                'language' => $details->language
-            ]);
         }
+
+        // Update user details with validated data & user ID.
+        $request->merge([
+            'id' => $record->id,
+            'email' => $record->email,
+            'name' => $record->name,
+            'postcode' => $request->input('postcode', $record->postcode),
+            'language' => $record->language
+        ]);
 
         // Add a record for our new user in the local database.
         $user = $this->create($request->all());
@@ -108,7 +96,7 @@ class AuthController extends Controller
         // Because the ID is the primary key, it will be incremented in this instance of $user.
         // We'll have to change it back just so we can log them in. The database record, however,
         // has the right information.
-        $user->id = $request->input('id');
+        $user->id = $record->id;
 
         // Log them in.
         Auth::login($user);

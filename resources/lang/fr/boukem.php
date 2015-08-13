@@ -216,6 +216,7 @@ return [
     "results_found"     =>":total résultats trouvés",
     "filter_by"         =>"Filtrer par",
     "reset"             =>"Tout effacer",
+    "account_exists"    =>"Un compte avec cet courriel existe déjà.",
 
 ];
 

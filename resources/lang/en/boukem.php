@@ -216,6 +216,7 @@ return [
     "results_found"     =>":total results found",
     "filter_by"         =>"Filter by",
     "reset"             =>"Reset",
+    "account_exists"    =>"An account with that email already exists.",
 
 ];
 
