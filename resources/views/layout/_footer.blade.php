@@ -39,22 +39,34 @@
                 <div class="col">
                     <h4>{{ Lang::get("boukem.customer_service") }}</h4>
                     <ul>
-                        <li>
-                            <a href="{{ route('auth.login') }}">
-                                {{ Lang::get("boukem.account") }}
-                            </a>
-                        </li>
-                        <li>
-                            @if (Auth::guest())
+
+                        @if (Auth::guest())
+
+                            <li>
+                                <a href="{{ route('auth.login') }}">
+                                    {{ Lang::get("boukem.account") }}
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('auth.register')  }}">
                                     {{ Lang::get("boukem.sign_up") }}
                                 </a>
-                            @else
+                            </li>
+
+                        @else
+
+                            <li>
+                                <a href="{{ route('auth.account') }}">
+                                    {{ Lang::get("boukem.account") }}
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('auth.logout') }}">
                                     @lang("boukem.log_out")
                                 </a>
-                            @endif
-                        </li>
+                            </li>
+
+                        @endif
                     </ul>
                 </div>
             </div>

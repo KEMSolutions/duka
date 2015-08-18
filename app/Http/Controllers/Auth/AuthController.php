@@ -41,7 +41,7 @@ class AuthController extends Controller
         $this->loginPath = route('auth.login');
         $this->redirectAfterLogout = $this->redirectPath = route('home');
 
-		$this->middleware('guest', ['except' => 'getLogout']);
+		$this->middleware('guest', ['except' => ['getLogout', 'getAccount', 'postAccount']]);
 	}
 
     /**
@@ -138,6 +138,21 @@ class AuthController extends Controller
         }
 
         return $this->loginUser($request);
+    }
+
+    public function getAccount()
+    {
+        // Check that user is authenticated.
+        if (!Auth::check()) {
+            return redirect(route('auth.login'));
+        }
+
+        return view('auth.account')->withUser(Customers::get(Auth::user()->id));
+    }
+
+    public function postAccount()
+    {
+        return redirect(route('auth.account'))->withMessages(['TODO: save account details.']);
     }
 
     /**
