@@ -2,6 +2,7 @@
 
 use Customers;
 
+use App\Models\Customer;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
@@ -50,20 +51,41 @@ class KemApiUserProvider implements UserProvider
         return null;
     }
 
+    /**
+     * Update the "remember me" token for the given user in storage.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  string  $token
+     * @return void
+     */
     public function updateRememberToken(UserContract $user, $token) {}
 
+    /**
+     * Retrieve a user by the given credentials.
+     *
+     * @param array $credentials
+     * @return \App\Models\Customer|null
+     */
     public function retrieveByCredentials(array $credentials)
     {
-        // TODO
+        // Retrieve customer record.
+        $record = Customers::get($credentials['email']);
+        if (Customers::isError($record)) {
+            return null;
+        }
 
-        return null;
+        return new Customer((array) $record);
     }
 
-    public function validateCredentials(UserContract $user, array $credentials)
-    {
-        $plain = $credentials['password'];
-
-        return $this->hasher->check($plain, $user->getAuthPassword());
+    /**
+     * Validate a user against the given credentials.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  array  $credentials
+     * @return bool
+     */
+    public function validateCredentials(UserContract $user, array $credentials) {
+        return $this->hasher->check($credentials['password'], $user->getAuthPassword());
     }
-
 }
+
