@@ -143,10 +143,11 @@ return [
 		'App\Providers\BusServiceProvider',
 		'App\Providers\ConfigServiceProvider',
         'App\Providers\EventServiceProvider',
+        'App\Providers\KemApiAuthProvider',
         'App\Providers\KemApiServiceProvider',
         'App\Providers\LocalizationServiceProvider',
-		'App\Providers\RouteServiceProvider',
 		'Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider',
+        'App\Providers\RouteServiceProvider',
 
 	],
 
