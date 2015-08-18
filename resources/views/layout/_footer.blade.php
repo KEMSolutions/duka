@@ -50,8 +50,8 @@
                                     {{ Lang::get("boukem.sign_up") }}
                                 </a>
                             @else
-                                <a href="{{ url('/auth/logout') }}">
-                                    {{ Lang::get("boukem.sign_out") }}
+                                <a href="{{ route('auth.logout') }}">
+                                    @lang("boukem.log_out")
                                 </a>
                             @endif
                         </li>
