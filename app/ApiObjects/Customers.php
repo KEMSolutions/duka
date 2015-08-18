@@ -29,7 +29,14 @@ class Customers extends BaseObject
             $id = base64_encode($id);
         }
 
-        return parent::get($id, $requestParams, $expires);
+        $customer = parent::get($id, $requestParams, $expires);
+
+        // Format metadata attribute.
+        if (!$this->isError($customer)) {
+            $customer->metadata = json_decode($customer->metadata);
+        }
+
+        return $customer;
     }
 
     /**
@@ -40,6 +47,7 @@ class Customers extends BaseObject
     public function create(array $details = [], array $locale = [])
     {
         $customer = $this->getCustomerObject($details, $locale);
+        $customer->metadata = json_encode($customer->metadata);
 
         // Create customer record.
         return KemAPI::post($this->baseRequest, $customer);
@@ -54,6 +62,7 @@ class Customers extends BaseObject
     public function update($id, array $details = [], array $locale = [])
     {
         $customer = $this->getCustomerObject($details, $locale);
+        $customer->metadata = json_encode($customer->metadata);
 
         // Make sure email is base64 encoded.
         if (!is_numeric($id) && strpos($id, '@')) {
@@ -80,11 +89,12 @@ class Customers extends BaseObject
         $customer->postcode = '';
         $customer->name = '';
         $customer->language = '';
+        $customer->metadata = [];
 
         // Fill in some attributes.
         foreach (get_object_vars($customer) as $attribute => $empty)
         {
-            if (isset($details[$attribute]) && strlen($details[$attribute]))
+            if (isset($details[$attribute]) && (gettype($details[$attribute]) == gettype($customer->$attribute)))
             {
                 $customer->$attribute = $details[$attribute];
             }
@@ -122,8 +132,6 @@ class Customers extends BaseObject
 
         // Validate some fields.
         $customer->postcode = preg_replace('/[^a-z0-9\s]/i', '', $customer->postcode);
-
-        $customer->metadata = [];
 
         return $customer;
     }
