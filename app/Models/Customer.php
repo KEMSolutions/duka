@@ -67,14 +67,12 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract
 
         // Validate some fields.
         $this->postcode = preg_replace('/[^a-z0-9\s]/i', '', $this->postcode);
-    }
+        if (isset($this->metadata['password'])
+            && strlen($this->metadata['password']) > 0
+            && strpos($this->metadata['password'], '$2') !== 0) {
 
-    /**
-     * @param string $email
-     * @return mixed
-     */
-    public static function findByEmail($email) {
-        return Customers::get($email);
+            $this->metadata['password'] = Crypt::decrypt($this->metadata['password']);
+        }
     }
 
     /**
@@ -109,7 +107,7 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract
      * @return string
      */
     public function getAuthPassword() {
-        return Crypt::decrypt($this->metadata['password']);
+        return $this->metadata['password'];
     }
 
     /**
@@ -128,7 +126,7 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract
      */
     public function getRememberToken()
     {
-        return $this->metadata['token'];
+        return $this->metadata['remember_token'];
     }
 
     /**
@@ -139,7 +137,7 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract
      */
     public function setRememberToken($value)
     {
-        $this->metadata['token'] = $value;
+        $this->metadata['remember_token'] = $value;
     }
 
     /**

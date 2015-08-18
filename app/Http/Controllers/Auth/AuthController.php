@@ -52,6 +52,13 @@ class AuthController extends Controller
             return redirect(route('auth.login'));
         }
 
+        // Validate incoming data.
+        $validator = $this->validator($request->all());
+        if ($validator->fails()) {
+            return redirect(route('auth.account'))->withValidator($validator)->withInput();
+//            $this->throwValidationException($request, $validator);
+        }
+
         // Make sure we're editing a valid customer record.
         if (!$record = Customers::get(Auth::user()->id)) {
             Log::error('Could not retrieve customer record while updating account details.');
@@ -63,10 +70,6 @@ class AuthController extends Controller
         $passwd = $request->input('password');
         if (strlen($passwd))
         {
-            if ($passwd !== $request->input('password_confirmation') || strlen($passwd) < 6) {
-                return redirect(route('auth.account'))->withMessages([Lang::get('passwords.password')]);
-            }
-
             $updatePasswd = true;
             $request->merge([
                 'metadata' => [
@@ -119,7 +122,7 @@ class AuthController extends Controller
     {
         // Create customer object.
         $customer = new Customer($data);
-        $customer->metadata['password'] = Crypt::encrypt(bcrypt($data['password']));
+        $customer->metadata['password'] = bcrypt($data['password']);
 
         // Save details on main server.
         return Customers::create($customer);

@@ -1,5 +1,6 @@
 <?php namespace App\Providers;
 
+use Arr;
 use Customers;
 
 use App\Models\Customer;
@@ -32,7 +33,7 @@ class KemApiUserProvider implements UserProvider
      */
     public function retrieveById($identifier)
     {
-        return Customers::get($identifier);
+        return new Customer((array) Customers::get($identifier));
     }
 
     /**
@@ -46,19 +47,23 @@ class KemApiUserProvider implements UserProvider
     {
         $customer = $this->retrieveById($identifier);
 
-        // TODO
-
-        return null;
+        // Check if customer has a "remember me" token.
+        return Arr::has($customer->metadata, 'remember_token') ? $customer : null;
     }
 
     /**
      * Update the "remember me" token for the given user in storage.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  string  $token
+     * @param \App\Models\Customer $customer
+     * @param string $token
      * @return void
      */
-    public function updateRememberToken(UserContract $user, $token) {}
+    public function updateRememberToken(UserContract $customer, $token)
+    {
+        $customer->metadata['remember_token'] = $token;
+
+        Customers::update($customer);
+    }
 
     /**
      * Retrieve a user by the given credentials.

@@ -1,5 +1,6 @@
 <?php namespace App\ApiObjects;
 
+use Crypt;
 use KemAPI;
 use Localization;
 
@@ -38,7 +39,7 @@ class Customers extends BaseObject
 
         // Format metadata attribute.
         if (!$this->isError($customer)) {
-            $customer->metadata = json_decode($customer->metadata);
+            $customer = new Customer((array) $customer);
         }
 
         return $customer;
@@ -47,6 +48,7 @@ class Customers extends BaseObject
     public function create(Customer $customer)
     {
         // Format metadata before saving.
+        $customer->metadata['password'] = Crypt::encrypt($customer->metadata['password']);
         $customer->metadata = json_encode($customer->metadata);
 
         // Create customer record.
@@ -56,24 +58,17 @@ class Customers extends BaseObject
         return new Customer($result);
     }
 
-    /**
-     * @param mixed $id         Either a customer ID or customer email.
-     * @param array $details    Customer details.
-     * @param array $locale     Details of customer's selected locale.
-     * @return mixed
-     */
-    public function update($id, array $details = [], array $locale = [])
+    public function update(Customer $customer)
     {
-        $customer = $this->getCustomerObject($details, $locale);
+        // Format metadata before saving.
+        $customer->metadata['password'] = Crypt::encrypt($customer->metadata['password']);
         $customer->metadata = json_encode($customer->metadata);
 
-        // Make sure email is base64 encoded.
-        if (!is_numeric($id) && strpos($id, '@')) {
-            $id = base64_encode($id);
-        }
-
         // Update customer record.
-        return KemAPI::put($this->baseRequest .'/'. $id, $customer);
+        $result = (array) KemAPI::put($this->baseRequest .'/'. $customer->id, $customer);
+
+        // Return instance of App\Models\Customer.
+        return new Customer($result);
     }
 
     /**
