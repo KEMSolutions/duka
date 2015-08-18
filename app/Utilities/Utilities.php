@@ -2,14 +2,21 @@
 
 use Localization;
 
+use Illuminate\Http\Request;
+
+
 class Utilities
 {
+    private $request;
     private $userCountryCode;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
         // Build the cache namespace.
         $this->cacheNamespace = Localization::getCurrentLocale() .'.utilities.';
+
+        // Save an instance of the request object.
+        $this->request = $request;
     }
 
     /**
@@ -28,11 +35,9 @@ class Utilities
      */
     public function getUserCountryCode()
     {
-        // TODO
-
         if (is_null($this->userCountryCode))
         {
-            $this->userCountryCode = 'CA';
+            $this->userCountryCode = $this->request->headers->get('HTTP_CF_IPCOUNTRY', 'CA');
         }
 
         return $this->userCountryCode;
