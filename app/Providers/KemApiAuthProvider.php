@@ -1,6 +1,6 @@
 <?php namespace App\Providers;
 
-use App\Models\User;
+use App\Models\Customer;
 use App\Providers\KemApiUserProvider;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,7 +17,7 @@ class KemApiAuthProvider extends ServiceProvider
         // Extend the Auth provider to support our custom KemApiUserProvider.
         $this->app['auth']->extend('kemapi', function()
         {
-            return new KemApiUserProvider(new User);
+            return new KemApiUserProvider(new Customer);
         });
     }
 
