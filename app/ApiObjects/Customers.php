@@ -1,8 +1,13 @@
 <?php namespace App\ApiObjects;
 
 use KemAPI;
-use League\Flysystem\Adapter\Local;
 use Localization;
+
+
+use App\Models\Customer;
+
+// TODO: remove this from dependencies.
+use League\Flysystem\Adapter\Local;
 
 class Customers extends BaseObject
 {
@@ -39,18 +44,16 @@ class Customers extends BaseObject
         return $customer;
     }
 
-    /**
-     * @param array $details    Customer details.
-     * @param array $locale     Details of customer's selected locale.
-     * @return mixed
-     */
-    public function create(array $details = [], array $locale = [])
+    public function create(Customer $customer)
     {
-        $customer = $this->getCustomerObject($details, $locale);
+        // Format metadata before saving.
         $customer->metadata = json_encode($customer->metadata);
 
         // Create customer record.
-        return KemAPI::post($this->baseRequest, $customer);
+        $result = (array) KemAPI::post($this->baseRequest, $customer);
+
+        // Return instance of App\Models\Customer.
+        return new Customer($result);
     }
 
     /**

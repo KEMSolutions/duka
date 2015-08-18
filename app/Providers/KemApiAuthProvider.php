@@ -15,9 +15,10 @@ class KemApiAuthProvider extends ServiceProvider
     public function boot()
     {
         // Extend the Auth provider to support our custom KemApiUserProvider.
-        $this->app['auth']->extend('kemapi', function()
+        $hash = $this->app['hash'];
+        $this->app['auth']->extend('kemapi', function() use ($hash)
         {
-            return new KemApiUserProvider(new Customer);
+            return new KemApiUserProvider($hash);
         });
     }
 
