@@ -1,11 +1,9 @@
-# Ignore phpStorm project files
-/.idea
-
-# Node modules
-/node_modules
-
-# Ignore Laravel environment variables
+# Laravel & vendor stuff.
 .env
-
-# Ignore vendor directory.
+/node_modules
 /vendor
+
+# ctags & other project files.
+.tags
+tags
+/.idea
