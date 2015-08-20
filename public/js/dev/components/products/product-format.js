@@ -11,25 +11,14 @@ var productFormatContainer = {
      */
     displaySyncedProductInformation: function() {
 
-        const self = productFormatContainer;
+        const self = productFormatContainer,
+            $formatSelection = $(".format-selection");
 
-
-        $(".product-page.buybutton").hover(function () {
+        $formatSelection.on("click", function () {
             self.setPriceTag($(this).data("price"));
             self.setInventoryCount($(this).data("inventory-count"));
             $("#product-format").text($(this).data("format"));
-
-            // We add the "active" class on mouseenter.
-            $(this).addClass("active");
-        }, function() {
-            // And we remove it on mouseleave.
-            $(this).removeClass("active");
         });
-
-        // We persist the active class when the user clicks on the buybutton.
-        $(".product-page.buybutton").on("click", function () {
-            !$(this).hasClass("active") ? $(this).addClass("active") : "";
-        })
 
     },
 

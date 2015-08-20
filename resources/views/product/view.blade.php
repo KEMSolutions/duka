@@ -85,12 +85,15 @@
                                                                 <div class="input-group bootstrap-touchspin horizontal-align" style=""><span class="input-group-addon bootstrap-touchspin-prefix"></span><input type="text" class="form-control input-qty text-center" id="item_quantity" value="1"><span class="input-group-addon bootstrap-touchspin-postfix"></span></div>
                                                             </div>
 
+
                                                             @if(count($product->formats) != 0)
-                                                                @foreach($product->formats as $index => $format)
-                                                                    <button class="btn btn-three product-page buybutton
-                                                                    @if ($index == 0)
-                                                                        {!! 'active' !!}
-                                                                    @endif
+                                                                <div class="ui buttons huge">
+
+                                                                    @foreach($product->formats as $index => $format)
+                                                                    <button class="ui button format-selection
+                                                                    {{--@if ($index == 0)--}}
+                                                                        {{--{!! 'active' !!}--}}
+                                                                    {{--@endif--}}
                                                                             "
                                                                             data-product="{{ $format->id }}"
                                                                             data-price="{{ $format->price }}"
@@ -106,12 +109,25 @@
                                                                         @if(count($product->formats) > 1)
                                                                             <p class="ui sub header">{{ $format->name }}</p>
                                                                         @endif
-
-                                                                        <i class="fa fa-check-circle"></i>
-                                                                        @lang("boukem.add_cart")
                                                                     </button>
+
+                                                                    @if($format != end($product->formats))
+                                                                        <div class="or" data-text=@lang("boukem.or")></div>
+                                                                    @endif
+
                                                                 @endforeach
+                                                                </div>
                                                             @endif
+
+                                                            <br/>
+                                                            <br/>
+
+                                                            <button class="btn btn-three buybutton horizontal-align">
+                                                                <div class="add-cart">
+                                                                    <i class="fa fa-check-circle"></i>
+                                                                    @lang("boukem.add_cart")
+                                                                </div>
+                                                            </button>
 
                                                         </div>
                                                         </p>

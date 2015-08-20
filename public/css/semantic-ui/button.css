@@ -880,7 +880,6 @@
 .ui.buttons .or {
   position: relative;
   width: 0.3em;
-  height: 2.57142857em;
   z-index: 3;
 }
 .ui.buttons .or:before {
