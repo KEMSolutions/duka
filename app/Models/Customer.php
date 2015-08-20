@@ -5,11 +5,13 @@ use Customers;
 use Validator;
 use Localization;
 
+use Illuminate\Contracts\Support\Arrayable;
+
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 
-class Customer implements AuthenticatableContract, CanResetPasswordContract
+class Customer implements AuthenticatableContract, CanResetPasswordContract, Arrayable
 {
     public $id = null;
     public $email = '';
@@ -149,5 +151,8 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract
     {
         return 'remember_token';
     }
-}
 
+    public function toArray() {
+        return get_object_vars($this);
+    }
+}
