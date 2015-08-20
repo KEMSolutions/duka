@@ -125,15 +125,18 @@ var cartLogicContainer = {
 
     /**
      * Modify the quantity in a product page before buying
-     * Only used in a product page.
+     * Only used in a product page. (It is hackish, I'll admit it)
      * Assuming the DOM has (and will keep) this structure:
      *      .form-group
      *          #item-quantity
+     *          .ui.buttons.huge
+     *          br
+     *          br
      *      .buybutton
      */
     modifyQuantityBeforeBuying : function() {
         $("#item_quantity").on("change", function() {
-            $(this).closest(".form-group").next().data("quantity", parseInt($(this).val()));
+            $(this).closest(".form-group").nextAll().eq(3).data("quantity", parseInt($(this).val()));
         });
     },
 
