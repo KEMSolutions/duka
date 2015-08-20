@@ -59,7 +59,7 @@
 						<div class="form-group">
 							<label class="col-md-4 control-label">Language</label>
 							<div class="col-md-6">
-								<input type="text" class="form-control" name="language" value="{{ $user->locale->name }}" disabled>
+								<input type="text" class="form-control" name="language" value="{{ $user->locale['name'] }}" disabled>
 							</div>
 						</div>
 

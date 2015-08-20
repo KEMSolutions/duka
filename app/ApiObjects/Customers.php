@@ -1,10 +1,13 @@
 <?php namespace App\ApiObjects;
 
+use Log;
+use Auth;
+use Cache;
 use Crypt;
 use KemAPI;
 use Localization;
 
-
+use Carbon\Carbon;
 use App\Models\Customer;
 
 // TODO: remove this from dependencies.
@@ -35,6 +38,11 @@ class Customers extends BaseObject
             $id = base64_encode($id);
         }
 
+        // Embed the customer addresses while we're retrieving their details.
+        // NOTE: any change in this parameter should be reflected in the "update" method
+        // so that the cache can be cleared properly.
+        $requestParams['embed'] = 'addresses';
+
         $customer = parent::get($id, $requestParams, $expires);
 
         // Format metadata attribute.
@@ -58,80 +66,44 @@ class Customers extends BaseObject
         return new Customer($result);
     }
 
-    public function update(Customer $customer)
+    /**
+     * Updates a customer record.
+     *
+     * @param \App\Models\Customer $customer
+     * @param array $details
+     * @param string $passwd
+     * @return \App\Models\Customer|object
+     */
+    public function update(Customer $customer, array $details, $passwd = null)
     {
-        // Format metadata before saving.
+        // Update customer details.
+        $customer->fill($details);
+
+        if ($passwd) {
+            $customer->metadata['password'] = bcrypt($passwd);
+        }
+
         $customer->metadata['password'] = Crypt::encrypt($customer->metadata['password']);
         $customer->metadata = json_encode($customer->metadata);
 
         // Update customer record.
         $result = (array) KemAPI::put($this->baseRequest .'/'. $customer->id, $customer);
 
+        // Replace cached data.
+        if (!static::isError($result))
+        {
+            $expiresAt = Carbon::now()->addHours(3);
+            $keyAppend = '.'. json_encode(['embed' => 'addresses']);
+            Cache::put($this->getCacheKey($result['id'] . $keyAppend), $result, $expiresAt);
+            Cache::put($this->getCacheKey($result['email'] . $keyAppend), $result, $expiresAt);
+        }
+
         // Return instance of App\Models\Customer.
         return new Customer($result);
     }
 
-    /**
-     * Creates a customer object with all the expected fields.
-     *
-     * @param array $details    Customer details.
-     * @param array $locale     Details of customer's selected locale.
-     * @return object
-     */
-    public function getCustomerObject(array $details = [], array $locale = [])
+    public function getDefault()
     {
-        // Build user object for API.
-        $customer = new \stdClass;
-        $customer->email = '';
-        $customer->phone = '';
-        $customer->postcode = '';
-        $customer->name = '';
-        $customer->language = '';
-        $customer->metadata = [];
-
-        // Fill in some attributes.
-        foreach (get_object_vars($customer) as $attribute => $empty)
-        {
-            if (isset($details[$attribute]) && (gettype($details[$attribute]) == gettype($customer->$attribute)))
-            {
-                $customer->$attribute = $details[$attribute];
-            }
-        }
-
-        // Customer locale.
-        $customer->locale = new \stdClass;
-        $customer->locale->id = '';
-        $customer->locale->name = '';
-        $customer->locale->language = '';
-        $customer->locale->language_name = '';
-        $customer->locale->script = '';
-
-        if (!Localization::checkLocaleInSupportedLocales($customer->language))
-        {
-            $customer->language = Localization::getCurrentLocale();
-            $customer->locale->id = Localization::getCurrentLocale() .'-CA';
-            $customer->locale->name = Localization::getCurrentLocaleNativeReading();
-            $customer->locale->language = Localization::getCurrentLocale();
-            $customer->locale->language_name = Localization::getCurrentLocaleName();
-            $customer->locale->script = Localization::getCurrentLocaleScript();
-        }
-
-        // Fill in locale attributes.
-        else
-        {
-            foreach (get_object_vars($customer->locale) as $attribute)
-            {
-                if (isset($locale[$attribute]) && strlen($locale[$attribute]))
-                {
-                    $customer->locale->$attribute = $locale[$attribute];
-                }
-            }
-        }
-
-        // Validate some fields.
-        $customer->postcode = preg_replace('/[^a-z0-9\s]/i', '', $customer->postcode);
-
-        return $customer;
+        return Auth::guest() ? new Customer : Auth::user();
     }
 }
-

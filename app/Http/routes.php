@@ -70,16 +70,12 @@ Route::group([
 
     Route::group(['prefix' => 'dev'], function()
     {
-        Route::get('empty-customer', function() {
-            return Illuminate\Support\Collection::make(Customers::getCustomerObject());
-        });
-
         Route::get('list-customers', function() {
             return Illuminate\Support\Collection::make(Customers::all());
         });
 
         Route::get('get-customer', function() {
-            return Illuminate\Support\Collection::make(Customers::get(base64_encode('shirley@example.com')));
+            return Illuminate\Support\Collection::make(Customers::get(base64_encode('kevin@kemsolutions.com')));
         });
 
         Route::get('store-info', function() {
@@ -124,4 +120,3 @@ Route::group(['prefix' => 'api'], function()
         return Illuminate\Http\JsonResponse::create(['status' => 400, 'error' => 'Bad request.'], 400);
     });
 });
-
