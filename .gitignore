@@ -5,6 +5,7 @@
 
 # ctags & other project files.
 .tags
+.tags_swap
 tags
 /.idea
 
