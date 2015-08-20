@@ -18,6 +18,8 @@ var productFormatContainer = {
             self.setPriceTag($(this).data("price"));
             self.setInventoryCount($(this).data("inventory-count"));
             $("#product-format").text($(this).data("format"));
+
+            self.setBuybuttonInformation($(this));
         });
 
     },
@@ -72,6 +74,20 @@ var productFormatContainer = {
         $(".price-tag").text("$ " + price);
     },
 
+    setBuybuttonInformation: function(format) {
+        const $buybutton = $(".buybutton");
+
+        $(".buybutton").attr("data-product", format.data("product"));
+        $buybutton.attr("data-price", format.data("price"));
+        $buybutton.attr("data-thumbnail", format.data("thumbnail"));
+        $buybutton.attr("data-thumbnail_lg", format.data("thumbnail_lg"));
+        $buybutton.attr("data-name", format.data("name"));
+        $buybutton.attr("data-format", format.data("format"));
+        $buybutton.attr("data-inventory-count", format.data("inventory-count"));
+        $buybutton.attr("data-quantity", format.data("quantity"));
+        $buybutton.attr("data-link", format.data("link"));
+
+    },
 
     init: function () {
         const self = productFormatContainer;
