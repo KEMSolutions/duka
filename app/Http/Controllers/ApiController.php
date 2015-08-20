@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use Log;
+use Auth;
 use Lang;
 use Brands;
 use Orders;
@@ -13,7 +14,7 @@ use Redirect;
 use Categories;
 use Localization;
 
-use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -105,7 +106,7 @@ class ApiController extends Controller
      */
     public function placeOrder()
     {
-        // Retrieve shipment address.
+        // Retrieve shipping address.
         $shipAddress = Request::input('shipping_address');
         $shipAddress['name'] = $shipAddress['firstname'] .' '. $shipAddress['lastname'];
 
@@ -118,16 +119,20 @@ class ApiController extends Controller
             $billAddress['name'] = $billAddress['firstname'] .' '. $billAddress['lastname'];
         }
 
+        // Retrieve customer details.
+        $customer = Auth::guest() ?
+            new Customer(['email' => Request::input('email')]) :
+            new Customer(['id' => Auth::user()->id]);
+
         // Retrieve other details.
-        $email = Request::input('email');
-        $items = Request::input('products');
-        $shipping = json_decode(base64_decode(Request::input('shipping')), true);
+        $itemList = Request::input('products');
+        $shippingDetails = json_decode(base64_decode(Request::input('shipping')), true);
 
         // Place order.
-        $response = Orders::placeOrder($shipping, $items, $email, $shipAddress, $billAddress);
+        $response = Orders::placeOrder($customer, $itemList, $shippingDetails, $shipAddress, $billAddress);
 
         // If we have errors, redirect to cart and display an error message.
-        if (property_exists($response, 'error'))
+        if (Orders::isError($response))
         {
             $redirect = route('cart');
             Log::error($response->error);
@@ -138,19 +143,11 @@ class ApiController extends Controller
         {
             $redirect = $response->payment_details->payment_url;
 
-            // If user does not already have an account, create one for them.
-            // We'll ask them to create a password later.
-            $customer = $response->customer;
-            if (!User::find($customer->id))
-            {
-                User::create([
-                    'id' => $customer->id,
-                    'name' => $shipAddress['name'],
-                    'email' => $email,
-                    'language' => Localization::getCurrentLocale()
-                ]);
-
-                Cookie::queue('unregistered_user', $customer->id, 2628000);
+            // If the customer hasn't created their password yet, we'll have to ask them
+            // to create one later.
+            $check = new Customer((array) $response->customer);
+            if (!isset($check->metadata['password'])) {
+                Cookie::queue('unregistered_user', $check->id, 2628000);
             }
         }
 

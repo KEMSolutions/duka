@@ -5,7 +5,9 @@ use Auth;
 use Lang;
 use Cache;
 use KemAPI;
+
 use Carbon\Carbon;
+use App\Models\Customer;
 
 class Orders extends BaseObject
 {
@@ -49,7 +51,7 @@ class Orders extends BaseObject
     {
         // Performance check.
         if (count($items) < 1 || !isset($address['country']) || !isset($address['postcode'])) {
-            Log::info('Invalid parameters for order estimate.');
+            Log::error('Invalid parameters for order estimate.');
             return $this->badRequest('Invalid parameters.');
         }
 
@@ -58,10 +60,10 @@ class Orders extends BaseObject
         $address['province'] = preg_replace('/[^A-Z]/', '', strtoupper(@$address['province']));
         $address['postcode'] = preg_replace('/[^A-Z0-9- ]/', '', strtoupper($address['postcode']));
         if (strlen($address['country']) != 2 || strlen($address['postcode']) < 5) {
-            Log::info('Invalid address for order estimate.');
+            Log::error('Invalid address for order estimate.');
             return $this->badRequest('Invalid parameters.');
         } elseif ($address['country'] == 'CA' && strlen($address['province']) != 2) {
-            Log::info('Invalid province code for order estimate.');
+            Log::error('Invalid province code for order estimate.');
             return $this->badRequest('Shipements to Canada must include a province code.');
         }
 
@@ -100,14 +102,14 @@ class Orders extends BaseObject
     /**
      * Places an order and redirects user to payment page.
      *
-     * @param array $shippingDetails
+     * @param \App\Models\Customer $customer
      * @param array $itemList
-     * @param mixed $customer           A customer object, or their email.
+     * @param array $shippingDetails
      * @param array $shippingAddress
      * @param array $billingAddress
      * @return mixed
      */
-    public function placeOrder(array $shippingDetails, array $itemList, $customer, array $shippingAddress, array $billingAddress = null)
+    public function placeOrder(Customer $customer, array $itemList, array $shippingDetails, array $shippingAddress, array $billingAddress = null)
     {
         // Build request body.
         $data = [];
@@ -115,21 +117,10 @@ class Orders extends BaseObject
         // Set return URLs.
         $data['return_url'] = route('api.orders.return');
 
-        // Customer details.
-        if (is_object($customer)) {
-            $customer = (array) $customer;
-        } elseif (is_string($customer) && strpos($customer, '@')) {
-            $customer = ['email' => $customer];
-        } elseif (is_numeric($customer) && $customer > 0) {
-            $customer = ['id' => (int) $customer];
-        } elseif (!is_array($customer)) {
-            throw new \Exception('Invalid customer details.');
-        }
-
         // Set order details.
-        $data['customer'] = $customer;
-        $data['shipping'] = $shippingDetails;
+        $data['customer'] = $customer->toArray();
         $data['items'] = $itemList;
+        $data['shipping'] = $shippingDetails;
         $data['shipping_address'] = $shippingAddress;
         if ($billingAddress) {
             $data['billing_address'] = $billingAddress;
@@ -138,4 +129,3 @@ class Orders extends BaseObject
         return KemAPI::post($this->baseRequest, $data);
     }
 }
-
