@@ -56,7 +56,6 @@ class AuthController extends Controller
         $validator = $this->validator($request->all());
         if ($validator->fails()) {
             return redirect(route('auth.account'))->withValidator($validator)->withInput();
-//            $this->throwValidationException($request, $validator);
         }
 
         // Make sure we're editing a valid customer record.
@@ -65,39 +64,18 @@ class AuthController extends Controller
             abort(500);
         }
 
+		$details = $request->except(['password', 'password_confirmation']);
+
         // Validate password, if we are updating that as well.
-        $updatePasswd = false;
         $passwd = $request->input('password');
-        if (strlen($passwd))
-        {
-            $updatePasswd = true;
-            $request->merge([
-                'metadata' => [
-                    'password' => bcrypt($passwd)
-                ]
-            ]);
-        }
+		$passwd = strlen($passwd) ? $passwd : null;
 
         // Update account details.
-        $result = Customers::update(Auth::user()->id, $request->except(['password', 'password_confirmation']));
+        $result = Customers::update(Auth::user(), $details, $passwd);
 
-        // Update local database.
-        if (!Customers::isError($result))
-        {
-            $message = Lang::get('boukem.account_saved');
-
-            $user = Auth::user();
-            $user->email = $result->email;
-            $user->name = $result->name;
-            if ($updatePasswd) {
-                $user->password = bcrypt($passwd);
-            }
-
-            $user->save();
-        }
-        else {
-            $message = Lang::get('boukem.account_not_saved');
-        }
+		$message = Customers::isError($result)
+			? Lang::get('boukem.account_not_saved')
+			: Lang::get('boukem.account_saved');
 
         return redirect(route('auth.account'))->withMessages([$message]);
     }
@@ -137,4 +115,3 @@ class AuthController extends Controller
         return redirect($redirectTo)->withErrors($messages);
     }
 }
-

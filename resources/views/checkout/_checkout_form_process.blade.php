@@ -12,12 +12,19 @@
             <div class="row">
                 <div class="form-group one-half">
                     <label for="shipping_address[firstname]" class="control-label" >{{ Lang::get("boukem.first_name") }}</label>
-                    <input type="text" name="shipping_address[firstname]" id="shippingFirstname" class="form-control firstname" required/>
+                    <input type="text" name="shipping_address[firstname]" id="shippingFirstname" class="form-control firstname" disabled/>
                 </div>
 
                 <div class="form-group one-half">
                     <label for="shipping_address[lastname]" class="control-label" >{{ Lang::get("boukem.last_name") }}</label>
-                    <input type="text" name="shipping_address[lastname]" id="shippingLastname" class="form-control lastname" required/>
+                    <input type="text" name="shipping_address[lastname]" id="shippingLastname" class="form-control lastname" disabled/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="shipping_address[name]" class="control-label">{{ Lang::get("boukem.name") }}</label>
+                    <input type="text" name="shipping_address[name]" id="shippingName" class="form-control name" value="{{ Customers::getDefault()->name }}" required/>
                 </div>
             </div>
 
@@ -57,7 +64,7 @@
 
                 <div class="form-group one-half">
                     <label for="shipping_address[postcode]" class="control-label">{{ Lang::get("boukem.postal_code") }}</label>
-                    <input type="text" name="shipping_address[postcode]" value="" placeholder="A1A 1A1" id="shippingPostcode" class="form-control postcode" required>
+                    <input type="text" name="shipping_address[postcode]" value="" placeholder="A1A 1A1" id="shippingPostcode" class="form-control postcode" value="{{ Customers::getDefault()->postcode }}" required>
                 </div>
             </div>
 
@@ -66,12 +73,12 @@
                 <div class="form-group one-half">
                     <span class="hidden label label-info pull-right" id="why_email" data-toggle="tooltip" data-placement="left" data-trigger="click" title="{{ Lang::get("boukem.keep_email") }}">{{ Lang::get("boukem.why") }}</span>
                     <label for="email" class="control-label">{{ Lang::get("boukem.email_address") }}</label>
-                    <input type="email" name="email" id="customer_email" class="form-control" value="" required>
+                    <input type="email" name="email" id="customer_email" class="form-control" value="{{ Customers::getDefault()->email }}" required>
                 </div>
 
                 <div class="form-group one-half">
                     <label for="shipping_address[phone]" class="control-label">{{ Lang::get("boukem.phone") }}</label>
-                    <input type="tel" name="shipping_address[phone]" id="customer_phone" class="form-control " required/>
+                    <input type="tel" name="shipping_address[phone]" id="customer_phone" class="form-control" value="{{ Customers::getDefault()->phone }}" required/>
                 </div>
             </div>
 
