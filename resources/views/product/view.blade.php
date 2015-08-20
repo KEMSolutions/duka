@@ -27,7 +27,8 @@
                                                     <img alt="" itemprop="image" src="//static.boutiquekem.com/productimg-8-300-300-{{ count($product->images) > 0 ? $product->images[0]->id : "0000"}}.{{ count($product->images) > 0 ? $product->images[0]->extension : "png"}}" class="img-responsive center-block hidden-sm hidden-md hidden-lg">
 
                                                     <h2 class="plan-title" itemprop="name">
-                                                        {{ $product->localization->name . " - " . $product->formats[0]->name}}
+                                                        {{ $product->localization->name}} -
+                                                        <span id="product-format">{{ $product->formats[0]->name }}</span>
                                                     </h2>
 
                                                     {{-- TODO ... --}}
@@ -43,7 +44,9 @@
 
                                                             {{-- TODO: update price with details from format --}}
                                                             <h3 class="price-tag color-one">
-                                                                <meta itemprop="price" content="{{ $product->formats[0]->price }}"><span itemprop="priceCurrency" content="CAD">$</span>{{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
+                                                                <meta itemprop="price" content="{{ $product->formats[0]->price }}">
+                                                                <span itemprop="priceCurrency" content="CAD">$</span>
+                                                                {{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
                                                             </h3>
 
                                                             <ul>
@@ -52,16 +55,18 @@
                                                                 </li>
 
                                                                 {{-- TODO: update price with details from format --}}
-                                                                @if($product->formats[0]->inventory->count > 5)
-                                                                    <link itemprop="availability" href="http://schema.org/LimitedAvailability">
-                                                                    <li class="text-success"><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.express_shipping") }}</li>
-                                                                @elseif($product->formats[0]->inventory->count > 0)
-                                                                    <link itemprop="availability" href="http://schema.org/InStock" >
-                                                                    <li class="text-warning"><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.stock_left", array("quantity" => $product->formats[0]->inventory->count)) }}</li>
-                                                                @else
-                                                                    <link itemprop="availability" href="http://schema.org/LimitedAvailability" >
-                                                                    <li><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.shipping_time") }}</li>
-                                                                @endif
+                                                                <div id="inventory-count" data-country-code="{{ $country_code }}">
+                                                                    @if($product->formats[0]->inventory->count > 5)
+                                                                        <link itemprop="availability" href="http://schema.org/LimitedAvailability">
+                                                                        <li class="text-success"><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.express_shipping") }}</li>
+                                                                    @elseif($product->formats[0]->inventory->count > 0)
+                                                                        <link itemprop="availability" href="http://schema.org/InStock" >
+                                                                        <li class="text-warning"><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.stock_left", array("quantity" => $product->formats[0]->inventory->count)) }}</li>
+                                                                    @else
+                                                                        <link itemprop="availability" href="http://schema.org/LimitedAvailability" >
+                                                                        <li><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.shipping_time") }}</li>
+                                                                    @endif
+                                                                </div>
 
                                                                 <li><i class="fa fa-lock fa-fw"></i>{{ Lang::get("boukem.secure_payment") }}</li>
 
@@ -81,13 +86,19 @@
                                                             </div>
 
                                                             @if(count($product->formats) != 0)
-                                                                @foreach($product->formats as $format)
-                                                                    <button class="btn btn-three buybutton"
+                                                                @foreach($product->formats as $index => $format)
+                                                                    <button class="btn btn-three product-page buybutton
+                                                                    @if ($index == 0)
+                                                                        {!! 'active' !!}
+                                                                    @endif
+                                                                            "
                                                                             data-product="{{ $format->id }}"
                                                                             data-price="{{ $format->price }}"
                                                                             data-thumbnail="{{ Products::thumbnail($product) }}"
                                                                             data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
                                                                             data-name="{{ $product->localization->name . " - " . $format->name }}"
+                                                                            data-format="{{ $format->name }}"
+                                                                            data-inventory-count="{{ $format->inventory->count }}"
                                                                             data-quantity="1"
                                                                             data-link="{{ route('product', ['slug' => $product->slug]) }}"
                                                                             >
@@ -102,7 +113,7 @@
                                                                 @endforeach
                                                             @endif
 
-                                                            </div>
+                                                        </div>
                                                         </p>
                                                     @endif
                                                 </div>
@@ -110,21 +121,21 @@
 
                                             {{--VIDEOS--}}
                                             @if(count($product->videos) > 0)
-                                                @section("custom_css")
-                                                    <link rel="stylesheet" href="//vjs.zencdn.net/4.8/video-js.css"/>
-                                                @endsection
+                                            @section("custom_css")
+                                                <link rel="stylesheet" href="//vjs.zencdn.net/4.8/video-js.css"/>
+                                            @endsection
 
-                                                @section("scripts")
-                                                    <script src="//vjs.zencdn.net/4.8/video.js"></script>
-                                                    <script>
-                                                        //store_video
-											            document.createElement('video');
-											            document.createElement('audio');
-											            document.createElement('track');
-                                                    </script>
-                                                @endsection
+                                            @section("scripts")
+                                                <script src="//vjs.zencdn.net/4.8/video.js"></script>
+                                                <script>
+                                                    //store_video
+                                                    document.createElement('video');
+                                                    document.createElement('audio');
+                                                    document.createElement('track');
+                                                </script>
+                                            @endsection
 
-                                                @include("product._product_video", ["videos" => $product->videos ])
+                                            @include("product._product_video", ["videos" => $product->videos ])
                                             @endif
 
 
