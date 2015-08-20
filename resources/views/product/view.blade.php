@@ -27,7 +27,7 @@
                                                     <img alt="" itemprop="image" src="//static.boutiquekem.com/productimg-8-300-300-{{ count($product->images) > 0 ? $product->images[0]->id : "0000"}}.{{ count($product->images) > 0 ? $product->images[0]->extension : "png"}}" class="img-responsive center-block hidden-sm hidden-md hidden-lg">
 
                                                     <h2 class="plan-title" itemprop="name">
-                                                        {{ $product->localization->name }}
+                                                        {{ $product->localization->name . " - " . $product->formats[0]->name}}
                                                     </h2>
 
                                                     {{-- TODO ... --}}
@@ -75,27 +75,34 @@
                                                     {{-- TODO ... --}}
                                                     @if(!$product->formats[0]->discontinued)
                                                         <p class="plan-select text-center">
-                                                        <div class="input-qty-detail form-inline text-center">
+                                                        <div class="input-qty-detail text-center">
                                                             <div class="form-group">
-                                                                <div class="input-group bootstrap-touchspin" style=""><span class="input-group-addon bootstrap-touchspin-prefix"></span><input type="text" class="form-control input-qty text-center" id="item_quantity" value="1"><span class="input-group-addon bootstrap-touchspin-postfix"></span></div>
+                                                                <div class="input-group bootstrap-touchspin horizontal-align" style=""><span class="input-group-addon bootstrap-touchspin-prefix"></span><input type="text" class="form-control input-qty text-center" id="item_quantity" value="1"><span class="input-group-addon bootstrap-touchspin-postfix"></span></div>
                                                             </div>
 
-                                                            <button class="btn btn-three buybutton visible-lg-inline"
-                                                                    data-product="{{ $product->id }}"
-                                                                    data-price="{{ number_format((float)$product->formats[0]->price, 2, '.', '') }}"
-                                                                    data-thumbnail="{{ Products::thumbnail($product->id) }}"
-                                                                    data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
-                                                                    data-name="{{ $product->localization->name }}"
-                                                                    data-quantity="1">
-                                                                <i class="fa fa-check-circle"></i>  {{ Lang::get("boukem.add_cart") }}</button>
-                                                            <button class="btn btn-block btn-three center-block buybutton hidden-lg" data-product="{{ $product->id }}"
-                                                                    data-price="{{ number_format((float)$product->formats[0]->price, 2, '.', '') }}"
-                                                                    data-thumbnail="{{ Products::thumbnail($product->id) }}"
-                                                                    data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
-                                                                    data-name="{{ $product->localization->name }}"
-                                                                    data-quantity="1">
-                                                                <i class="fa fa-check-circle"></i>  {{ Lang::get("boukem.add_cart") }}</button>
-                                                        </div>
+                                                            @if(count($product->formats) != 0)
+                                                                @foreach($product->formats as $format)
+                                                                    <button class="btn btn-three buybutton"
+                                                                            data-product="{{ $format->id }}"
+                                                                            data-price="{{ $format->price }}"
+                                                                            data-thumbnail="{{ Products::thumbnail($product) }}"
+                                                                            data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
+                                                                            data-name="{{ $product->localization->name . " - " . $format->name }}"
+                                                                            data-quantity="1"
+                                                                            data-link="{{ route('product', ['slug' => $product->slug]) }}"
+                                                                            >
+
+                                                                        @if(count($product->formats) > 1)
+                                                                            <p class="ui sub header">{{ $format->name }}</p>
+                                                                        @endif
+
+                                                                        <i class="fa fa-check-circle"></i>
+                                                                        @lang("boukem.add_cart")
+                                                                    </button>
+                                                                @endforeach
+                                                            @endif
+
+                                                            </div>
                                                         </p>
                                                     @endif
                                                 </div>

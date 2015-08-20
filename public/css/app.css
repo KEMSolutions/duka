@@ -4694,6 +4694,10 @@ footer .copyright{color:#EEE;}
   transform: translateY(-25%);
 }
 
+.horizontal-align {
+  margin: 0 auto;
+}
+
 .fullScreen {
   position: fixed;
   height: 100%;
@@ -4723,6 +4727,10 @@ footer .copyright{color:#EEE;}
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
+}
+
+.buybutton {
+  margin-bottom: 0.25rem;
 }
 
         /*----------------------------------------*/

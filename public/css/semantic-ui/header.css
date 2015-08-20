@@ -24,6 +24,7 @@
   font-weight: bold;
   line-height: 1.2857em;
   text-transform: none;
+  height: auto;
 }
 .ui.header:first-child {
   margin-top: -0.14285em;
