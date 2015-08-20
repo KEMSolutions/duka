@@ -77,7 +77,7 @@ var productFormatContainer = {
     setBuybuttonInformation: function(format) {
         const $buybutton = $(".buybutton");
 
-        $(".buybutton").attr("data-product", format.data("product"));
+        $buybutton.attr("data-product", format.data("product"));
         $buybutton.attr("data-price", format.data("price"));
         $buybutton.attr("data-thumbnail", format.data("thumbnail"));
         $buybutton.attr("data-thumbnail_lg", format.data("thumbnail_lg"));
