@@ -8,11 +8,10 @@ Boukem 2 is built on the popular PHP framework [Laravel](http://laravel.com). To
 [composer is installed](https://getcomposer.org/) on your machine and run the following commands from the root folder.
 
 1. Install the dependencies: `composer install`.
-2. Create an environement file: `cp .env.sample .env`. You will probably have some changes to make, so we recommend
-you review the contents of the file.
+2. Create an environment file: `cp .env.sample .env`.
 3. Setup the database: `cp storage/database.sqlite.sample storage/database.sqlite`.
 
-You're now ready to go!
+You're now ready to go! Have a look at the environment file and update the relevant parameters.
 
 # Quick Reference
 
@@ -45,7 +44,7 @@ js
 |    |    └─── layout
 |    |    └─── products
 |    |    └─── site
-|   │   
+|    |   
 |    └─── utils
 |
 └───prod
@@ -94,6 +93,7 @@ Generally, interactions with the API should be done through the other facades, d
     // Some examples of how the facades can be used.
 	$brand = Brands::get( 444 );
     $category = Categories::get( 300 );
+    $customer = Customers::get( 'john@example.com' );
 	$homepage = Layouts::get( '' );
     $product = Products::get( 616 );
     $estimate = Orders::estimate( $products, $address );

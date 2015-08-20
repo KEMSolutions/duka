@@ -23,14 +23,16 @@ Route::group([
     // Cart & checkout.
     Route::get('cart',              ['as' => 'cart', 'uses' => 'CheckoutController@index']);
 
-    // Authentication routes.
+    // Authentication  & account routes.
     Route::get('login',             ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
     Route::post('login',            ['as' => 'auth.login.action', 'uses' => 'Auth\AuthController@postLogin']);
     Route::get('logout',            ['as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout']);
 
-    // Registration routes.
     Route::get('signup',            ['as' => 'auth.register', 'uses' => 'Auth\AuthController@getRegister']);
     Route::post('signup',           ['as' => 'auth.register.action', 'uses' => 'Auth\AuthController@postRegister']);
+
+    Route::get('account',           ['as' => 'auth.account', 'uses' => 'Auth\AuthController@getAccount']);
+    Route::post('account',          ['as' => 'auth.account.action', 'uses' => 'Auth\AuthController@postAccount']);
 
     Route::controllers([
 //        'auth' => 'Auth\AuthController',
@@ -68,22 +70,16 @@ Route::group([
 
     Route::group(['prefix' => 'dev'], function()
     {
+        Route::get('empty-customer', function() {
+            return Illuminate\Support\Collection::make(Customers::getCustomerObject());
+        });
+
         Route::get('list-customers', function() {
             return Illuminate\Support\Collection::make(Customers::all());
         });
 
         Route::get('get-customer', function() {
-            return Illuminate\Support\Collection::make(Customers::get(base64_encode('a@a.com')));
-        });
-
-        Route::get('update-customer', function() {
-            return Illuminate\Support\Collection::make(Customers::update(
-                1357,
-                'a@a.com',
-                'Joey',
-                'H1G 5F7',
-                'es'
-            ));
+            return Illuminate\Support\Collection::make(Customers::get(base64_encode('shirley@example.com')));
         });
 
         Route::get('store-info', function() {

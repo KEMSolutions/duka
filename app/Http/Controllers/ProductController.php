@@ -4,6 +4,7 @@ use View;
 use Request;
 use Redirect;
 use Products;
+use Utilities;
 use Localization;
 
 use App\Http\Controllers\Controller;
@@ -22,7 +23,7 @@ class ProductController extends Controller
             "product" => Products::get($id),
             "locale" => Localization::getCurrentLocale(),
             "supported_countries" => array("US", "FR", "BE", "IT", "CH", "GB", "IE", "ES", "DE"),
-            "country_code" => "US" // TODO: Find the current user's country code!
+            "country_code" => Utilities::getUserCountryCode()
         ]);
     }
 

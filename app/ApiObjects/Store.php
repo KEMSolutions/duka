@@ -2,9 +2,10 @@
 
 use Cache;
 use KemAPI;
+use Utilities;
 
 use Carbon\Carbon;
-use App\Utilities\Utilities;
+
 
 class Store extends BaseObject
 {
@@ -52,7 +53,7 @@ class Store extends BaseObject
      */
     public function contracts()
     {
-        $contracts = Cache::remember($this->locale .'.store.contracts', Carbon::now()->addWeek(), function()
+        $contracts = Cache::remember($this->getCacheKey('contracts'), Carbon::now()->addWeek(), function()
         {
             $results = KemAPI::get('store', ['embed' => 'contracts']);
 
@@ -76,8 +77,7 @@ class Store extends BaseObject
      * @param string $mode
      * @return string
      */
-    public function logo($width = 200, $height = 60, $mode = 'fit')
-    {
+    public function logo($width = 200, $height = 60, $mode = 'fit') {
         return Utilities::setImageSizeAndMode($width, $height, '', $this->info()->logo->url);
     }
 }

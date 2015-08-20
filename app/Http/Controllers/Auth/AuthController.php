@@ -2,6 +2,7 @@
 
 use Log;
 use Auth;
+use Lang;
 use Session;
 use Redirect;
 use Customers;
@@ -40,7 +41,7 @@ class AuthController extends Controller
         $this->loginPath = route('auth.login');
         $this->redirectAfterLogout = $this->redirectPath = route('home');
 
-		$this->middleware('guest', ['except' => 'getLogout']);
+		$this->middleware('guest', ['except' => ['getLogout', 'getAccount', 'postAccount']]);
 	}
 
     /**
@@ -54,53 +55,40 @@ class AuthController extends Controller
         // Performance check.
         if (User::findByEmail($request->input('email')))
         {
-            // TODO: localize.
             return redirect(route('auth.login'))
                 ->withInput($request->only('email'))
-                ->withMessages('[test] Account already exists.');
+                ->withMessages([Lang::get('boukem.account_exists')]);
         }
 
         // Validate user details.
-        $details = Customers::getCustomerObject(
-            $request->input('email'),
-            $request->input('name'),
-            $request->input('postcode')
-        );
+        $details = Customers::getCustomerObject([
+            'email' => $request->input('email'),
+            'name' => $request->input('name'),
+            'postcode' => $request->input('postcode')
+        ]);
 
         // Check if user already exists on the main server.
         $record = Customers::get($details->email);
-        if (!Customers::isError($record))
+        if (Customers::isError($record))
         {
-            $request->merge([
-                'id' => $record->id,
-                'email' => $record->email,
-                'name' => $record->name,
-                'postcode' => $record->postcode,
-                'language' => $record->language
-            ]);
-        }
-
-        // If not, create them and retrieve their unique ID.
-        else
-        {
-            $details = Customers::create($details->email, $details->name, $details->postcode);
+            $record = Customers::create((array) $details);
 
             // Catch any errors from the server.
-            if (Customers::isError($details))
+            if (Customers::isError($record))
             {
-                Log::error('Could not create user on main server.');
+                Log::error('Could not create customer record on main server.');
                 abort(500);
             }
-
-            // Update new user details with validated data & user ID.
-            $request->merge([
-                'id' => $details->id,
-                'email' => $details->email,
-                'name' => $details->name,
-                'postcode' => $details->postcode,
-                'language' => $details->language
-            ]);
         }
+
+        // Update user details with validated data & user ID.
+        $request->merge([
+            'id' => $record->id,
+            'email' => $record->email,
+            'name' => $record->name,
+            'postcode' => $request->input('postcode', $record->postcode),
+            'language' => $record->language
+        ]);
 
         // Add a record for our new user in the local database.
         $user = $this->create($request->all());
@@ -108,7 +96,7 @@ class AuthController extends Controller
         // Because the ID is the primary key, it will be incremented in this instance of $user.
         // We'll have to change it back just so we can log them in. The database record, however,
         // has the right information.
-        $user->id = $request->input('id');
+        $user->id = $record->id;
 
         // Log them in.
         Auth::login($user);
@@ -124,8 +112,6 @@ class AuthController extends Controller
      */
     public function postLogin(Request $request)
     {
-        // TODO: make sure the form fields have the attribute "required."
-
         $username = $request->input($this->loginUsername());
 
         // Check if the user is in our database.
@@ -133,27 +119,40 @@ class AuthController extends Controller
         {
             // If the user does not exist in our database, or on the main server, redirect
             // them to the registration page.
-            // TODO: localize.
             $record = Customers::get($username);
             if (Customers::isError($record))
             {
                 return redirect(route('auth.register'))
                     ->withInput($request->only($this->loginUsername()))
-                    ->withMessages(['[test] That account does not exist.']);
+                    ->withMessages([Lang::get('boukem.account_does_not_exists')]);
             }
 
             // If the user does not exist in our database but has an account on the main server,
             // invite them to create a new password here. Maybe the database was reset...
-            // TODO: localize.
             else
             {
                 return redirect(route('auth.register'))
                     ->withInput(['name' => $record->name, $this->loginUsername() => $record->email])
-                    ->withMessages(['[test] Please create a new password.']);
+                    ->withMessages([Lang::get('boukem.please_create_password')]);
             }
         }
 
         return $this->loginUser($request);
+    }
+
+    public function getAccount()
+    {
+        // Check that user is authenticated.
+        if (!Auth::check()) {
+            return redirect(route('auth.login'));
+        }
+
+        return view('auth.account')->withUser(Customers::get(Auth::user()->id));
+    }
+
+    public function postAccount()
+    {
+        return redirect(route('auth.account'))->withMessages(['TODO: save account details.']);
     }
 
     /**
