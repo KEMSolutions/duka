@@ -47,7 +47,7 @@
                                 data-price="{{ $format->price }}"
                                 data-thumbnail="{{ Products::thumbnail($product) }}"
                                 data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
-                                data-name="{{ $product->localization->name }}"
+                                data-name="{{ $product->localization->name . " - " . $format->name }}"
                                 data-quantity="1"
                                 data-link="{{ route('product', ['slug' => $product->slug]) }}"
                                 >
