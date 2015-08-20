@@ -30,6 +30,7 @@
 	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/button.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/icon.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/input.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/header.css') }}"/>
 
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
 
