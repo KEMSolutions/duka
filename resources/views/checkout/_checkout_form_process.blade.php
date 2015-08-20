@@ -24,17 +24,17 @@
             <div class="row">
                 <div class="col-sm-12">
                     <label for="shipping_address[name]" class="control-label">{{ Lang::get("boukem.name") }}</label>
-                    <input type="text" name="shipping_address[name]" id="shippingName" class="form-control name" value="{{ Customers::getDefault()->name }}" required/>
+                    <input type="text" name="shipping_address[name]" id="shippingName" class="form-control name" value="{{ Customers::getDefaultAddress()->name }}" required/>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="shipping_address[line1]" class="control-label">{{ Lang::get("boukem.address_1") }}</label>
-                <input type="text" name="shipping_address[line1]" id="shippingAddress1" class="form-control address1" required/>
+                <input type="text" name="shipping_address[line1]" id="shippingAddress1" class="form-control address1" value="{{ Customers::getDefaultAddress()->line1 }}" required/>
             </div>
             <div class="form-group">
                 <label for="shipping_address[line2]" class="control-label">{{ Lang::get("boukem.address_2") }} ( {{ Lang::get("boukem.optional") }} )</label>
-                <input type="text" name="shipping_address[line2]" id="shippingAddress2" class="form-control address2"/>
+                <input type="text" name="shipping_address[line2]" id="shippingAddress2" class="form-control address2" value="{{ Customers::getDefaultAddress()->line2 }}"/>
             </div>
 
             <div class="row">
@@ -59,12 +59,12 @@
             <div class="row">
                 <div class="form-group one-half">
                     <label for="shipping_address[city]" class="control-label">{{ Lang::get("boukem.city") }}</label>
-                    <input type="text" name="shipping_address[city]" id="shippingCity" class="form-control city" required/>
+                    <input type="text" name="shipping_address[city]" id="shippingCity" class="form-control city" value="{{ Customers::getDefaultAddress()->city }}" required/>
                 </div>
 
                 <div class="form-group one-half">
                     <label for="shipping_address[postcode]" class="control-label">{{ Lang::get("boukem.postal_code") }}</label>
-                    <input type="text" name="shipping_address[postcode]" value="" placeholder="A1A 1A1" id="shippingPostcode" class="form-control postcode" value="{{ Customers::getDefault()->postcode }}" required>
+                    <input type="text" name="shipping_address[postcode]" value="" placeholder="A1A 1A1" id="shippingPostcode" class="form-control postcode" value="{{ Customers::getDefaultAddress()->postcode }}" required>
                 </div>
             </div>
 
@@ -78,7 +78,7 @@
 
                 <div class="form-group one-half">
                     <label for="shipping_address[phone]" class="control-label">{{ Lang::get("boukem.phone") }}</label>
-                    <input type="tel" name="shipping_address[phone]" id="customer_phone" class="form-control" value="{{ Customers::getDefault()->phone }}" required/>
+                    <input type="tel" name="shipping_address[phone]" id="customer_phone" class="form-control" value="{{ Customers::getDefaultAddress()->phone }}" required/>
                 </div>
             </div>
 
