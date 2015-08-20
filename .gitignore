@@ -1,14 +1,12 @@
-# Ignore phpStorm project files
+# Laravel & vendor stuff.
+.env
+/node_modules
+/vendor
+
+# ctags & other project files.
+.tags
+tags
 /.idea
 
 # Ignore OS X finder files
 .DS_Store
-
-# Node modules
-/node_modules
-
-# Ignore Laravel environment variables
-.env
-
-# Ignore vendor directory.
-/vendor
