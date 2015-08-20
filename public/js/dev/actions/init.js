@@ -10,7 +10,8 @@ $(document).ready(function () {
      */
     $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'locale': $('html').attr('lang')
         }
     });
 
@@ -48,7 +49,7 @@ $(document).ready(function () {
      * Initialize favorite products feature.
      *
      */
-    productLayoutFavoriteLogicContainer.init();
+    productLayoutFavoriteContainer.init();
 
     /**
      * Initialize wishlist page.

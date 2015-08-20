@@ -7,7 +7,7 @@ use Cache;
 use KemAPI;
 use Carbon\Carbon;
 
-class Orders extends KemApiObject
+class Orders extends BaseObject
 {
     public function __construct() { parent::__construct('orders'); }
 
@@ -18,7 +18,7 @@ class Orders extends KemApiObject
      * @param int $verification Order verification code.
      * @return object
      */
-    public function get($id, $verification = null)
+    public function details($id, $verification = null)
     {
         // Retrieve order details.
         $original = parent::get($id);
@@ -41,14 +41,14 @@ class Orders extends KemApiObject
     /**
      * Retrieves shipping costs and delivery time estimates.
      *
-     * @param array $products   Products to include in order.
+     * @param array $items      Products to include in order.
      * @param array $address    Shipping address.
      * @return mixed
      */
-    public function estimate(array $products, array $address)
+    public function estimate(array $items, array $address)
     {
         // Performance check.
-        if (count($products) < 1 || !isset($address['country']) || !isset($address['postcode'])) {
+        if (count($items) < 1 || !isset($address['country']) || !isset($address['postcode'])) {
             Log::info('Invalid parameters for order estimate.');
             return $this->badRequest('Invalid parameters.');
         }
@@ -66,22 +66,22 @@ class Orders extends KemApiObject
         }
 
         // Prepare API request body.
-        $body = new \stdClass;
-        $body->products = [];
-        $body->shipping_address = new \stdClass;
-        $body->shipping_address->country = $address['country'];
-        $body->shipping_address->postcode = $address['postcode'];
+        $body = [];
+        $body['items'] = [];
+        $body['shipping_address'] = [];
+        $body['shipping_address']['country'] = $address['country'];
+        $body['shipping_address']['postcode'] = $address['postcode'];
         if ($address['country'] == 'CA') {
-            $body->shipping_address->province = $address['province'];
+            $body['shipping_address']['province'] = $address['province'];
         }
 
         // Format product list.
-        foreach ($products as $product)
+        foreach ($items as $item)
         {
-            $std = new \stdClass;
-            $std->id = (int) $product['id'];
-            $std->quantity = isset($product['quantity']) ? (int) $product['quantity'] : 1;
-            $body->products[] = $std;
+            $std = [];
+            $std['id'] = (int) $item['id'];
+            $std['quantity'] = isset($item['quantity']) ? (int) $item['quantity'] : 1;
+            $body['items'][] = $std;
         }
 
         // Retrieve estimate from cache.
@@ -101,31 +101,41 @@ class Orders extends KemApiObject
      * Places an order and redirects user to payment page.
      *
      * @param array $shippingDetails
-     * @param array $productList
-     * @param string $email
+     * @param array $itemList
+     * @param mixed $customer           A customer object, or their email.
      * @param array $shippingAddress
      * @param array $billingAddress
      * @return mixed
      */
-    public function placeOrder(array $shippingDetails, array $productList, $email, array $shippingAddress, array $billingAddress = null)
+    public function placeOrder(array $shippingDetails, array $itemList, $customer, array $shippingAddress, array $billingAddress = null)
     {
         // Build request body.
-        $data = new \stdClass;
+        $data = [];
 
         // Set return URLs.
-        $data->success_url = route('api.orders.success');
-        $data->failure_url = route('api.orders.failure');
-        $data->cancel_url = route('api.orders.cancel');
+        $data['return_url'] = route('api.orders.return');
+
+        // Customer details.
+        if (is_object($customer)) {
+            $customer = (array) $customer;
+        } elseif (is_string($customer) && strpos($customer, '@')) {
+            $customer = ['email' => $customer];
+        } elseif (is_numeric($customer) && $customer > 0) {
+            $customer = ['id' => (int) $customer];
+        } elseif (!is_array($customer)) {
+            throw new \Exception('Invalid customer details.');
+        }
 
         // Set order details.
-        $data->email = $email;
-        $data->shipping = $shippingDetails;
-        $data->products = $productList;
-        $data->shipping_address = $shippingAddress;
+        $data['customer'] = $customer;
+        $data['shipping'] = $shippingDetails;
+        $data['items'] = $itemList;
+        $data['shipping_address'] = $shippingAddress;
         if ($billingAddress) {
-            $data->billing_address = $billingAddress;
+            $data['billing_address'] = $billingAddress;
         }
 
         return KemAPI::post($this->baseRequest, $data);
     }
 }
+

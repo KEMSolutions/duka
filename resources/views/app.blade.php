@@ -10,7 +10,7 @@
 	<link rel="icon" href="{{ url('/') . "/img/favicon.png"}}"/>
 
 	{{-- TODO : include dynamic name based on each store name--}}
-	<title>Boukem 2</title>
+	<title>{{ Store::info()->name }}</title>
 
 	{{-- TODO: include page description if any--}}
 
@@ -20,14 +20,23 @@
 
 	<!-- Required -->
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-	<link href="//kle-en-main.com/assets/fancybox/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" rel="stylesheet">
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="//cdn.kem.guru/boukem/spirit/css/fancybox-fraction-concat.css"/>
 	<link href="//cdn.kem.guru/css/outdatedBrowser.min.css" rel="stylesheet">
+
+	<!-- Semantic UI css dependencies -->
+	<link rel="stylesheet" href="{{ asset('css/semantic-ui/transition.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/dropdown.css') }}">
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/label.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/button.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/icon.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/input.css') }}"/>
+
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
 
-	<!-- Custom Css -->
+	<!-- Custom css -->
 	@yield("custom_css")
+	<!-- Color specific css -->
+	@include("_color_css")
 
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -38,13 +47,17 @@
 </head>
 <body>
 
-	@include('layout._header')
-	@include('layout._messages')
+	@include("layout._header")
+
+	@include("layout._drawer")
+
+	@include("layout._messages")
+
 
 	@yield("content")
 
-	@include("layout._drawer")
-	@include('layout._footer')
+
+	@include("layout._footer")
 
 	<!-- Scripts -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -53,6 +66,10 @@
 	<script src="/js_assets/mixitup/jquery.mixitup.init.js"></script>
 	<script src="/js_assets/blur/blur.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+	<!-- Semantic ui dependencies -->
+	<script src="/js_assets/semantic-ui/transition.min.js"></script>
+	<script src="/js_assets/semantic-ui/dropdown.min.js"></script>
 
 	@include("_dynamic_resources")
 

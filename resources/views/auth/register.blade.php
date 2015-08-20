@@ -1,9 +1,9 @@
 @extends('app')
 
 @section("custom_css")
-	<link href="{{ asset('/css/cartdrawer.css') }}" rel="stylesheet">
-	<link rel="stylesheet" href="{{asset('/css/animate.css')}}"/>
-	<link rel="stylesheet" href="{{ asset('/css/product_card.css') }}"/>
+    <link href="{{ asset('/css/cartdrawer.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset('/css/animate.css')}}"/>
+    <link rel="stylesheet" href="{{ asset('/css/product_card.css') }}"/>
 @endsection
 
 @section('content')
@@ -30,28 +30,28 @@
 						<div class="form-group">
 							<label class="col-md-4 control-label">Name</label>
 							<div class="col-md-6">
-								<input type="text" class="form-control" name="name" value="{{ old('name') }}">
+								<input type="text" class="form-control" name="name" value="{{ old('name') }}" required>
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label class="col-md-4 control-label">E-Mail Address</label>
 							<div class="col-md-6">
-								<input type="email" class="form-control" name="email" value="{{ old('email') }}">
+								<input type="email" class="form-control" name="email" value="{{ old('email') }}" required>
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label class="col-md-4 control-label">Password</label>
 							<div class="col-md-6">
-								<input type="password" class="form-control" name="password">
+								<input type="password" class="form-control" name="password" required>
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label class="col-md-4 control-label">Confirm Password</label>
 							<div class="col-md-6">
-								<input type="password" class="form-control" name="password_confirmation">
+								<input type="password" class="form-control" name="password_confirmation" required>
 							</div>
 						</div>
 
@@ -68,4 +68,11 @@
 		</div>
 	</div>
 </div>
+@endsection
+
+@section("scripts")
+    <script>
+        $(".indicator-down:first").hide();
+        $(".section-title:first").hide();
+    </script>
 @endsection

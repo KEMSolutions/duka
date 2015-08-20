@@ -38,6 +38,7 @@
     padding: 10px 10px 10px 20px;
     opacity: 0.5;
     cursor: pointer;
+    outline: none;
 }
 
 .cart-header #back:hover {

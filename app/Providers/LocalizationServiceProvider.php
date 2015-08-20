@@ -1,7 +1,9 @@
 <?php namespace App\Providers;
 
 use Cache;
+use Store;
 use KemAPI;
+
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 
@@ -9,8 +11,8 @@ use Illuminate\Support\ServiceProvider;
  * Class LocalizationServiceProvider
  * @package App\Providers
  */
-class LocalizationServiceProvider extends ServiceProvider {
-
+class LocalizationServiceProvider extends ServiceProvider
+{
 	/**
 	 * Bootstrap the application services.
 	 *
@@ -39,21 +41,11 @@ class LocalizationServiceProvider extends ServiceProvider {
         // Retrieve the list of supported locales from the cache. If the list
         // doesn't exist, retrieve it from KEM's API and cache it for next time.
         $expiresAt  = Carbon::now()->addWeek();
-        $locales    = Cache::remember('supportedlocales', $expiresAt, function()
-        {
-            $supportedLocales = KemAPI::get('locales');
-            foreach ($supportedLocales as $loc) {
-                $locales[$loc->language] = [
-                    'name' => $loc->language_name,
-                    'native' => $loc->language_name,
-                    'script' => 'Latn'
-                ];
-            }
-            
-            return $locales;
+        $locales    = Cache::remember('supportedlocales', $expiresAt, function() {
+            return Store::locales();
         });
 
         return $locales;
     }
-
 }
+

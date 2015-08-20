@@ -4,11 +4,11 @@
     var Localization = {!! json_encode(include base_path('resources/lang/'. Localization::getCurrentLocale() .'/boukem.php')) !!};
     {{-- Include all necessary API endpoints into a javascript object. --}}
     var ApiEndpoints = {!! json_encode([
-                'estimate'  => route('api.estimate'),
-            'placeOrder'=> route('api.orders'),
-            'orders'    => [
-        'pay'   => route('api.orders.pay', ['id' => ':id', 'verification' => ':verification']),
-    'view'  => route('api.orders.view', ['id' => ':id', 'verification' => ':verification'])
-    ]
+        'estimate'  => route('api.estimate'),
+        'placeOrder'=> route('api.orders'),
+        'orders'    => [
+            'pay'   => route('api.orders.pay', ['id' => ':id', 'verification' => ':verification']),
+            'view'  => route('api.orders.view', ['id' => ':id', 'verification' => ':verification'])
+        ]
     ]) !!};
 </script>
