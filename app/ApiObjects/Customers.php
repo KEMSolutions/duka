@@ -102,8 +102,23 @@ class Customers extends BaseObject
         return new Customer($result);
     }
 
-    public function getDefault()
-    {
+    public function getDefault() {
         return Auth::guest() ? new Customer : Auth::user();
+    }
+
+    public function getDefaultAddress()
+    {
+        $customer = $this->getDefault();
+
+        return count($customer->addresses) ? $customer->addresses[0] : [
+            'line1' => '',
+            'line2' => '',
+            'name' => $customer->name,
+            'postcode' => $customer->postcode,
+            'city' => '',
+            'province' => 'QC',
+            'country' => 'CA',
+            'phone' => ''
+        ];
     }
 }

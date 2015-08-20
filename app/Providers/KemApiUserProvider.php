@@ -62,7 +62,7 @@ class KemApiUserProvider implements UserProvider
     {
         $customer->metadata['remember_token'] = $token;
 
-        Customers::update($customer);
+        Customers::update($customer, []);
     }
 
     /**
@@ -93,4 +93,3 @@ class KemApiUserProvider implements UserProvider
         return $this->hasher->check($credentials['password'], $user->getAuthPassword());
     }
 }
-
