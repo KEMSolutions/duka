@@ -75,18 +75,27 @@ var productFormatContainer = {
     },
 
     setBuybuttonInformation: function(format) {
-        const $buybutton = $(".buybutton");
+        var $buybuttonWrapper = $(".buybutton-format-selection-wrapper"),
+            buybutton =
+                '<button class="btn btn-three buybutton horizontal-align"' +
+                    'data-product="' + format.data("product") +'"' +
+                'data-price="' + format.data("price") +'"' +
+                'data-thumbnail="' + format.data("thumbnail") +'"' +
+                'data-thumbnail_lg="' + format.data("thumbnail_lg") +'"' +
+                'data-name="' + format.data("name") +'"' +
+                'data-format="' + format.data("format") +'"' +
+                'data-inventory-count="' + format.data("inventory-count") +'"' +
+                'data-quantity="' + format.data("quantity") +'"' +
+                'data-link="' + format.data("link") +'"' +
+                    '>' +
+                '<div class="add-cart">' +
+                    '<i class="fa fa-check-circle"></i> ' +
+                    Localization.add_cart +
+                    '</div> </button>';
 
-        $buybutton.attr("data-product", format.data("product"));
-        $buybutton.attr("data-price", format.data("price"));
-        $buybutton.attr("data-thumbnail", format.data("thumbnail"));
-        $buybutton.attr("data-thumbnail_lg", format.data("thumbnail_lg"));
-        $buybutton.attr("data-name", format.data("name"));
-        $buybutton.attr("data-format", format.data("format"));
-        $buybutton.attr("data-inventory-count", format.data("inventory-count"));
-        $buybutton.attr("data-quantity", format.data("quantity"));
-        $buybutton.attr("data-link", format.data("link"));
+        $buybuttonWrapper.empty();
 
+        $buybuttonWrapper.append(buybutton);
     },
 
     init: function () {
