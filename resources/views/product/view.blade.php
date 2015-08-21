@@ -86,7 +86,7 @@
                                                                 </div>
 
 
-                                                                @if(count($product->formats) != 0)
+                                                                @if(count($product->formats) > 1)
                                                                     <div class="ui buttons huge">
 
                                                                         @foreach($product->formats as $index => $format)
