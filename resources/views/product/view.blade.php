@@ -90,6 +90,10 @@
                                                                     <div class="ui buttons huge">
 
                                                                         @foreach($product->formats as $index => $format)
+
+                                                                        {{-- Select format buttons (contains html5 data tags to be synced with the buybutton
+                                                                             located after
+                                                                        --}}
                                                                         <button class="ui button format-selection
                                                                         {{--@if ($index == 0)--}}
                                                                             {{--{!! 'active' !!}--}}
@@ -122,6 +126,7 @@
                                                                 <br/>
                                                                 <br/>
 
+                                                                {{-- buybutton takes by default the value of the first format --}}
                                                                 <div class="buybutton-format-selection-wrapper">
                                                                     <button
                                                                     class="btn btn-three buybutton horizontal-align"
