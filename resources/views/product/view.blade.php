@@ -94,7 +94,7 @@
                                                                         {{-- Select format buttons (contains html5 data tags to be synced with the buybutton
                                                                              located after
                                                                         --}}
-                                                                        <button class="ui button format-selection
+                                                                        <button class="ui btn btn-three format-selection
                                                                         {{--@if ($index == 0)--}}
                                                                             {{--{!! 'active' !!}--}}
                                                                         {{--@endif--}}
