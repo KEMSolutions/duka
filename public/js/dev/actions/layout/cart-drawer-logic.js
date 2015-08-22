@@ -130,13 +130,25 @@ var cartLogicContainer = {
      *      .form-group
      *          #item-quantity
      *          .ui.buttons.huge
-     *          br
-     *          br
+     *          <br>
+     *          <br>
      *      .buybutton
      */
     modifyQuantityBeforeBuying : function() {
         $("#item_quantity").on("change", function() {
-            $(this).closest(".form-group").nextAll().eq(3).data("quantity", parseInt($(this).val()));
+
+            //Change the value in format buttons data value (if any).
+            $(this).closest(".form-group")
+                .next()
+                .children(".format-selection")
+                .data("quantity", parseInt($(this).val()));
+
+            //Change the value in "Add to Cart" button.
+            $(this).closest(".form-group")
+                .nextAll()
+                .eq(3)
+                .children(".buybutton")
+                .data("quantity", parseInt($(this).val()));
         });
     },
 
