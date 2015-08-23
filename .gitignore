@@ -1,6 +1,9 @@
 # Ignore phpStorm project files
 /.idea
 
+# Ignore OS X finder files
+.DS_Store
+
 # Node modules
 /node_modules
 
