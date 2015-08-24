@@ -15,8 +15,8 @@ return [
 	*/
 
     'kemapi' => [
-        'user' => '1',
-        'secret' => 'hLEQPVB9OduNPC5zd3ErIRs4e1wap0Dn9SEzUXeaMyovxJbowhC6TOSY4ySRel8'
+        'user' => getenv('KEM_API_USER'),
+        'secret' => getenv('KEM_API_KEY'),
     ],
 
 	'mailgun' => [
