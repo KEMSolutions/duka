@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ Localization::getCurrentLocale() }}" >
 <head>
-	{{-- TODO : include b2b functionnality --}}
 
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,7 +8,6 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}"/>
 	<link rel="icon" href="{{ url('/') . "/img/favicon.png"}}"/>
 
-	{{-- TODO : include dynamic name based on each store name--}}
 	<title>{{ Store::info()->name }}</title>
 
 	{{-- TODO: include page description if any--}}
@@ -19,9 +17,11 @@
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
 	<!-- Required -->
-	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 	<link href="//cdn.kem.guru/css/outdatedBrowser.min.css" rel="stylesheet">
+
+	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.0.8/semantic.css"/>
 
 	<!-- Semantic UI css dependencies -->
 	<link rel="stylesheet" href="{{ asset('css/semantic-ui/transition.min.css') }}"/>
@@ -32,7 +32,6 @@
 	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/input.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/header.css') }}"/>
 
-	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
 
 	<!-- Custom css -->
 	@yield("custom_css")

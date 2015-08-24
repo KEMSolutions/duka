@@ -4,7 +4,6 @@
         @include("site.homepage._tab", ["tabTitle" => $layoutData["mixed"]["tabTitle"]])
     @endif
 
-    <div class="w-section inverse">
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
@@ -89,6 +88,5 @@
             </div><!-- row -->
 
         </div> <!-- container -->
-    </div> <!-- w-section inverse -->
 
 </section>
