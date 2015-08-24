@@ -75,6 +75,12 @@
 	@include("_dynamic_resources")
 
 	<script src="/js/prod/boukem2.js"></script>
+	<script src="/js/dev/actions/layout/cart-drawer-logic.js"></script>
+	<script src="/js/dev/actions/layout/cart-drawer-init.js"></script>
+	<script src="/js/dev/components/products/product-format.js"></script>
+	<script>
+		productFormatContainer.init();
+	</script>
 	@yield("scripts")
 </body>
 

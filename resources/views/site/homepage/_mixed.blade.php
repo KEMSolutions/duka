@@ -22,7 +22,7 @@
                                     </div>
                                     <div class="col-md-10">
                                         <p>
-                                            <a href="/{{ $locale }}/prod/{{ $product->slug }}" class="strong">
+                                            <a href="/{{ $locale }}/prod/{{ $product->slug }}" class="strong"></a>
                                             <a href="{{ route('product', ['slug' => $product->slug]) }}" class="strong">
                                                 {{ $product->localization->name }}
                                             </a>
@@ -35,15 +35,27 @@
                                             {{ str_limit(strip_tags($product->localization->short_description), 140, "...") }}
 
                                             <br/>
-                                            <button class="btn btn-one btn-sm buybutton"
-                                                    data-product="{{ $product->id }}"
-                                                    data-price="{{ number_format((float)$product->formats[0]->price, 2, '.', '') }}"
-                                                    data-thumbnail="{{ Products::thumbnail($product->id) }}"
-                                                    data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
-                                                    data-name="{{ $product->localization->name }}"
-                                                    data-quantity="1">
-                                                <i class="fa fa-shopping-cart"></i>{{ number_format((float)$product->formats[0]->price, 2, '.', '') }} $
-                                            </button>
+                                            @if(count($product->formats) != 0)
+                                                @foreach($product->formats as $format)
+                                                    <button class="btn btn-one btn-sm buybutton"
+                                                            data-product="{{ $format->id }}"
+                                                            data-price="{{ $format->price }}"
+                                                            data-thumbnail="{{ Products::thumbnail($product) }}"
+                                                            data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
+                                                            data-name="{{ $product->localization->name . " - " . $format->name }}"
+                                                            data-quantity="1"
+                                                            data-link="{{ route('product', ['slug' => $product->slug]) }}"
+                                                            >
+
+                                                        @if(count($product->formats) > 1)
+                                                            <p class="ui sub header gray">{{ $format->name }}</p>
+                                                        @endif
+
+                                                        <i class="fa fa-shopping-cart"></i>
+                                                        $ {{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
+                                                    </button>
+                                                @endforeach
+                                            @endif
                                         </p>
                                     </div>
                                 </div>

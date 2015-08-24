@@ -93,7 +93,7 @@
         border-bottom: 4px solid {{ $color_three_dark }};
     }
 
-    .btn-three:hover, .btn-three:focus, .btn-three:active, .btn-three.active, .open .dropdown-toggle.btn-three {
+    .btn-three:hover, .btn-three:focus, .btn-three:active, .btn-three.active, .open .dropdown-toggle.btn-three, .btn-three .active {
         background-color: {{ $color_three_light }};
         color: #fff;
         border-color: {{ $color_three_light }};
