@@ -106,7 +106,6 @@
                                                                                 data-name="{{ $product->localization->name . " - " . $format->name }}"
                                                                                 data-format="{{ $format->name }}"
                                                                                 data-inventory-count="{{ $format->inventory->count }}"
-                                                                                data-quantity="1"
                                                                                 data-link="{{ route('product', ['slug' => $product->slug]) }}"
                                                                                 >
 
