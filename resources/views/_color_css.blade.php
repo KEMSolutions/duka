@@ -37,7 +37,7 @@
     }
 
     .color-three {
-        background: #fff;
+        background: {{ $color_three }};
         color: #4C4C4C;
     }
 
@@ -56,6 +56,10 @@
 
     .dark {
         color: #333 !important;
+    }
+
+    .white {
+        color: #fff !important;
     }
 
     .btn:hover, .btn:focus {
@@ -93,7 +97,7 @@
         border-bottom: 4px solid {{ $color_three_dark }};
     }
 
-    .btn-three:hover, .btn-three:focus, .btn-three:active, .btn-three.active, .open .dropdown-toggle.btn-three, .btn-three .active {
+    .btn-three:hover, .btn-three:focus, .btn-three:active, .open .dropdown-toggle.btn-three, .btn-three.active {
         background-color: {{ $color_three_light }};
         color: #fff;
         border-color: {{ $color_three_light }};
