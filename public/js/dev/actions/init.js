@@ -52,6 +52,12 @@ $(document).ready(function () {
     productLayoutFavoriteContainer.init();
 
     /**
+     * Initialize product formats feature.
+     *
+     */
+    productFormatContainer.init();
+
+    /**
      * Initialize wishlist page.
      *
      */

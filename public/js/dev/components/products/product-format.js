@@ -15,10 +15,17 @@ var productFormatContainer = {
             $formatSelection = $(".format-selection");
 
         $formatSelection.on("click", function () {
-            self.setPriceTag($(this).data("price"));
-            self.setInventoryCount($(this).data("inventory-count"));
+            // Set the right format in product title
             $("#product-format").text($(this).data("format"));
 
+            // Set the right price and the right inventory count
+            self.setPriceTag($(this).data("price"));
+            self.setInventoryCount($(this).data("inventory-count"));
+
+            // Toggle active class on right format
+            self.toggleActiveClass($(this));
+
+            // Creates an appropriate buybutton according to the info.
             self.setBuybuttonInformation($(this));
         });
 
@@ -74,6 +81,11 @@ var productFormatContainer = {
         $(".price-tag").text("$ " + price);
     },
 
+    /**
+     * Recreates a buybutton with relevant information every time we switch format.
+     *
+     * @param format (html5 data in format buttons)
+     */
     setBuybuttonInformation: function(format) {
         var $buybuttonWrapper = $(".buybutton-format-selection-wrapper"),
             buybutton =
@@ -85,7 +97,7 @@ var productFormatContainer = {
                 'data-name="' + format.data("name") +'"' +
                 'data-format="' + format.data("format") +'"' +
                 'data-inventory-count="' + format.data("inventory-count") +'"' +
-                'data-quantity="' + format.data("quantity") +'"' +
+                'data-quantity="1"' +
                 'data-link="' + format.data("link") +'"' +
                     '>' +
                 '<div class="add-cart">' +
@@ -98,9 +110,20 @@ var productFormatContainer = {
         $buybuttonWrapper.append(buybutton);
     },
 
+    /**
+     * Toggles the .active class when clicked on a format.
+     *
+     * @param format
+     */
+    toggleActiveClass: function (format) {
+        $(".format-selection.active").removeClass("active");
+        format.addClass("active");
+    },
+
     init: function () {
         const self = productFormatContainer;
 
         self.displaySyncedProductInformation();
+
     }
 }

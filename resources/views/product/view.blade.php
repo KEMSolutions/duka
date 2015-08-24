@@ -9,7 +9,7 @@
 @section("content")
     @include("product._breadcrumb", ["product" => $product])
 
-    <section class="slice color-three column1_main_slice">
+    <section class="slice column1_main_slice">
         <div class="w-section inverse">
             <div class="container">
                 <div class="row">
@@ -95,9 +95,9 @@
                                                                              located after
                                                                         --}}
                                                                         <button class="ui btn btn-three format-selection
-                                                                        {{--@if ($index == 0)--}}
-                                                                            {{--{!! 'active' !!}--}}
-                                                                        {{--@endif--}}
+                                                                        @if ($index == 0)
+                                                                            {!! 'active' !!}
+                                                                        @endif
                                                                                 "
                                                                                 data-product="{{ $format->id }}"
                                                                                 data-price="{{ $format->price }}"
@@ -106,12 +106,11 @@
                                                                                 data-name="{{ $product->localization->name . " - " . $format->name }}"
                                                                                 data-format="{{ $format->name }}"
                                                                                 data-inventory-count="{{ $format->inventory->count }}"
-                                                                                data-quantity="1"
                                                                                 data-link="{{ route('product', ['slug' => $product->slug]) }}"
                                                                                 >
 
                                                                             @if(count($product->formats) > 1)
-                                                                                <p class="ui sub header">{{ $format->name }}</p>
+                                                                                <p class="ui sub header white">{{ $format->name }}</p>
                                                                             @endif
                                                                         </button>
 
