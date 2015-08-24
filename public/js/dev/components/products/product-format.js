@@ -117,7 +117,7 @@ var productFormatContainer = {
      */
     toggleActiveClass: function (format) {
         $(".format-selection.active").removeClass("active");
-        format.removeClass("active");
+        format.addClass("active");
     },
 
     init: function () {
