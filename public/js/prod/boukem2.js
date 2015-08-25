@@ -1,4 +1,493 @@
 /**
+ * Utility object containing various utility functions...
+ * Self Explanatory duh.
+ *
+ * @type {{getProductsFromLocalStorage: Function, getNumberOfProductsInWishlist: Function, getNumberOfProducts: Function, getProductsPriceFromLocalStorage: Function, removeAllProductsFromLocalStorage: Function, getShippingFromForm: Function, buyButton_to_Json: Function, populateCountry: Function, validateEmptyFields: Function, validateEmail: Function, validatePostCode: Function, validateEmptyCart: Function, addErrorClassToFields: Function, addErrorClassToFieldsWithRules: Function, addFadeOutUpClass: Function, removeErrorClassFromFields: Function, getCheapestShippingMethod: Function, getTaxes: Function, getShipmentTaxes: Function, getCartTaxes: Function, getCartTotal: Function}}
+ */
+var UtilityContainer = {
+    /**
+     * Utility function for getting all the products in localStorage.
+     * Returns an array containing their id, their quantity and their price.
+     *
+     * @returns {Array}
+     */
+    getProductsFromLocalStorage : function() {
+        var res = [];
+
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
+            {
+                var product = JSON.parse(localStorage.getItem(localStorage.key(i))),
+                    productId = product.product,
+                    productQuantity = product.quantity,
+                    productPrice = product.price;
+
+                res.push({
+                    id: productId,
+                    quantity: productQuantity,
+                    price : productPrice
+                });
+            }
+        }
+
+        return res;
+    },
+
+    /**
+     * Utility function returning the number of products present in the wish list.
+     *
+     * @returns {number}
+     */
+    getNumberOfProductsInWishlist : function() {
+        var total = 0;
+
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
+            {
+                total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
+            }
+        }
+
+        return total;
+    },
+
+    /**
+     * Utility function returning the number of products present in the cart.
+     *
+     * @returns {number}
+     */
+    getNumberOfProducts : function() {
+        var total = 0;
+
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
+            {
+                total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
+            }
+        }
+
+        return total;
+    },
+
+    /**
+     * Utility function to get the total price from all products present in localStorage.
+     *
+     * @returns {number}
+     */
+    getProductsPriceFromLocalStorage : function() {
+        var total = 0,
+            products = UtilityContainer.getProductsFromLocalStorage();
+
+        for(var i= 0, length = products.length; i<length; i++)
+        {
+            total += (products[i].price * products[i].quantity);
+        }
+
+        return total;
+    },
+
+    /**
+     * Utility function to delete all products from localStorage.
+     *
+     */
+    removeAllProductsFromLocalStorage : function() {
+        for(var i= 0, length = localStorage.length; i<length; i++) {
+            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
+            {
+                localStorage.removeItem(localStorage.key(i));
+            }
+        }
+    },
+
+    /**
+     * Utility function fo getting the country, the postal code and the province (if any) of the user.
+     *
+     * @returns {{country: (*|jQuery), postcode: (*|jQuery), province: (*|jQuery)}}
+     */
+    getShippingFromForm : function() {
+        return res = {
+            "country" : $("#shippingCountry").val(),
+            "postcode" : $("#shippingPostcode").val(),
+            "province" : $("#shippingProvince").val(),
+            "line1" : $("#shippingAddress1").val(),
+            "line2" : $("#shippingAddress2").val(),
+            "name" : $("#shippingFirstname").val() + " " + $("#shippingLastname").val(),
+            "city" : $("#shippingCity").val(),
+            "phone" : $("#shippingTel").val()
+        };
+    },
+
+    /**
+     * parse the information from a buy button into a readable json format
+     *
+     * @param item
+     * @returns {{product: *, name: *, price: *, thumbnail: *, thumbnail_lg: *, quantity: number}}
+     */
+    buyButton_to_Json : function(item) {
+        return {
+            "product" : item.data("product"),
+            "name" : item.data("name"),
+            "price" : item.data("price"),
+            "thumbnail" : item.data("thumbnail"),
+            "thumbnail_lg" : item.data("thumbnail_lg"),
+            "quantity" : parseInt(item.data("quantity")),
+            "link" : item.data("link")
+        }
+    },
+
+    /**
+     * Utility object used to populate a select list (#country) with a list of country (json formatted) in the appropriate language.
+     *
+     */
+    populateCountry : function (lang) {
+        var file = "/js/data/country-list." + lang + ".json",
+            listItems = '',
+            $country = $("#country");
+
+        $.getJSON(file, function(data) {
+            $.each(data, function(key, val) {
+                if (key == "CA") {
+                    listItems += "<option value='" + key + "' selected>" + val + "</option>";
+                }
+                else {
+                    listItems += "<option value='" + key + "'>" + val + "</option>";
+                }
+            });
+            $country.append(listItems);
+        });
+    },
+
+    /**
+     * Check if the fields passed in the argument are empty or not.
+     *
+     * @param emptyFields
+     * @returns {boolean}
+     */
+    validateEmptyFields: function(emptyFields) {
+        var passed = true;
+        for(var i= 0, length = emptyFields.length; i<length; i++) {
+            if (emptyFields[i].val() == "")
+            {
+                passed = false;
+                break;
+            }
+        }
+        return passed;
+    },
+
+    /**
+     * Validate the email address passed as the argument.
+     *
+     * @param email
+     * @returns {boolean}
+     */
+    validateEmail: function(email) {
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        return re.test(email);
+    },
+
+    /**
+     * Validate a CA or US postal code.
+     *
+     * @param postcode
+     * @param country
+     * @returns {boolean}
+     */
+    validatePostCode: function(postcode, country) {
+        if (country == "CA")
+            return postcode.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
+        else if (country == "US")
+            return postcode.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
+        else
+            return true;
+    },
+
+    /**
+     * Returns true if the cart is empty, false otherwise.
+     *
+     * @returns {*}
+     */
+    validateEmptyCart : function () {
+        var empty;
+        UtilityContainer.getProductsPriceFromLocalStorage() === 0 ?  empty = true : empty = false;
+
+        return empty;
+    },
+
+    /**
+     * Add .has-error to parent class + animate the relevant fields.
+     *
+     * @param fields
+     */
+    addErrorClassToFields: function(fields) {
+        for(var i= 0, length = fields.length; i<length; i++)
+        {
+            if (fields[i].val() == "")
+            {
+                fields[i].parent().addClass("has-error");
+                fields[i].addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                    $(this).removeClass("animated");
+                    $(this).removeClass("shake");
+                    $(this).unbind();
+                });
+            }
+        }
+    },
+
+    /**
+     * Same as addErrorClassToFields but accept a single input (ie. specific rules have to be applied: email / postal code / ...
+     *
+     * @param input
+     */
+    addErrorClassToFieldsWithRules: function(input) {
+        input.parent().addClass("has-error");
+        input.addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+            $(this).removeClass("animated");
+            $(this).removeClass("shake");
+            $(this).unbind();
+        });
+    },
+
+    /**
+     * Adds a fadeOutUp class then hide the element passed as an argument.
+     *
+     * @param $element
+     */
+    addFadeOutUpClass: function ($element) {
+        $element.addClass("animated fadeOutUp").delay(1000).queue(function() {
+            $(this).addClass("hidden").clearQueue();
+        });
+    },
+
+    /**
+     * Remove .has-error from fields
+     *
+     * @param fields
+     */
+    removeErrorClassFromFields: function(fields) {
+        for(var i= 0, length = fields.length; i<length; i++)
+        {
+            if (fields[i].val() != "" && fields[i].parent().hasClass("has-error"))
+            {
+                fields[i].parent().removeClass("has-error");
+            }
+        }
+    },
+
+    /**
+     * Returns the method and the price of the cheapest shipping services.
+     *
+     * @param data
+     * @returns {{fare: *, method: (*|string)}}
+     */
+    getCheapestShippingMethod : function(data) {
+        var availableShipment = data.shipping.services,
+            sortedShipmentByPrice = [];
+
+        for(var i= 0, length = availableShipment.length; i<length; i++)
+        {
+            sortedShipmentByPrice.push(availableShipment[i]);
+        }
+
+        sortedShipmentByPrice.sort(function(a,b) {
+            return a.price - b.price
+        });
+
+        return {
+            fare: sortedShipmentByPrice[0].price,
+            method: sortedShipmentByPrice[0].method
+        }
+    },
+
+    /**
+     * Get the total taxes (TPS/TVQ or TVH or TPS or null) + shipping method taxes.
+     *
+     * @param data
+     * @returns {number}
+     */
+    getTaxes : function(data) {
+        var taxes = 0,
+            dataTaxesLength = data.taxes.length;
+
+        if (dataTaxesLength != 0)
+        {
+            for(var i=0; i<dataTaxesLength; i++)
+            {
+                taxes += data.taxes[i].amount;
+            }
+        }
+
+        return taxes.toFixed(2);
+    },
+
+    /**
+     * Get the relevant taxes according to the chosen shipping method.
+     *
+     * @param serviceCode
+     * @param data
+     * @returns {string}
+     */
+    getShipmentTaxes : function(serviceCode, data) {
+        var taxes = 0;
+        console.log(data);
+
+        for(var i=0; i<data.shipping.services.length; i++)
+        {
+            if(data.shipping.services[i].method == serviceCode)
+            {
+                if (data.shipping.services[i].taxes.length != 0)
+                {
+                    for(var j=0; j<data.shipping.services[i].taxes.length; j++)
+                    {
+                        taxes += data.shipping.services[i].taxes[j].amount;
+                    }
+                }
+            }
+        }
+        return taxes.toFixed(2);
+    },
+
+    /**
+     * Returns appropriate taxes according to the shipping method.
+     *
+     * @param serviceCode
+     * @param data
+     * @returns {number}
+     */
+    getCartTaxes : function(serviceCode, data) {
+        var taxes = parseFloat(UtilityContainer.getTaxes(data)),
+            shippingTaxes = parseFloat(UtilityContainer.getShipmentTaxes(serviceCode, data)),
+            totalTaxes = taxes + shippingTaxes;
+
+        return totalTaxes;
+    },
+
+    /**
+     * Returns total price (subtotal + taxes + shipping taxes)
+     * Saves total in sessionStorage (for live update)
+     *
+     * @param data
+     * @returns {string}
+     */
+    getCartTotal : function(serviceCode, data) {
+        var taxes = parseFloat(UtilityContainer.getCartTaxes(serviceCode.method, data)),
+            shipping = parseFloat(UtilityContainer.getCheapestShippingMethod(data).fare),
+            subtotal = parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()),
+            total = (taxes + shipping + subtotal).toFixed(2);
+
+        return total;
+    },
+
+    /**
+     * Retrieves the query parameters from the URL.
+     * Courtesy of http://stackoverflow.com/a/1917916
+     *
+     * @returns object
+     */
+    urlGetParameters : function() {
+
+        // Performance check.
+        var query = document.location.search.substr(1);
+        if (query.length < 1) {
+            return {};
+        }
+
+        // Loop through query elements.
+        var kvp = query.split('&'), index, pair, key, value, pairs = {};
+        for (index in kvp)
+        {
+            // Skip parameters without any values.
+            if (kvp[index].indexOf('=') < 1) {
+                continue;
+            }
+
+            // Save query value.
+            pair = kvp[index].split('=');
+            key = decodeURIComponent(pair[0]), value = decodeURIComponent(pair[1]);
+            pairs[key] = value;
+
+            // Split up queries with a ";" in the value.
+            if (value.indexOf(';') > -1) {
+                pairs[key] = value.split(';');
+            }
+        }
+
+        return pairs;
+    },
+
+    /**
+     * Adds one or more query parameters to the URL and reloads the page.
+     * Courtesy of http://stackoverflow.com/a/1917916
+     *
+     * @param mixed key     Either a query key, or an object representing all the key-pair values to be added.
+     * @param mixed value   Query value, or null if key is an object.
+     * @constructor
+     */
+    urlAddParameters : function(key, value) {
+
+        // We either accept a key-value pair, or a query object.
+        var params = {};
+        if (typeof key == "object") {
+            params = key;
+        } else if (typeof key == "string" && typeof value != "undefined") {
+            params[key] = value;
+        } else {
+            return console.log("Invalid query parameters.");
+        }
+
+        // Add query parameters to existing ones.
+        var query = this.urlGetParameters(), index;
+        for (index in params) {
+            query[index] = params[index];
+        }
+
+        // Build query string and reload the page.
+        document.location.search = this.urlBuildQuery(query);
+    },
+
+    urlRemoveParameters : function(key) {
+
+        key = typeof key == "string" ? [key] : key;
+
+        // Try to remove one or more query parameters.
+        var query = this.urlGetParameters();
+        key.forEach(function(param, index, keys)
+        {
+            if (typeof query[param] != "undefined") {
+                delete query[param];
+            }
+        });
+
+        // Update the URL query.
+        document.location.search = this.urlBuildQuery(query);
+    },
+
+    urlBuildQuery : function(query) {
+
+        // Build query string.
+        // We use encodeURIComponent() instead of the deprecated escape() function.
+        var newQuery = [];
+        for (var index in query) {
+            if (typeof query[index] != "undefined" && query[index] != null)
+            {
+                // Concatenate arrays.
+                if (typeof query[index] == 'object') {
+                    query[index] = query[index].join(';');
+                }
+
+                newQuery.push(encodeURIComponent(index) +'='+ encodeURIComponent(query[index]));
+            }
+        }
+
+        return "?"+ (newQuery.length > 1 ? newQuery.join('&') : newQuery[0]);
+    }
+};
+
+
+/**
  * Object responsible for handling billing information.
  *
  * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
@@ -702,100 +1191,6 @@ var paymentOverlayContainer = {
 }
 
 /**
- * Object responsible for adding products to a user's wishlist.
- *
- * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
- */
-var productLayoutFavoriteContainer = {
-    /**
-     * Fade in the favorite icon (heart icon) when hovering on a product tile.
-     *
-     */
-    fadeInFavoriteIcon: function() {
-        $(".dense_product").hover(function() {
-            $(this).children(".favorite-wrapper").fadeIn();
-        }, function () {
-            $(this).children(".favorite-wrapper").hide();
-        });
-    },
-
-    /**
-     * Update the value of .wishlist_badge when adding or deleting elements.
-     *
-     */
-    setWishlistBadgeQuantity : function() {
-        var total = UtilityContainer.getNumberOfProductsInWishlist();
-
-        $(".wishlist_badge").text(total);
-    },
-
-    /**
-     * Add the clicked product to the wish list.
-     *
-     */
-    addToFavorite: function() {
-        var self = productLayoutFavoriteContainer,
-            item;
-
-        $(".favorite-wrapper").on("click", function() {
-            //No favorited class.
-            if (!$(this).hasClass("favorited")) {
-                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
-                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
-
-                $(this).addClass("favorited");
-
-                self.setWishlistBadgeQuantity();
-            }
-            else
-            //Has a favorited class. We remove it, then delete the element from local Storage.
-            {
-                self.removeFromFavorite($(this), self);
-            }
-        });
-    },
-
-    /**
-     * Persist the heart icon next to products already marked as wished.
-     *
-     */
-    persistFavorite: function() {
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
-                for(var j = 0; j<$(".favorite-wrapper").length; j++)
-                {
-                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === parseInt($(".favorite-wrapper")[j].dataset.product))
-                    {
-                        $(".favorite-wrapper")[j].className += " favorited";
-                    }
-                }
-            }
-        };
-    },
-
-    /**
-     * Delete the clicked element from the wish list.
-     *
-     * @param context
-     */
-    removeFromFavorite: function (element, context) {
-        element.removeClass("favorited");
-        localStorage.removeItem("_wish_product " + element.data("product"));
-        context.setWishlistBadgeQuantity();
-    },
-
-    init: function () {
-        var self = productLayoutFavoriteContainer;
-
-
-        self.addToFavorite();
-        self.persistFavorite();
-        self.fadeInFavoriteIcon();
-        self.setWishlistBadgeQuantity();
-    }
-}
-/**
  * Object responsible for handling different formats of the same product.
  *
  * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
@@ -922,6 +1317,125 @@ var productFormatContainer = {
 
         self.displaySyncedProductInformation();
 
+    }
+}
+/**
+ * Object responsible for the view component of the wish list page.
+ * Logic handled in dev/actions/site/wishlist-logic.js
+ *
+ * @type {{setNumberOfProductsInHeader: Function, init: Function}}
+ */
+var wishlistContainer = {
+
+    /**
+     * Sets the number of products in the header (singular / plural).
+     *
+     */
+    setNumberOfProductsInHeader: function() {
+        var quantity = "";
+        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
+        $("#quantity-wishlist").text(quantity);
+    },
+
+
+    init: function() {
+        var self = wishlistContainer;
+
+        self.setNumberOfProductsInHeader();
+    }
+}
+/**
+ * Object responsible for adding products to a user's wishlist.
+ *
+ * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
+ */
+var productLayoutFavoriteContainer = {
+    /**
+     * Fade in the favorite icon (heart icon) when hovering on a product tile.
+     *
+     */
+    fadeInFavoriteIcon: function() {
+        $(".dense_product").hover(function() {
+            $(this).children(".favorite-wrapper").fadeIn();
+        }, function () {
+            $(this).children(".favorite-wrapper").hide();
+        });
+    },
+
+    /**
+     * Update the value of .wishlist_badge when adding or deleting elements.
+     *
+     */
+    setWishlistBadgeQuantity : function() {
+        var total = UtilityContainer.getNumberOfProductsInWishlist();
+
+        $(".wishlist_badge").text(total);
+    },
+
+    /**
+     * Add the clicked product to the wish list.
+     *
+     */
+    addToFavorite: function() {
+        var self = productLayoutFavoriteContainer,
+            item;
+
+        $(".favorite-wrapper").on("click", function() {
+            //No favorited class.
+            if (!$(this).hasClass("favorited")) {
+                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
+                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+
+                $(this).addClass("favorited");
+
+                self.setWishlistBadgeQuantity();
+            }
+            else
+            //Has a favorited class. We remove it, then delete the element from local Storage.
+            {
+                self.removeFromFavorite($(this), self);
+            }
+        });
+    },
+
+    /**
+     * Persist the heart icon next to products already marked as wished.
+     *
+     */
+    persistFavorite: function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
+                for(var j = 0; j<$(".favorite-wrapper").length; j++)
+                {
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === parseInt($(".favorite-wrapper")[j].dataset.product))
+                    {
+                        $(".favorite-wrapper")[j].className += " favorited";
+                    }
+                }
+            }
+        };
+    },
+
+    /**
+     * Delete the clicked element from the wish list.
+     *
+     * @param context
+     */
+    removeFromFavorite: function (element, context) {
+        element.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + element.data("product"));
+        context.setWishlistBadgeQuantity();
+    },
+
+    init: function () {
+        var self = productLayoutFavoriteContainer;
+
+
+        self.addToFavorite();
+        self.persistFavorite();
+        self.fadeInFavoriteIcon();
+        self.setWishlistBadgeQuantity();
     }
 }
 /**
@@ -1152,519 +1666,80 @@ var categoryContainer = {
 
 
 /**
- * Object responsible for the view component of the wish list page.
- * Logic handled in dev/actions/site/wishlist-logic.js
+ * Entry point of script.
  *
- * @type {{setNumberOfProductsInHeader: Function, init: Function}}
  */
-var wishlistContainer = {
+$(document).ready(function () {
 
     /**
-     * Sets the number of products in the header (singular / plural).
+     * Sets up the ajax token for all ajax requests
      *
      */
-    setNumberOfProductsInHeader: function() {
-        var quantity = "";
-        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
-        $("#quantity-wishlist").text(quantity);
-    },
-
-
-    init: function() {
-        var self = wishlistContainer;
-
-        self.setNumberOfProductsInHeader();
-    }
-}
-/**
- * Utility object containing various utility functions...
- * Self Explanatory duh.
- *
- * @type {{getProductsFromLocalStorage: Function, getNumberOfProductsInWishlist: Function, getNumberOfProducts: Function, getProductsPriceFromLocalStorage: Function, removeAllProductsFromLocalStorage: Function, getShippingFromForm: Function, buyButton_to_Json: Function, populateCountry: Function, validateEmptyFields: Function, validateEmail: Function, validatePostCode: Function, validateEmptyCart: Function, addErrorClassToFields: Function, addErrorClassToFieldsWithRules: Function, addFadeOutUpClass: Function, removeErrorClassFromFields: Function, getCheapestShippingMethod: Function, getTaxes: Function, getShipmentTaxes: Function, getCartTaxes: Function, getCartTotal: Function}}
- */
-var UtilityContainer = {
-    /**
-     * Utility function for getting all the products in localStorage.
-     * Returns an array containing their id, their quantity and their price.
-     *
-     * @returns {Array}
-     */
-    getProductsFromLocalStorage : function() {
-        var res = [];
-
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
-            {
-                var product = JSON.parse(localStorage.getItem(localStorage.key(i))),
-                    productId = product.product,
-                    productQuantity = product.quantity,
-                    productPrice = product.price;
-
-                res.push({
-                    id: productId,
-                    quantity: productQuantity,
-                    price : productPrice
-                });
-            }
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'locale': $('html').attr('lang')
         }
-
-        return res;
-    },
+    });
 
     /**
-     * Utility function returning the number of products present in the wish list.
+     * Initialize checkout logic.
      *
-     * @returns {number}
      */
-    getNumberOfProductsInWishlist : function() {
-        var total = 0;
-
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
-            {
-                total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
-            }
-        }
-
-        return total;
-    },
+    checkoutInitContainer.init();
 
     /**
-     * Utility function returning the number of products present in the cart.
+     * Initialize cart drawer logic.
      *
-     * @returns {number}
      */
-    getNumberOfProducts : function() {
-        var total = 0;
-
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
-            {
-                total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
-            }
-        }
-
-        return total;
-    },
+    cartDrawerInitContainer.init();
 
     /**
-     * Utility function to get the total price from all products present in localStorage.
+     * Initialize category container
      *
-     * @returns {number}
      */
-    getProductsPriceFromLocalStorage : function() {
-        var total = 0,
-            products = UtilityContainer.getProductsFromLocalStorage();
-
-        for(var i= 0, length = products.length; i<length; i++)
-        {
-            total += (products[i].price * products[i].quantity);
-        }
-
-        return total;
-    },
+    categoryContainer.init();
 
     /**
-     * Utility function to delete all products from localStorage.
+     * Initialize overlay plugin.
      *
      */
-    removeAllProductsFromLocalStorage : function() {
-        for(var i= 0, length = localStorage.length; i<length; i++) {
-            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
-            {
-                localStorage.removeItem(localStorage.key(i));
-            }
-        }
-    },
+    paymentOverlayContainer.init();
 
     /**
-     * Utility function fo getting the country, the postal code and the province (if any) of the user.
+     * Initialize navigation header.
      *
-     * @returns {{country: (*|jQuery), postcode: (*|jQuery), province: (*|jQuery)}}
      */
-    getShippingFromForm : function() {
-        return res = {
-            "country" : $("#shippingCountry").val(),
-            "postcode" : $("#shippingPostcode").val(),
-            "province" : $("#shippingProvince").val(),
-            "line1" : $("#shippingAddress1").val(),
-            "line2" : $("#shippingAddress2").val(),
-            "name" : $("#shippingFirstname").val() + " " + $("#shippingLastname").val(),
-            "city" : $("#shippingCity").val(),
-            "phone" : $("#shippingTel").val()
-        };
-    },
+    headerContainer.init();
 
     /**
-     * parse the information from a buy button into a readable json format
+     * Initialize favorite products feature.
      *
-     * @param item
-     * @returns {{product: *, name: *, price: *, thumbnail: *, thumbnail_lg: *, quantity: number}}
      */
-    buyButton_to_Json : function(item) {
-        return {
-            "product" : item.data("product"),
-            "name" : item.data("name"),
-            "price" : item.data("price"),
-            "thumbnail" : item.data("thumbnail"),
-            "thumbnail_lg" : item.data("thumbnail_lg"),
-            "quantity" : parseInt(item.data("quantity")),
-            "link" : item.data("link")
-        }
-    },
+    productLayoutFavoriteContainer.init();
 
     /**
-     * Utility object used to populate a select list (#country) with a list of country (json formatted) in the appropriate language.
+     * Initialize product formats feature.
      *
      */
-    populateCountry : function (lang) {
-        var file = "/js/data/country-list." + lang + ".json",
-            listItems = '',
-            $country = $("#country");
-
-        $.getJSON(file, function(data) {
-            $.each(data, function(key, val) {
-                if (key == "CA") {
-                    listItems += "<option value='" + key + "' selected>" + val + "</option>";
-                }
-                else {
-                    listItems += "<option value='" + key + "'>" + val + "</option>";
-                }
-            });
-            $country.append(listItems);
-        });
-    },
+    productFormatContainer.init();
 
     /**
-     * Check if the fields passed in the argument are empty or not.
+     * Initialize wishlist page.
      *
-     * @param emptyFields
-     * @returns {boolean}
      */
-    validateEmptyFields: function(emptyFields) {
-        var passed = true;
-        for(var i= 0, length = emptyFields.length; i<length; i++) {
-            if (emptyFields[i].val() == "")
-            {
-                passed = false;
-                break;
-            }
-        }
-        return passed;
-    },
+    wishlistLogicContainer.init();
 
     /**
-     * Validate the email address passed as the argument.
+     * Global initialization of elements.
      *
-     * @param email
-     * @returns {boolean}
      */
-    validateEmail: function(email) {
-        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-        return re.test(email);
-    },
+    //fancy plugin for product page (quantity input)
+    $(".input-qty").TouchSpin({
+        initval: 1
+    });
 
-    /**
-     * Validate a CA or US postal code.
-     *
-     * @param postcode
-     * @param country
-     * @returns {boolean}
-     */
-    validatePostCode: function(postcode, country) {
-        if (country == "CA")
-            return postcode.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
-        else if (country == "US")
-            return postcode.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
-        else
-            return true;
-    },
-
-    /**
-     * Returns true if the cart is empty, false otherwise.
-     *
-     * @returns {*}
-     */
-    validateEmptyCart : function () {
-        var empty;
-        UtilityContainer.getProductsPriceFromLocalStorage() === 0 ?  empty = true : empty = false;
-
-        return empty;
-    },
-
-    /**
-     * Add .has-error to parent class + animate the relevant fields.
-     *
-     * @param fields
-     */
-    addErrorClassToFields: function(fields) {
-        for(var i= 0, length = fields.length; i<length; i++)
-        {
-            if (fields[i].val() == "")
-            {
-                fields[i].parent().addClass("has-error");
-                fields[i].addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-                    $(this).removeClass("animated");
-                    $(this).removeClass("shake");
-                    $(this).unbind();
-                });
-            }
-        }
-    },
-
-    /**
-     * Same as addErrorClassToFields but accept a single input (ie. specific rules have to be applied: email / postal code / ...
-     *
-     * @param input
-     */
-    addErrorClassToFieldsWithRules: function(input) {
-        input.parent().addClass("has-error");
-        input.addClass('animated shake').bind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-            $(this).removeClass("animated");
-            $(this).removeClass("shake");
-            $(this).unbind();
-        });
-    },
-
-    /**
-     * Adds a fadeOutUp class then hide the element passed as an argument.
-     *
-     * @param $element
-     */
-    addFadeOutUpClass: function ($element) {
-        $element.addClass("animated fadeOutUp").delay(1000).queue(function() {
-            $(this).addClass("hidden").clearQueue();
-        });
-    },
-
-    /**
-     * Remove .has-error from fields
-     *
-     * @param fields
-     */
-    removeErrorClassFromFields: function(fields) {
-        for(var i= 0, length = fields.length; i<length; i++)
-        {
-            if (fields[i].val() != "" && fields[i].parent().hasClass("has-error"))
-            {
-                fields[i].parent().removeClass("has-error");
-            }
-        }
-    },
-
-    /**
-     * Returns the method and the price of the cheapest shipping services.
-     *
-     * @param data
-     * @returns {{fare: *, method: (*|string)}}
-     */
-    getCheapestShippingMethod : function(data) {
-        var availableShipment = data.shipping.services,
-            sortedShipmentByPrice = [];
-
-        for(var i= 0, length = availableShipment.length; i<length; i++)
-        {
-            sortedShipmentByPrice.push(availableShipment[i]);
-        }
-
-        sortedShipmentByPrice.sort(function(a,b) {
-            return a.price - b.price
-        });
-
-        return {
-            fare: sortedShipmentByPrice[0].price,
-            method: sortedShipmentByPrice[0].method
-        }
-    },
-
-    /**
-     * Get the total taxes (TPS/TVQ or TVH or TPS or null) + shipping method taxes.
-     *
-     * @param data
-     * @returns {number}
-     */
-    getTaxes : function(data) {
-        var taxes = 0,
-            dataTaxesLength = data.taxes.length;
-
-        if (dataTaxesLength != 0)
-        {
-            for(var i=0; i<dataTaxesLength; i++)
-            {
-                taxes += data.taxes[i].amount;
-            }
-        }
-
-        return taxes.toFixed(2);
-    },
-
-    /**
-     * Get the relevant taxes according to the chosen shipping method.
-     *
-     * @param serviceCode
-     * @param data
-     * @returns {string}
-     */
-    getShipmentTaxes : function(serviceCode, data) {
-        var taxes = 0;
-        console.log(data);
-
-        for(var i=0; i<data.shipping.services.length; i++)
-        {
-            if(data.shipping.services[i].method == serviceCode)
-            {
-                if (data.shipping.services[i].taxes.length != 0)
-                {
-                    for(var j=0; j<data.shipping.services[i].taxes.length; j++)
-                    {
-                        taxes += data.shipping.services[i].taxes[j].amount;
-                    }
-                }
-            }
-        }
-        return taxes.toFixed(2);
-    },
-
-    /**
-     * Returns appropriate taxes according to the shipping method.
-     *
-     * @param serviceCode
-     * @param data
-     * @returns {number}
-     */
-    getCartTaxes : function(serviceCode, data) {
-        var taxes = parseFloat(UtilityContainer.getTaxes(data)),
-            shippingTaxes = parseFloat(UtilityContainer.getShipmentTaxes(serviceCode, data)),
-            totalTaxes = taxes + shippingTaxes;
-
-        return totalTaxes;
-    },
-
-    /**
-     * Returns total price (subtotal + taxes + shipping taxes)
-     * Saves total in sessionStorage (for live update)
-     *
-     * @param data
-     * @returns {string}
-     */
-    getCartTotal : function(serviceCode, data) {
-        var taxes = parseFloat(UtilityContainer.getCartTaxes(serviceCode.method, data)),
-            shipping = parseFloat(UtilityContainer.getCheapestShippingMethod(data).fare),
-            subtotal = parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()),
-            total = (taxes + shipping + subtotal).toFixed(2);
-
-        return total;
-    },
-
-    /**
-     * Retrieves the query parameters from the URL.
-     * Courtesy of http://stackoverflow.com/a/1917916
-     *
-     * @returns object
-     */
-    urlGetParameters : function() {
-
-        // Performance check.
-        var query = document.location.search.substr(1);
-        if (query.length < 1) {
-            return {};
-        }
-
-        // Loop through query elements.
-        var kvp = query.split('&'), index, pair, key, value, pairs = {};
-        for (index in kvp)
-        {
-            // Skip parameters without any values.
-            if (kvp[index].indexOf('=') < 1) {
-                continue;
-            }
-
-            // Save query value.
-            pair = kvp[index].split('=');
-            key = decodeURIComponent(pair[0]), value = decodeURIComponent(pair[1]);
-            pairs[key] = value;
-
-            // Split up queries with a ";" in the value.
-            if (value.indexOf(';') > -1) {
-                pairs[key] = value.split(';');
-            }
-        }
-
-        return pairs;
-    },
-
-    /**
-     * Adds one or more query parameters to the URL and reloads the page.
-     * Courtesy of http://stackoverflow.com/a/1917916
-     *
-     * @param mixed key     Either a query key, or an object representing all the key-pair values to be added.
-     * @param mixed value   Query value, or null if key is an object.
-     * @constructor
-     */
-    urlAddParameters : function(key, value) {
-
-        // We either accept a key-value pair, or a query object.
-        var params = {};
-        if (typeof key == "object") {
-            params = key;
-        } else if (typeof key == "string" && typeof value != "undefined") {
-            params[key] = value;
-        } else {
-            return console.log("Invalid query parameters.");
-        }
-
-        // Add query parameters to existing ones.
-        var query = this.urlGetParameters(), index;
-        for (index in params) {
-            query[index] = params[index];
-        }
-
-        // Build query string and reload the page.
-        document.location.search = this.urlBuildQuery(query);
-    },
-
-    urlRemoveParameters : function(key) {
-
-        key = typeof key == "string" ? [key] : key;
-
-        // Try to remove one or more query parameters.
-        var query = this.urlGetParameters();
-        key.forEach(function(param, index, keys)
-        {
-            if (typeof query[param] != "undefined") {
-                delete query[param];
-            }
-        });
-
-        // Update the URL query.
-        document.location.search = this.urlBuildQuery(query);
-    },
-
-    urlBuildQuery : function(query) {
-
-        // Build query string.
-        // We use encodeURIComponent() instead of the deprecated escape() function.
-        var newQuery = [];
-        for (var index in query) {
-            if (typeof query[index] != "undefined" && query[index] != null)
-            {
-                // Concatenate arrays.
-                if (typeof query[index] == 'object') {
-                    query[index] = query[index].join(';');
-                }
-
-                newQuery.push(encodeURIComponent(index) +'='+ encodeURIComponent(query[index]));
-            }
-        }
-
-        return "?"+ (newQuery.length > 1 ? newQuery.join('&') : newQuery[0]);
-    }
-};
-
-
+});
 /**
  * Container responsible for initializing the checkout page.
  * Overall logic is handled in js/dev/actions/checkout/*.js
@@ -1922,6 +1997,164 @@ var checkoutValidationContainer = {
         self.removeErrorClassFromPostcode(shippingInformation.postcodeInput, shippingInformation.country);
         self.removeErrorClassFromPostcode(billingInformation.postcodeInput, billingInformation.country);
     }
+}
+
+/**
+ * Container responsible for handling the logic of the wish list page.
+ * Layout handled in dev/components/site/wishlist.js
+ *
+ * @type {{createWishlistElement: Function, renderWishlist: Function, removeWishlistElement: Function, init: Function}}
+ */
+var wishlistLogicContainer = {
+
+    /**
+     * Create a list layout element from the information passed as an argument.
+     *
+     * Rounding to 2 decimals, courtesy of http://stackoverflow.com/a/6134070.
+     *
+     * @param item
+     */
+    createWishlistElement: function(item) {
+        var self = wishlistLogicContainer,
+            element =
+            '<div class="col-md-12 list-layout-element">' +
+            '<div class="col-md-2">' +
+            '<img src=' + item.thumbnail_lg + '>' +
+            '</div>' +
+            '<div class="col-md-10">' +
+            '<button class="btn btn-outline btn-danger-outline pull-right btn-lg inline-block padding-side-lg removeFavoriteButton" data-product="' + item.product + '">Remove from wishlist </button>' +
+            '<button class="btn btn-success buybutton pull-right btn-lg inline-block padding-side-lg"' +
+            'data-product="' + item.product + '"' +
+            'data-price="' + item.price + '"' +
+            'data-thumbnail="' + item.thumbnail + '"' +
+            'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
+            'data-name="' + item.name + '"' +
+            'data-quantity="' + item.quantity  + '"' + ">" +
+            'Add to cart </button>' +
+            '<a href=' + item.link + '><h4 style="margin-top: 5px">' + item.name + '</h4></a>' +
+            '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
+            '</div>' +
+            '</div>';
+
+        //Localize button (default in english)
+        self.localizeWishlistButton();
+
+        //Append elements
+        $(".list-layout-element-container").append(element);
+    },
+
+    /**
+     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
+     * The creation is handled in createWishlistElement function.
+     *
+     */
+    renderWishlist: function() {
+        var self = wishlistLogicContainer;
+
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
+            {
+                self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
+            }
+        }
+    },
+
+    localizeWishlistButton: function() {
+        $(".list-layout-element .buybutton").text(Localization.add_cart);
+        $(".list-layout-element .removeFavoriteButton").text(Localization.wishlist_remove);
+    },
+
+    /**
+     * Remove the element from the wishlist after a subtle animation.
+     *
+     */
+    removeWishlistElement: function () {
+        $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
+            //Animate the element.
+            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
+
+            //Delete the element from localStorage.
+            localStorage.removeItem("_wish_product " + $(this).data("product"));
+
+            //Set wishlist header quantity.
+            wishlistContainer.setNumberOfProductsInHeader();
+
+            //Set wishlist badge
+            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
+        });
+    },
+
+    init: function () {
+        var self = wishlistLogicContainer;
+
+        //Calls the layout container (wishlistContainer).
+        wishlistContainer.init();
+
+        //Initialize the logic.
+        self.renderWishlist();
+        self.removeWishlistElement();
+    }
+
+}
+/**
+ * Container responsible for initializing the cart drawer feature.
+ *
+ * @type {{buyButtonClick: Function, getEstimateClick: Function, init: Function}}
+ */
+var cartDrawerInitContainer = {
+
+    /**
+     * Event triggered when a buy button is clicked.
+     *
+     */
+    buyButtonClick : function () {
+        $("body").on("click", ".buybutton", function() {
+            cartDisplayContainer.animateIn();
+            cartLogicContainer.addItem(UtilityContainer.buyButton_to_Json($(this)));
+            cartLogicContainer.storeItem(UtilityContainer.buyButton_to_Json($(this)));
+
+            //We remove the "Your cart is empty" message at the top every time we add an item.
+            //TODO : Maybe improve it?
+            $("#cart-items .empty-cart").addClass("hidden");
+        });
+    },
+
+    /**
+     * Event triggered when the Calculate button (to get a price estimate) is clicked.
+     *
+     */
+    getEstimateClick: function () {
+        $(".getEstimate").on("click", function() {
+            //Fields validation + Empty cart validation.
+            if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate #country").val())
+                && UtilityContainer.validateEmptyFields([$("#postcode")])
+                && !UtilityContainer.validateEmptyCart()) {
+
+                $(this).html('<i class="fa fa-spinner fa-spin"></i>');
+
+                cartLogicContainer.ajaxCall();
+
+            }
+            else if (UtilityContainer.validateEmptyCart()) {
+                $("#cart-items .empty-cart").removeClass("hidden");
+            }
+            else {
+                UtilityContainer.addErrorClassToFieldsWithRules($("#postcode"));
+            }
+        });
+    },
+
+    init: function () {
+        cartDisplayContainer.init();
+        cartLogicContainer.init();
+        cartDisplayContainer.setCartItemsHeight();
+
+        var self = cartDrawerInitContainer;
+        self.buyButtonClick();
+        self.getEstimateClick();
+    }
+
 }
 
 /**
@@ -2210,238 +2443,3 @@ var cartLogicContainer = {
         cartLogicContainer.setCartSubtotal();
     }
 };
-
-/**
- * Container responsible for initializing the cart drawer feature.
- *
- * @type {{buyButtonClick: Function, getEstimateClick: Function, init: Function}}
- */
-var cartDrawerInitContainer = {
-
-    /**
-     * Event triggered when a buy button is clicked.
-     *
-     */
-    buyButtonClick : function () {
-        $("body").on("click", ".buybutton", function() {
-            cartDisplayContainer.animateIn();
-            cartLogicContainer.addItem(UtilityContainer.buyButton_to_Json($(this)));
-            cartLogicContainer.storeItem(UtilityContainer.buyButton_to_Json($(this)));
-
-            //We remove the "Your cart is empty" message at the top every time we add an item.
-            //TODO : Maybe improve it?
-            $("#cart-items .empty-cart").addClass("hidden");
-        });
-    },
-
-    /**
-     * Event triggered when the Calculate button (to get a price estimate) is clicked.
-     *
-     */
-    getEstimateClick: function () {
-        $(".getEstimate").on("click", function() {
-            //Fields validation + Empty cart validation.
-            if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate #country").val())
-                && UtilityContainer.validateEmptyFields([$("#postcode")])
-                && !UtilityContainer.validateEmptyCart()) {
-
-                $(this).html('<i class="fa fa-spinner fa-spin"></i>');
-
-                cartLogicContainer.ajaxCall();
-
-            }
-            else if (UtilityContainer.validateEmptyCart()) {
-                $("#cart-items .empty-cart").removeClass("hidden");
-            }
-            else {
-                UtilityContainer.addErrorClassToFieldsWithRules($("#postcode"));
-            }
-        });
-    },
-
-    init: function () {
-        cartDisplayContainer.init();
-        cartLogicContainer.init();
-        cartDisplayContainer.setCartItemsHeight();
-
-        var self = cartDrawerInitContainer;
-        self.buyButtonClick();
-        self.getEstimateClick();
-    }
-
-}
-
-/**
- * Container responsible for handling the logic of the wish list page.
- * Layout handled in dev/components/site/wishlist.js
- *
- * @type {{createWishlistElement: Function, renderWishlist: Function, removeWishlistElement: Function, init: Function}}
- */
-var wishlistLogicContainer = {
-
-    /**
-     * Create a list layout element from the information passed as an argument.
-     *
-     * Rounding to 2 decimals, courtesy of http://stackoverflow.com/a/6134070.
-     *
-     * @param item
-     */
-    createWishlistElement: function(item) {
-        var self = wishlistLogicContainer,
-            element =
-            '<div class="col-md-12 list-layout-element">' +
-            '<div class="col-md-2">' +
-            '<img src=' + item.thumbnail_lg + '>' +
-            '</div>' +
-            '<div class="col-md-10">' +
-            '<button class="btn btn-outline btn-danger-outline pull-right btn-lg inline-block padding-side-lg removeFavoriteButton" data-product="' + item.product + '">Remove from wishlist </button>' +
-            '<button class="btn btn-success buybutton pull-right btn-lg inline-block padding-side-lg"' +
-            'data-product="' + item.product + '"' +
-            'data-price="' + item.price + '"' +
-            'data-thumbnail="' + item.thumbnail + '"' +
-            'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
-            'data-name="' + item.name + '"' +
-            'data-quantity="' + item.quantity  + '"' + ">" +
-            'Add to cart </button>' +
-            '<a href=' + item.link + '><h4 style="margin-top: 5px">' + item.name + '</h4></a>' +
-            '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
-            '</div>' +
-            '</div>';
-
-        //Localize button (default in english)
-        self.localizeWishlistButton();
-
-        //Append elements
-        $(".list-layout-element-container").append(element);
-    },
-
-    /**
-     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
-     * The creation is handled in createWishlistElement function.
-     *
-     */
-    renderWishlist: function() {
-        var self = wishlistLogicContainer;
-
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
-            {
-                self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
-            }
-        }
-    },
-
-    localizeWishlistButton: function() {
-        $(".list-layout-element .buybutton").text(Localization.add_cart);
-        $(".list-layout-element .removeFavoriteButton").text(Localization.wishlist_remove);
-    },
-
-    /**
-     * Remove the element from the wishlist after a subtle animation.
-     *
-     */
-    removeWishlistElement: function () {
-        $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
-            //Animate the element.
-            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
-
-            //Delete the element from localStorage.
-            localStorage.removeItem("_wish_product " + $(this).data("product"));
-
-            //Set wishlist header quantity.
-            wishlistContainer.setNumberOfProductsInHeader();
-
-            //Set wishlist badge
-            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
-        });
-    },
-
-    init: function () {
-        var self = wishlistLogicContainer;
-
-        //Calls the layout container (wishlistContainer).
-        wishlistContainer.init();
-
-        //Initialize the logic.
-        self.renderWishlist();
-        self.removeWishlistElement();
-    }
-
-}
-/**
- * Entry point of script.
- *
- */
-$(document).ready(function () {
-
-    /**
-     * Sets up the ajax token for all ajax requests
-     *
-     */
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            'locale': $('html').attr('lang')
-        }
-    });
-
-    /**
-     * Initialize checkout logic.
-     *
-     */
-    checkoutInitContainer.init();
-
-    /**
-     * Initialize cart drawer logic.
-     *
-     */
-    cartDrawerInitContainer.init();
-
-    /**
-     * Initialize category container
-     *
-     */
-    categoryContainer.init();
-
-    /**
-     * Initialize overlay plugin.
-     *
-     */
-    paymentOverlayContainer.init();
-
-    /**
-     * Initialize navigation header.
-     *
-     */
-    headerContainer.init();
-
-    /**
-     * Initialize favorite products feature.
-     *
-     */
-    productLayoutFavoriteContainer.init();
-
-    /**
-     * Initialize product formats feature.
-     *
-     */
-    productFormatContainer.init();
-
-    /**
-     * Initialize wishlist page.
-     *
-     */
-    wishlistLogicContainer.init();
-
-    /**
-     * Global initialization of elements.
-     *
-     */
-    //fancy plugin for product page (quantity input)
-    $(".input-qty").TouchSpin({
-        initval: 1
-    });
-
-});
-//# sourceMappingURL=boukem2.js.map

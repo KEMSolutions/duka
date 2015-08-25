@@ -1,36 +1,12 @@
-var elixir = require('laravel-elixir');
+var elixir = require('laravel-elixir'),
+    gulp = require('gulp'),
+    concat = require('gulp-concat'),
+    uglify = require('gulp-uglify');
 
-/*
- |--------------------------------------------------------------------------
- | Elixir Asset Management
- |--------------------------------------------------------------------------
- |
- | Elixir provides a clean, fluent API for defining some basic Gulp tasks
- | for your Laravel application. By default, we are compiling the Less
- | file for our application, as well as publishing vendor resources.
- |
- */
 
-elixir(function(mix) {
-    mix.scripts([
-        "../../../public/js/dev/components/checkout/billing.js",
-        "../../../public/js/dev/components/checkout/estimate.js",
-        "../../../public/js/dev/components/checkout/location.js",
-        "../../../public/js/dev/components/checkout/payment.js",
-        "../../../public/js/dev/components/layout/cart-drawer.js",
-        "../../../public/js/dev/components/layout/header.js",
-        "../../../public/js/dev/components/layout/payment-overlay.js",
-        "../../../public/js/dev/components/products/layout/product-layout-favorite.js",
-        "../../../public/js/dev/components/products/product-format.js",
-        "../../../public/js/dev/components/site/category/category.js",
-        "../../../public/js/dev/components/site/wishlist.js",
-        "../../../public/js/dev/utils/utility.js",
-        "../../../public/js/dev/actions/checkout/checkout-init.js",
-        "../../../public/js/dev/actions/checkout/checkout-logic.js",
-        "../../../public/js/dev/actions/checkout/checkout-validation.js",
-        "../../../public/js/dev/actions/layout/cart-drawer-logic.js",
-        "../../../public/js/dev/actions/layout/cart-drawer-init.js",
-        "../../../public/js/dev/actions/site/wishlist-logic.js",
-        "../../../public/js/dev/actions/init.js"
-    ], "public/js/prod/boukem2.js");
+gulp.task('js', function () {
+    return gulp.src(['public/js/dev/utils/*.js', 'public/js/dev/components/**/*.js', 'public/js/dev/actions/**/*.js' ])
+        .pipe(concat('boukem2.js'))
+        //.pipe(uglify())
+        .pipe(gulp.dest('public/js/prod')) //the destination folder
 });
