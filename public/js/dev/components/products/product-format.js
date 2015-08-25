@@ -97,7 +97,7 @@ var productFormatContainer = {
                 'data-name="' + format.data("name") +'"' +
                 'data-format="' + format.data("format") +'"' +
                 'data-inventory-count="' + format.data("inventory-count") +'"' +
-                'data-quantity="1"' +
+                'data-quantity="' + format.data("quantity") + '"' +
                 'data-link="' + format.data("link") +'"' +
                     '>' +
                 '<div class="add-cart">' +

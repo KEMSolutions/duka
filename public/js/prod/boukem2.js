@@ -894,7 +894,7 @@ var productFormatContainer = {
                 'data-name="' + format.data("name") +'"' +
                 'data-format="' + format.data("format") +'"' +
                 'data-inventory-count="' + format.data("inventory-count") +'"' +
-                'data-quantity="1"' +
+                'data-quantity="' + format.data("quantity") + '"' +
                 'data-link="' + format.data("link") +'"' +
                     '>' +
                 '<div class="add-cart">' +
@@ -2063,9 +2063,17 @@ var cartLogicContainer = {
     modifyQuantityBeforeBuying : function() {
         $("#item_quantity").on("change", function() {
 
+            // Cache buybutton and format selection buttons.
             var $buybutton = $(this).closest(".input-qty-detail").find(".buybutton"),
+                $formatSelection = $(this).closest(".input-qty-detail").find(".format-selection"),
                 self = $(this);
 
+            // Set quantity in html5 data attributes for each format selection button.
+            $formatSelection.each(function() {
+                this.dataset.quantity = parseInt(self.val());
+            })
+
+            // Set quantity in html5 data attribute for buybutton.
             $buybutton.data("quantity", parseInt(self.val()));
 
         });
