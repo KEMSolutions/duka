@@ -108,7 +108,9 @@ class ApiController extends Controller
     {
         // Retrieve shipping address.
         $shipAddress = Request::input('shipping_address');
-        $shipAddress['name'] = $shipAddress['firstname'] .' '. $shipAddress['lastname'];
+        if (!array_key_exists('name', $shipAddress)) {
+            $shipAddress['name'] = $shipAddress['firstname'] .' '. $shipAddress['lastname'];
+        }
 
         // Retrieve billing address.
         $useShipAddress = Request::input('use_shipping_address', false);
@@ -116,7 +118,9 @@ class ApiController extends Controller
             $billAddress = null;
         } else {
             $billAddress = Request::input('billing_address');
-            $billAddress['name'] = $billAddress['firstname'] .' '. $billAddress['lastname'];
+            if (!array_key_exists('name', $billAddress)) {
+                $billAddress['name'] = $billAddress['firstname'] .' '. $billAddress['lastname'];
+            }
         }
 
         // Retrieve customer details.

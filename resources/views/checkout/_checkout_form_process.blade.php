@@ -13,20 +13,20 @@
             <div class="row">
                 <div class="form-group one-half">
                     <label for="shipping_address[firstname]" class="control-label" >{{ Lang::get("boukem.first_name") }}</label>
-                    <input type="text" name="shipping_address[firstname]" id="shippingFirstname" class="form-control firstname" disabled/>
+                    <input type="text" name="shipping_address[firstname]" id="shippingFirstname" class="form-control firstname">
                 </div>
 
                 <div class="form-group one-half">
                     <label for="shipping_address[lastname]" class="control-label" >{{ Lang::get("boukem.last_name") }}</label>
-                    <input type="text" name="shipping_address[lastname]" id="shippingLastname" class="form-control lastname" disabled/>
+                    <input type="text" name="shipping_address[lastname]" id="shippingLastname" class="form-control lastname"/>
                 </div>
             </div>
 
-            {{-- Name field --}}
+            {{-- TODO: update this when the first name/last names have been deleted --}}
             <div class="row">
                 <div class="col-sm-12">
                     <label for="shipping_address[name]" class="control-label">{{ Lang::get("boukem.name") }}</label>
-                    <input type="text" name="shipping_address[name]" id="shippingName" class="form-control name" value="{{ Customers::getDefaultAddress()->name }}" required/>
+                    <input type="text" name="shipping_address[name]" id="shippingName" class="form-control name" value="{{ Customers::getDefaultAddress()->name }}" disabled/>
                 </div>
             </div>
 
@@ -156,7 +156,6 @@
                     </div>
                 </div>
             </div><!-- billing panel -->
-
 
             <button class="btn btn-three pull-right btn-lg" id="estimateButton">{{ Lang::get("boukem.continue") }}</button>
         </div> <!-- panel-body -->
