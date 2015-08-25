@@ -1,6 +1,7 @@
 <?php namespace App\Models;
 
 use Crypt;
+use Store;
 use Customers;
 use Validator;
 use Localization;
@@ -147,7 +148,12 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
         // Default locale.
         if (!isset($this->locale['language']) || !Localization::checkLocaleInSupportedLocales($this->locale['language']))
         {
-            $this->locale['id'] = Localization::getCurrentLocale() .'-CA';
+            // Retrieve the full locale ID for our current locale.
+            $locales = Store::locales();
+            $lang = Localization::getCurrentLocale();
+            $localeID = isset($locales[$lang]) ? $locales[$lang]['id'] : current($locales)['id'];
+
+            $this->locale['id'] = $localeID;
             $this->locale['name'] = Localization::getCurrentLocaleNativeReading();
             $this->locale['language'] = Localization::getCurrentLocale();
             $this->locale['language_name'] = Localization::getCurrentLocaleName();
