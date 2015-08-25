@@ -32,6 +32,7 @@ class AuthController extends Controller
         $this->loginPath = route('auth.login');
         $this->redirectAfterLogout = $this->redirectPath = route('home');
 
+		// Enabled the guest middleware.
 		$this->middleware('guest', ['except' => ['getLogout', 'getAccount', 'postAccount']]);
 	}
 
