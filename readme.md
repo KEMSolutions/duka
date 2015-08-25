@@ -1,17 +1,21 @@
 # Boukem 2
 
-TODO: include a nice & short description... :)
+Boukem 2 is a fully functional e-commerce application built using the [KEM API](http://docs.kem.guru).
 
 # Setup
 
 Boukem 2 is built on the popular PHP framework [Laravel](http://laravel.com). To get started, make sure
-[composer is installed](https://getcomposer.org/) on your machine and run the following commands from the root folder.
+[composer is installed](https://getcomposer.org/).
 
-1. Install the dependencies: `composer install`.
-2. Create an environment file: `cp .env.sample .env`.
-3. Setup the database: `cp storage/database.sqlite.sample storage/database.sqlite`.
+1. Fork this repository and clone it on your machine.
+2. Create an environment file: `cp .env.sample .env` and update the values accordingly.
+4. Install the dependencies: `composer install`.
 
-You're now ready to go! Have a look at the environment file and update the relevant parameters.
+Since running composer doesn't require root access, Boukem 2 can be deployed on almost any shared hosting running PHP 5.5.9+. Note that you might also have to create a symlink to boukem's /public folder:
+
+E.g. on Cpanel: ```ln -s my-boukem-fork/public public_html```
+
+Boukem 2 source code contains a Procfile, allowing it to run on Heroku on apache2, out of the box. At this moment, nginx is not supported.
 
 # Quick Reference
 
