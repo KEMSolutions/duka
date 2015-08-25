@@ -110,7 +110,7 @@ class Customers extends BaseObject
     {
         $customer = $this->getDefault();
 
-        return count($customer->addresses) ? $customer->addresses[0] : [
+        return count($customer->addresses) ? $customer->addresses[0] : (object) [
             'line1' => '',
             'line2' => '',
             'name' => $customer->name,
