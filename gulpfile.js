@@ -28,14 +28,14 @@ gulp.task('js', function () {
 gulp.task('semantic-css', function() {
     return gulp.src(['public/semantic/dev/css/*.css'])
         .pipe(concatCss('semantic.css'))
-        .pipe(gulp.dest('public/css'))
+        .pipe(gulp.dest('public/semantic/prod'))
 });
 
 gulp.task('semantic-js', function () {
     return gulp.src(['public/semantic/dev/js/*.js'])
         .pipe(concat('semantic.js'))
         //.pipe(uglify())
-        .pipe(gulp.dest('public/js_assets/semantic'))
+        .pipe(gulp.dest('public/semantic/prod'))
 });
 
 gulp.task('semantic', ['semantic-css', 'semantic-js']);

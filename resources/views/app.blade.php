@@ -24,7 +24,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.0.8/semantic.css"/>
 
 	<!-- Semantic UI css dependencies -->
-	<link rel="stylesheet" href="{{ asset('/css/semantic.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/semantic/prod/semantic.css') }}"/>
 
 	<!-- Custom css -->
 	@yield("custom_css")
@@ -61,7 +61,7 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
 	<!-- Semantic ui dependencies -->
-	<script src="/js_assets/semantic/semantic.js"></script>
+	<script src="/semantic/prod/semantic.js"></script>
 
 	@include("_dynamic_resources")
 
