@@ -29,11 +29,13 @@ class Store extends BaseObject
     {
         $locales = Cache::remember('store.locales', Carbon::now()->addDay(), function()
         {
+            $locales = [];
             $results = KemAPI::get('store', ['embed' => 'locales']);
 
             // Format results for use with Mcamara\LaravelLocalization.
             foreach ($results->locales as $loc) {
                 $locales[$loc->language] = [
+                    'id' => $loc->id,
                     'name' => $loc->language_name,
                     'native' => $loc->language_name,
                     'script' => $loc->script
@@ -81,4 +83,3 @@ class Store extends BaseObject
         return Utilities::setImageSizeAndMode($width, $height, '', $this->info()->logo->url);
     }
 }
-
