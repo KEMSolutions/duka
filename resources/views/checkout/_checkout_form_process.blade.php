@@ -9,6 +9,7 @@
         </div>
         <div class="panel-body">
 
+            {{-- TODO: delete this and update the related javascript --}}
             <div class="row">
                 <div class="form-group one-half">
                     <label for="shipping_address[firstname]" class="control-label" >{{ Lang::get("boukem.first_name") }}</label>
@@ -21,6 +22,7 @@
                 </div>
             </div>
 
+            {{-- Name field --}}
             <div class="row">
                 <div class="col-sm-12">
                     <label for="shipping_address[name]" class="control-label">{{ Lang::get("boukem.name") }}</label>
@@ -28,15 +30,23 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="shipping_address[line1]" class="control-label">{{ Lang::get("boukem.address_1") }}</label>
-                <input type="text" name="shipping_address[line1]" id="shippingAddress1" class="form-control address1" value="{{ Customers::getDefaultAddress()->line1 }}" required/>
-            </div>
-            <div class="form-group">
-                <label for="shipping_address[line2]" class="control-label">{{ Lang::get("boukem.address_2") }} ( {{ Lang::get("boukem.optional") }} )</label>
-                <input type="text" name="shipping_address[line2]" id="shippingAddress2" class="form-control address2" value="{{ Customers::getDefaultAddress()->line2 }}"/>
+            {{-- Address line 1 --}}
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="shipping_address[line1]" class="control-label">{{ Lang::get("boukem.address_1") }}</label>
+                    <input type="text" name="shipping_address[line1]" id="shippingAddress1" class="form-control address1" value="{{ Customers::getDefaultAddress()->line1 }}" required/>
+                </div>
             </div>
 
+            {{-- Address line 2 --}}
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="shipping_address[line2]" class="control-label">{{ Lang::get("boukem.address_2") }} ( {{ Lang::get("boukem.optional") }} )</label>
+                    <input type="text" name="shipping_address[line2]" id="shippingAddress2" class="form-control address2" value="{{ Customers::getDefaultAddress()->line2 }}"/>
+                </div>
+            </div>
+
+            {{-- Conutry & state --}}
             <div class="row">
                 <div class="form-group one-half">
                     <label for="shipping_address[country]">{{ Lang::get("boukem.country") }}</label>
@@ -53,9 +63,9 @@
                         <optgroup data-country="MX" label="{{ Lang::get("boukem.mex_states") }}"></optgroup>
                     </select>
                 </div>
-
             </div>
 
+            {{-- City & postal code --}}
             <div class="row">
                 <div class="form-group one-half">
                     <label for="shipping_address[city]" class="control-label">{{ Lang::get("boukem.city") }}</label>
@@ -68,7 +78,7 @@
                 </div>
             </div>
 
-
+            {{-- Email & phone # --}}
             <div class="row">
                 <div class="form-group one-half">
                     <span class="hidden label label-info pull-right" id="why_email" data-toggle="tooltip" data-placement="left" data-trigger="click" title="{{ Lang::get("boukem.keep_email") }}">{{ Lang::get("boukem.why") }}</span>
