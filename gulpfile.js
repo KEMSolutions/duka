@@ -38,8 +38,7 @@ gulp.task('semantic-js', function () {
         .pipe(gulp.dest('public/semantic/prod'))
 });
 
-gulp.task('semantic', ['semantic-css', 'semantic-js']);
-
 
 // Default task.
+gulp.task('semantic', ['semantic-css', 'semantic-js']);
 gulp.task('default', ['js', 'semantic']);
