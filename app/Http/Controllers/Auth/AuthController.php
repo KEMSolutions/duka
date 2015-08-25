@@ -60,6 +60,7 @@ class AuthController extends Controller
         }
 
         // Make sure we're editing a valid customer record.
+		// TODO: review whether this step is necessary...
         if (!$record = Customers::get(Auth::user()->id)) {
             Log::error('Could not retrieve customer record while updating account details.');
             abort(500);
