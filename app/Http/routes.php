@@ -34,10 +34,8 @@ Route::group([
     Route::get('account',           ['as' => 'auth.account', 'uses' => 'Auth\AuthController@getAccount']);
     Route::post('account',          ['as' => 'auth.account.action', 'uses' => 'Auth\AuthController@postAccount']);
 
-    Route::controllers([
-//        'auth' => 'Auth\AuthController',
-        'password' => 'Auth\PasswordController',
-    ]);
+    Route::get('reset',             ['as' => 'auth.reset', 'uses' => 'Auth\PasswordController@getEmail']);
+    Route::post('reset',            ['as' => 'auth.reset', 'uses' => 'Auth\PasswordController@postEmail']);
 
     // Wish list.
     Route::get('wishlist',          ['as' => 'wishlist', 'uses' => 'WishlistController@index']);

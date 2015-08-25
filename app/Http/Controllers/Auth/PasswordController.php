@@ -23,6 +23,11 @@ class PasswordController extends Controller {
 	 */
 	public function __construct()
 	{
+		// Email subject for password resets.
+		// TODO: localize email subject for password reset.
+		// $this->subject = Lang::get('');
+
+		// Enabled the guest middleware on this controller.
 		$this->middleware('guest');
 	}
 
