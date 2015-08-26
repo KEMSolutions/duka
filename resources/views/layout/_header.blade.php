@@ -165,9 +165,8 @@
             <div class="ui fluid action input">
                 <input type="text" placeholder="@lang('boukem.search')">
 
-                <select class="ui selection dropdown dropdown-select">
-                    <option value="@lang("boukem.all")">@lang("boukem.all")</option>
-                    <option value="@lang("boukem.categories")">@lang("boukem.categories")</option>
+                <select class="ui selection dropdown dropdown-select compact">
+                    <option value="@lang("boukem.all_categories")">@lang("boukem.all_categories")</option>
                     <option value="@lang("boukem.brands")">@lang("boukem.brands")</option>
                     <option value="@lang("boukem.health_issues")">@lang("boukem.health_issues")</option>
                     <option value="@lang("boukem.featured_products")">@lang("boukem.featured_products")</option>
@@ -178,6 +177,90 @@
         </div>
 
         <div class="four wide column right floated text-center">
+
+            {{-- Mobile only categories menu. --}}
+            {{--<div class="ui grid mobile only">--}}
+                {{--<div class="two column mobile only">--}}
+                    {{--<div class="ui icon btn btn-one">--}}
+                        {{--<div class="ui dropdown dropdown-select">--}}
+                            {{--<div class="text">--}}
+                                {{--{{ Lang::get("boukem.shop_by") }}{{ Lang::get("boukem.categories") }}--}}
+                            {{--</div>--}}
+                            {{--<i class="dropdown icon"></i>--}}
+
+                            {{--<div class="menu">--}}
+                                {{--@foreach(Categories::getAllCategories() as $category)--}}
+                                    {{--@if(count($category->children) > 0)--}}
+                                        {{--<div class="item">--}}
+                                            {{--<span class="text">{{ $category->name }}</span>--}}
+                                            {{--<i class="fa fa-caret-right pull-right"></i>--}}
+                                            {{--<div class="menu">--}}
+                                                {{--@foreach($category->children as $children)--}}
+                                                    {{--<div class="item">--}}
+                                                        {{--<a class="dark" href="/{{ Localization::getCurrentLocale() }}/cat/{{ $children->slug }}">{{ $children->name }}</a>--}}
+                                                    {{--</div>--}}
+                                                {{--@endforeach--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                    {{--@else--}}
+                                        {{--<div class="item">--}}
+                                            {{--@if(isset($category->slug) && isset($category->name))--}}
+                                                {{--<a class="dark no-decoration"--}}
+                                                   {{--href="/{{ Localization::getCurrentLocale() }}/cat/{{ $category->slug }}">--}}
+                                                    {{--<div class="item">--}}
+                                                        {{--{{ $category->name }}--}}
+                                                    {{--</div>--}}
+                                                {{--</a>--}}
+                                            {{--@endif--}}
+                                        {{--</div>--}}
+                                    {{--@endif--}}
+                                {{--@endforeach--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+            {{-- End of mobile only categories menu. --}}
+
+
+                <div class="ui icon btn btn-one visible-mobile-inline-block">
+                    <div class="ui dropdown dropdown-select">
+                        <div class="text">
+                            {{ Lang::get("boukem.shop_by") }}{{ Lang::get("boukem.categories") }}
+                        </div>
+                        <i class="dropdown icon"></i>
+
+                        <div class="menu">
+                            @foreach(Categories::getAllCategories() as $category)
+                                @if(count($category->children) > 0)
+                                    <div class="item">
+                                        <span class="text">{{ $category->name }}</span>
+                                        <i class="fa fa-caret-right pull-right"></i>
+                                        <div class="menu">
+                                            @foreach($category->children as $children)
+                                                <div class="item">
+                                                    <a class="dark" href="/{{ Localization::getCurrentLocale() }}/cat/{{ $children->slug }}">{{ $children->name }}</a>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="item">
+                                        @if(isset($category->slug) && isset($category->name))
+                                            <a class="dark no-decoration"
+                                               href="/{{ Localization::getCurrentLocale() }}/cat/{{ $category->slug }}">
+                                                <div class="item">
+                                                    {{ $category->name }}
+                                                </div>
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
             <div class="ui icon btn btn-five">
                 <div class="ui top left pointing dropdown dropdown-no-select">
                     <div class="text">

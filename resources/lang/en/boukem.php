@@ -184,6 +184,7 @@ return [
     "name_recommendation"=>":name's recommendation",
     "curated"           =>"Curated results",
     "all_results"       =>"All results",
+    "all_categories"    =>"All Categories",
     "world_shipping"    =>"We ship everywhere in Canada",
     "shipping_estimate" =>"Usually ships within 3 to 7 days.",
     "brand"             =>"Brand",

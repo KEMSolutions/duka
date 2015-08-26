@@ -184,6 +184,7 @@ return [
     "name_recommendation"=>"La suggestion de :name",
     "curated"           =>"Suggestions",
     "all_results"       =>"Tous les résultats",
+    "all_categories"    =>"Toutes les catégories",
     "world_shipping"    =>"Nous livrons à travers tout le Canada",
     "shipping_estimate" =>"Expédition prévue dans les 3 à 7 jours.",
     "brand"             =>"Marque",
