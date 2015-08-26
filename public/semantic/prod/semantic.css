@@ -13246,7 +13246,7 @@ i.flag.zimbabwe:before {
       Stackable
 --------------------*/
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 768px) {
   .ui.stackable.grid {
     width: auto;
   }
@@ -13466,6 +13466,14 @@ i.flag.zimbabwe:before {
 /*******************************
          Theme Overrides
 *******************************/
+
+/* Equivalent of bootstrap hidden-xs */
+
+@media only screen and (max-width: 768px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+}
 
 /*******************************
          Site Overrides

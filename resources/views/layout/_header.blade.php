@@ -177,7 +177,7 @@
             </div>
         </div>
 
-        <div class="four wide column right floated">
+        <div class="four wide column right floated text-center">
             <div class="ui icon btn btn-five">
                 <div class="ui top left pointing dropdown dropdown-no-select">
                     <div class="text">
@@ -248,13 +248,13 @@
         </div>
     </div>
 
-    <div class="row header-banner color-one">
+    <div class="row header-banner color-one hidden-mobile">
         <div class="three wide column text-center border-right">
             <div class="ui dropdown dropdown-no-select pointing item">
 
                 <span class="text header-banner-align">
                     <span class="light">{{ Lang::get("boukem.shop_by") }}</span><strong class="bold"> {{ Lang::get("boukem.categories") }}</strong>
-                    <i class="fa fa-caret-down pull-right" style="line-height: 53px"></i>
+                    <i class="caret down icon"></i>
                 </span>
 
                 <div class="menu fluid">
@@ -288,16 +288,13 @@
             </div>
         </div>
 
-        <div class="one wide column">
             {{-- Back to store link --}}
             @if(strlen(Store::info()->url))
                 <button type="button" class="btn btn-link">
                     <a href="{{ Store::info()->url }}">Back to site</a>
                 </button>
             @endif
-        </div>
 
-        <div class="one wide column">
             {{--Links to custom pages--}}
             @if (count(Pages::all()))
                 @foreach (Pages::all() as $page)
@@ -306,14 +303,13 @@
                     </button>
                 @endforeach
             @endif
-        </div>
 
-        <div class="one wide column">
-            {{--Store contact info--}}
+        {{--Store contact info--}}
+        <div class="two wide column">
             <div class="ui pointing dropdown dropdown-select top left header-banner-align">
                 <span class="text">
                     {{ Lang::get("boukem.contact") }}
-                    <i class="fa fa-caret-down pull-right" style="line-height: 53px"></i>
+                    <i class="caret down icon"></i>
                 </span>
 
                 <div class="menu fluid">
