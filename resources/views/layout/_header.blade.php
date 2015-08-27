@@ -211,7 +211,7 @@
 
         {{-- Store contact info. --}}
             <button type="button" class="btn btn-link">
-                <div class="ui pointing dropdown dropdown-select top left">
+                <div class="ui pointing dropdown dropdown-select top left white">
                     <span class="text">
                         {{ Lang::get("boukem.contact") }}
                         <i class="caret down icon"></i>
