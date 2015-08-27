@@ -210,26 +210,26 @@
             @endif
 
         {{-- Store contact info. --}}
-        <div class="two wide column">
-            <div class="ui pointing dropdown dropdown-select top left header-banner-align">
-                <span class="text">
-                    {{ Lang::get("boukem.contact") }}
-                    <i class="caret down icon"></i>
-                </span>
+            <button type="button" class="btn btn-link">
+                <div class="ui pointing dropdown dropdown-select top left">
+                    <span class="text">
+                        {{ Lang::get("boukem.contact") }}
+                        <i class="caret down icon"></i>
+                    </span>
 
-                <div class="menu fluid">
-                    <div class="item">
-                        <i class="fa fa-phone icon"></i>
-                        {{ Store::info()->support->phone->number }}
-                    </div>
-                    <div class="divider"></div>
-                    <div class="item">
-                        <i class="fa fa-envelope-o icon"></i>
-                        <a href="mailto:{{ Store::info()->support->email }}" class="dark">{{ Store::info()->support->email }}</a>
+                    <div class="menu fluid">
+                        <div class="item">
+                            <i class="fa fa-phone icon"></i>
+                            {{ Store::info()->support->phone->number }}
+                        </div>
+                        <div class="divider"></div>
+                        <div class="item">
+                            <i class="fa fa-envelope-o icon"></i>
+                            <a href="mailto:{{ Store::info()->support->email }}" class="dark">{{ Store::info()->support->email }}</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </button>
     </div>
     {{-- End of second row. --}}
 
