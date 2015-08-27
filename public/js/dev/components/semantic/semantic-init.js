@@ -1,28 +1,54 @@
 /**
- * Object responsible for handling the initialization of all semantic ui modules.
+ * Object responsible for activating semantic ui features.
  *
- * @type {{initDropdownModule: Function, init: Function}}
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
  */
 var semanticInitContainer = {
 
     /**
-     * Initialize dropdown module.
+     * Initialize modules
      *
      */
-    initDropdownModule : function() {
-        //Enable selection on clicked items
-        $(".ui.dropdown-select").dropdown();
+    module: {
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule: function() {
+            //Enable selection on clicked items
+            $(".ui.dropdown-select").dropdown();
 
-        //Prevent selection on clicked items
-        $(".ui.dropdown-no-select").dropdown({
-                action: "select"
-            }
-        );
+            //Prevent selection on clicked items
+            $(".ui.dropdown-no-select").dropdown({
+                    action: "select"
+                }
+            );
+        },
+
+        /**
+         * Initialize rating module.
+         *
+         */
+        initRatingModule: function () {
+            $(".ui.rating").rating();
+        }
     },
 
-    init: function () {
-        var self = semanticInitContainer;
+    /**
+     * Specify semantic custom behavior.
+     *
+     */
+    behaviors: {
 
-        self.initDropdownModule();
+    },
+
+
+
+    init: function () {
+        var self = semanticInitContainer,
+            module = self.module;
+
+        module.initDropdownModule();
+        module.initRatingModule();
     }
 }
