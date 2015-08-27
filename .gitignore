@@ -4,9 +4,9 @@
 /vendor
 
 # ctags & other project files.
-.tags
-.tags_swap
-tags
+/.tags
+/.tags_swap
+/tags
 /.idea
 
 # Ignore OS X finder files
