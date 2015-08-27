@@ -1,3 +1,12 @@
+{{-- FOOTER --}}
+
+{{--
+
+    The footer is using a stackable vertically padded grid with a container.
+    That allows the grid to be vertically aligned.
+
+--}}
+
 <footer class="color-four">
     <div class="ui grid container stackable vertically padded">
         <div class="row">
