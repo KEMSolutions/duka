@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Auth;
+<?php namespace App\Http\Controllers;
 
 use Log;
 use Auth;
@@ -16,19 +16,13 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 
-class AuthController extends Controller
+class AccountController extends Controller
 {
 	use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
-	/**
-	 * Create a new authentication controller instance.
-	 *
-	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
-	 * @param  \Illuminate\Contracts\Auth\Registrar  $registrar
-	 */
 	public function __construct()
 	{
-        // Define some paths.
+        // These paths are used internally by Laravel.
         $this->loginPath = route('auth.login');
         $this->redirectAfterLogout = $this->redirectPath = route('home');
 
@@ -36,20 +30,26 @@ class AuthController extends Controller
 		$this->middleware('guest', ['except' => ['getLogout', 'getAccount', 'postAccount']]);
 	}
 
+	/**
+	 * Displays the form allowing customers to edit their details.
+	 */
     public function getAccount()
-    {
-        // Check that user is authenticated.
-        if (!Auth::check()) {
+	{
+		// Make sure user is logged in.
+		if (!Auth::check()) {
             return redirect(route('auth.login'));
         }
 
         return view('auth.account')->withUser(Customers::get(Auth::user()->id));
     }
 
+	/**
+	 * Handles post requests from the account form.
+	 */
     public function postAccount(Request $request)
     {
-        // Check that user is authenticated.
-        if (!Auth::check()) {
+		// Make sure user is logged in.
+		if (!Auth::check()) {
             return redirect(route('auth.login'));
         }
 
@@ -72,7 +72,7 @@ class AuthController extends Controller
         $passwd = $request->input('password');
 		$passwd = strlen($passwd) ? $passwd : null;
 
-        // Update account details.
+        // Update customer details.
         $result = Customers::update(Auth::user(), $details, $passwd);
 
 		$message = Customers::isError($result)
@@ -81,6 +81,22 @@ class AuthController extends Controller
 
         return redirect(route('auth.account'))->withMessages([$message]);
     }
+
+	/**
+	 * Displays the form allowing customers to reset their password.
+	 */
+	public function getReset()
+	{
+
+	}
+
+	/**
+	 * Handles post requests from the password reset form.
+	 */
+	public function postReset()
+	{
+
+	}
 
     /**
      * Get a validator for an incoming registration request.
@@ -96,7 +112,7 @@ class AuthController extends Controller
      * Create a new customer instance after a valid registration.
      *
      * @param  array  $data
-     * @return User
+     * @return \App\Models\Customer
      */
     public function create(array $data)
     {

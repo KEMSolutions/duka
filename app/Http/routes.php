@@ -23,19 +23,19 @@ Route::group([
     // Cart & checkout.
     Route::get('cart',              ['as' => 'cart', 'uses' => 'CheckoutController@index']);
 
-    // Authentication  & account routes.
-    Route::get('login',             ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
-    Route::post('login',            ['as' => 'auth.login.action', 'uses' => 'Auth\AuthController@postLogin']);
-    Route::get('logout',            ['as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout']);
+    // Customer routes.
+    Route::get('login',             ['as' => 'auth.login', 'uses' => 'AccountController@getLogin']);
+    Route::post('login',            ['as' => 'auth.login.action', 'uses' => 'AccountController@postLogin']);
+    Route::get('logout',            ['as' => 'auth.logout', 'uses' => 'AccountController@getLogout']);
 
-    Route::get('signup',            ['as' => 'auth.register', 'uses' => 'Auth\AuthController@getRegister']);
-    Route::post('signup',           ['as' => 'auth.register.action', 'uses' => 'Auth\AuthController@postRegister']);
+    Route::get('signup',            ['as' => 'auth.register', 'uses' => 'AccountController@getRegister']);
+    Route::post('signup',           ['as' => 'auth.register.action', 'uses' => 'AccountController@postRegister']);
 
-    Route::get('account',           ['as' => 'auth.account', 'uses' => 'Auth\AuthController@getAccount']);
-    Route::post('account',          ['as' => 'auth.account.action', 'uses' => 'Auth\AuthController@postAccount']);
+    Route::get('account',           ['as' => 'auth.account', 'uses' => 'AccountController@getAccount']);
+    Route::post('account',          ['as' => 'auth.account.action', 'uses' => 'AccountController@postAccount']);
 
-    Route::get('reset',             ['as' => 'auth.reset', 'uses' => 'Auth\PasswordController@getEmail']);
-    Route::post('reset',            ['as' => 'auth.reset', 'uses' => 'Auth\PasswordController@postEmail']);
+    Route::get('reset',             ['as' => 'auth.reset', 'uses' => 'AccountController@getReset']);
+    Route::post('reset',            ['as' => 'auth.reset.action', 'uses' => 'AccountController@postReset']);
 
     // Wish list.
     Route::get('wishlist',          ['as' => 'wishlist', 'uses' => 'WishlistController@index']);
