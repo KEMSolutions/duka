@@ -35,6 +35,7 @@ Route::group([
     Route::post('account',          ['as' => 'auth.account.action', 'uses' => 'AccountController@postAccount']);
 
     Route::get('reset',             ['as' => 'auth.reset', 'uses' => 'AccountController@getReset']);
+    Route::get('reset/{token}',     ['as' => 'auth.reset.token', 'uses' => 'AccountController@getToken']);
     Route::post('reset',            ['as' => 'auth.reset.action', 'uses' => 'AccountController@postReset']);
 
     // Wish list.

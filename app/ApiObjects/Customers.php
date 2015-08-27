@@ -99,7 +99,7 @@ class Customers extends BaseObject
         }
 
         // Return instance of App\Models\Customer.
-        return new Customer($result);
+        return static::isError($result) ? $result : new Customer($result);
     }
 
     public function getDefault() {

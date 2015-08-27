@@ -4,11 +4,13 @@ use Log;
 use Auth;
 use Lang;
 use Crypt;
+use Store;
 use Session;
 use Redirect;
 use Customers;
 use Localization;
 
+use Illuminate\Support\Str;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -26,7 +28,7 @@ class AccountController extends Controller
         $this->loginPath = route('auth.login');
         $this->redirectAfterLogout = $this->redirectPath = route('home');
 
-		// Enabled the guest middleware.
+		// Enable the guest middleware.
 		$this->middleware('guest', ['except' => ['getLogout', 'getAccount', 'postAccount']]);
 	}
 
@@ -85,17 +87,96 @@ class AccountController extends Controller
 	/**
 	 * Displays the form allowing customers to reset their password.
 	 */
-	public function getReset()
-	{
-
+	public function getReset() {
+		return view('auth.reset');
 	}
 
 	/**
 	 * Handles post requests from the password reset form.
 	 */
-	public function postReset()
+	public function postReset(Request $request)
 	{
+		// Retrieve email address and find related customer account.
+		$email = $request->input('email');
+		$customer = Customers::get($email);
+		if (Customers::isError($customer)) {
+			return redirect(route('auth.reset'))->withErrors([Lang::get('passwords.user')])->withInput();
+		}
 
+		// Create the reset token. This is the same hasing used by Laravel
+		// in \Illuminate\Auth\Passwords\DatabaseTokenRepository;
+		$token = hash_hmac('sha256', Str::random(40), config('app.key'));
+
+		// Since we don't have a password_resets table, we'll attach the customer's ID to this token
+		// so that we may easily retrieve their record later on.
+		$link = Crypt::encrypt($customer->id .':'. $token);
+
+		// Store the token.
+		$customer->metadata['password_token'] = $token;
+		$saved = Customers::update($customer, []);
+		if (Customers::isError($saved)) {
+			Log::error('Could not save the password token to reset a customer password.');
+			return redirect(route('auth.reset'))->withErrors([Lang::get('boukem.error_occurred')])->withInput();
+		}
+
+		// Retrieve the email template.
+		$view = config('auth.password.email', 'emails.password');
+		$data = [
+			'token' => urlencode($link),
+			'customer' => $customer,
+			'store' => Store::info()
+		];
+
+		// Send the email.
+		$sent = app()->mailer->send($view, $data, function($mailer) use($customer) {
+			$mailer->to($customer->getEmailForPasswordReset());
+		});
+
+		return redirect(route('home'))->withMessages([Lang::get('passwords.sent')]);
+	}
+
+	/**
+	 * Handles a customer password reset request.
+	 *
+	 * @param string $emailToken
+	 */
+	public function getToken($emailToken)
+	{
+		// Retrieve data from the token.
+		if (!$emailToken = Crypt::decrypt($emailToken)) {
+			Log::error('Could not retrieve data from password token.');
+			return redirect(route('home'))->withErrors([Lang::get('boukem.error_occurred')]);
+		}
+
+		// The email token includes the password token and customer ID.
+		$emailToken = @explode(':', $emailToken, 2);
+		$customerId = (int) $emailToken[0];
+		$passwordToken = $emailToken[1];
+		if ($customerId < 1 || strlen($passwordToken) < 1) {
+			Log::error('Invalid password token data.');
+			return redirect(route('home'))->withErrors([Lang::get('boukem.error_occurred')]);
+		}
+
+		// Retrieve the customer record and remove the token.
+		$customer = Customers::get($customerId);
+		if (Customers::isError($customer)) {
+			Log::error('Could not retrieve customer record with id "'. $customerId .'".');
+			return redirect(route('home'))->withErrors([Lang::get('boukem.error_occurred')]);
+		}
+
+		$checkToken = $customer->metadata['password_token'];
+		$customer->metadata['password_token'] == '';
+		Customers::update($customer, []);
+
+		// Validate the password token.
+		if ($passwordToken !== $checkToken) {
+			return redirect(route('home'))->withErrors([Lang::get('passwords.token')]);
+		}
+
+		// Log in the customer, so that they may reset their password.
+		Auth::login($customer);
+
+		return redirect(route('auth.account'))->withMessages([Lang::get('passwords.new')]);
 	}
 
     /**
@@ -122,14 +203,5 @@ class AccountController extends Controller
 
         // Save details on main server.
         return Customers::create($customer);
-    }
-
-    /**
-     * @param string $redirectTo
-     * @param array $messages
-     * @return mixed
-     */
-    private function fail($redirectTo, array $messages = []) {
-        return redirect($redirectTo)->withErrors($messages);
     }
 }
