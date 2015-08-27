@@ -1,5 +1,5 @@
 <footer class="color-four">
-    <div class="ui container stackable vertically padded grid">
+    <div class="ui grid container stackable vertically padded">
         <div class="row">
 
             {{-- Contract pages --}}
