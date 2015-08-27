@@ -16,6 +16,12 @@ $(document).ready(function () {
     });
 
     /**
+     * Initialize semantic UI modules
+     *
+     */
+    semanticInitContainer.init();
+
+    /**
      * Initialize checkout logic.
      *
      */
