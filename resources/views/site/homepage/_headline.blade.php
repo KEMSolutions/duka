@@ -1,19 +1,23 @@
-<section id="homepageCarousel" class="carousel carousel-1 home_headline slide {{ $color }}">
-    @if ($showTab)
-        @include("site.homepage._tab", ["tabTitle" => $layoutData["headline"]["tabTitle"]])
-    @endif
+{{-- SECTION: HEADLINE --}}
 
-    <div class="carousel-inner">
-        <div class="item item-{{ $layoutData["headline"]["style"] }} active"
-                @if ( isset($layoutData["headline"]["backgroundUrl"]))
-                    style="background-image:url({{$layoutData["headline"]["backgroundUrl"]}})"
+<section class="headline-section">
+    <div class="ui grid">
+        <div class="sixteen wide column headline-section-background"
+        @if ( isset($layoutData["headline"]["backgroundUrl"]))
+             style="background-image:url({{$layoutData["headline"]["backgroundUrl"]}})"
                 @endif
                 >
 
-            <div class="description fluid-center">
+
+            @if ($showTab)
+                @include("site.homepage._tab", ["tabTitle" => $layoutData["headline"]["tabTitle"]])
+            @endif
+
+            <div class="description description-{{ $layoutData["headline"]["style"] }} fluid-center">
                 <span class="title">{{ $layoutData["headline"]["title"] }}</span>
                 <span class="subtitle">{{ $layoutData["headline"]["subtitle"] }}</span>
             </div>
+
         </div>
     </div>
 </section>

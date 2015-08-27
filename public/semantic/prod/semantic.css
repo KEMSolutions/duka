@@ -8280,7 +8280,7 @@ select.ui.dropdown {
 
 .ui.pointing.dropdown > .menu {
   top: 100%;
-  margin-top: 0.71428571rem;
+  margin-top: 0rem;
   border-radius: 0.28571429rem;
 }
 

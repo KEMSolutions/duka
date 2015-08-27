@@ -41,7 +41,7 @@
 
             {{-- Mobile only categories menu. --}}
                 <div class="ui icon btn btn-one visible-mobile-inline-block">
-                    <div class="ui dropdown dropdown-select">
+                    <div class="ui dropdown dropdown-select pointing top left">
                         <div class="text">
                             {{ Lang::get("boukem.shop_by") }}{{ Lang::get("boukem.categories") }}
                         </div>

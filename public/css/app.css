@@ -4561,27 +4561,49 @@ footer .copyright{color:#EEE;}
 /* HEADLINE */
 
 /*-----------------------------------*/
-.carousel-1 .item-dark {
+.headline-section {
+  height: 260px;
+  margin-top: 1rem; /* Since semantic's .ui margin-top: -1rem; */
+}
+
+.headline-section .description-dark {
   color: #fff;
 }
-.carousel-1 .description.fluid-center {
+
+.headline-section .description-white {
+  color: #333;
+}
+
+.headline-section .description.fluid-center {
   width: 100%;
   padding: 50px;
   left: 0;
   margin: 0px;
 }
-.carousel-1 .description .title{font-size:32px; margin:0 0 15px 0; padding:8px 20px; background:#FFF; color:#9ab2cc; display:block; text-align:center;}
-.carousel-1 .description.fluid-center .title{
-  background:none;
-  color:#FFF;
-  text-shadow: 1px 1px 3px rgba(150, 150, 150, 0.5);
-  margin-bottom: 5px;
+
+.headline-section .description .title {
+  font-weight: 500;
+  font-size:3rem;
+  line-height: 3rem;
+  display:block;
+}
+
+.headline-section .description.fluid-center .title{
+  margin-bottom: 30px;
   display: block;
   text-align: center;
-  font-weight: 500;
 }
-.carousel-1 .description.fluid-center .subtitle{font-size:20px; margin:0; display:block; text-align:center; padding: 0}
-.carousel-1 .item {
+
+.headline-section .description.fluid-center .subtitle{
+  font-size:2rem;
+  line-height: 2rem;
+  margin:0;
+  display:block;
+  text-align:center;
+  padding: 0
+}
+
+.headline-section .headline-section-background {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0% 0%;
