@@ -7,6 +7,8 @@
     @endif
 
         <div class="ui grid container">
+
+            {{-- Product section. --}}
             <div class="eleven wide column">
                 <div class="ui three cards">
                 @foreach($layoutData["mixed"]["products"] as $product)
@@ -34,7 +36,7 @@
                 </div>
             </div>
 
-
+            {{-- Search and Widget section. --}}
             <div class="four wide column large screen only">
                 <div class="widget">
                     <form action="{{ route('search') }}" method="get">

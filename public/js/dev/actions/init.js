@@ -46,10 +46,10 @@ $(document).ready(function () {
     paymentOverlayContainer.init();
 
     /**
-     * Initialize navigation header.
+     * Initialize homepage sections.
      *
      */
-    headerContainer.init();
+    homepageContainer.init();
 
     /**
      * Initialize favorite products feature.
