@@ -4537,7 +4537,7 @@ label,
 /* FOOTER */
 
 /*-----------------------------------*/
-footer{padding:30px; min-height:30px; font-size:12px;}
+footer{padding:30px; margin-top: 1rem; min-height:30px; font-size:12px;}
 footer:before, footer:after {display:table; content:" ";}
 footer:after{clear:both;}
 footer .col.reset{margin:0;}
@@ -4657,6 +4657,16 @@ footer .copyright{color:#EEE;}
   background-color: rgba(0,0,0,0.1);
   border-radius: 5px;
   padding: 1%;
+}
+
+/*-----------------------------------*/
+
+/* FEATURED */
+
+/*-----------------------------------*/
+.featured-section {
+  padding-top: 1rem;
+  position: relative;
 }
 
 /*----------------------------------------*/
