@@ -13,9 +13,9 @@
 
             {{-- Contract pages --}}
             <div class="five wide column">
-                <h2 class="ui header white">
+                <h3 class="ui header white">
                     @lang("boukem.information")
-                </h2>
+                </h3>
 
                 <ul>
                     @foreach (Store::contracts() as $contract)
@@ -31,9 +31,9 @@
 
             {{-- Quick links --}}
             <div class="five wide column">
-                <h2 class="ui header white">
+                <h3 class="ui header white">
                     @lang("boukem.shortcuts")
-                </h2>
+                </h3>
 
                 <ul>
                     <li>
@@ -47,9 +47,9 @@
 
             {{--User links--}}
             <div class="five wide column">
-                <h2 class="ui header white">
+                <h3 class="ui header white">
                     @lang("boukem.customer_service")
-                </h2>
+                </h3>
 
                 <ul>
                     @if(Auth::guest())

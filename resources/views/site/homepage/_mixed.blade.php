@@ -48,7 +48,7 @@
                 </div>
 
                 <div class="widget">
-                    <h2 class="ui header white">{{ Lang::get("boukem.shortcuts") }}</h2>
+                    <h3 class="ui header white">{{ Lang::get("boukem.shortcuts") }}</h3>
                 </div>
 
                 <ul class="categories highlight">

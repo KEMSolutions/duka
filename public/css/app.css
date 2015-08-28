@@ -2386,6 +2386,7 @@ fieldset[disabled] .btn-danger.active {
   color: #337ab7;
   font-weight: normal;
   border-radius: 0;
+  padding: 0 12px;
 }
 .btn-link,
 .btn-link:active,
@@ -4583,8 +4584,8 @@ footer .copyright{color:#EEE;}
 
 .headline-section .description .title {
   font-weight: 500;
-  font-size:3rem;
-  line-height: 3rem;
+  font-size:2.5rem;
+  line-height: 2.5rem;
   display:block;
 }
 
@@ -4595,8 +4596,8 @@ footer .copyright{color:#EEE;}
 }
 
 .headline-section .description.fluid-center .subtitle{
-  font-size:2rem;
-  line-height: 2rem;
+  font-size:1.3rem;
+  line-height: 1.3rem;
   margin:0;
   display:block;
   text-align:center;
@@ -4845,10 +4846,6 @@ section.slice {
 
 .widget {
   margin-bottom: 20px;
-}
-
-#product_long_description {
-  padding: 40px;
 }
 
 #why_email {

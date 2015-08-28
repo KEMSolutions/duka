@@ -2,7 +2,7 @@
     <ul class="list-unstyled list-inline">
         <li>
             <span>
-              <div class="ui inline dropdown dropdown-select top left pointing button labeled large" id="sort-by-box">
+              <div class="ui inline dropdown dropdown-select top left pointing button labeled" id="sort-by-box">
                   Sort by:
                   <div class="text">
                       <i class="fa fa-link"></i>
@@ -29,7 +29,7 @@
 
         <li>
             <span>
-                <div class="ui inline dropdown dropdown-select top right pointing button labeled large" id="items-per-page-box">
+                <div class="ui inline dropdown dropdown-select top right pointing button labeled" id="items-per-page-box">
                     Items per page:
                     <div class="text">
                         8
@@ -58,14 +58,14 @@
               Layout:
               <ul class="list-unstyled list-inline inline-block" id="category-result-layout">
                   <li>
-                      <button class="ui labeled icon button large" id="grid-layout">
+                      <button class="ui labeled icon button" id="grid-layout">
                           <i class="fa fa-th-large icon"></i>
                           Grid
                       </button>
                   </li>
 
                   <li>
-                      <button class="ui labeled icon button large" id="list-layout">
+                      <button class="ui labeled icon button" id="list-layout">
                           <i class="fa fa-bars icon"></i>
                           List
                       </button>
