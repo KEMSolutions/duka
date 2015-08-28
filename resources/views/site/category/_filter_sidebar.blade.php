@@ -1,6 +1,6 @@
 <div class="col-md-2" id="refine-search-container">
     <div class="row">
-        <h4 class="text-center">{{ Lang::get('boukem.results_found', ['total' => $total]) }}</h4>
+        <h3 class="text-center">{{ Lang::get('boukem.results_found', ['total' => $total]) }}</h3>
     </div>
 
     <div class="row padding-5">
@@ -66,7 +66,7 @@
                                 <input type="number" placeholder="Max" min="0" id="max-price">
                             </div>
 
-                            <button class="ui button large center-block" id="price-update">
+                            <button class="ui button center-block" id="price-update">
                                 Update
                             </button>
                         </div>
