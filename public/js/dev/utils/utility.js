@@ -134,7 +134,8 @@ var UtilityContainer = {
             "thumbnail" : item.data("thumbnail"),
             "thumbnail_lg" : item.data("thumbnail_lg"),
             "quantity" : parseInt(item.data("quantity")),
-            "link" : item.data("link")
+            "link" : item.data("link"),
+            "description" : item.data("description") ? item.data("description") : ""
         }
     },
 

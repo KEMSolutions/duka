@@ -1,6 +1,5 @@
 
 @foreach($products as $product)
-
     @if (is_object($product) && isset($product->id))
         <div class="four wide column text-center dense-product
             @if (!$border)
@@ -15,7 +14,7 @@
 
             --}}
             @if(count($product->formats) != 0)
-                <span class="pull-right favorite-wrapper" data-product="{{ $product->formats[0]->id }}">
+                <span class="pull-right favorite-wrapper" data-product="{{ $product->formats[0]->id }}" data-description="{{ $product->localization->short_description }}" >
                     <i class="icon heart favorite-heart"></i>
                 </span>
             @endif
@@ -64,6 +63,7 @@
                                 data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
                                 data-name="{{ $product->localization->name . " - " . $format->name }}"
                                 data-quantity="1"
+                                data-description="{{ $product->localization->short_description }}"
                                 data-link="{{ route('product', ['slug' => $product->slug]) }}"
                                 >
 

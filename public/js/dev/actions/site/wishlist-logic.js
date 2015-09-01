@@ -16,24 +16,37 @@ var wishlistLogicContainer = {
     createWishlistElement: function(item) {
         var self = wishlistLogicContainer,
             element =
-            '<div class="col-md-12 list-layout-element">' +
-            '<div class="col-md-2">' +
-            '<img src=' + item.thumbnail_lg + '>' +
-            '</div>' +
-            '<div class="col-md-10">' +
-            '<button class="btn btn-outline btn-danger-outline pull-right btn-lg inline-block padding-side-lg removeFavoriteButton" data-product="' + item.product + '">Remove from wishlist </button>' +
-            '<button class="btn btn-success buybutton pull-right btn-lg inline-block padding-side-lg"' +
-            'data-product="' + item.product + '"' +
-            'data-price="' + item.price + '"' +
-            'data-thumbnail="' + item.thumbnail + '"' +
-            'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
-            'data-name="' + item.name + '"' +
-            'data-quantity="' + item.quantity  + '"' + ">" +
-            'Add to cart </button>' +
-            '<a href=' + item.link + '><h4 style="margin-top: 5px">' + item.name + '</h4></a>' +
+        '<div class="item list-layout-element">' +
+        '<div class="ui tiny image">' +
+        '<img src=' + item.thumbnail_lg + '>' +
+        '</div>' +
+        '<div class="middle aligned content">' +
+        '<div class="header">' +
+        '<a href=' + item.link + '>' + item.name + '</a>' +
+        '</div>' +
+        '<div class="description">' +
+        '<p>' + item.description + '</p>' +
             '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
-            '</div>' +
-            '</div>';
+        '</div>' +
+        '<div class="extra">' +
+        '<button class="ui right floated button green buybutton"' +
+        'data-product="' + item.product + '"' +
+        'data-price="' + item.price + '"' +
+        'data-thumbnail="' + item.thumbnail + '"' +
+        'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
+        'data-name="' + item.name + '"' +
+        'data-description="' + item.description + '"' +
+        'data-quantity="' + item.quantity  + '"' + ">" +
+        'Add to cart </button>' +
+        '</button>' +
+        '<button class="ui right floated button inverted red removeFavoriteButton" data-product="' + item.product + '">' +
+        'Remove from wishlist' +
+        '</button>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<hr/>';
+
 
         //Localize button (default in english)
         self.localizeWishlistButton();
