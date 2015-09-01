@@ -27,19 +27,14 @@ class Store extends BaseObject
      */
     public function locales()
     {
-        $locales = Cache::remember('store.locales', Carbon::now()->addDay(), function()
+        $locales = Cache::remember('store.locales', Carbon::now()->addWeek(), function()
         {
             $locales = [];
             $results = KemAPI::get('store', ['embed' => 'locales']);
 
-            // Format results for use with Mcamara\LaravelLocalization.
-            foreach ($results->locales as $loc) {
-                $locales[$loc->language] = [
-                    'id' => $loc->id,
-                    'name' => $loc->language_name,
-                    'native' => $loc->language_name,
-                    'script' => $loc->script
-                ];
+            // Key languages by ID for easy retrieval.
+            foreach ($results->locales as $locale) {
+                $locales[$locale->id] = $locale;
             }
 
             return $locales;

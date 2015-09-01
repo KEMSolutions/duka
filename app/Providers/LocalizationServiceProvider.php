@@ -21,7 +21,9 @@ class LocalizationServiceProvider extends ServiceProvider
 	public function boot()
 	{
         // Set supported locales for the Mcamara/Laravel-localization package.
-        config(['laravellocalization.supportedLocales' => $this->getSupportedLocales()]);
+        if (app()->laravellocalization) {
+            app()->laravellocalization->setSupportedLocales($this->getSupportedLocales());
+        }
 	}
 
 	/**
@@ -38,14 +40,18 @@ class LocalizationServiceProvider extends ServiceProvider
      */
     public function getSupportedLocales()
     {
-        // Retrieve the list of supported locales from the cache. If the list
-        // doesn't exist, retrieve it from KEM's API and cache it for next time.
-        $expiresAt  = Carbon::now()->addWeek();
-        $locales    = Cache::remember('supportedlocales', $expiresAt, function() {
-            return Store::locales();
-        });
+        // Format the store's supported locales for use with Mcamara\LaravelLocalization.
+        // These are already cached by the Store facade.
+        $locales = [];
+        foreach (Store::locales() as $locale)
+        {
+            $locales[$locale->language] = [
+                'name' => $locale->language_name,
+                'script' => $locale->script,
+                'native' => $locale->name
+            ];
+        }
 
         return $locales;
     }
 }
-

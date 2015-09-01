@@ -140,12 +140,12 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
         if (isset($details['locale']) && is_string($details['locale']))
         {
             // Make sure we have a supported locale.
-            if (!in_array($details['locale'], Store::locales())) {
+            $locales = Store::locales();
+            if (!in_array($details['locale'], $locales)) {
                 unset($details['locale']);
             }
 
-            // TODO: update locale.
-            unset($details['locale']);
+            $details['locale'] = (array) $locales[$details['locale']];
         }
 
         // Fill in customer details with new data.
@@ -160,16 +160,11 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
         // Default locale.
         if (!isset($this->locale['language']) || !Localization::checkLocaleInSupportedLocales($this->locale['language']))
         {
-            // Retrieve the full locale ID for our current locale.
-            $locales = Store::locales();
-            $lang = Localization::getCurrentLocale();
-            $localeID = isset($locales[$lang]) ? $locales[$lang]['id'] : current($locales)['id'];
-
-            $this->locale['id'] = $localeID;
-            $this->locale['name'] = Localization::getCurrentLocaleNativeReading();
-            $this->locale['language'] = Localization::getCurrentLocale();
-            $this->locale['language_name'] = Localization::getCurrentLocaleName();
-            $this->locale['script'] = Localization::getCurrentLocaleScript();
+            foreach (Store::locales() as $locale) {
+                if ($locale->language == Localization::getCurrentLocale()) {
+                    $this->locale = (array) $locale;
+                }
+            }
         }
 
         // Validate some fields.

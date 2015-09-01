@@ -3,7 +3,8 @@
 // Set all localized routes here.
 Route::group([
     'prefix' => Localization::setLocale(),
-    'middleware' => ['localeSessionRedirect', 'localizationRedirect']], function() {
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect']],
+    function() {
 
     // Homepage.
     Route::get('/',                 ['as' => 'home', 'uses' => 'HomeController@index']);
