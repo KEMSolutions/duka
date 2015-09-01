@@ -47,6 +47,8 @@ class AccountController extends Controller
 
 	/**
 	 * Handles post requests from the account form.
+     *
+     * @param Illuminate\Http\Request $request
 	 */
     public function postAccount(Request $request)
     {
@@ -61,16 +63,10 @@ class AccountController extends Controller
             return redirect(route('auth.account'))->withValidator($validator)->withInput();
         }
 
-        // Make sure we're editing a valid customer record.
-		// TODO: review whether this step is necessary...
-        if (!$record = Customers::get(Auth::user()->id)) {
-            Log::error('Could not retrieve customer record while updating account details.');
-            abort(500);
-        }
-
 		$details = $request->except(['password', 'password_confirmation']);
 
-        // Validate password, if we are updating that as well.
+        // Validate password, if we are updating that as well. The password confirmation
+        // has been checked by the validator already, so we don't need to worry about that.
         $passwd = $request->input('password');
 		$passwd = strlen($passwd) ? $passwd : null;
 

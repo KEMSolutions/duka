@@ -7,82 +7,83 @@
 @endsection
 
 @section('content')
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
-			<div class="panel panel-default">
 
-				<div class="panel-heading">Edit Account Details [test]</div>
-				<div class="panel-body">
-					@if (count($errors) > 0)
-						<div class="alert alert-danger">
-							<strong>Whoops!</strong> There were some problems with your input.<br><br>
-							<ul>
-								@foreach ($errors->all() as $error)
-									<li>{{ $error }}</li>
-								@endforeach
-							</ul>
-						</div>
-					@endif
+{{-- Errors --}}
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
-					<form class="form-horizontal" role="form" method="POST" action="{{ route('auth.account.action') }}">
-						<input type="hidden" name="_token" value="{{ csrf_token() }}">
+<br />
+<div class="ui grid container">
+    <form class="ui form" method="post" action="{{ route('auth.account.action') }}">
+        {!! csrf_field() !!}
 
-						<div class="form-group">
-							<label class="col-md-4 control-label">Name</label>
-							<div class="col-md-6">
-								<input type="text" class="form-control" name="name" value="{{ $user->name }}" required>
-							</div>
-						</div>
+        {{-- Personal details --}}
+        <h4 class="ui dividing header">Contact Info</h4>
 
-						<div class="form-group">
-							<label class="col-md-4 control-label">Phone #</label>
-							<div class="col-md-6">
-								<input type="tel" class="form-control" name="phone" value="{{ $user->phone }}" required>
-							</div>
-						</div>
+        <div class="field">
+            <label>Name</label>
+            <input type="text" name="name" value="{{ $user->name }}" required />
+        </div>
 
-						<div class="form-group">
-							<label class="col-md-4 control-label">E-Mail Address</label>
-							<div class="col-md-6">
-								<input type="email" class="form-control" name="email" value="{{ $user->email }}" required>
-							</div>
-						</div>
+        <div class="field">
+            <label>Email & Phone #</label>
+            <div class="fields">
+                <div class="ten wide field">
+                    <input type="email" name="email" value="{{ $user->email }}" required />
+                </div>
+                <div class="six wide field">
+                    <input type="tel" name="phone" value="{{ $user->phone }}" />
+                </div>
+            </div>
+        </div>
 
-						<div class="form-group">
-							<label class="col-md-4 control-label">Language</label>
-							<div class="col-md-6">
-								<input type="text" class="form-control" name="language" value="{{ $user->locale['name'] }}" disabled>
-							</div>
-						</div>
+        {{-- Settings --}}
+        <h4 class="ui dividing header">Settings</h4>
 
-						<div class="form-group">
-							<label class="col-md-4 control-label">New Password</label>
-							<div class="col-md-6">
-								<input type="password" class="form-control" name="password">
-							</div>
-						</div>
+        <div class="field">
+            <label>Language</label>
+            <select class="ui fluid dropdown" name="language">
+                @foreach (Store::locales() as $locale)
+                    <option
+                        value="{{ $locale['id'] }}"
+                        {{ $locale['id'] == $user->locale['id'] ? ' selected' : '' }}>
 
-						<div class="form-group">
-							<label class="col-md-4 control-label">Confirm New Password</label>
-							<div class="col-md-6">
-								<input type="password" class="form-control" name="password_confirmation">
-							</div>
-						</div>
+                        {{ $locale['name'] }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<button type="submit" class="btn btn-primary">
-									Save Changes
-								</button>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+        <div class="field">
+            <label>Update password</label>
+            <div class="fields">
+                <div class="eight wide field">
+                    <input type="password" name="password" placeholder="new password" />
+                </div>
+                <div class="eight wide field">
+                    <input type="password" name="password_confirmation" placeholder="confirm password" />
+                </div>
+            </div>
+        </div>
+
+        {{-- Addresses --}}
+        <h4 class="ui dividing header">Addresses</h4>
+        TODO...<br /><br />
+
+        <button class="ui button" type="submit">Submit</button>
+    </form>
 </div>
+<br />
+<br />
+
 @endsection
 
 @section("scripts")

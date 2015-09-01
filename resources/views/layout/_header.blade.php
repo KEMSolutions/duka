@@ -103,7 +103,7 @@
                                 </div>
 
                                 <div class="item">
-                                    <a href="#">Settings</a>
+                                    <a href="{{ route('auth.account') }}">Settings</a>
                                 </div>
 
                                 <div class="divider"></div>

@@ -31,6 +31,9 @@
 	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/icon.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/input.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/header.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/form.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/grid.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/container.css') }}"/>
 
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
 
