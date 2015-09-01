@@ -488,193 +488,6 @@ var UtilityContainer = {
 
 
 /**
- * Object responsible for displaying the cart drawer.
- * Logic handled in dev/actions/layout/cart-drawer-logic.js
- *
- * @type {{$el: {$back: (*|jQuery|HTMLElement), $proceed: (*|jQuery|HTMLElement), $trigger: (*|jQuery|HTMLElement), $container: (*|jQuery|HTMLElement), $checkout: (*|jQuery|HTMLElement), $body: (*|jQuery|HTMLElement)}, displayOn: Function, displayOff: Function, animateIn: Function, animateOut: Function, setCartItemsHeight: Function, computeCartItemsHeight: Function, init: Function}}
- */
-var cartDisplayContainer = {
-    $el : {
-        $back : $("#back"),
-        $proceed : $("#proceed"),
-        $trigger : $(".view-cart"),
-        $container : $("#cart-container"),
-        $checkout : $("#checkout"),
-        $body : $("body")
-    },
-
-    displayOn: function() {
-        var _width = cartDisplayContainer.$el.$container.width();
-        cartDisplayContainer.$el.$container.css( {
-            "margin-right" : -_width
-        });
-
-        cartDisplayContainer.$el.$trigger.click(function() {
-            cartDisplayContainer.animateIn();
-        });
-    },
-
-    displayOff : function() {
-        cartDisplayContainer.$el.$back.click(function() {
-            cartDisplayContainer.animateOut();
-        });
-        cartDisplayContainer.$el.$checkout.click(function() {
-            sessionStorage.isDisplayed = false;
-        });
-    },
-
-    animateIn : function() {
-        cartDisplayContainer.$el.$container.show();
-        cartDisplayContainer.$el.$container.animate( {
-            "margin-right" : 0
-        }, 400);
-        sessionStorage.isDisplayed = true;
-    },
-
-    animateOut: function() {
-        var _width = cartDisplayContainer.$el.$container.width();
-        cartDisplayContainer.$el.$container.animate( {
-            "margin-right" : -_width
-        }, 400, function() {
-            $(this).hide();
-        });
-        sessionStorage.isDisplayed = false;
-    },
-
-    setCartItemsHeight : function() {
-        cartDisplayContainer.computeCartItemsHeight();
-
-        $(window).on("resize", function() {
-            cartDisplayContainer.computeCartItemsHeight();
-        });
-
-        cartDisplayContainer.$el.$trigger.on("click", function() {
-            cartDisplayContainer.computeCartItemsHeight();
-        })
-    },
-
-    computeCartItemsHeight : function() {
-        var cartItemsHeight = $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
-
-        $("#cart-items").css("height", cartItemsHeight);
-    },
-
-    init : function() {
-        cartDisplayContainer.displayOn();
-        cartDisplayContainer.displayOff();
-        UtilityContainer.populateCountry($("html").attr("lang"));
-
-        if (sessionStorage.isDisplayed == "true")
-        {
-            cartDisplayContainer.$el.$container.css("margin-right", 0);
-            cartDisplayContainer.$el.$container.show();
-        }
-
-    }
-};
-/**
- * Object responsible for handling the payment overlay behaviour.
- *
- * @type {{cancelOrder: Function, init: Function}}
- */
-var paymentOverlayContainer = {
-
-    /**
-     * Cancels an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_unpaid_orders");
-
-            $("#cancelledOrder .jumbotron").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-
-        });
-    },
-
-    /**
-     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_unpaid_orders')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(data) {
-                    if (data.status == 'pending')
-                        paymentOverlayContainer.showPaymentNotice();
-                    else
-                        Cookies.remove('_unpaid_orders');
-                }
-            });
-        }
-
-    },
-
-    /**
-     * Shows payment notice.
-     *
-     */
-    showPaymentNotice : function() {
-
-        // Retrieve order details.
-        var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-        // Display notice.
-        $('body').prepend(
-            '<div class="container overlay fullScreen" id="cancelledOrder">'+
-            '<div class="jumbotron vertical-align color-one">'+
-            '<div class="text-center">'+
-            '<h2>'+
-            Localization.pending_order.replace(':command', order.id) +
-            '</h2>'+
-            '<h4>'+ Localization.what_to_do +'</h4>'+
-            '<br />'+
-            '<ul class="list-inline">' +
-            '<li>' +
-            '<a href="'+
-            ApiEndpoints.orders.pay.replace(':id', order.id)
-                .replace(':verification', order.verification) +'">'+
-            '<button class="btn btn-success" id="payOrder">'+ Localization.pay_now +'</button>'+
-            '</a>'+
-            '</li>' +
-            '<li>' +
-            '<button class="btn btn-danger" id="cancelOrder">'+
-            Localization.cancel_order +
-            '</button>'+
-            '</li>'+
-            '</ul>'+
-            '</div>'+
-            '</div>'+
-            '</div>'
-        );
-    },
-
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-        self.checkPendingOrders();
-    }
-}
-
-/**
  * Object responsible for handling billing information.
  *
  * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
@@ -1103,65 +916,192 @@ var paymentContainer = {
     }
 }
 /**
- * Object responsible for specific behaviours of homepage sections.
+ * Object responsible for displaying the cart drawer.
+ * Logic handled in dev/actions/layout/cart-drawer-logic.js
  *
- * @type {{mixed: {toggleSixteenWideColumn: Function}, init: Function}}
+ * @type {{$el: {$back: (*|jQuery|HTMLElement), $proceed: (*|jQuery|HTMLElement), $trigger: (*|jQuery|HTMLElement), $container: (*|jQuery|HTMLElement), $checkout: (*|jQuery|HTMLElement), $body: (*|jQuery|HTMLElement)}, displayOn: Function, displayOff: Function, animateIn: Function, animateOut: Function, setCartItemsHeight: Function, computeCartItemsHeight: Function, init: Function}}
  */
-var homepageContainer = {
+var cartDisplayContainer = {
+    $el : {
+        $back : $("#back"),
+        $proceed : $("#proceed"),
+        $trigger : $(".view-cart"),
+        $container : $("#cart-container"),
+        $checkout : $("#checkout"),
+        $body : $("body")
+    },
+
+    displayOn: function() {
+        var _width = cartDisplayContainer.$el.$container.width();
+        cartDisplayContainer.$el.$container.css( {
+            "margin-right" : -_width
+        });
+
+        cartDisplayContainer.$el.$trigger.click(function() {
+            cartDisplayContainer.animateIn();
+        });
+    },
+
+    displayOff : function() {
+        cartDisplayContainer.$el.$back.click(function() {
+            cartDisplayContainer.animateOut();
+        });
+        cartDisplayContainer.$el.$checkout.click(function() {
+            sessionStorage.isDisplayed = false;
+        });
+    },
+
+    animateIn : function() {
+        cartDisplayContainer.$el.$container.show();
+        cartDisplayContainer.$el.$container.animate( {
+            "margin-right" : 0
+        }, 400);
+        sessionStorage.isDisplayed = true;
+    },
+
+    animateOut: function() {
+        var _width = cartDisplayContainer.$el.$container.width();
+        cartDisplayContainer.$el.$container.animate( {
+            "margin-right" : -_width
+        }, 400, function() {
+            $(this).hide();
+        });
+        sessionStorage.isDisplayed = false;
+    },
+
+    setCartItemsHeight : function() {
+        cartDisplayContainer.computeCartItemsHeight();
+
+        $(window).on("resize", function() {
+            cartDisplayContainer.computeCartItemsHeight();
+        });
+
+        cartDisplayContainer.$el.$trigger.on("click", function() {
+            cartDisplayContainer.computeCartItemsHeight();
+        })
+    },
+
+    computeCartItemsHeight : function() {
+        var cartItemsHeight = $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
+
+        $("#cart-items").css("height", cartItemsHeight);
+    },
+
+    init : function() {
+        cartDisplayContainer.displayOn();
+        cartDisplayContainer.displayOff();
+        UtilityContainer.populateCountry($("html").attr("lang"));
+
+        if (sessionStorage.isDisplayed == "true")
+        {
+            cartDisplayContainer.$el.$container.css("margin-right", 0);
+            cartDisplayContainer.$el.$container.show();
+        }
+
+    }
+};
+/**
+ * Object responsible for handling the payment overlay behaviour.
+ *
+ * @type {{cancelOrder: Function, init: Function}}
+ */
+var paymentOverlayContainer = {
 
     /**
-     * Mixed section
+     * Cancels an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
      *
      */
-    mixed: {
-        toggleSixteenWideColumn: function () {
-                var $productColumn = $(".mixed-section .eleven"),
-                $widgetColumn = $(".mixed-section .four");
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            Cookies.remove("_unpaid_orders");
 
-            $(window).on("load resize", function() {
-                if(!$widgetColumn.is(":visible")) {
-                    $productColumn.removeClass().addClass("sixteen wide column");
-                }
-                else {
-                    $productColumn.removeClass().addClass("eleven wide column");
+            $("#cancelledOrder .jumbotron").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+
+        });
+    },
+
+    /**
+     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_unpaid_orders')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(data) {
+                    if (data.status == 'pending')
+                        paymentOverlayContainer.showPaymentNotice();
+                    else
+                        Cookies.remove('_unpaid_orders');
                 }
             });
-
         }
+
     },
-
-    init: function () {
-        var self = homepageContainer,
-            mixed = self.mixed;
-
-        mixed.toggleSixteenWideColumn();
-    }
-}
-/**
- * Object responsible for the view component of the wish list page.
- * Logic handled in dev/actions/site/wishlist-logic.js
- *
- * @type {{setNumberOfProductsInHeader: Function, init: Function}}
- */
-var wishlistContainer = {
 
     /**
-     * Sets the number of products in the header (singular / plural).
+     * Shows payment notice.
      *
      */
-    setNumberOfProductsInHeader: function() {
-        var quantity = "";
-        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
-        $("#quantity-wishlist").text(quantity);
+    showPaymentNotice : function() {
+
+        // Retrieve order details.
+        var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+        // Display notice.
+        $('body').prepend(
+            '<div class="container overlay fullScreen" id="cancelledOrder">'+
+            '<div class="jumbotron vertical-align color-one">'+
+            '<div class="text-center">'+
+            '<h2>'+
+            Localization.pending_order.replace(':command', order.id) +
+            '</h2>'+
+            '<h4>'+ Localization.what_to_do +'</h4>'+
+            '<br />'+
+            '<ul class="list-inline">' +
+            '<li>' +
+            '<a href="'+
+            ApiEndpoints.orders.pay.replace(':id', order.id)
+                .replace(':verification', order.verification) +'">'+
+            '<button class="btn btn-success" id="payOrder">'+ Localization.pay_now +'</button>'+
+            '</a>'+
+            '</li>' +
+            '<li>' +
+            '<button class="btn btn-danger" id="cancelOrder">'+
+            Localization.cancel_order +
+            '</button>'+
+            '</li>'+
+            '</ul>'+
+            '</div>'+
+            '</div>'+
+            '</div>'
+        );
     },
 
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
 
-    init: function() {
-        var self = wishlistContainer;
-
-        self.setNumberOfProductsInHeader();
+        self.cancelOrder();
+        self.checkPendingOrders();
     }
 }
+
 /**
  * Object responsible for handling different formats of the same product.
  *
@@ -1289,6 +1229,66 @@ var productFormatContainer = {
 
         self.displaySyncedProductInformation();
 
+    }
+}
+/**
+ * Object responsible for specific behaviours of homepage sections.
+ *
+ * @type {{mixed: {toggleSixteenWideColumn: Function}, init: Function}}
+ */
+var homepageContainer = {
+
+    /**
+     * Mixed section
+     *
+     */
+    mixed: {
+        toggleSixteenWideColumn: function () {
+                var $productColumn = $(".mixed-section .eleven"),
+                $widgetColumn = $(".mixed-section .four");
+
+            $(window).on("load resize", function() {
+                if(!$widgetColumn.is(":visible")) {
+                    $productColumn.removeClass().addClass("sixteen wide column");
+                }
+                else {
+                    $productColumn.removeClass().addClass("eleven wide column");
+                }
+            });
+
+        }
+    },
+
+    init: function () {
+        var self = homepageContainer,
+            mixed = self.mixed;
+
+        mixed.toggleSixteenWideColumn();
+    }
+}
+/**
+ * Object responsible for the view component of the wish list page.
+ * Logic handled in dev/actions/site/wishlist-logic.js
+ *
+ * @type {{setNumberOfProductsInHeader: Function, init: Function}}
+ */
+var wishlistContainer = {
+
+    /**
+     * Sets the number of products in the header (singular / plural).
+     *
+     */
+    setNumberOfProductsInHeader: function() {
+        var quantity = "";
+        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
+        $("#quantity-wishlist").text(quantity);
+    },
+
+
+    init: function() {
+        var self = wishlistContainer;
+
+        self.setNumberOfProductsInHeader();
     }
 }
 /**
@@ -1500,9 +1500,9 @@ var categoryContainer = {
 
     toggleLayout: function () {
         var $container = $(".layout-toggle-container"),
-            $product = $(".dense_product"),
+            $product = $(".dense-product"),
             $product_img = $(".product-image"),
-            $product_buybutton = $(".dense_product .buybutton");
+            $product_buybutton = $(".dense-product .buybutton");
 
         $("#list-layout, #grid-layout").on("click", function () {
 
@@ -1583,7 +1583,7 @@ var productLayoutFavoriteContainer = {
      *
      */
     fadeInFavoriteIcon: function() {
-        $(".dense_product").hover(function() {
+        $(".dense-product").hover(function() {
             $(this).children(".favorite-wrapper").fadeIn();
         }, function () {
             $(this).children(".favorite-wrapper").hide();
@@ -1636,7 +1636,7 @@ var productLayoutFavoriteContainer = {
             if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
                 for(var j = 0; j<$(".favorite-wrapper").length; j++)
                 {
-                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === parseInt($(".favorite-wrapper")[j].dataset.product))
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
                     {
                         $(".favorite-wrapper")[j].className += " favorited";
                     }
@@ -1747,104 +1747,6 @@ $(document).ready(function () {
     });
 
 });
-/**
- * Container responsible for handling the logic of the wish list page.
- * Layout handled in dev/components/site/wishlist.js
- *
- * @type {{createWishlistElement: Function, renderWishlist: Function, removeWishlistElement: Function, init: Function}}
- */
-var wishlistLogicContainer = {
-
-    /**
-     * Create a list layout element from the information passed as an argument.
-     *
-     * Rounding to 2 decimals, courtesy of http://stackoverflow.com/a/6134070.
-     *
-     * @param item
-     */
-    createWishlistElement: function(item) {
-        var self = wishlistLogicContainer,
-            element =
-            '<div class="col-md-12 list-layout-element">' +
-            '<div class="col-md-2">' +
-            '<img src=' + item.thumbnail_lg + '>' +
-            '</div>' +
-            '<div class="col-md-10">' +
-            '<button class="btn btn-outline btn-danger-outline pull-right btn-lg inline-block padding-side-lg removeFavoriteButton" data-product="' + item.product + '">Remove from wishlist </button>' +
-            '<button class="btn btn-success buybutton pull-right btn-lg inline-block padding-side-lg"' +
-            'data-product="' + item.product + '"' +
-            'data-price="' + item.price + '"' +
-            'data-thumbnail="' + item.thumbnail + '"' +
-            'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
-            'data-name="' + item.name + '"' +
-            'data-quantity="' + item.quantity  + '"' + ">" +
-            'Add to cart </button>' +
-            '<a href=' + item.link + '><h4 style="margin-top: 5px">' + item.name + '</h4></a>' +
-            '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
-            '</div>' +
-            '</div>';
-
-        //Localize button (default in english)
-        self.localizeWishlistButton();
-
-        //Append elements
-        $(".list-layout-element-container").append(element);
-    },
-
-    /**
-     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
-     * The creation is handled in createWishlistElement function.
-     *
-     */
-    renderWishlist: function() {
-        var self = wishlistLogicContainer;
-
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
-            {
-                self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
-            }
-        }
-    },
-
-    localizeWishlistButton: function() {
-        $(".list-layout-element .buybutton").text(Localization.add_cart);
-        $(".list-layout-element .removeFavoriteButton").text(Localization.wishlist_remove);
-    },
-
-    /**
-     * Remove the element from the wishlist after a subtle animation.
-     *
-     */
-    removeWishlistElement: function () {
-        $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
-            //Animate the element.
-            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
-
-            //Delete the element from localStorage.
-            localStorage.removeItem("_wish_product " + $(this).data("product"));
-
-            //Set wishlist header quantity.
-            wishlistContainer.setNumberOfProductsInHeader();
-
-            //Set wishlist badge
-            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
-        });
-    },
-
-    init: function () {
-        var self = wishlistLogicContainer;
-
-        //Calls the layout container (wishlistContainer).
-        wishlistContainer.init();
-
-        //Initialize the logic.
-        self.renderWishlist();
-        self.removeWishlistElement();
-    }
-
-}
 /**
  * Container responsible for initializing the checkout page.
  * Overall logic is handled in js/dev/actions/checkout/*.js
@@ -2450,3 +2352,102 @@ var cartLogicContainer = {
         cartLogicContainer.setCartSubtotal();
     }
 };
+
+/**
+ * Container responsible for handling the logic of the wish list page.
+ * Layout handled in dev/components/site/wishlist.js
+ *
+ * @type {{createWishlistElement: Function, renderWishlist: Function, removeWishlistElement: Function, init: Function}}
+ */
+var wishlistLogicContainer = {
+
+    /**
+     * Create a list layout element from the information passed as an argument.
+     *
+     * Rounding to 2 decimals, courtesy of http://stackoverflow.com/a/6134070.
+     *
+     * @param item
+     */
+    createWishlistElement: function(item) {
+        var self = wishlistLogicContainer,
+            element =
+            '<div class="col-md-12 list-layout-element">' +
+            '<div class="col-md-2">' +
+            '<img src=' + item.thumbnail_lg + '>' +
+            '</div>' +
+            '<div class="col-md-10">' +
+            '<button class="btn btn-outline btn-danger-outline pull-right btn-lg inline-block padding-side-lg removeFavoriteButton" data-product="' + item.product + '">Remove from wishlist </button>' +
+            '<button class="btn btn-success buybutton pull-right btn-lg inline-block padding-side-lg"' +
+            'data-product="' + item.product + '"' +
+            'data-price="' + item.price + '"' +
+            'data-thumbnail="' + item.thumbnail + '"' +
+            'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
+            'data-name="' + item.name + '"' +
+            'data-quantity="' + item.quantity  + '"' + ">" +
+            'Add to cart </button>' +
+            '<a href=' + item.link + '><h4 style="margin-top: 5px">' + item.name + '</h4></a>' +
+            '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
+            '</div>' +
+            '</div>';
+
+        //Localize button (default in english)
+        self.localizeWishlistButton();
+
+        //Append elements
+        $(".list-layout-element-container").append(element);
+    },
+
+    /**
+     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
+     * The creation is handled in createWishlistElement function.
+     *
+     */
+    renderWishlist: function() {
+        var self = wishlistLogicContainer;
+
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
+            {
+                self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
+            }
+        }
+    },
+
+    localizeWishlistButton: function() {
+        $(".list-layout-element .buybutton").text(Localization.add_cart);
+        $(".list-layout-element .removeFavoriteButton").text(Localization.wishlist_remove);
+    },
+
+    /**
+     * Remove the element from the wishlist after a subtle animation.
+     *
+     */
+    removeWishlistElement: function () {
+        $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
+            //Animate the element.
+            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
+
+            //Delete the element from localStorage.
+            localStorage.removeItem("_wish_product " + $(this).data("product"));
+
+            //Set wishlist header quantity.
+            wishlistContainer.setNumberOfProductsInHeader();
+
+            //Set wishlist badge
+            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
+        });
+    },
+
+    init: function () {
+        var self = wishlistLogicContainer;
+
+        //Calls the layout container (wishlistContainer).
+        wishlistContainer.init();
+
+        //Initialize the logic.
+        self.renderWishlist();
+        self.removeWishlistElement();
+    }
+
+}

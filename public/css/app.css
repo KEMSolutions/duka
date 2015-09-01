@@ -4902,20 +4902,21 @@ section.slice {
 
 /*-----------------------------------*/
 .favorite-heart {
-  padding: 5px;
   color: #F45D5D;
-  border: 1px solid #E1E1E1;
-  border-radius: 2px;
 }
 
 .favorite-wrapper {
   cursor: pointer;
   display: none;
+  padding: 3px 3px 2px 7px;
+  border: 1px solid #E1E1E1;
+  border-radius: 2px;
 
   transition: all 0.1s ease-in;
 }
 
-.favorite-heart:hover, .favorite-heart:active {
+
+.favorite-wrapper:hover, .favorite-wrapper:active {
   border: 1px solid #F45D5D;
 }
 

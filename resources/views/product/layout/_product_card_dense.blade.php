@@ -8,10 +8,17 @@
             @endif
             ">
 
-            {{-- Favorite heart icon --}}
-            <span class="pull-right favorite-wrapper" data-product="{{ $product->id }}">
-                <i class="icon heart favorite-heart"></i>
-            </span>
+            {{--
+                Favorite heart icon
+
+                TODO: Assume that favoriting a product has only 1 format. If there are multiple formats, it will favorite it BUT the persistance will fail.
+
+            --}}
+            @if(count($product->formats) != 0)
+                <span class="pull-right favorite-wrapper" data-product="{{ $product->formats[0]->id }}">
+                    <i class="icon heart favorite-heart"></i>
+                </span>
+            @endif
 
             {{-- Product Image --}}
             <a href="{{ route('product', ['slug' => $product->slug]) }}" class="strong">
