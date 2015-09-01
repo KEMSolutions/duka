@@ -139,13 +139,22 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
         // Format locale.
         if (isset($details['locale']) && is_string($details['locale']))
         {
-            // Make sure we have a supported locale.
-            $locales = Store::locales();
-            if (!in_array($details['locale'], $locales)) {
+            if (is_string($details['locale']))
+            {
+                // If the locale is supported, retrieve and store it in the customer model.
+                if (array_key_exists($details['locale'], Store::locales()))
+                {
+                    $this->locale = (array) Store::locales()[$details['locale']];
+                }
+
+                // Since the locale has already been updated, we don't need to pass it to the
+                // fill method later.
                 unset($details['locale']);
             }
 
-            $details['locale'] = (array) $locales[$details['locale']];
+            elseif (!is_array($details['locale'])) {
+                $details['locale'] = (array) $details['locale'];
+            }
         }
 
         // Fill in customer details with new data.

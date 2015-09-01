@@ -63,7 +63,7 @@ class AccountController extends Controller
             return redirect(route('auth.account'))->withValidator($validator)->withInput();
         }
 
-		$details = $request->except(['password', 'password_confirmation']);
+		$details = $request->except(['password', 'password_confirmation', '_token']);
 
         // Validate password, if we are updating that as well. The password confirmation
         // has been checked by the validator already, so we don't need to worry about that.

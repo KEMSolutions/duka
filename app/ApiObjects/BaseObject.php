@@ -111,7 +111,7 @@ abstract class BaseObject
 
         // If not, retrieve the data from the API. We use the response object so that
         // we may retrieve more information about the response later if necessary.
-        $response = KemAPI::get($this->baseRequest .'/'. $id, $requestParams, true);
+        $response = KemAPI::get($this->baseRequest .'/'. $id, $requestParams, [], true);
 
         // Catch any errors without throwing them back.
         if (!$response) {

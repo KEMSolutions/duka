@@ -81,7 +81,7 @@ class Products extends BaseObject
         if (!$results = Cache::get($key))
         {
             // Make the API call.
-            $response = KemAPI::get('products/search', $requestParams, true);
+            $response = KemAPI::get('products/search', $requestParams, [], true);
 
             $results = json_decode($response->getBody());
 
@@ -112,7 +112,7 @@ class Products extends BaseObject
 
     /**
      * Gets the thumbnail source for a product.
-     * 
+     *
      * @param object|int $id    Product object, or ID of a product.
      * @return string
      */
@@ -160,4 +160,3 @@ class Products extends BaseObject
         return Utilities::setImageSizeAndMode(300, 550, '',  $this->get($id)->images[0]->url);
     }
 }
-

@@ -86,8 +86,10 @@ class Customers extends BaseObject
         $customer->metadata['password'] = Crypt::encrypt($customer->metadata['password']);
         $customer->metadata = json_encode($customer->metadata);
 
+        $headers = ['Accept-Language' => $customer->locale['id']];
+
         // Update customer record.
-        $result = (array) KemAPI::put($this->baseRequest .'/'. $customer->id, $customer);
+        $result = (array) KemAPI::put($this->baseRequest .'/'. $customer->id, $customer, $headers);
 
         // Replace cached data.
         if (!static::isError($result))

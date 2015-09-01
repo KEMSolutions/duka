@@ -67,8 +67,8 @@ class KemApiHttpClient
      * @param bool $returnResponse  Whether to return the response object itself instead of a JSON-decoded object.
      * @return mixed                JSON-decoded response object or instance of \GuzzleHttp\Http\Response.
      */
-    public function get($request, $params = [], $returnResponse = false) {
-        return $this->makeRequest('GET', $request, $params, '', $returnResponse);
+    public function get($request, $params = [], $headers = [], $returnResponse = false) {
+        return $this->makeRequest('GET', $request, $params, '', $headers, $returnResponse);
     }
 
     /**
@@ -79,8 +79,8 @@ class KemApiHttpClient
      * @param bool $returnResponse  Whether to return the response object itself instead of a JSON-decoded object.
      * @return mixed                JSON-decoded response object or instance of \GuzzleHttp\Http\Response.
      */
-    public function post($request, $body = '', $returnResponse = false) {
-        return $this->makeRequest('POST', $request, [], $body, $returnResponse);
+    public function post($request, $body = '', $headers = [], $returnResponse = false) {
+        return $this->makeRequest('POST', $request, [], $body, $headers, $returnResponse);
     }
 
     /**
@@ -91,8 +91,8 @@ class KemApiHttpClient
      * @param bool $returnResponse  Whether to return the response object itself instead of a JSON-decoded object.
      * @return mixed                JSON-decoded response object or instance of \GuzzleHttp\Http\Response.
      */
-    public function put($request, $body, $returnResponse = false) {
-        return $this->makeRequest('PUT', $request, [], $body, $returnResponse);
+    public function put($request, $body, $headers = [], $returnResponse = false) {
+        return $this->makeRequest('PUT', $request, [], $body, $headers, $returnResponse);
     }
 
     /**
@@ -100,13 +100,14 @@ class KemApiHttpClient
      * @param string $endpoint      Request being made, e.g. "layouts".
      * @param array $params         Parameters to include with request.
      * @param mixed $body           Body of request.
+     * @param array $headers        Headers to send with request.
      * @param bool $returnResponse  Whether to return the response object itself instead of a JSON-decoded object.
      * @return mixed                JSON-decoded response object or instance of \GuzzleHttp\Http\Response.
      */
-    private function makeRequest($method, $request, $params = [], $body = '', $returnResponse = false)
+    private function makeRequest($method, $request, $params = [], $body = '', $headers = [], $returnResponse = false)
     {
         // Performance check.
-        if ($error = $this->checkRequest($request, $params, $body)) {
+        if ($error = $this->checkRequest($request, $params, $body, $headers)) {
             Log::error($error);
             return $returnResponse ? null : $this->badRequest();
         }
@@ -126,25 +127,26 @@ class KemApiHttpClient
         $sig = $body . $this->secret;
         $sig = base64_encode(hash('sha512', $sig, true));
 
+        // Prepare headers.
+        $headers = array_merge([
+            'X-Kem-User' => $this->user,
+            'X-Kem-Signature' => $sig,
+            'Accept-Language' => $this->locale,
+            'Content-Type' => 'application/json'
+        ], $headers);
+
         // Log requrest.
         Log::debug(
             "\n\nMaking API request:".
             "\n\tMethod: $method" .
             "\n\tEndpoint: $endpoint" .
             "\n\tSignature: $sig" .
-            "\n\tBody: $body\n"
+            "\n\tBody: $body" .
+            "\n\tHeaders: \n". print_r($headers, true)
         );
 
         // Create request.
-        $request = $this->client->createRequest($method, $endpoint, [
-            'body' => $body,
-            'headers' => [
-                'X-Kem-User' => $this->user,
-                'X-Kem-Signature' => $sig,
-                'Accept-Language' => $this->locale,
-                'Content-Type' => 'application/json'
-            ]
-        ]);
+        $request = $this->client->createRequest($method, $endpoint, ['body' => $body, 'headers' => $headers]);
 
         // Attempt to send request.
         try {
@@ -172,9 +174,10 @@ class KemApiHttpClient
      * @param string $request       Request being made, e.g. "categories/1234".
      * @param array $params         Parameters to include with request.
      * @param mixed $body           Body of request.
+     * @param array $headers        Headers to send with request.
      * @return false|string         Error message, or false if there are no errors.
      */
-    private function checkRequest($request, $params, $body)
+    private function checkRequest($request, $params, $body, $headers)
     {
         // Make sure we have a valid request.
         $request = preg_replace('/[^a-z0-9\/_\-=+]/i', '', $request);

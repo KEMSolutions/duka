@@ -50,13 +50,13 @@
 
         <div class="field">
             <label>Language</label>
-            <select class="ui fluid dropdown" name="language">
+            <select class="ui fluid dropdown" name="locale">
                 @foreach (Store::locales() as $locale)
                     <option
-                        value="{{ $locale['id'] }}"
-                        {{ $locale['id'] == $user->locale['id'] ? ' selected' : '' }}>
+                        value="{{ $locale->id }}"
+                        {{ $locale->id == $user->locale['id'] ? ' selected' : '' }}>
 
-                        {{ $locale['name'] }}
+                        {{ $locale->name }}
                     </option>
                 @endforeach
             </select>
