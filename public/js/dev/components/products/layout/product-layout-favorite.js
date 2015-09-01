@@ -9,7 +9,7 @@ var productLayoutFavoriteContainer = {
      *
      */
     fadeInFavoriteIcon: function() {
-        $(".dense_product").hover(function() {
+        $(".dense-product").hover(function() {
             $(this).children(".favorite-wrapper").fadeIn();
         }, function () {
             $(this).children(".favorite-wrapper").hide();

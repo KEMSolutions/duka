@@ -4872,16 +4872,16 @@ section.slice {
 /* Grid and list layout                   */
 /*----------------------------------------*/
 /*----------------------------------------*/
-.grid-layout .dense_product .name, .grid-layout .dense_product .brand, .grid-layout .dense_product .price {
+.grid-layout .dense-product .name, .grid-layout .dense-product .brand, .grid-layout .dense-product .price {
   padding: 3px;
 }
 
-.grid-layout .dense_product .btn {
+.grid-layout .dense-product .btn {
   border: 1px solid lightgray;
   border-radius: 5px;
 }
 
-.grid-layout .dense_product {
+.grid-layout .dense-product {
   height: 320px;
   border: 1px solid #CCC;
   border-left: 0;
@@ -4889,7 +4889,7 @@ section.slice {
   padding: 25px;
 }
 
-.grid-layout .dense_product img {
+.grid-layout .dense-product img {
   margin-bottom: 1.3rem;
   max-width: 20em;
   height: 160px;

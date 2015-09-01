@@ -2,18 +2,21 @@
 @foreach($products as $product)
 
     @if (is_object($product) && isset($product->id))
-        <div class="col-xs-6 col-sm-4 col-md-3 text-center dense_product
-                @if (!$border)
-                    {!! 'no-border' !!}
-                @endif
-                ">
+        <div class="four wide column text-center dense-product
+            @if (!$border)
+             {!! 'no-border' !!}
+            @endif
+            ">
+
+            {{-- Favorite heart icon --}}
             <span class="pull-right favorite-wrapper" data-product="{{ $product->id }}">
-                <i class="fa fa-heart favorite-heart"></i>
+                <i class="icon heart favorite-heart"></i>
             </span>
 
+            {{-- Product Image --}}
             <a href="{{ route('product', ['slug' => $product->slug]) }}" class="strong">
                 <img src="{{ Products::imgFeaturedLg($product) }}"
-                     class="product-image img-responsive center-block"
+                     class="product-image center-block"
                      alt="{{ $product->localization->name }}" />
             </a>
 
@@ -28,21 +31,26 @@
                 </div>
             @endif
 
+            {{-- Product name --}}
             <div class="name">
                 <a href="{{ route('product', ['slug' => $product->slug]) }}">
                     {{ $product->localization->name }}
                 </a>
             </div>
 
+
+            {{-- Product short description. --}}
             <div class="short-description hidden">
                 <p>{{ $product->localization->short_description }}</p>
             </div>
 
+
+            {{-- Buybutton --}}
             <div class="price">
 
                 @if(count($product->formats) != 0)
                     @foreach($product->formats as $format)
-                        <button class="btn btn-two btn-sm buybutton"
+                        <button class="ui icon btn btn-two buybutton"
                                 data-product="{{ $format->id }}"
                                 data-price="{{ $format->price }}"
                                 data-thumbnail="{{ Products::thumbnail($product) }}"
@@ -56,7 +64,7 @@
                                 <p class="ui sub header gray">{{ $format->name }}</p>
                             @endif
 
-                            <i class="fa fa-shopping-cart"></i>
+                            <i class="icon shop"></i>
                             $ {{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
                         </button>
                     @endforeach

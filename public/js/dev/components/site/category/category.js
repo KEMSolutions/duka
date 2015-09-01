@@ -153,9 +153,9 @@ var categoryContainer = {
 
     toggleLayout: function () {
         var $container = $(".layout-toggle-container"),
-            $product = $(".dense_product"),
+            $product = $(".dense-product"),
             $product_img = $(".product-image"),
-            $product_buybutton = $(".dense_product .buybutton");
+            $product_buybutton = $(".dense-product .buybutton");
 
         $("#list-layout, #grid-layout").on("click", function () {
 
