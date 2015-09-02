@@ -58,7 +58,6 @@
 	<script src="//cdn.kem.guru/boukem/spirit/js/gcc_ressources.js.gz"></script>
 	<script src="/js_assets/mixitup/jquery.mixitup.init.js"></script>
 	<script src="/js_assets/blur/blur.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
 	<!-- Semantic ui dependencies -->
 	<script src="/semantic/prod/semantic.js"></script>

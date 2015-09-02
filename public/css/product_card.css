@@ -53,7 +53,7 @@ Product page
 }
 
 .pricing-plans .plan-info {
-    margin-top: 2rem;
+    margin: 1rem 0 ;
     padding: 1rem;
 }
 
@@ -100,7 +100,7 @@ ul.categories.highlight li a {
     color: #F7F7F7!important;
 }
 
-.pinterest_share_button a:link {
+.pinterest_share_button a {
     background-color: #EFEFEF!important;
     color: #BD091F!important;
 }

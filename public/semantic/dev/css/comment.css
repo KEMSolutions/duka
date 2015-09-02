@@ -29,6 +29,10 @@
 .ui.comments:last-child {
   margin-bottom: 0em;
 }
+.ui.comments.full-width {
+    width: 100% !important;
+    max-width: 100%;
+}
 
 /*--------------
      Comment
