@@ -40,7 +40,7 @@
         <div class="four wide column right floated text-center">
 
             {{-- Mobile only categories menu. --}}
-                <div class="ui icon btn btn-one visible-mobile-inline-block">
+                <div class="ui icon btn btn-one visible-xs-inline-block">
                     <div class="ui dropdown dropdown-select pointing top left">
                         <div class="text">
                             {{ Lang::get("boukem.shop_by") }}{{ Lang::get("boukem.categories") }}
@@ -152,7 +152,7 @@
     {{-- End of fist row. --}}
 
     {{-- Second row. --}}
-    <div class="row header-banner color-one hidden-mobile">
+    <div class="row header-banner color-one hidden-xs">
 
         <div class="three wide column text-center border-right">
             <div class="ui dropdown dropdown-no-select pointing item">

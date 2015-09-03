@@ -1,13 +1,13 @@
-<div class="col-md-2" id="refine-search-container">
+<div class="three wide column" id="refine-search-container">
     <div class="row">
-        <h3 class="text-center">{{ Lang::get('boukem.results_found', ['total' => $total]) }}</h3>
+        <h3 class="ui header text-center">{{ Lang::get('boukem.results_found', ['total' => $total]) }}</h3>
     </div>
 
-    <div class="row padding-5">
+    <div class="row padded">
         <nav class="hidden-print hidden-xs hidden-sm">
             <ul class="nav list-unstyled">
 
-                {{-- Only display category filter on brand page --}}
+                {{--Only display category filter on brand page --}}
                 @if ($isBrand)
                     <li>
                         <div class="refine-search-component">
@@ -27,7 +27,7 @@
                     </li>
                 @endif
 
-                {{-- Only show brands filter on category page --}}
+                {{--Only show brands filter on category page --}}
                 @if (!$isBrand)
                     <li>
                         <div class="refine-search-component">
@@ -47,7 +47,7 @@
                     </li>
                 @endif
 
-                {{-- Price filter --}}
+                {{--Price filter --}}
                 <li>
                     <div class="refine-search-component">
                         <h5 class="refine-search-title">Gamme de prix</h5>

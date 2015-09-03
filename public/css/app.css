@@ -4713,7 +4713,7 @@ footer .copyright{color:#EEE;}
   padding: 1%;
 }
 
-.padding-5 {
+.row.padded {
   padding: 5%;
 }
 
@@ -4739,11 +4739,11 @@ footer .copyright{color:#EEE;}
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.float-right {
+.pull-right {
   float: right;
 }
 
-.float-left {
+.pull-left {
   float: left;
 }
 

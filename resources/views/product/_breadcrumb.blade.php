@@ -5,7 +5,7 @@
         </div>
 
         <div class="right floated column">
-            <div class="ui breadcrumb float-right">
+            <div class="ui breadcrumb pull-right">
                 <a class="section" href="/{{ $locale }}/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a>
                 <i class="right chevron icon divider"></i>
                 <a class="active section">{{ $product->localization->name }}</a>
