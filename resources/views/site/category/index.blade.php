@@ -17,14 +17,17 @@
                 {{-- Include filter sidebar --}}
                 @include('site.category._filter_sidebar', ['total' => $total])
 
-                 {{--Include filter summary container--}}
-                @include('site.category._filter_summary')
+                <div class="twelve wide column">
+                    {{--Include filter summary container--}}
+                    @include('site.category._filter_summary')
 
-                {{-- Include sorting topbar --}}
-                {{--@include('site.category._sorting_topbar')--}}
+                    {{--Include sorting topbar--}}
+                    @include('site.category._sorting_topbar')
 
-                {{-- Include results --}}
-                {{--@include('site.category._results', ['products' => $products])--}}
+                    {{-- Include results --}}
+                    {{--@include('site.category._results', ['products' => $products])--}}
+                </div>
+
             </div>
 
     @endsection

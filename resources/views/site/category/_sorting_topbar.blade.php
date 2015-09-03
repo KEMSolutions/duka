@@ -1,33 +1,33 @@
-<div class="col-md-10 sorting-topbar">
-    <ul class="list-unstyled list-inline">
-        <li>
+<div class="sorting-topbar row">
+    <div class="ui horizontal list full-width">
+        <div class="item">
             <span>
               <div class="ui inline dropdown dropdown-select top left pointing button labeled tiny" id="sort-by-box">
                   Sort by:
                   <div class="text">
-                      <i class="fa fa-link"></i>
+                      <i class="linkify icon"></i>
                       Relevance
                   </div>
                   <i class="dropdown icon"></i>
                   <div class="menu sort-by">
                       <div class="item" data-sort="-relevance">
-                          <i class="fa fa-link"></i>
+                          <i class="linkify icon"></i>
                           Relevance
                       </div>
                       <div class="item" data-sort="price">
-                          <i class="fa fa-usd"></i>
+                          <i class="dollar icon"></i>
                           Price: Low to High
                       </div>
                       <div class="item" data-sort="-price">
-                          <i class="fa fa-usd"></i>
+                          <i class="dollar icon"></i>
                           Price: High to Low
                       </div>
                   </div>
               </div>
             </span>
-        </li>
+        </div>
 
-        <li>
+        <div class="item">
             <span>
                 <div class="ui inline dropdown dropdown-select top right pointing button labeled tiny" id="items-per-page-box">
                     Items per page:
@@ -51,10 +51,10 @@
                     </div>
                 </div>
             </span>
-        </li>
+        </div>
 
-        <li class="pull-right">
-            <span>
+        <div class="item">
+                <span>
               Layout:
               <ul class="list-unstyled list-inline inline-block" id="category-result-layout">
                   <li>
@@ -72,10 +72,6 @@
                   </li>
               </ul>
             </span>
-        </li>
-
-    </ul>
-
-
-
+        </div>
+    </div>
 </div>
