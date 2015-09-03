@@ -1,3 +1,7 @@
-Hello {{ $customer->name }}
+@lang('passwords.greeting', ['name' => $customer->name])
 
-@lang('passwords.follow_token_link') {{ route('auth.reset.token', ['token' => $token]) }}
+
+@lang('passwords.follow_token')
+
+
+{{ route('auth.reset.token', ['token' => $token]) }}

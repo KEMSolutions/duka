@@ -7,63 +7,57 @@
 @endsection
 
 @section('content')
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
-			<div class="panel panel-default">
-				<div class="panel-heading">Login</div>
-				<div class="panel-body">
-					@if (count($errors) > 0)
-						<div class="alert alert-danger">
-							<strong>Whoops!</strong> There were some problems with your input.<br><br>
-							<ul>
-								@foreach ($errors->all() as $error)
-									<li>{{ $error }}</li>
-								@endforeach
-							</ul>
-						</div>
-					@endif
 
-					<form class="form-horizontal" role="form" method="POST" action="{{ route('auth.login.action') }}">
-						<input type="hidden" name="_token" value="{{ csrf_token() }}">
+{{-- Errors --}}
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
-						<div class="form-group">
-							<label class="col-md-4 control-label">E-Mail Address</label>
-							<div class="col-md-6">
-								<input type="email" class="form-control" name="email" value="{{ old('email') }}" required>
-							</div>
-						</div>
+<br />
+<div class="ui grid container">
+    <div class="two wide column"></div>
 
-						<div class="form-group">
-							<label class="col-md-4 control-label">Password</label>
-							<div class="col-md-6">
-								<input type="password" class="form-control" name="password" required>
-							</div>
-						</div>
+    <div class="twelve wide column">
+        <form class="ui form" role="form" method="post" action="{{ route('auth.login.action') }}">
+            {!! csrf_field() !!}
 
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" name="remember"> Remember Me
-									</label>
-								</div>
-							</div>
-						</div>
+            {{-- Email --}}
+            <div class="field">
+                <label>Email</label>
+                <input type="email" name="email" value="{{ old('email') }}" required />
+            </div>
 
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<button type="submit" class="btn btn-primary">Login</button>
+            {{-- Password --}}
+            <div class="field">
+                <label>Password</label>
+                <input type="password" name="password" required />
+            </div>
 
-								<a class="btn btn-link" href="{{ route('auth.reset') }}">Forgot Your Password?</a>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+            {{-- Remember me checkbox --}}
+            <div class="field">
+                <div class="ui checkbox">
+                    <input type="checkbox" name="remember" tabindex="0" class="hidden">
+                    <label>Remember Me</label>
+                </div>
+            </div>
+
+            <button class="ui button" type="submit">Submit</button>
+            <a class="btn btn-link" href="{{ route('auth.reset') }}">Forgot Your Password?</a>
+        </form>
+    </div>
+
+    <div class="two wide column"></div>
 </div>
+<br />
+<br />
+
 @endsection
 
 @section("scripts")

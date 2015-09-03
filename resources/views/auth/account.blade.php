@@ -22,7 +22,7 @@
 
 <br />
 <div class="ui grid container">
-    <form class="ui form" method="post" action="{{ route('auth.account.action') }}">
+    <form class="ui form" role="form" method="post" action="{{ route('auth.account.action') }}">
         {!! csrf_field() !!}
 
         {{-- Personal details --}}
