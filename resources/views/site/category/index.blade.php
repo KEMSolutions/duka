@@ -17,7 +17,7 @@
                 {{-- Include filter sidebar --}}
                 @include('site.category._filter_sidebar', ['total' => $total])
 
-                <div class="twelve wide column">
+                <div class="thirteen wide column">
                     {{--Include filter summary container--}}
                     @include('site.category._filter_summary')
 
@@ -25,7 +25,7 @@
                     @include('site.category._sorting_topbar')
 
                     {{-- Include results --}}
-                    {{--@include('site.category._results', ['products' => $products])--}}
+                    @include('site.category._results', ['products' => $products])
                 </div>
 
             </div>

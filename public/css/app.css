@@ -4717,6 +4717,18 @@ footer .copyright{color:#EEE;}
   padding: 5%;
 }
 
+.row.little-padded {
+  padding: 2%;
+}
+
+.row.horizontally-padded {
+  padding: 0 2%;
+}
+
+.row.vertically-padded {
+  padding: 2% 0;
+}
+
 .padding-side-lg {
   padding: 10px 40px;
 }

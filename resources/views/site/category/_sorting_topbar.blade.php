@@ -1,4 +1,4 @@
-<div class="sorting-topbar row">
+<div class="row sorting-topbar horizontally-padded">
     <div class="ui horizontal list full-width">
         <div class="item">
             <span>
