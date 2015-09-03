@@ -2793,24 +2793,24 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-left: -1px;
 }
 
-.breadcrumb {
-  float: right;
-  margin: 0;
-  padding: 24px 0;
-  background: none;
-  border-radius: 0;
-}
-.breadcrumb > li {
-  display: inline-block;
-}
-.breadcrumb > li + li:before {
-  content: "/\00a0";
-  padding: 0 5px;
-  color: #cccccc;
-}
-.breadcrumb > .active {
-  color: #777777;
-}
+/*.breadcrumb {*/
+  /*float: right;*/
+  /*margin: 0;*/
+  /*padding: 24px 0;*/
+  /*background: none;*/
+  /*border-radius: 0;*/
+/*}*/
+/*.breadcrumb > li {*/
+  /*display: inline-block;*/
+/*}*/
+/*.breadcrumb > li + li:before {*/
+  /*content: "/\00a0";*/
+  /*padding: 0 5px;*/
+  /*color: #cccccc;*/
+/*}*/
+/*.breadcrumb > .active {*/
+  /*color: #777777;*/
+/*}*/
 .pagination {
   display: inline-block;
   padding-left: 0;
@@ -4739,6 +4739,18 @@ footer .copyright{color:#EEE;}
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-clear {
+  float: none;
+}
+
 /*----------------------------------------*/
 
 /* Button */
@@ -4924,7 +4936,6 @@ section.slice {
 
 /*-----------------------------------*/
 .breadcrumb {
-  float: right;
   margin: 0;
   padding: 24px 0;
   background: none;
