@@ -5032,10 +5032,6 @@ section.slice {
   border-right: 1px solid #EBEBEB;
 }
 
-.refine-search-title {
-  font-weight: 900;
-}
-
 .refine-search-component:last-child {
   padding-bottom: 20px;
 }

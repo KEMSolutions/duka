@@ -13,7 +13,7 @@
         {{-- Include breadcrumbs --}}
         @include('site.category._breadcrumbs')
 
-            <div class="ui grid">
+            <div class="ui stackable grid">
                 {{-- Include filter sidebar --}}
                 @include('site.category._filter_sidebar', ['total' => $total])
 
