@@ -221,6 +221,6 @@ return [
     "please_create_password"    => "Veuillez créer un nouveau mot de passe pour votre compte existant.",
     "account_saved"     => "Vos coordonées ont été mises à jour. Merci!",
     "account_not_saved" => "Nous n'avons pas pu mettre vos coordonées à jour.",
+    "select_language" => "Langue",
 
 ];
-

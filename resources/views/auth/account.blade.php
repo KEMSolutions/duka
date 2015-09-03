@@ -26,15 +26,15 @@
         {!! csrf_field() !!}
 
         {{-- Personal details --}}
-        <h4 class="ui dividing header">Contact Info</h4>
+        <h4 class="ui dividing header">@lang('boukem.contact')</h4>
 
         <div class="field">
-            <label>Name</label>
+            <label>@lang('boukem.name')</label>
             <input type="text" name="name" value="{{ $user->name }}" required />
         </div>
 
         <div class="field">
-            <label>Email & Phone #</label>
+            <label>@lang('boukem.email') &amp; @lang('boukem.phone')</label>
             <div class="fields">
                 <div class="ten wide field">
                     <input type="email" name="email" value="{{ $user->email }}" required />
@@ -46,10 +46,10 @@
         </div>
 
         {{-- Settings --}}
-        <h4 class="ui dividing header">Settings</h4>
+        <h4 class="ui dividing header">@lang('boukem.account')</h4>
 
         <div class="field">
-            <label>Language</label>
+            <label>@lang('boukem.select_language')</label>
             <select class="ui fluid dropdown" name="locale">
                 @foreach (Store::locales() as $locale)
                     <option
@@ -63,22 +63,22 @@
         </div>
 
         <div class="field">
-            <label>Update password</label>
+            <label>@lang('boukem.new_pass')</label>
             <div class="fields">
                 <div class="eight wide field">
-                    <input type="password" name="password" placeholder="new password" />
+                    <input type="password" name="password" placeholder="@lang('boukem.new_pass')" />
                 </div>
                 <div class="eight wide field">
-                    <input type="password" name="password_confirmation" placeholder="confirm password" />
+                    <input type="password" name="password_confirmation" placeholder="@lang('boukem.confirmation')" />
                 </div>
             </div>
         </div>
 
         {{-- Addresses --}}
-        <h4 class="ui dividing header">Addresses</h4>
+        <h4 class="ui dividing header">@lang('boukem.address')</h4>
         TODO...<br /><br />
 
-        <button class="ui button" type="submit">Submit</button>
+        <button class="ui button" type="submit">@lang('boukem.update')</button>
     </form>
 </div>
 <br />

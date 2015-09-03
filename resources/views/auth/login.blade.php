@@ -30,13 +30,13 @@
 
             {{-- Email --}}
             <div class="field">
-                <label>Email</label>
+                <label>@lang('boukem.email')</label>
                 <input type="email" name="email" value="{{ old('email') }}" required />
             </div>
 
             {{-- Password --}}
             <div class="field">
-                <label>Password</label>
+                <label>@lang('boukem.password')</label>
                 <input type="password" name="password" required />
             </div>
 
@@ -44,12 +44,13 @@
             <div class="field">
                 <div class="ui checkbox">
                     <input type="checkbox" name="remember" tabindex="0" class="hidden">
-                    <label>Remember Me</label>
+                    <label>@lang('boukem.remember')</label>
                 </div>
             </div>
 
-            <button class="ui button" type="submit">Submit</button>
-            <a class="btn btn-link" href="{{ route('auth.reset') }}">Forgot Your Password?</a>
+            <button class="ui button" type="submit">@lang('boukem.log_in')</button>
+
+            <a class="btn btn-link" href="{{ route('auth.reset') }}">@lang('passwords.password_forgotten')</a>
         </form>
     </div>
 

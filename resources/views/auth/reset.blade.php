@@ -36,11 +36,11 @@
 
             {{-- Email --}}
             <div class="field">
-                <label>Email</label>
+                <label>@lang('boukem.email')</label>
                 <input type="email" name="email" value="{{ old('email') }}" required />
             </div>
 
-            <button class="ui button" type="submit">Submit</button>
+            <button class="ui button" type="submit">@lang('boukem.change_pass')</button>
         </form>
     </div>
 

@@ -30,29 +30,29 @@
 
             {{-- Name --}}
             <div class="field">
-                <label>Name</label>
+                <label>@lang('boukem.name')</label>
                 <input type="text" name="name" value="{{ old('name') }}" required />
             </div>
 
             {{-- Email --}}
             <div class="field">
-                <label>Email</label>
+                <label>@lang('boukem.email')</label>
                 <input type="email" name="email" value="{{ old('email') }}" required />
             </div>
 
             {{-- Password --}}
             <div class="field">
-                <label>Password</label>
+                <label>@lang('boukem.password')</label>
                 <input type="password" name="password" required />
             </div>
 
             {{-- Confirm password --}}
             <div class="field">
-                <label>Confirm password</label>
+                <label>@lang('boukem.confirmation')</label>
                 <input type="password" name="password_confirmation" required />
             </div>
 
-            <button class="ui button" type="submit">Register</button>
+            <button class="ui button" type="submit">@lang('boukem.sign_up')</button>
         </form>
     </div>
 

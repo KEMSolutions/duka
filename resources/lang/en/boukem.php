@@ -221,6 +221,6 @@ return [
     "please_create_password"    => "Please create a new password for your existing account.",
     "account_saved"    => "Your details have been updated. Thank you!",
     "account_not_saved"    => "We were not able to update your account information.",
+    "select_language" => "Language",
 
 ];
-
