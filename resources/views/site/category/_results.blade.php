@@ -1,5 +1,5 @@
-<div class="row layout-toggle-container grid-layout little-padded">
-    <div class="ui grid">
+<div class="row little-padded">
+    <div class="ui grid layout-toggle-container grid-layout">
         @include(
         'product.layout._product_card_dense', [
             'showTag' => false,

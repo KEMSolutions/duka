@@ -39,7 +39,7 @@
 
             {{-- Product name --}}
             <div class="name">
-                <a href="{{ route('product', ['slug' => $product->slug]) }}">
+                <a href="{{ route('product', ['slug' => $product->slug]) }}" class="ui tiny header">
                     {{ $product->localization->name }}
                 </a>
             </div>

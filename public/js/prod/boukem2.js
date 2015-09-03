@@ -489,322 +489,6 @@ var UtilityContainer = {
 
 
 /**
- * Object responsible for handling different formats of the same product.
- *
- * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
- */
-var productFormatContainer = {
-
-    /**
-     * Sets the right price, inventory count and format text according to the format of the hovered product.
-     *
-     */
-    displaySyncedProductInformation: function() {
-
-        const self = productFormatContainer,
-            $formatSelection = $(".format-selection");
-
-        $formatSelection.on("click", function () {
-            // Set the right format in product title
-            $("#product-format").text($(this).data("format"));
-
-            // Set the right price and the right inventory count
-            self.setPriceTag($(this).data("price"));
-            self.setInventoryCount($(this).data("inventory-count"));
-
-            // Toggle active class on right format
-            self.toggleActiveClass($(this));
-
-            // Creates an appropriate buybutton according to the info.
-            self.setBuybuttonInformation($(this));
-        });
-
-    },
-
-    /**
-     * Sets the inventory text and value according to the inventory count of the product.
-     *
-     * @param count
-     */
-    setInventoryCount: function (count) {
-        const $inventoryCount = $("#inventory-count"),
-            countryCode = $inventoryCount.data("country-code"),
-            expressShipping = Localization.express_shipping,
-            stockLeft = Localization.stock_left.replace(":quantity", count),
-            shippingTime = Localization.shipping_time,
-            shippingMethod = (countryCode === "US" || countryCode === "CA") ? "fa-truck" : "fa-plane";
-
-        var inventoryDescription = '';
-
-       if (count > 5) {
-            inventoryDescription =
-                '<link itemprop="availability" href="http://schema.org/InStock">' +
-                    '<li class="text-success">' +
-                    '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-                    expressShipping;
-       }
-       else if (count > 0) {
-           inventoryDescription =
-               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
-               '<li class="text-warning">' +
-                   '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-                   stockLeft;
-       }
-        else {
-           inventoryDescription =
-               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
-           '<li class="text-warning">' +
-           '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-           shippingTime;
-       }
-
-        $inventoryCount.html(inventoryDescription);
-
-    },
-
-    /**
-     * Sets the price tag according to the format.
-     *
-     * @param price
-     */
-    setPriceTag: function (price) {
-        $(".price-tag").text("$ " + price);
-    },
-
-    /**
-     * Recreates a buybutton with relevant information every time we switch format.
-     *
-     * @param format (html5 data in format buttons)
-     */
-    setBuybuttonInformation: function(format) {
-        var $buybuttonWrapper = $(".buybutton-format-selection-wrapper"),
-            buybutton =
-                '<button class="btn btn-three buybutton horizontal-align"' +
-                    'data-product="' + format.data("product") +'"' +
-                'data-price="' + format.data("price") +'"' +
-                'data-thumbnail="' + format.data("thumbnail") +'"' +
-                'data-thumbnail_lg="' + format.data("thumbnail_lg") +'"' +
-                'data-name="' + format.data("name") +'"' +
-                'data-format="' + format.data("format") +'"' +
-                'data-inventory-count="' + format.data("inventory-count") +'"' +
-                'data-quantity="1"' +
-                'data-link="' + format.data("link") +'"' +
-                    '>' +
-                '<div class="add-cart">' +
-                    '<i class="fa fa-check-circle"></i> ' +
-                    Localization.add_cart +
-                    '</div> </button>';
-
-        $buybuttonWrapper.empty();
-
-        $buybuttonWrapper.append(buybutton);
-    },
-
-    /**
-     * Toggles the .active class when clicked on a format.
-     *
-     * @param format
-     */
-    toggleActiveClass: function (format) {
-        $(".format-selection.active").removeClass("active");
-        format.addClass("active");
-    },
-
-    init: function () {
-        const self = productFormatContainer;
-
-        self.displaySyncedProductInformation();
-
-    }
-}
-/**
- * Object responsible for displaying the cart drawer.
- * Logic handled in dev/actions/layout/cart-drawer-logic.js
- *
- * @type {{$el: {$back: (*|jQuery|HTMLElement), $proceed: (*|jQuery|HTMLElement), $trigger: (*|jQuery|HTMLElement), $container: (*|jQuery|HTMLElement), $checkout: (*|jQuery|HTMLElement), $body: (*|jQuery|HTMLElement)}, displayOn: Function, displayOff: Function, animateIn: Function, animateOut: Function, setCartItemsHeight: Function, computeCartItemsHeight: Function, init: Function}}
- */
-var cartDisplayContainer = {
-    $el : {
-        $back : $("#back"),
-        $proceed : $("#proceed"),
-        $trigger : $(".view-cart"),
-        $container : $("#cart-container"),
-        $checkout : $("#checkout"),
-        $body : $("body")
-    },
-
-    displayOn: function() {
-        var _width = cartDisplayContainer.$el.$container.width();
-        cartDisplayContainer.$el.$container.css( {
-            "margin-right" : -_width
-        });
-
-        cartDisplayContainer.$el.$trigger.click(function() {
-            cartDisplayContainer.animateIn();
-        });
-    },
-
-    displayOff : function() {
-        cartDisplayContainer.$el.$back.click(function() {
-            cartDisplayContainer.animateOut();
-        });
-        cartDisplayContainer.$el.$checkout.click(function() {
-            sessionStorage.isDisplayed = false;
-        });
-    },
-
-    animateIn : function() {
-        cartDisplayContainer.$el.$container.show();
-        cartDisplayContainer.$el.$container.animate( {
-            "margin-right" : 0
-        }, 400);
-        sessionStorage.isDisplayed = true;
-    },
-
-    animateOut: function() {
-        var _width = cartDisplayContainer.$el.$container.width();
-        cartDisplayContainer.$el.$container.animate( {
-            "margin-right" : -_width
-        }, 400, function() {
-            $(this).hide();
-        });
-        sessionStorage.isDisplayed = false;
-    },
-
-    setCartItemsHeight : function() {
-        cartDisplayContainer.computeCartItemsHeight();
-
-        $(window).on("resize", function() {
-            cartDisplayContainer.computeCartItemsHeight();
-        });
-
-        cartDisplayContainer.$el.$trigger.on("click", function() {
-            cartDisplayContainer.computeCartItemsHeight();
-        })
-    },
-
-    computeCartItemsHeight : function() {
-        var cartItemsHeight = $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
-
-        $("#cart-items").css("height", cartItemsHeight);
-    },
-
-    init : function() {
-        cartDisplayContainer.displayOn();
-        cartDisplayContainer.displayOff();
-        UtilityContainer.populateCountry($("html").attr("lang"));
-
-        if (sessionStorage.isDisplayed == "true")
-        {
-            cartDisplayContainer.$el.$container.css("margin-right", 0);
-            cartDisplayContainer.$el.$container.show();
-        }
-
-    }
-};
-/**
- * Object responsible for handling the payment overlay behaviour.
- *
- * @type {{cancelOrder: Function, init: Function}}
- */
-var paymentOverlayContainer = {
-
-    /**
-     * Cancels an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_unpaid_orders");
-
-            $("#cancelledOrder .jumbotron").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-
-        });
-    },
-
-    /**
-     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_unpaid_orders')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(data) {
-                    if (data.status == 'pending')
-                        paymentOverlayContainer.showPaymentNotice();
-                    else
-                        Cookies.remove('_unpaid_orders');
-                }
-            });
-        }
-
-    },
-
-    /**
-     * Shows payment notice.
-     *
-     */
-    showPaymentNotice : function() {
-
-        // Retrieve order details.
-        var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-        // Display notice.
-        $('body').prepend(
-            '<div class="container overlay fullScreen" id="cancelledOrder">'+
-            '<div class="jumbotron vertical-align color-one">'+
-            '<div class="text-center">'+
-            '<h2>'+
-            Localization.pending_order.replace(':command', order.id) +
-            '</h2>'+
-            '<h4>'+ Localization.what_to_do +'</h4>'+
-            '<br />'+
-            '<ul class="list-inline">' +
-            '<li>' +
-            '<a href="'+
-            ApiEndpoints.orders.pay.replace(':id', order.id)
-                .replace(':verification', order.verification) +'">'+
-            '<button class="btn btn-success" id="payOrder">'+ Localization.pay_now +'</button>'+
-            '</a>'+
-            '</li>' +
-            '<li>' +
-            '<button class="btn btn-danger" id="cancelOrder">'+
-            Localization.cancel_order +
-            '</button>'+
-            '</li>'+
-            '</ul>'+
-            '</div>'+
-            '</div>'+
-            '</div>'
-        );
-    },
-
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-        self.checkPendingOrders();
-    }
-}
-
-/**
  * Object responsible for handling billing information.
  *
  * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
@@ -1233,6 +917,376 @@ var paymentContainer = {
     }
 }
 /**
+ * Object responsible for handling different formats of the same product.
+ *
+ * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
+ */
+var productFormatContainer = {
+
+    /**
+     * Sets the right price, inventory count and format text according to the format of the hovered product.
+     *
+     */
+    displaySyncedProductInformation: function() {
+
+        const self = productFormatContainer,
+            $formatSelection = $(".format-selection");
+
+        $formatSelection.on("click", function () {
+            // Set the right format in product title
+            $("#product-format").text($(this).data("format"));
+
+            // Set the right price and the right inventory count
+            self.setPriceTag($(this).data("price"));
+            self.setInventoryCount($(this).data("inventory-count"));
+
+            // Toggle active class on right format
+            self.toggleActiveClass($(this));
+
+            // Creates an appropriate buybutton according to the info.
+            self.setBuybuttonInformation($(this));
+        });
+
+    },
+
+    /**
+     * Sets the inventory text and value according to the inventory count of the product.
+     *
+     * @param count
+     */
+    setInventoryCount: function (count) {
+        const $inventoryCount = $("#inventory-count"),
+            countryCode = $inventoryCount.data("country-code"),
+            expressShipping = Localization.express_shipping,
+            stockLeft = Localization.stock_left.replace(":quantity", count),
+            shippingTime = Localization.shipping_time,
+            shippingMethod = (countryCode === "US" || countryCode === "CA") ? "fa-truck" : "fa-plane";
+
+        var inventoryDescription = '';
+
+       if (count > 5) {
+            inventoryDescription =
+                '<link itemprop="availability" href="http://schema.org/InStock">' +
+                    '<li class="text-success">' +
+                    '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+                    expressShipping;
+       }
+       else if (count > 0) {
+           inventoryDescription =
+               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
+               '<li class="text-warning">' +
+                   '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+                   stockLeft;
+       }
+        else {
+           inventoryDescription =
+               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
+           '<li class="text-warning">' +
+           '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+           shippingTime;
+       }
+
+        $inventoryCount.html(inventoryDescription);
+
+    },
+
+    /**
+     * Sets the price tag according to the format.
+     *
+     * @param price
+     */
+    setPriceTag: function (price) {
+        $(".price-tag").text("$ " + price);
+    },
+
+    /**
+     * Recreates a buybutton with relevant information every time we switch format.
+     *
+     * @param format (html5 data in format buttons)
+     */
+    setBuybuttonInformation: function(format) {
+        var $buybuttonWrapper = $(".buybutton-format-selection-wrapper"),
+            buybutton =
+                '<button class="btn btn-three buybutton horizontal-align"' +
+                    'data-product="' + format.data("product") +'"' +
+                'data-price="' + format.data("price") +'"' +
+                'data-thumbnail="' + format.data("thumbnail") +'"' +
+                'data-thumbnail_lg="' + format.data("thumbnail_lg") +'"' +
+                'data-name="' + format.data("name") +'"' +
+                'data-format="' + format.data("format") +'"' +
+                'data-inventory-count="' + format.data("inventory-count") +'"' +
+                'data-quantity="1"' +
+                'data-link="' + format.data("link") +'"' +
+                    '>' +
+                '<div class="add-cart">' +
+                    '<i class="fa fa-check-circle"></i> ' +
+                    Localization.add_cart +
+                    '</div> </button>';
+
+        $buybuttonWrapper.empty();
+
+        $buybuttonWrapper.append(buybutton);
+    },
+
+    /**
+     * Toggles the .active class when clicked on a format.
+     *
+     * @param format
+     */
+    toggleActiveClass: function (format) {
+        $(".format-selection.active").removeClass("active");
+        format.addClass("active");
+    },
+
+    init: function () {
+        const self = productFormatContainer;
+
+        self.displaySyncedProductInformation();
+
+    }
+}
+/**
+ * Object responsible for displaying the cart drawer.
+ * Logic handled in dev/actions/layout/cart-drawer-logic.js
+ *
+ * @type {{$el: {$back: (*|jQuery|HTMLElement), $proceed: (*|jQuery|HTMLElement), $trigger: (*|jQuery|HTMLElement), $container: (*|jQuery|HTMLElement), $checkout: (*|jQuery|HTMLElement), $body: (*|jQuery|HTMLElement)}, displayOn: Function, displayOff: Function, animateIn: Function, animateOut: Function, setCartItemsHeight: Function, computeCartItemsHeight: Function, init: Function}}
+ */
+var cartDisplayContainer = {
+    $el : {
+        $back : $("#back"),
+        $proceed : $("#proceed"),
+        $trigger : $(".view-cart"),
+        $container : $("#cart-container"),
+        $checkout : $("#checkout"),
+        $body : $("body")
+    },
+
+    displayOn: function() {
+        var _width = cartDisplayContainer.$el.$container.width();
+        cartDisplayContainer.$el.$container.css( {
+            "margin-right" : -_width
+        });
+
+        cartDisplayContainer.$el.$trigger.click(function() {
+            cartDisplayContainer.animateIn();
+        });
+    },
+
+    displayOff : function() {
+        cartDisplayContainer.$el.$back.click(function() {
+            cartDisplayContainer.animateOut();
+        });
+        cartDisplayContainer.$el.$checkout.click(function() {
+            sessionStorage.isDisplayed = false;
+        });
+    },
+
+    animateIn : function() {
+        cartDisplayContainer.$el.$container.show();
+        cartDisplayContainer.$el.$container.animate( {
+            "margin-right" : 0
+        }, 400);
+        sessionStorage.isDisplayed = true;
+    },
+
+    animateOut: function() {
+        var _width = cartDisplayContainer.$el.$container.width();
+        cartDisplayContainer.$el.$container.animate( {
+            "margin-right" : -_width
+        }, 400, function() {
+            $(this).hide();
+        });
+        sessionStorage.isDisplayed = false;
+    },
+
+    setCartItemsHeight : function() {
+        cartDisplayContainer.computeCartItemsHeight();
+
+        $(window).on("resize", function() {
+            cartDisplayContainer.computeCartItemsHeight();
+        });
+
+        cartDisplayContainer.$el.$trigger.on("click", function() {
+            cartDisplayContainer.computeCartItemsHeight();
+        })
+    },
+
+    computeCartItemsHeight : function() {
+        var cartItemsHeight = $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
+
+        $("#cart-items").css("height", cartItemsHeight);
+    },
+
+    init : function() {
+        cartDisplayContainer.displayOn();
+        cartDisplayContainer.displayOff();
+        UtilityContainer.populateCountry($("html").attr("lang"));
+
+        if (sessionStorage.isDisplayed == "true")
+        {
+            cartDisplayContainer.$el.$container.css("margin-right", 0);
+            cartDisplayContainer.$el.$container.show();
+        }
+
+    }
+};
+/**
+ * Object responsible for handling the payment overlay behaviour.
+ *
+ * @type {{cancelOrder: Function, init: Function}}
+ */
+var paymentOverlayContainer = {
+
+    /**
+     * Cancels an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     *
+     */
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            Cookies.remove("_unpaid_orders");
+
+            $("#cancelledOrder .jumbotron").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+
+        });
+    },
+
+    /**
+     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_unpaid_orders')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(data) {
+                    if (data.status == 'pending')
+                        paymentOverlayContainer.showPaymentNotice();
+                    else
+                        Cookies.remove('_unpaid_orders');
+                }
+            });
+        }
+
+    },
+
+    /**
+     * Shows payment notice.
+     *
+     */
+    showPaymentNotice : function() {
+
+        // Retrieve order details.
+        var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+        // Display notice.
+        $('body').prepend(
+            '<div class="container overlay fullScreen" id="cancelledOrder">'+
+            '<div class="jumbotron vertical-align color-one">'+
+            '<div class="text-center">'+
+            '<h2>'+
+            Localization.pending_order.replace(':command', order.id) +
+            '</h2>'+
+            '<h4>'+ Localization.what_to_do +'</h4>'+
+            '<br />'+
+            '<ul class="list-inline">' +
+            '<li>' +
+            '<a href="'+
+            ApiEndpoints.orders.pay.replace(':id', order.id)
+                .replace(':verification', order.verification) +'">'+
+            '<button class="btn btn-success" id="payOrder">'+ Localization.pay_now +'</button>'+
+            '</a>'+
+            '</li>' +
+            '<li>' +
+            '<button class="btn btn-danger" id="cancelOrder">'+
+            Localization.cancel_order +
+            '</button>'+
+            '</li>'+
+            '</ul>'+
+            '</div>'+
+            '</div>'+
+            '</div>'
+        );
+    },
+
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+        self.checkPendingOrders();
+    }
+}
+
+/**
+ * Object responsible for activating semantic ui features.
+ *
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
+ */
+var semanticInitContainer = {
+
+    /**
+     * Initialize modules
+     *
+     */
+    module: {
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule: function() {
+            //Enable selection on clicked items
+            $(".ui.dropdown-select").dropdown();
+
+            //Prevent selection on clicked items
+            $(".ui.dropdown-no-select").dropdown({
+                    action: "select"
+                }
+            );
+        },
+
+        /**
+         * Initialize rating module.
+         *
+         */
+        initRatingModule: function () {
+            $(".ui.rating").rating();
+        }
+    },
+
+    /**
+     * Specify semantic custom behavior.
+     *
+     */
+    behaviors: {
+
+    },
+
+
+
+    init: function () {
+        var self = semanticInitContainer,
+            module = self.module;
+
+        module.initDropdownModule();
+        module.initRatingModule();
+    }
+}
+/**
  * Object responsible for specific behaviours of homepage sections.
  *
  * @type {{mixed: {toggleSixteenWideColumn: Function}, init: Function}}
@@ -1290,154 +1344,6 @@ var wishlistContainer = {
         var self = wishlistContainer;
 
         self.setNumberOfProductsInHeader();
-    }
-}
-/**
- * Object responsible for activating semantic ui features.
- *
- * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
- */
-var semanticInitContainer = {
-
-    /**
-     * Initialize modules
-     *
-     */
-    module: {
-        /**
-         * Initialize dropdown module.
-         *
-         */
-        initDropdownModule: function() {
-            //Enable selection on clicked items
-            $(".ui.dropdown-select").dropdown();
-
-            //Prevent selection on clicked items
-            $(".ui.dropdown-no-select").dropdown({
-                    action: "select"
-                }
-            );
-        },
-
-        /**
-         * Initialize rating module.
-         *
-         */
-        initRatingModule: function () {
-            $(".ui.rating").rating();
-        }
-    },
-
-    /**
-     * Specify semantic custom behavior.
-     *
-     */
-    behaviors: {
-
-    },
-
-
-
-    init: function () {
-        var self = semanticInitContainer,
-            module = self.module;
-
-        module.initDropdownModule();
-        module.initRatingModule();
-    }
-}
-/**
- * Object responsible for adding products to a user's wishlist.
- *
- * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
- */
-var productLayoutFavoriteContainer = {
-    /**
-     * Fade in the favorite icon (heart icon) when hovering on a product tile.
-     *
-     */
-    fadeInFavoriteIcon: function() {
-        $(".dense-product").hover(function() {
-            $(this).children(".favorite-wrapper").fadeIn();
-        }, function () {
-            $(this).children(".favorite-wrapper").hide();
-        });
-    },
-
-    /**
-     * Update the value of .wishlist_badge when adding or deleting elements.
-     *
-     */
-    setWishlistBadgeQuantity : function() {
-        var total = UtilityContainer.getNumberOfProductsInWishlist();
-
-        $(".wishlist_badge").text(total);
-    },
-
-    /**
-     * Add the clicked product to the wish list.
-     *
-     */
-    addToFavorite: function() {
-        var self = productLayoutFavoriteContainer,
-            item;
-
-        $(".favorite-wrapper").on("click", function() {
-            //No favorited class.
-            if (!$(this).hasClass("favorited")) {
-                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
-                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
-
-                $(this).addClass("favorited");
-
-                self.setWishlistBadgeQuantity();
-            }
-            else
-            //Has a favorited class. We remove it, then delete the element from local Storage.
-            {
-                self.removeFromFavorite($(this), self);
-            }
-        });
-    },
-
-    /**
-     * Persist the heart icon next to products already marked as wished.
-     *
-     */
-    persistFavorite: function() {
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
-                for(var j = 0; j<$(".favorite-wrapper").length; j++)
-                {
-                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
-                    {
-                        $(".favorite-wrapper")[j].className += " favorited";
-                    }
-                }
-            }
-        };
-    },
-
-    /**
-     * Delete the clicked element from the wish list.
-     *
-     * @param context
-     */
-    removeFromFavorite: function (element, context) {
-        element.removeClass("favorited");
-        localStorage.removeItem("_wish_product " + element.data("product"));
-        context.setWishlistBadgeQuantity();
-    },
-
-    init: function () {
-        var self = productLayoutFavoriteContainer;
-
-
-        self.addToFavorite();
-        self.persistFavorite();
-        self.fadeInFavoriteIcon();
-        self.setWishlistBadgeQuantity();
     }
 }
 /**
@@ -1597,7 +1503,9 @@ var categoryContainer = {
         var $container = $(".layout-toggle-container"),
             $product = $(".dense-product"),
             $product_img = $(".product-image"),
-            $product_buybutton = $(".dense-product .buybutton");
+            $product_buybutton = $(".dense-product .buybutton"),
+            $product_shortDescription = $(".dense-product .short-description"),
+            $product_name = $(".dense-product .name a");
 
         $("#list-layout, #grid-layout").on("click", function () {
 
@@ -1606,12 +1514,16 @@ var categoryContainer = {
                 // List layout
                 $container.removeClass("grid-layout").addClass("list-layout");
 
-                $product.removeClass("col-xs-6 col-sm-4 col-md-3 text-center no-border")
-                    .addClass("col-xs-12 col-sm-12 col-md-12 border-bottom padding-1");
+                $product.removeClass("four wide column text-center no-border")
+                    .addClass("sixteen wide column border-bottom-clear");
 
-                $product_img.removeClass("img-responsive center-block").addClass("pull-left").css("margin-right", "5%");
+                $product_shortDescription.removeClass("hidden");
 
-                $product_buybutton.css("margin-top", "3%");
+                $product_name.addClass("ui medium header");
+
+                $product_img.removeClass("center-block").addClass("pull-left").css("margin-right", "5%");
+
+                $product_buybutton.css("margin-top", "2rem");
 
 
                 $(this).toggleClass("active");
@@ -1621,10 +1533,14 @@ var categoryContainer = {
                 // Grid layout
                 $container.removeClass("list-layout").addClass("grid-layout");
 
-                $product.removeClass("col-xs-12 col-sm-12 col-md-12 border-bottom padding-1").
-                    addClass("col-xs-6 col-sm-4 col-md-3 text-center no-border");
+                $product.removeClass("sixteen wide column border-bottom-clear").
+                    addClass("four wide column text-center no-border");
 
-                $product_img.addClass("img-responsive center-block").removeClass("pull-left").css("margin-right", "0");
+                $product_img.addClass("center-block").removeClass("pull-left").css("margin-right", "0");
+
+                $product_shortDescription.addClass("hidden");
+
+                $product_name.removeClass("medium").addClass("tiny");
 
                 $product_buybutton.css("margin-top", "0");
 
@@ -1667,6 +1583,100 @@ var categoryContainer = {
 };
 
 
+/**
+ * Object responsible for adding products to a user's wishlist.
+ *
+ * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
+ */
+var productLayoutFavoriteContainer = {
+    /**
+     * Fade in the favorite icon (heart icon) when hovering on a product tile.
+     *
+     */
+    fadeInFavoriteIcon: function() {
+        $(".dense-product").hover(function() {
+            $(this).children(".favorite-wrapper").fadeIn();
+        }, function () {
+            $(this).children(".favorite-wrapper").hide();
+        });
+    },
+
+    /**
+     * Update the value of .wishlist_badge when adding or deleting elements.
+     *
+     */
+    setWishlistBadgeQuantity : function() {
+        var total = UtilityContainer.getNumberOfProductsInWishlist();
+
+        $(".wishlist_badge").text(total);
+    },
+
+    /**
+     * Add the clicked product to the wish list.
+     *
+     */
+    addToFavorite: function() {
+        var self = productLayoutFavoriteContainer,
+            item;
+
+        $(".favorite-wrapper").on("click", function() {
+            //No favorited class.
+            if (!$(this).hasClass("favorited")) {
+                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
+                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+
+                $(this).addClass("favorited");
+
+                self.setWishlistBadgeQuantity();
+            }
+            else
+            //Has a favorited class. We remove it, then delete the element from local Storage.
+            {
+                self.removeFromFavorite($(this), self);
+            }
+        });
+    },
+
+    /**
+     * Persist the heart icon next to products already marked as wished.
+     *
+     */
+    persistFavorite: function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
+                for(var j = 0; j<$(".favorite-wrapper").length; j++)
+                {
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
+                    {
+                        $(".favorite-wrapper")[j].className += " favorited";
+                    }
+                }
+            }
+        };
+    },
+
+    /**
+     * Delete the clicked element from the wish list.
+     *
+     * @param context
+     */
+    removeFromFavorite: function (element, context) {
+        element.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + element.data("product"));
+        context.setWishlistBadgeQuantity();
+    },
+
+    init: function () {
+        var self = productLayoutFavoriteContainer;
+
+
+        self.addToFavorite();
+        self.persistFavorite();
+        self.fadeInFavoriteIcon();
+        self.setWishlistBadgeQuantity();
+    }
+}
 /**
  * Entry point of script.
  *
@@ -1748,353 +1758,6 @@ $(document).ready(function () {
     });
 
 });
-/**
- * Container responsible for initializing the cart drawer feature.
- *
- * @type {{buyButtonClick: Function, getEstimateClick: Function, init: Function}}
- */
-var cartDrawerInitContainer = {
-
-    /**
-     * Event triggered when a buy button is clicked.
-     *
-     */
-    buyButtonClick : function () {
-        $("body").on("click", ".buybutton", function() {
-            cartDisplayContainer.animateIn();
-            cartLogicContainer.addItem(UtilityContainer.buyButton_to_Json($(this)));
-            cartLogicContainer.storeItem(UtilityContainer.buyButton_to_Json($(this)));
-
-            //We remove the "Your cart is empty" message at the top every time we add an item.
-            //TODO : Maybe improve it?
-            $("#cart-items .empty-cart").addClass("hidden");
-        });
-    },
-
-    /**
-     * Event triggered when the Calculate button (to get a price estimate) is clicked.
-     *
-     */
-    getEstimateClick: function () {
-        $(".getEstimate").on("click", function() {
-            //Fields validation + Empty cart validation.
-            if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate #country").val())
-                && UtilityContainer.validateEmptyFields([$("#postcode")])
-                && !UtilityContainer.validateEmptyCart()) {
-
-                $(this).html('<i class="fa fa-spinner fa-spin"></i>');
-
-                cartLogicContainer.ajaxCall();
-
-            }
-            else if (UtilityContainer.validateEmptyCart()) {
-                $("#cart-items .empty-cart").removeClass("hidden");
-            }
-            else {
-                UtilityContainer.addErrorClassToFieldsWithRules($("#postcode"));
-            }
-        });
-    },
-
-    init: function () {
-        cartDisplayContainer.init();
-        cartLogicContainer.init();
-        cartDisplayContainer.setCartItemsHeight();
-
-        var self = cartDrawerInitContainer;
-        self.buyButtonClick();
-        self.getEstimateClick();
-    }
-
-}
-
-/**
- * Object responsible for the overall logic (CRUD) of the cart drawer.
- * Layout handled in dev/components/layout/cart-drawer.js
- *
- * @type {{$el: {$list: (*|jQuery|HTMLElement)}, addItem: Function, storeItem: Function, loadItem: Function, deleteItem: Function, modifyQuantity: Function, modifyQuantityBeforeBuying: Function, setBadgeQuantity: Function, setQuantityCookie: Function, setCartSubtotal: Function, setCartShipping: Function, setCartTaxes: Function, setCartTotal: Function, ajaxCall: Function, updateAjaxCall: Function, init: Function}}
- */
-var cartLogicContainer = {
-    /**
-     * Cache a set of elements commonly used (to be updated)
-     */
-    $el : {
-        $list : $(".cart-items-list")
-    },
-
-    /**
-     * Add an item in the list.
-     *
-     * @param item JSON format converted from attributes on the .buybutton
-     */
-    addItem : function(item) {
-        var price = (parseInt(item.quantity) * parseFloat(item.price)).toFixed(2);
-
-        var sidebarElement = '<li class="w-box animated bounceInDown" data-product="' + item.product + '" data-quantity=1>' +
-            '<div class="col-xs-3 text-center"><img src=' + item.thumbnail_lg + ' class="img-responsive"></div>' +
-            '<div class="col-xs-9 no-padding-left">' +
-            '<div class="row"><div class="col-xs-10"><h3 class="product-name">' + item.name + '</h3></div><div class="col-xs-2"><h4 class="text-right"><i class="fa fa-trash fa-1 close-button"><span class="sr-only">Remove Item</span></i></h4></div></div>' +
-            '<div class="row"><div class="col-xs-8">' +
-            '<div class="input-group"><label for="products[' + item.product + '][quantity]" class="sr-only">'+ item.name + ":" + item.price +'</label>' +
-            '<input type="number" class="quantity form-control input-sm" min="1" step="1" value="' + item.quantity + '" name="products[' + item.product + '][quantity]">' +
-            '<span class="input-group-addon update_quantity_indicator"><i class="fa" hidden><span class="sr-only">' + "Update quantity" + '</span></i></span></div></div>' +
-            '<div class="col-xs-4 product-price text-right" data-price="' + item.price + '">$' + price  + '<span class="sr-only">' + $ + item.price + '</span></div></div>' +
-            '<input type="hidden" name="products[' + item.product + '][id]" value="' + item.product + '"/> ' +
-            '</div>' +
-            '</li>';
-
-        if (!$(".cart-items-list [data-product='" + item.product + "']").length){
-            cartLogicContainer.$el.$list.append(sidebarElement);
-        }
-
-    },
-
-    /**
-     * Store a product in localStorage
-     * Update badge quantity
-     * Create/update a quantity cookie
-     *
-     * @param item JSON format converted from attributes on the .buybutton
-     */
-    storeItem : function(item) {
-        localStorage.setItem("_product " + item.product, JSON.stringify(item));
-        cartLogicContainer.setBadgeQuantity();
-        cartLogicContainer.setQuantityCookie();
-        cartLogicContainer.setCartSubtotal();
-        cartLogicContainer.setCartTotal();
-        cartLogicContainer.updateAjaxCall();
-    },
-
-    /**
-     * Load a list of items previously bought into the cart.
-     * If there is no item in localStorage starting with the key "_product", then nothing is loaded.
-     */
-    loadItem : function() {
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
-            {
-                cartLogicContainer.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
-            }
-        }
-    },
-
-    /**
-     * Delete an item from the cart drawer list.
-     * Remove it from the DOM.
-     * Delete the object on localStorage.
-     * Set Badge quantity accordingly.
-     * Update Cookie quantity accordingly.
-     */
-    deleteItem: function() {
-        $(document).on('click', ".close-button", function() {
-            $parent = $(this).closest(".animated").addClass("animated bounceOutLeft");
-            $parent.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-                $(this).remove();
-            });
-
-            localStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
-
-            cartLogicContainer.setBadgeQuantity();
-            cartLogicContainer.setQuantityCookie();
-            cartLogicContainer.setCartSubtotal();
-            cartLogicContainer.setCartTotal();
-            cartLogicContainer.updateAjaxCall();
-
-        });
-    },
-
-    /**
-     * Modify the quantity of a product in the cart
-     * Update its price label accordingly
-     * Update the localStorage
-     * Set badge quantity
-     * Update Cookie quantity
-     */
-    modifyQuantity : function() {
-        $("#cart-items").on("change", ".quantity", function() {
-            $container = $(this).closest("li");
-            $product_price = $container.find(".product-price");
-
-            //update the total value
-            $product_price.text("$" + ($product_price.data("price") * $(this).val()).toFixed(2));
-
-            //retrieve old data from old object then update the quantity and finally update the object
-            var oldData = JSON.parse(localStorage.getItem("_product " + $container.data("product")));
-            oldData.quantity = parseInt($(this).val());
-            localStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
-
-            cartLogicContainer.setBadgeQuantity();
-            cartLogicContainer.setQuantityCookie();
-            cartLogicContainer.setCartSubtotal();
-            cartLogicContainer.setCartTotal();
-            cartLogicContainer.updateAjaxCall();
-
-        });
-    },
-
-    /**
-     * Modify the quantity in a product page before buying
-     * Only used in a product page. (It is hackish, I'll admit it)
-     * Assuming the DOM has (and will keep) this structure:
-     *      .form-group
-     *          #item-quantity
-     *          .ui.buttons.huge
-     *          <br>
-     *          <br>
-     *      .buybutton
-     */
-    modifyQuantityBeforeBuying : function() {
-        $("#item_quantity").on("change", function() {
-
-            var $buybutton = $(this).closest(".input-qty-detail").find(".buybutton"),
-                self = $(this);
-
-            $buybutton.data("quantity", parseInt(self.val()));
-
-        });
-    },
-
-    /**
-     * Update the value of #cart_badge when adding or deleting elements
-     */
-    setBadgeQuantity : function() {
-        var total = UtilityContainer.getNumberOfProducts();
-
-        $(".cart_badge").text(total);
-    },
-
-    /**
-     * Create or Update a cookie with the quantity present in the cart.
-     * The value of the cookie is encoded in base64 (btoa)
-     */
-    setQuantityCookie : function () {
-        var number = UtilityContainer.getNumberOfProducts();
-
-        if (Cookies.get("quantityCart") == undefined || number === 0)
-        {
-            Cookies.set("quantityCart", btoa("0"));
-        }
-        else {
-            Cookies.set("quantityCart", btoa(number));
-        }
-    },
-
-    /**
-     * Update subtotal when users put something in or out of their cart.
-     *
-     */
-    setCartSubtotal : function () {
-        $("dd#subtotal").text("$" + UtilityContainer.getProductsPriceFromLocalStorage().toFixed(2));
-    },
-
-    /**
-     * Set shipping field
-     *
-     * @param data
-     */
-    setCartShipping : function(data) {
-        $("dd#shipping").text("$" + (UtilityContainer.getCheapestShippingMethod(data).fare));
-    },
-
-
-    /**
-     * Set taxes field
-     *
-     * @param taxes
-     */
-    setCartTaxes : function(taxes) {
-        $("#taxes").text("$" + taxes.toFixed(2));
-    },
-
-    /**
-     * Set total field
-     *
-     * @param total
-     */
-    setCartTotal : function (total) {
-        $(".cart-total dl").show();
-        $(".calculation.total dd").text("$ " + total);
-    },
-
-
-
-    /**
-     * Ajax call to /api/estimate after all verifications have passed.
-     *
-     */
-    ajaxCall : function() {
-        $.ajax({
-            type: "POST",
-            url: "/api/estimate",
-            data: {
-                products: UtilityContainer.getProductsFromLocalStorage(),
-                shipping_address: {
-                    "postcode": $("#postcode").val(),
-                    "country": $(".price-estimate #country").val(),
-                    "province" : "QC"
-                }
-            },
-            success: function(data) {
-                cartLogicContainer.setCartShipping(data);
-                cartLogicContainer.setCartTaxes(UtilityContainer.getCartTaxes(UtilityContainer.getCheapestShippingMethod(data).method, data));
-                cartLogicContainer.setCartTotal(UtilityContainer.getCartTotal(UtilityContainer.getCheapestShippingMethod(data), data));
-            },
-            error: function(e) {
-                console.log(e);
-            },
-            complete : function() {
-                $(".price-estimate").fadeOut(300, function() {
-                    $(".calculation.hidden").fadeIn().removeClass("hidden");
-                    $(".cart-total.hidden").fadeIn().removeClass("hidden");
-                });
-            }
-        });
-    },
-
-    /**
-     * Display an update panel when changes are made to the cart drawer.
-     *
-     */
-    updateAjaxCall : function() {
-        //If the total is displayed, it means that there's already been an ajax call: we have to display an update!
-        if(!$(".total").parent().hasClass("hidden")) {
-            $(".cart-total dl").hide();
-            $(".price-estimate-update").fadeIn('fast');
-        }
-
-        $(".changeLocation").click(function() {
-            $("dl.calculation").addClass("hidden");
-            $(".getEstimate").html(Localization.calculate);
-            $(".price-estimate-update").fadeOut();
-            $(".price-estimate").fadeIn();
-
-        });
-
-        //TODO: Refactor the arbitrary xxxxms to an actual end of ajax call.
-
-        $(".price-estimate-update .getEstimate").click(function() {
-            if(!UtilityContainer.validateEmptyCart()) {
-                setTimeout(function() {
-                    $(".price-estimate-update .getEstimate").parent().fadeOut(300);
-                    $(".price-estimate-update .getEstimate").html(Localization.calculate);
-                }, 2250);
-            }
-        });
-
-    },
-
-    init : function() {
-        cartLogicContainer.setBadgeQuantity();
-        cartLogicContainer.loadItem();
-        cartLogicContainer.deleteItem();
-        cartLogicContainer.modifyQuantity();
-        cartLogicContainer.modifyQuantityBeforeBuying();
-        cartLogicContainer.setQuantityCookie();
-        cartLogicContainer.setCartSubtotal();
-    }
-};
-
 /**
  * Container responsible for initializing the checkout page.
  * Overall logic is handled in js/dev/actions/checkout/*.js
@@ -2465,3 +2128,349 @@ var wishlistLogicContainer = {
     }
 
 }
+/**
+ * Container responsible for initializing the cart drawer feature.
+ *
+ * @type {{buyButtonClick: Function, getEstimateClick: Function, init: Function}}
+ */
+var cartDrawerInitContainer = {
+
+    /**
+     * Event triggered when a buy button is clicked.
+     *
+     */
+    buyButtonClick : function () {
+        $("body").on("click", ".buybutton", function() {
+            cartDisplayContainer.animateIn();
+            cartLogicContainer.addItem(UtilityContainer.buyButton_to_Json($(this)));
+            cartLogicContainer.storeItem(UtilityContainer.buyButton_to_Json($(this)));
+
+            //We remove the "Your cart is empty" message at the top every time we add an item.
+            //TODO : Maybe improve it?
+            $("#cart-items .empty-cart").addClass("hidden");
+        });
+    },
+
+    /**
+     * Event triggered when the Calculate button (to get a price estimate) is clicked.
+     *
+     */
+    getEstimateClick: function () {
+        $(".getEstimate").on("click", function() {
+            //Fields validation + Empty cart validation.
+            if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate #country").val())
+                && UtilityContainer.validateEmptyFields([$("#postcode")])
+                && !UtilityContainer.validateEmptyCart()) {
+
+                $(this).html('<i class="fa fa-spinner fa-spin"></i>');
+
+                cartLogicContainer.ajaxCall();
+
+            }
+            else if (UtilityContainer.validateEmptyCart()) {
+                $("#cart-items .empty-cart").removeClass("hidden");
+            }
+            else {
+                UtilityContainer.addErrorClassToFieldsWithRules($("#postcode"));
+            }
+        });
+    },
+
+    init: function () {
+        cartDisplayContainer.init();
+        cartLogicContainer.init();
+        cartDisplayContainer.setCartItemsHeight();
+
+        var self = cartDrawerInitContainer;
+        self.buyButtonClick();
+        self.getEstimateClick();
+    }
+
+}
+
+/**
+ * Object responsible for the overall logic (CRUD) of the cart drawer.
+ * Layout handled in dev/components/layout/cart-drawer.js
+ *
+ * @type {{$el: {$list: (*|jQuery|HTMLElement)}, addItem: Function, storeItem: Function, loadItem: Function, deleteItem: Function, modifyQuantity: Function, modifyQuantityBeforeBuying: Function, setBadgeQuantity: Function, setQuantityCookie: Function, setCartSubtotal: Function, setCartShipping: Function, setCartTaxes: Function, setCartTotal: Function, ajaxCall: Function, updateAjaxCall: Function, init: Function}}
+ */
+var cartLogicContainer = {
+    /**
+     * Cache a set of elements commonly used (to be updated)
+     */
+    $el : {
+        $list : $(".cart-items-list")
+    },
+
+    /**
+     * Add an item in the list.
+     *
+     * @param item JSON format converted from attributes on the .buybutton
+     */
+    addItem : function(item) {
+        var price = (parseInt(item.quantity) * parseFloat(item.price)).toFixed(2);
+
+        var sidebarElement = '<li class="w-box animated bounceInDown" data-product="' + item.product + '" data-quantity=1>' +
+            '<div class="col-xs-3 text-center"><img src=' + item.thumbnail_lg + ' class="img-responsive"></div>' +
+            '<div class="col-xs-9 no-padding-left">' +
+            '<div class="row"><div class="col-xs-10"><h3 class="product-name">' + item.name + '</h3></div><div class="col-xs-2"><h4 class="text-right"><i class="fa fa-trash fa-1 close-button"><span class="sr-only">Remove Item</span></i></h4></div></div>' +
+            '<div class="row"><div class="col-xs-8">' +
+            '<div class="input-group"><label for="products[' + item.product + '][quantity]" class="sr-only">'+ item.name + ":" + item.price +'</label>' +
+            '<input type="number" class="quantity form-control input-sm" min="1" step="1" value="' + item.quantity + '" name="products[' + item.product + '][quantity]">' +
+            '<span class="input-group-addon update_quantity_indicator"><i class="fa" hidden><span class="sr-only">' + "Update quantity" + '</span></i></span></div></div>' +
+            '<div class="col-xs-4 product-price text-right" data-price="' + item.price + '">$' + price  + '<span class="sr-only">' + $ + item.price + '</span></div></div>' +
+            '<input type="hidden" name="products[' + item.product + '][id]" value="' + item.product + '"/> ' +
+            '</div>' +
+            '</li>';
+
+        if (!$(".cart-items-list [data-product='" + item.product + "']").length){
+            cartLogicContainer.$el.$list.append(sidebarElement);
+        }
+
+    },
+
+    /**
+     * Store a product in localStorage
+     * Update badge quantity
+     * Create/update a quantity cookie
+     *
+     * @param item JSON format converted from attributes on the .buybutton
+     */
+    storeItem : function(item) {
+        localStorage.setItem("_product " + item.product, JSON.stringify(item));
+        cartLogicContainer.setBadgeQuantity();
+        cartLogicContainer.setQuantityCookie();
+        cartLogicContainer.setCartSubtotal();
+        cartLogicContainer.setCartTotal();
+        cartLogicContainer.updateAjaxCall();
+    },
+
+    /**
+     * Load a list of items previously bought into the cart.
+     * If there is no item in localStorage starting with the key "_product", then nothing is loaded.
+     */
+    loadItem : function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
+            {
+                cartLogicContainer.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
+            }
+        }
+    },
+
+    /**
+     * Delete an item from the cart drawer list.
+     * Remove it from the DOM.
+     * Delete the object on localStorage.
+     * Set Badge quantity accordingly.
+     * Update Cookie quantity accordingly.
+     */
+    deleteItem: function() {
+        $(document).on('click', ".close-button", function() {
+            $parent = $(this).closest(".animated").addClass("animated bounceOutLeft");
+            $parent.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                $(this).remove();
+            });
+
+            localStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
+
+            cartLogicContainer.setBadgeQuantity();
+            cartLogicContainer.setQuantityCookie();
+            cartLogicContainer.setCartSubtotal();
+            cartLogicContainer.setCartTotal();
+            cartLogicContainer.updateAjaxCall();
+
+        });
+    },
+
+    /**
+     * Modify the quantity of a product in the cart
+     * Update its price label accordingly
+     * Update the localStorage
+     * Set badge quantity
+     * Update Cookie quantity
+     */
+    modifyQuantity : function() {
+        $("#cart-items").on("change", ".quantity", function() {
+            $container = $(this).closest("li");
+            $product_price = $container.find(".product-price");
+
+            //update the total value
+            $product_price.text("$" + ($product_price.data("price") * $(this).val()).toFixed(2));
+
+            //retrieve old data from old object then update the quantity and finally update the object
+            var oldData = JSON.parse(localStorage.getItem("_product " + $container.data("product")));
+            oldData.quantity = parseInt($(this).val());
+            localStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
+
+            cartLogicContainer.setBadgeQuantity();
+            cartLogicContainer.setQuantityCookie();
+            cartLogicContainer.setCartSubtotal();
+            cartLogicContainer.setCartTotal();
+            cartLogicContainer.updateAjaxCall();
+
+        });
+    },
+
+    /**
+     * Modify the quantity in a product page before buying
+     * Only used in a product page. (It is hackish, I'll admit it)
+     * Assuming the DOM has (and will keep) this structure:
+     *      .form-group
+     *          #item-quantity
+     *          .ui.buttons.huge
+     *          <br>
+     *          <br>
+     *      .buybutton
+     */
+    modifyQuantityBeforeBuying : function() {
+        $("#item_quantity").on("change", function() {
+
+            var $buybutton = $(this).closest(".input-qty-detail").find(".buybutton"),
+                self = $(this);
+
+            $buybutton.data("quantity", parseInt(self.val()));
+
+        });
+    },
+
+    /**
+     * Update the value of #cart_badge when adding or deleting elements
+     */
+    setBadgeQuantity : function() {
+        var total = UtilityContainer.getNumberOfProducts();
+
+        $(".cart_badge").text(total);
+    },
+
+    /**
+     * Create or Update a cookie with the quantity present in the cart.
+     * The value of the cookie is encoded in base64 (btoa)
+     */
+    setQuantityCookie : function () {
+        var number = UtilityContainer.getNumberOfProducts();
+
+        if (Cookies.get("quantityCart") == undefined || number === 0)
+        {
+            Cookies.set("quantityCart", btoa("0"));
+        }
+        else {
+            Cookies.set("quantityCart", btoa(number));
+        }
+    },
+
+    /**
+     * Update subtotal when users put something in or out of their cart.
+     *
+     */
+    setCartSubtotal : function () {
+        $("dd#subtotal").text("$" + UtilityContainer.getProductsPriceFromLocalStorage().toFixed(2));
+    },
+
+    /**
+     * Set shipping field
+     *
+     * @param data
+     */
+    setCartShipping : function(data) {
+        $("dd#shipping").text("$" + (UtilityContainer.getCheapestShippingMethod(data).fare));
+    },
+
+
+    /**
+     * Set taxes field
+     *
+     * @param taxes
+     */
+    setCartTaxes : function(taxes) {
+        $("#taxes").text("$" + taxes.toFixed(2));
+    },
+
+    /**
+     * Set total field
+     *
+     * @param total
+     */
+    setCartTotal : function (total) {
+        $(".cart-total dl").show();
+        $(".calculation.total dd").text("$ " + total);
+    },
+
+
+
+    /**
+     * Ajax call to /api/estimate after all verifications have passed.
+     *
+     */
+    ajaxCall : function() {
+        $.ajax({
+            type: "POST",
+            url: "/api/estimate",
+            data: {
+                products: UtilityContainer.getProductsFromLocalStorage(),
+                shipping_address: {
+                    "postcode": $("#postcode").val(),
+                    "country": $(".price-estimate #country").val(),
+                    "province" : "QC"
+                }
+            },
+            success: function(data) {
+                cartLogicContainer.setCartShipping(data);
+                cartLogicContainer.setCartTaxes(UtilityContainer.getCartTaxes(UtilityContainer.getCheapestShippingMethod(data).method, data));
+                cartLogicContainer.setCartTotal(UtilityContainer.getCartTotal(UtilityContainer.getCheapestShippingMethod(data), data));
+            },
+            error: function(e) {
+                console.log(e);
+            },
+            complete : function() {
+                $(".price-estimate").fadeOut(300, function() {
+                    $(".calculation.hidden").fadeIn().removeClass("hidden");
+                    $(".cart-total.hidden").fadeIn().removeClass("hidden");
+                });
+            }
+        });
+    },
+
+    /**
+     * Display an update panel when changes are made to the cart drawer.
+     *
+     */
+    updateAjaxCall : function() {
+        //If the total is displayed, it means that there's already been an ajax call: we have to display an update!
+        if(!$(".total").parent().hasClass("hidden")) {
+            $(".cart-total dl").hide();
+            $(".price-estimate-update").fadeIn('fast');
+        }
+
+        $(".changeLocation").click(function() {
+            $("dl.calculation").addClass("hidden");
+            $(".getEstimate").html(Localization.calculate);
+            $(".price-estimate-update").fadeOut();
+            $(".price-estimate").fadeIn();
+
+        });
+
+        //TODO: Refactor the arbitrary xxxxms to an actual end of ajax call.
+
+        $(".price-estimate-update .getEstimate").click(function() {
+            if(!UtilityContainer.validateEmptyCart()) {
+                setTimeout(function() {
+                    $(".price-estimate-update .getEstimate").parent().fadeOut(300);
+                    $(".price-estimate-update .getEstimate").html(Localization.calculate);
+                }, 2250);
+            }
+        });
+
+    },
+
+    init : function() {
+        cartLogicContainer.setBadgeQuantity();
+        cartLogicContainer.loadItem();
+        cartLogicContainer.deleteItem();
+        cartLogicContainer.modifyQuantity();
+        cartLogicContainer.modifyQuantityBeforeBuying();
+        cartLogicContainer.setQuantityCookie();
+        cartLogicContainer.setCartSubtotal();
+    }
+};

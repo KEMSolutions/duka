@@ -155,7 +155,9 @@ var categoryContainer = {
         var $container = $(".layout-toggle-container"),
             $product = $(".dense-product"),
             $product_img = $(".product-image"),
-            $product_buybutton = $(".dense-product .buybutton");
+            $product_buybutton = $(".dense-product .buybutton"),
+            $product_shortDescription = $(".dense-product .short-description"),
+            $product_name = $(".dense-product .name a");
 
         $("#list-layout, #grid-layout").on("click", function () {
 
@@ -164,12 +166,16 @@ var categoryContainer = {
                 // List layout
                 $container.removeClass("grid-layout").addClass("list-layout");
 
-                $product.removeClass("col-xs-6 col-sm-4 col-md-3 text-center no-border")
-                    .addClass("col-xs-12 col-sm-12 col-md-12 border-bottom padding-1");
+                $product.removeClass("four wide column text-center no-border")
+                    .addClass("sixteen wide column border-bottom-clear");
 
-                $product_img.removeClass("img-responsive center-block").addClass("pull-left").css("margin-right", "5%");
+                $product_shortDescription.removeClass("hidden");
 
-                $product_buybutton.css("margin-top", "3%");
+                $product_name.addClass("ui medium header");
+
+                $product_img.removeClass("center-block").addClass("pull-left").css("margin-right", "5%");
+
+                $product_buybutton.css("margin-top", "2rem");
 
 
                 $(this).toggleClass("active");
@@ -179,10 +185,14 @@ var categoryContainer = {
                 // Grid layout
                 $container.removeClass("list-layout").addClass("grid-layout");
 
-                $product.removeClass("col-xs-12 col-sm-12 col-md-12 border-bottom padding-1").
-                    addClass("col-xs-6 col-sm-4 col-md-3 text-center no-border");
+                $product.removeClass("sixteen wide column border-bottom-clear").
+                    addClass("four wide column text-center no-border");
 
-                $product_img.addClass("img-responsive center-block").removeClass("pull-left").css("margin-right", "0");
+                $product_img.addClass("center-block").removeClass("pull-left").css("margin-right", "0");
+
+                $product_shortDescription.addClass("hidden");
+
+                $product_name.removeClass("medium").addClass("tiny");
 
                 $product_buybutton.css("margin-top", "0");
 

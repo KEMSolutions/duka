@@ -4709,10 +4709,6 @@ footer .copyright{color:#EEE;}
   margin: 0 auto;
 }
 
-.padding-1 {
-  padding: 1%;
-}
-
 .row.padded {
   padding: 5%;
 }
@@ -4917,7 +4913,9 @@ section.slice {
   height: 160px;
 }
 
-
+.short-description {
+  margin-top: 2rem;
+}
 /*-----------------------------------*/
 
 /* FAVORITE ICON */
