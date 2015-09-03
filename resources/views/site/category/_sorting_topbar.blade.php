@@ -3,24 +3,24 @@
         <div class="item">
             <span>
               <div class="ui inline dropdown dropdown-select top left pointing button labeled tiny" id="sort-by-box">
-                  Sort by:
+                  @lang("boukem.sort_by")
                   <div class="text">
                       <i class="linkify icon"></i>
-                      Relevance
+                      @lang("boukem.relevance")
                   </div>
                   <i class="dropdown icon"></i>
                   <div class="menu sort-by">
                       <div class="item" data-sort="-relevance">
                           <i class="linkify icon"></i>
-                          Relevance
+                          @lang("boukem.relevance")
                       </div>
                       <div class="item" data-sort="price">
                           <i class="dollar icon"></i>
-                          Price: Low to High
+                          @lang("boukem.price_low_to_high")
                       </div>
                       <div class="item" data-sort="-price">
                           <i class="dollar icon"></i>
-                          Price: High to Low
+                          @lang("boukem.price_high_to_low")
                       </div>
                   </div>
               </div>
@@ -30,7 +30,7 @@
         <div class="item">
             <span>
                 <div class="ui inline dropdown dropdown-select top right pointing button labeled tiny" id="items-per-page-box">
-                    Items per page:
+                    @lang("boukem.items_per_page")
                     <div class="text">
                         8
                     </div>
@@ -54,23 +54,13 @@
         </div>
 
         <div class="item">
+            {{-- Grid layout is set by default. --}}
                 <span>
-              Layout:
-              <ul class="list-unstyled list-inline inline-block" id="category-result-layout">
-                  <li>
-                      <button class="ui labeled icon button tiny" id="grid-layout">
-                          <i class="fa fa-th-large icon"></i>
-                          Grid
-                      </button>
-                  </li>
-
-                  <li>
-                      <button class="ui labeled icon button tiny" id="list-layout">
-                          <i class="fa fa-bars icon"></i>
-                          List
-                      </button>
-                  </li>
-              </ul>
+              @lang("boukem.switch_layout")
+                    <button class="ui labeled icon button tiny" id="category-layout-switcher">
+                        <i class="list layout icon"></i>
+                        @lang("boukem.list")
+                    </button>
             </span>
         </div>
     </div>

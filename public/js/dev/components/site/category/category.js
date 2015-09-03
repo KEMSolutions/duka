@@ -55,6 +55,7 @@ var categoryContainer = {
 
     /**
      * Adds the price filter to the search query.
+     *
      */
     priceUpdate: function() {
 
@@ -78,6 +79,7 @@ var categoryContainer = {
 
     /**
      * Adds the category filter to the search query.
+     *
      */
     categoriesUpdate: function() {
         this.filterListUpdate($("#refine-by-category"), "categories");
@@ -85,6 +87,7 @@ var categoryContainer = {
 
     /**
      * Adds the brands filter to the search query.
+     *
      */
     brandsUpdate: function() {
         this.filterListUpdate($("#refine-by-brand"), "brands");
@@ -92,6 +95,9 @@ var categoryContainer = {
 
     /**
      * Shortcut to handle filter lists such as brands and categories.
+     *
+     * @param el
+     * @param type
      */
     filterListUpdate : function(el, type)
     {
@@ -151,15 +157,20 @@ var categoryContainer = {
         });
     },
 
+    /**
+     * Switch between grid or list layout.
+     *
+     */
     toggleLayout: function () {
-        var $container = $(".layout-toggle-container"),
+        var self= categoryContainer,
+            $container = $(".layout-toggle-container"),
             $product = $(".dense-product"),
             $product_img = $(".product-image"),
             $product_buybutton = $(".dense-product .buybutton"),
             $product_shortDescription = $(".dense-product .short-description"),
             $product_name = $(".dense-product .name a");
 
-        $("#list-layout, #grid-layout").on("click", function () {
+        $("#category-layout-switcher").on("click", function () {
 
             if($container.hasClass("grid-layout"))
             {
@@ -177,8 +188,7 @@ var categoryContainer = {
 
                 $product_buybutton.css("margin-top", "2rem");
 
-
-                $(this).toggleClass("active");
+                self.localizeSwitcher($(this), "grid");
             }
             else if ($container.hasClass("list-layout"))
             {
@@ -196,9 +206,21 @@ var categoryContainer = {
 
                 $product_buybutton.css("margin-top", "0");
 
-                $(this).toggleClass("active");
+                self.localizeSwitcher($(this), "list");
             }
         })
+    },
+
+    /**
+     * Utility function to localize the layout switch button in the appropriate locale.
+     *
+     * @param element
+     * @param layout
+     */
+    localizeSwitcher: function(element, layout) {
+        layout === "list" ?
+            element.html("<i class='list layout icon'></i>" + Localization.list) :
+            element.html("<i class='grid layout icon'></i>" + Localization.grid);
     },
 
     /**

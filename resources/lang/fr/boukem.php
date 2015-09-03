@@ -220,6 +220,14 @@ return [
     "account_exists"    =>"Un compte avec cet courriel existe déjà.",
     "account_does_not_exists"    => "Le compte associé à ce courriel n'existe pas",
     "please_create_password"    => "Veuillez créer un nouveau mot de passe pour votre compte existant.",
+    "sort_by"           =>"Classer par",
+    "relevance"         =>"Pertinence",
+    "price_low_to_high" =>"Prix: ordre croissant",
+    "price_high_to_high" =>"Prix: ordre décroissant",
+    "items_per_page"    =>"Articles par page: ",
+    "switch_layout"     =>"Vue: ",
+    "grid"              =>"Grille",
+    "list"              =>"Liste"
 
 ];
 

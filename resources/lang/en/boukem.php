@@ -220,6 +220,14 @@ return [
     "account_exists"    => "An account with that email already exists.",
     "account_does_not_exists"    => "No account exists with that email.",
     "please_create_password"    => "Please create a new password for your existing account.",
+    "sort_by"           =>"Sort by",
+    "relevance"         =>"Relevance",
+    "price_low_to_high" =>"Price: low to high",
+    "price_high_to_low" =>"Price: high to low",
+    "items_per_page"    =>"Items per page: ",
+    "switch_layout"     =>"Switch layout: ",
+    "grid"              =>"Grid",
+    "list"              =>"List"
 
 ];
 
