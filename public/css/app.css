@@ -4838,7 +4838,11 @@ section.slice {
   border-left: 1px solid #fff;
 }
 
-.border-bottom {
+.border-bottom-dark {
+  border-bottom: 1px solid #333;
+}
+
+.border-bottom-clear {
   border-bottom: 1px solid #E0E0E0;
 }
 
