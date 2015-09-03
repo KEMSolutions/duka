@@ -85,6 +85,7 @@ var wishlistLogicContainer = {
         $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
             //Animate the element.
             UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
+            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element").next());
 
             //Delete the element from localStorage.
             localStorage.removeItem("_wish_product " + $(this).data("product"));
