@@ -241,7 +241,7 @@
             @endif
 
             {{-- Reviews. --}}
-            <div class="ui comments full-width">
+            <div class="ui comments full-width hidden">
                 <h3 class="ui dividing header">Comments</h3>
                 <div class="comment">
                     <a class="avatar">
