@@ -1104,6 +1104,60 @@ var paymentOverlayContainer = {
 }
 
 /**
+ * Object responsible for activating semantic ui features.
+ *
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
+ */
+var semanticInitContainer = {
+
+    /**
+     * Initialize modules
+     *
+     */
+    module: {
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule: function() {
+            //Enable selection on clicked items
+            $(".ui.dropdown-select").dropdown();
+
+            //Prevent selection on clicked items
+            $(".ui.dropdown-no-select").dropdown({
+                    action: "select"
+                }
+            );
+        },
+
+        /**
+         * Initialize rating module.
+         *
+         */
+        initRatingModule: function () {
+            $(".ui.rating").rating();
+        }
+    },
+
+    /**
+     * Specify semantic custom behavior.
+     *
+     */
+    behaviors: {
+
+    },
+
+
+
+    init: function () {
+        var self = semanticInitContainer,
+            module = self.module;
+
+        module.initDropdownModule();
+        module.initRatingModule();
+    }
+}
+/**
  * Object responsible for handling different formats of the same product.
  *
  * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
@@ -1230,60 +1284,6 @@ var productFormatContainer = {
 
         self.displaySyncedProductInformation();
 
-    }
-}
-/**
- * Object responsible for activating semantic ui features.
- *
- * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
- */
-var semanticInitContainer = {
-
-    /**
-     * Initialize modules
-     *
-     */
-    module: {
-        /**
-         * Initialize dropdown module.
-         *
-         */
-        initDropdownModule: function() {
-            //Enable selection on clicked items
-            $(".ui.dropdown-select").dropdown();
-
-            //Prevent selection on clicked items
-            $(".ui.dropdown-no-select").dropdown({
-                    action: "select"
-                }
-            );
-        },
-
-        /**
-         * Initialize rating module.
-         *
-         */
-        initRatingModule: function () {
-            $(".ui.rating").rating();
-        }
-    },
-
-    /**
-     * Specify semantic custom behavior.
-     *
-     */
-    behaviors: {
-
-    },
-
-
-
-    init: function () {
-        var self = semanticInitContainer,
-            module = self.module;
-
-        module.initDropdownModule();
-        module.initRatingModule();
     }
 }
 /**
@@ -1497,6 +1497,7 @@ var categoryContainer = {
 
     /**
      * Adds the price filter to the search query.
+     *
      */
     priceUpdate: function() {
 
@@ -1520,6 +1521,7 @@ var categoryContainer = {
 
     /**
      * Adds the category filter to the search query.
+     *
      */
     categoriesUpdate: function() {
         this.filterListUpdate($("#refine-by-category"), "categories");
@@ -1527,6 +1529,7 @@ var categoryContainer = {
 
     /**
      * Adds the brands filter to the search query.
+     *
      */
     brandsUpdate: function() {
         this.filterListUpdate($("#refine-by-brand"), "brands");
@@ -1534,6 +1537,9 @@ var categoryContainer = {
 
     /**
      * Shortcut to handle filter lists such as brands and categories.
+     *
+     * @param el
+     * @param type
      */
     filterListUpdate : function(el, type)
     {
@@ -1593,6 +1599,10 @@ var categoryContainer = {
         });
     },
 
+    /**
+     * Switch between grid or list layout.
+     *
+     */
     toggleLayout: function () {
         var self= categoryContainer,
             $container = $(".layout-toggle-container"),
@@ -1643,6 +1653,12 @@ var categoryContainer = {
         })
     },
 
+    /**
+     * Utility function to localize the layout switch button in the appropriate locale.
+     *
+     * @param element
+     * @param layout
+     */
     localizeSwitcher: function(element, layout) {
         layout === "list" ?
             element.html("<i class='list layout icon'></i>" + Localization.list) :
@@ -2105,18 +2121,39 @@ var cartLogicContainer = {
     addItem : function(item) {
         var price = (parseInt(item.quantity) * parseFloat(item.price)).toFixed(2);
 
-        var sidebarElement = '<li class="w-box animated bounceInDown" data-product="' + item.product + '" data-quantity=1>' +
-            '<div class="col-xs-3 text-center"><img src=' + item.thumbnail_lg + ' class="img-responsive"></div>' +
-            '<div class="col-xs-9 no-padding-left">' +
-            '<div class="row"><div class="col-xs-10"><h3 class="product-name">' + item.name + '</h3></div><div class="col-xs-2"><h4 class="text-right"><i class="fa fa-trash fa-1 close-button"><span class="sr-only">Remove Item</span></i></h4></div></div>' +
-            '<div class="row"><div class="col-xs-8">' +
-            '<div class="input-group"><label for="products[' + item.product + '][quantity]" class="sr-only">'+ item.name + ":" + item.price +'</label>' +
-            '<input type="number" class="quantity form-control input-sm" min="1" step="1" value="' + item.quantity + '" name="products[' + item.product + '][quantity]">' +
-            '<span class="input-group-addon update_quantity_indicator"><i class="fa" hidden><span class="sr-only">' + "Update quantity" + '</span></i></span></div></div>' +
-            '<div class="col-xs-4 product-price text-right" data-price="' + item.price + '">$' + price  + '<span class="sr-only">' + $ + item.price + '</span></div></div>' +
-            '<input type="hidden" name="products[' + item.product + '][id]" value="' + item.product + '"/> ' +
-            '</div>' +
-            '</li>';
+        var sidebarElement =
+        '<div class="item horizontally-padded animated bounceInDown" data-product="' + item.product + '"data-quantity=1>' +
+        '<div class="ui tiny images">' +
+        '<img src="' + item.thumbnail_lg + '"/>' +
+        '</div>' +
+        '<div class="middle aligned content" style="padding-left: 1.7531%">' +
+        '<h4 class="ui header">' + item.name + '</h4>' +
+        '<div class="meta">' +
+        '<span class="price" data-price="' + item.price + '">$' + price  + '</span>' +
+        '<i class="trash icon pull-right close-button"></i>' +
+        '</div>' +
+        '<div class="content" style="margin-top: 2.958rem">' +
+        '<div class="ui input">' +
+        '<input type="number" class="quantity" min="1" step="1" value="' + item.quantity + '" name="products[' + item.product + '][quantity]">' +
+        '<input type="hidden" name="products[' + item.product + '][id]" value="' + item.product + '"/> ' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+
+        //var sidebarElement = '<li class="w-box animated bounceInDown" data-product="' + item.product + '" data-quantity=1>' +
+        //    '<div class="col-xs-3 text-center"><img src=' + item.thumbnail_lg + ' class="img-responsive"></div>' +
+        //    '<div class="col-xs-9 no-padding-left">' +
+        //    '<div class="row"><div class="col-xs-10"><h3 class="product-name">' + item.name + '</h3></div><div class="col-xs-2"><h4 class="text-right"><i class="fa fa-trash fa-1 close-button"><span class="sr-only">Remove Item</span></i></h4></div></div>' +
+        //    '<div class="row"><div class="col-xs-8">' +
+        //    '<div class="input-group"><label for="products[' + item.product + '][quantity]" class="sr-only">'+ item.name + ":" + item.price +'</label>' +
+        //    '<input type="number" class="quantity form-control input-sm" min="1" step="1" value="' + item.quantity + '" name="products[' + item.product + '][quantity]">' +
+        //    '<span class="input-group-addon update_quantity_indicator"><i class="fa" hidden><span class="sr-only">' + "Update quantity" + '</span></i></span></div></div>' +
+        //    '<div class="col-xs-4 product-price text-right" data-price="' + item.price + '">$' + price  + '<span class="sr-only">' + $ + item.price + '</span></div></div>' +
+        //    '<input type="hidden" name="products[' + item.product + '][id]" value="' + item.product + '"/> ' +
+        //    '</div>' +
+        //    '</li>';
 
         if (!$(".cart-items-list [data-product='" + item.product + "']").length){
             cartLogicContainer.$el.$list.append(sidebarElement);

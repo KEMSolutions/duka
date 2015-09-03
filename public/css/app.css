@@ -4709,6 +4709,11 @@ footer .copyright{color:#EEE;}
   margin: 0 auto;
 }
 
+.horizontally-padded {
+  padding-left: 5% !important;
+  padding-right: 5% !important;
+}
+
 .row.padded {
   padding: 5%;
 }
