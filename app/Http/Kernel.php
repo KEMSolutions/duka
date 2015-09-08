@@ -26,8 +26,8 @@ class Kernel extends HttpKernel {
 	protected $routeMiddleware = [
 		'auth' => 'App\Http\Middleware\Authenticate',
 		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
-        'csrf.any' => 'App\Http\Middleware\VerifyCsrfTokenOnAllRequests',
 		'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
+		'validateWebhook'=>'App\Http\Middleware\ValidateWebhook',
         'localeSessionRedirect' => 'Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect',
         'localizationRedirect' => 'Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter',
 	];
