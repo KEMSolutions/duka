@@ -51,8 +51,26 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
         ]);
     }
 
+    /*
+     *
+     */
+    public function newAddressObject()
+    {
+        $address = new \stdClass;
+        $address->id = 0;
+        $address->line1 = '';
+        $address->line2 = '';
+        $address->postcode = '';
+        $address->city = '';
+        $address->province = '';
+        $address->country = '';
+        $address->phone = '';
+
+        return $address;
+    }
+
     /**
-     * Get the unique identifier for the user.
+     * Get the unique identifier for the user (used internally by Laravel).
      *
      * @return mixed
      */
@@ -61,7 +79,7 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
     }
 
     /**
-     * Get the password for the user.
+     * Get the password for the user (used internally by Laravel).
      *
      * @return string
      */
@@ -70,7 +88,7 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
     }
 
     /**
-     * Get the e-mail address where password reset links are sent.
+     * Get the e-mail address where password reset links are sent (used internally by Laravel).
      *
      * @return string
      */
@@ -79,7 +97,7 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
     }
 
     /**
-     * Get the token value for the "remember me" session.
+     * Get the token value for the "remember me" session (used internally by Laravel).
      *
      * @return string
      */
@@ -89,7 +107,7 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
     }
 
     /**
-     * Set the token value for the "remember me" session.
+     * Set the token value for the "remember me" session (used internally by Laravel).
      *
      * @param  string  $value
      * @return void
@@ -100,7 +118,7 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
     }
 
     /**
-     * Get the column name for the "remember me" token.
+     * Get the column name for the "remember me" token (used internally by Laravel).
      *
      * @return string
      */
@@ -186,6 +204,9 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
         }
     }
 
+    /*
+     *
+     */
     public function toArray() {
         return get_object_vars($this);
     }

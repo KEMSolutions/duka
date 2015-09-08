@@ -40,7 +40,7 @@
                     <input type="email" name="email" value="{{ $user->email }}" required />
                 </div>
                 <div class="six wide field">
-                    <input type="tel" name="phone" value="{{ $user->phone }}" />
+                    <input type="tel" name="phone" value="{{ $user->phone }}" placeholder="+xx (xxx) xxx xxxx" />
                 </div>
             </div>
         </div>
@@ -75,9 +75,20 @@
         </div>
 
         {{-- Addresses --}}
-        <h4 class="ui dividing header">@lang('boukem.address')</h4>
-        TODO...<br /><br />
+        @if (count($user->addresses) > 0)
+            @foreach ($user->addresses as $address)
+                @include('auth._address', [
+                    'address' => $address
+                ])
+            @endforeach
+        @endif
 
+        {{-- Add a new address --}}
+        @include('auth._address', [
+            'address' => $user->newAddressObject()
+        ])
+
+        <br /><br />
         <button class="ui button" type="submit">@lang('boukem.update')</button>
     </form>
 </div>
