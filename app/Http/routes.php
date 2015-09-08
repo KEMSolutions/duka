@@ -90,6 +90,9 @@ Route::group([
     });
 });
 
+// Console webhooks endpoint
+Route::post('webhooks', ['uses' => 'WebhooksController@postReceive', 'middleware' => ['validateWebhook']]);
+
 // API endpoints.
 Route::group(['prefix' => 'api'], function()
 {
