@@ -34,6 +34,7 @@
 	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/form.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/grid.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/container.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/accordion.css') }}"/>
 
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
 
@@ -74,6 +75,7 @@
 	<!-- Semantic ui dependencies -->
 	<script src="/js_assets/semantic-ui/transition.min.js"></script>
 	<script src="/js_assets/semantic-ui/dropdown.min.js"></script>
+	<script src="/js_assets/semantic-ui/accordion.min.js"></script>
 
 	@include("_dynamic_resources")
 

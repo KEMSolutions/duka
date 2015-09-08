@@ -63,7 +63,7 @@ class AccountController extends Controller
             return redirect(route('auth.account'))->withValidator($validator)->withInput();
         }
 
-		$details = $request->except(['password', 'password_confirmation', '_token']);
+		$details = $request->except(['password', 'password_confirmation', 'addresses', '_token']);
 
         // Validate password, if we are updating that as well. The password confirmation
         // has been checked by the validator already, so we don't need to worry about that.
@@ -73,9 +73,29 @@ class AccountController extends Controller
         // Update customer details.
         $result = Customers::update(Auth::user(), $details, $passwd);
 
-		$message = Customers::isError($result)
-			? Lang::get('boukem.account_not_saved')
-			: Lang::get('boukem.account_saved');
+        // Update addresses. We keep these decoupled from the customer so that we may
+        // update them independently if we ever need to.
+        if (!Customers::isError($result))
+        {
+            foreach ($request->input('addesses') as $address)
+            {
+                // Validate address details.
+                if (!Customers::validateAddress($address)) {
+                    continue;
+                }
+
+                // Update address details.
+                $address['id'] == 'new'
+                    ? Customers::addAddress($address)
+                    : Customers::updateAddress($address);
+            }
+
+            $message = Lang::get('boukem.account_saved');
+        }
+
+        else {
+            $message = Lang::get('boukem.account_not_saved');
+        }
 
         return redirect(route('auth.account'))->withMessages([$message]);
     }

@@ -13,22 +13,22 @@ use Illuminate\Http\JsonResponse;
 abstract class BaseObject
 {
     /**
-     * @var string  Base API request for this object, e.g. "products" or "layouts".
+     * Base API request for this object, e.g. "products" or "layouts".
      */
     public $baseRequest = '';
 
     /**
-     * @var string  Current locale. Used for caching purposes.
+     * Current locale. Used for caching purposes.
      */
     public $locale = 'en';
 
     /**
-     * @var string  Namespace used to cache individual objects, e.g. "en.api.products.1234".
+     * Namespace used to cache individual objects, e.g. "en.api.products.1234".
      */
     public $cacheNamespace = 'api.';
 
     /**
-     * @var string  Regular expression used to validate slug.
+     * Regular expression used to validate slug.
      */
     protected $slugInvalidCharacters = '/[^a-z0-9_\-]/i';
 

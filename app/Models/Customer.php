@@ -39,16 +39,11 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
      *
      * @param array $details    Details to be validated.
      * @return \Illuminate\Contracts\Validation\Validator
+     *
+     * @deprecated              Use Customers::validate($details) instead.
      */
-    public static function validator(array $details)
-    {
-        return Validator::make($details, [
-            'email' => 'required|email|max:255',
-            'postcode' => '',
-            'name' => 'required|max:255',
-            'phone' => 'max:255',
-            'password' => 'confirmed|min:6',
-        ]);
+    public static function validator(array $details) {
+        return Customers::validate($details);
     }
 
     /*
@@ -62,8 +57,8 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
         $address->line2 = '';
         $address->postcode = '';
         $address->city = '';
-        $address->province = '';
-        $address->country = '';
+        $address->province = 'QC';
+        $address->country = 'CA';
         $address->phone = '';
 
         return $address;

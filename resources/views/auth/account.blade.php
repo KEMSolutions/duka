@@ -37,10 +37,10 @@
             <label>@lang('boukem.email') &amp; @lang('boukem.phone')</label>
             <div class="fields">
                 <div class="ten wide field">
-                    <input type="email" name="email" value="{{ $user->email }}" required />
+                    <input type="email" name="email" value="{{ $user->email }}" placeholder="@lang('boukem.email')" required>
                 </div>
                 <div class="six wide field">
-                    <input type="tel" name="phone" value="{{ $user->phone }}" placeholder="+xx (xxx) xxx xxxx" />
+                    <input type="tel" name="phone" value="{{ $user->phone }}" placeholder="@lang('boukem.phone')">
                 </div>
             </div>
         </div>
@@ -75,18 +75,21 @@
         </div>
 
         {{-- Addresses --}}
-        @if (count($user->addresses) > 0)
-            @foreach ($user->addresses as $address)
-                @include('auth._address', [
-                    'address' => $address
-                ])
-            @endforeach
-        @endif
+        <h4 class="ui dividing header">@lang('boukem.address')</h4>
+        <div class="ui accordion">
+            @if (count($user->addresses) > 0)
+                @foreach ($user->addresses as $address)
+                    @include('auth._address', [
+                        'address' => $address
+                    ])
+                @endforeach
+            @endif
 
-        {{-- Add a new address --}}
-        @include('auth._address', [
-            'address' => $user->newAddressObject()
-        ])
+            {{-- Add a new address --}}
+            @include('auth._address', [
+                'address' => $user->newAddressObject()
+            ])
+        </div>
 
         <br /><br />
         <button class="ui button" type="submit">@lang('boukem.update')</button>
@@ -101,5 +104,6 @@
     <script>
         $(".indicator-down:first").hide();
         $(".section-title:first").hide();
+        $('.ui.accordion').accordion();
     </script>
 @endsection
