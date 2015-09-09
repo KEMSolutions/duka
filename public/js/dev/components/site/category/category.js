@@ -55,6 +55,7 @@ var categoryContainer = {
 
     /**
      * Adds the price filter to the search query.
+     *
      */
     priceUpdate: function() {
 
@@ -78,6 +79,7 @@ var categoryContainer = {
 
     /**
      * Adds the category filter to the search query.
+     *
      */
     categoriesUpdate: function() {
         this.filterListUpdate($("#refine-by-category"), "categories");
@@ -85,6 +87,7 @@ var categoryContainer = {
 
     /**
      * Adds the brands filter to the search query.
+     *
      */
     brandsUpdate: function() {
         this.filterListUpdate($("#refine-by-brand"), "brands");
@@ -92,6 +95,9 @@ var categoryContainer = {
 
     /**
      * Shortcut to handle filter lists such as brands and categories.
+     *
+     * @param el
+     * @param type
      */
     filterListUpdate : function(el, type)
     {
@@ -151,44 +157,70 @@ var categoryContainer = {
         });
     },
 
+    /**
+     * Switch between grid or list layout.
+     *
+     */
     toggleLayout: function () {
-        var $container = $(".layout-toggle-container"),
-            $product = $(".dense_product"),
+        var self= categoryContainer,
+            $container = $(".layout-toggle-container"),
+            $product = $(".dense-product"),
             $product_img = $(".product-image"),
-            $product_buybutton = $(".dense_product .buybutton");
+            $product_buybutton = $(".dense-product .buybutton"),
+            $product_shortDescription = $(".dense-product .short-description"),
+            $product_name = $(".dense-product .name a");
 
-        $("#list-layout, #grid-layout").on("click", function () {
+        $("#category-layout-switcher").on("click", function () {
 
             if($container.hasClass("grid-layout"))
             {
                 // List layout
                 $container.removeClass("grid-layout").addClass("list-layout");
 
-                $product.removeClass("col-xs-6 col-sm-4 col-md-3 text-center no-border")
-                    .addClass("col-xs-12 col-sm-12 col-md-12 border-bottom padding-1");
+                $product.removeClass("four wide column text-center no-border")
+                    .addClass("sixteen wide column border-bottom-clear");
 
-                $product_img.removeClass("img-responsive center-block").addClass("pull-left").css("margin-right", "5%");
+                $product_shortDescription.removeClass("hidden");
 
-                $product_buybutton.css("margin-top", "3%");
+                $product_name.addClass("ui medium header");
 
+                $product_img.removeClass("center-block").addClass("pull-left").css("margin-right", "5%");
 
-                $(this).toggleClass("active");
+                $product_buybutton.css("margin-top", "2rem");
+
+                self.localizeSwitcher($(this), "grid");
             }
             else if ($container.hasClass("list-layout"))
             {
                 // Grid layout
                 $container.removeClass("list-layout").addClass("grid-layout");
 
-                $product.removeClass("col-xs-12 col-sm-12 col-md-12 border-bottom padding-1").
-                    addClass("col-xs-6 col-sm-4 col-md-3 text-center no-border");
+                $product.removeClass("sixteen wide column border-bottom-clear").
+                    addClass("four wide column text-center no-border");
 
-                $product_img.addClass("img-responsive center-block").removeClass("pull-left").css("margin-right", "0");
+                $product_img.addClass("center-block").removeClass("pull-left").css("margin-right", "0");
+
+                $product_shortDescription.addClass("hidden");
+
+                $product_name.removeClass("medium").addClass("tiny");
 
                 $product_buybutton.css("margin-top", "0");
 
-                $(this).toggleClass("active");
+                self.localizeSwitcher($(this), "list");
             }
         })
+    },
+
+    /**
+     * Utility function to localize the layout switch button in the appropriate locale.
+     *
+     * @param element
+     * @param layout
+     */
+    localizeSwitcher: function(element, layout) {
+        layout === "list" ?
+            element.html("<i class='list layout icon'></i>" + Localization.list) :
+            element.html("<i class='grid layout icon'></i>" + Localization.grid);
     },
 
     /**

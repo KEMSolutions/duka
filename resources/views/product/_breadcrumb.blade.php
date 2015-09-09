@@ -1,16 +1,15 @@
-<div class="pg-opt pin">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <h2>{{ $product->localization->name }}</h2>
-            </div>
-            <div class="col-md-6">
+<div class="ui container grid vertically padded">
+    <div class="two column row">
+        <div class="left floated column">
+            <h1 class="ui header">{{ $product->localization->name }}</h1>
+        </div>
 
-                <ol class="breadcrumb">
-                    <li><a href="/{{ $locale }}/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a></li>
-                    <li class="active">{{ $product->localization->name }}</li></ol>
+        <div class="right floated column">
+            <div class="ui breadcrumb pull-right">
+                <a class="section" href="/{{ $locale }}/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a>
+                <i class="right chevron icon divider"></i>
+                <a class="active section">{{ $product->localization->name }}</a>
             </div>
         </div>
     </div>
 </div>
-

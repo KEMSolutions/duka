@@ -1,12 +1,20 @@
-<div class="col-md-10 border-bottom">
-    <h4>{{ Lang::get("boukem.filter_by") }}</h4>
+<div class="row border-bottom-clear horizontally-padded">
+    <h4 class="ui header">{{ Lang::get("boukem.filter_by") }}</h4>
+
     <button class="btn btn-black btn-xs pull-right">{{ Lang::get("boukem.reset") }}</button>
 
-    <ul class="list-unstyled list-inline no-margin-bottom">
-        <li><a class="ui orange tag big label">Filter 1</a></li>
-        <li><a class="ui teal tag big label">Filter 2</a></li>
-        <li><a class="ui black tag big label">Filter 3</a></li>
-    </ul>
-</div>
+    <div class="ui horizontal list">
+        <div class="item">
+            <a class="ui orange tag label">Filter 1</a>
+        </div>
 
+        <div class="item">
+            <a class="ui teal tag label">Filter 2</a>
+        </div>
+
+        <div class="item">
+            <a class="ui black tag label">Filter 3</a>
+        </div>
+    </div>
+</div>
 

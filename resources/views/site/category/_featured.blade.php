@@ -3,7 +3,7 @@
 <ul>
     @foreach($featured as $product)
         <li>
-            <div class="col-md-4 col-xs-6 col-sm-4 text-center dense_product">
+            <div class="col-md-4 col-xs-6 col-sm-4 text-center dense-product">
 
             <span class="pull-right favorite-wrapper" data-product="{{ $product->id }}">
                 <i class="fa fa-heart favorite-heart"></i>

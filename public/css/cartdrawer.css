@@ -39,6 +39,7 @@
     opacity: 0.5;
     cursor: pointer;
     outline: none;
+    font-size: 3rem;
 }
 
 .cart-header #back:hover {
@@ -59,7 +60,6 @@
 
 .cart-footer .order-summary {
     color: #666;
-    padding: 15px 0;
     background-color: #F4F4F4;
     line-height: 12px;
     height: 180px;
@@ -221,11 +221,6 @@ h4 {
     margin: 0.5em 0;
 }
 
-.cart-items-list .product-name{
-    white-space:nowrap;
-    overflow:hidden;
-    font-size: 16px;
-}
 .cart-items-list h2{
     padding: 15px 0;
     border-bottom: 0;
@@ -235,10 +230,6 @@ h4 {
     padding-left: 0;
 }
 
-.cart-items-list .product-price{
-    font-size: 1.2em;
-    padding-top: 0.3em;
-}
 
 .cart-checkout{
     overflow: hidden;

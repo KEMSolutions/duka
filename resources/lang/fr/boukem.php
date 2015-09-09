@@ -184,6 +184,7 @@ return [
     "name_recommendation"=>"La suggestion de :name",
     "curated"           =>"Suggestions",
     "all_results"       =>"Tous les résultats",
+    "all_categories"    =>"Toutes les catégories",
     "world_shipping"    =>"Nous livrons à travers tout le Canada",
     "shipping_estimate" =>"Expédition prévue dans les 3 à 7 jours.",
     "brand"             =>"Marque",
@@ -222,5 +223,13 @@ return [
     "account_saved"     => "Vos coordonées ont été mises à jour. Merci!",
     "account_not_saved" => "Nous n'avons pas pu mettre vos coordonées à jour.",
     "select_language" => "Langue",
+    "sort_by"           =>"Classer par",
+    "relevance"         =>"Pertinence",
+    "price_low_to_high" =>"Prix: ordre croissant",
+    "price_high_to_high" =>"Prix: ordre décroissant",
+    "items_per_page"    =>"Articles par page: ",
+    "switch_layout"     =>"Vue: ",
+    "grid"              =>"Grille",
+    "list"              =>"Liste"
 
 ];

@@ -1,17 +1,17 @@
-<div class="col-md-2" id="refine-search-container">
+<div class="three wide column hidden-print hidden-xs hidden-sm" id="refine-search-container">
     <div class="row">
-        <h4 class="text-center">{{ Lang::get('boukem.results_found', ['total' => $total]) }}</h4>
+        <h3 class="ui header center aligned">{{ Lang::get('boukem.results_found', ['total' => $total]) }}</h3>
     </div>
 
-    <div class="row padding-5">
-        <nav class="hidden-print hidden-xs hidden-sm">
+    <div class="row padded">
+        <nav>
             <ul class="nav list-unstyled">
 
-                {{-- Only display category filter on brand page --}}
+                {{--Only display category filter on brand page --}}
                 @if ($isBrand)
                     <li>
                         <div class="refine-search-component">
-                            <h5 class="refine-search-title">@lang('boukem.categories')</h5>
+                            <h5 class="ui header">@lang('boukem.categories')</h5>
                             <ul class="list-unstyled absolute-scrollable" id="refine-by-category">
 
                                 @foreach(Categories::getAllCategories() as $category)
@@ -27,11 +27,11 @@
                     </li>
                 @endif
 
-                {{-- Only show brands filter on category page --}}
+                {{--Only show brands filter on category page --}}
                 @if (!$isBrand)
                     <li>
                         <div class="refine-search-component">
-                            <h5 class="refine-search-title">@lang('boukem.brands')</h5>
+                            <h5 class="ui header">@lang('boukem.brands')</h5>
                             <ul class="list-unstyled absolute-scrollable" id="refine-by-brand">
 
                                 @foreach(Brands::getAllBrands() as $brand)
@@ -47,10 +47,10 @@
                     </li>
                 @endif
 
-                {{-- Price filter --}}
+                {{--Price filter --}}
                 <li>
                     <div class="refine-search-component">
-                        <h5 class="refine-search-title">Gamme de prix</h5>
+                        <h5 class="ui header">Gamme de prix</h5>
                         <div class="center-block">
                             <div class="ui labeled input refine-search-input">
                                 <div class="ui label">
@@ -66,7 +66,7 @@
                                 <input type="number" placeholder="Max" min="0" id="max-price">
                             </div>
 
-                            <button class="ui button large center-block" id="price-update">
+                            <button class="ui button center-block" id="price-update">
                                 Update
                             </button>
                         </div>

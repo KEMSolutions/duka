@@ -16,6 +16,12 @@ $(document).ready(function () {
     });
 
     /**
+     * Initialize semantic UI modules
+     *
+     */
+    semanticInitContainer.init();
+
+    /**
      * Initialize checkout logic.
      *
      */
@@ -40,10 +46,10 @@ $(document).ready(function () {
     paymentOverlayContainer.init();
 
     /**
-     * Initialize navigation header.
+     * Initialize homepage sections.
      *
      */
-    headerContainer.init();
+    homepageContainer.init();
 
     /**
      * Initialize favorite products feature.

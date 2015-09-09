@@ -184,6 +184,7 @@ return [
     "name_recommendation"=>":name's recommendation",
     "curated"           =>"Curated results",
     "all_results"       =>"All results",
+    "all_categories"    =>"All Categories",
     "world_shipping"    =>"We ship everywhere in Canada",
     "shipping_estimate" =>"Usually ships within 3 to 7 days.",
     "brand"             =>"Brand",
@@ -222,5 +223,13 @@ return [
     "account_saved"    => "Your details have been updated. Thank you!",
     "account_not_saved"    => "We were not able to update your account information.",
     "select_language" => "Language",
+    "sort_by"           =>"Sort by",
+    "relevance"         =>"Relevance",
+    "price_low_to_high" =>"Price: low to high",
+    "price_high_to_low" =>"Price: high to low",
+    "items_per_page"    =>"Items per page: ",
+    "switch_layout"     =>"Switch layout: ",
+    "grid"              =>"Grid",
+    "list"              =>"List"
 
 ];

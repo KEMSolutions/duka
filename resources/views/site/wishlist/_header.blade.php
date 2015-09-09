@@ -1,14 +1,19 @@
-<div class="container-fluid category-header no-padding" style="background-color: #F3F3F3">
-    <div class="category-overlay">
-        <div class="center-block text-center category-header-text">
-            {{--logo--}}
-            <span class="category-logo"><i class="fa fa-heart fa-4x" style="color: #F45D5D"></i></span>
+{{-- WISHLIHST HEADER --}}
 
-            {{--title--}}
-            <h1 class="category-title">{{ Lang::get("boukem.wishlist") }}</h1>
+<div class="ui grid">
+    <div class="sixteen wide column category-header">
+        <div class="category-overlay">
 
-            {{--subtitle--}}
-            <h4 class="category-subtitle">{!! Lang::get("boukem.wishlist_number") !!} <br/> <br/> {{ Lang::get("boukem.wishlist_saved")}}</h4>
+
+            <h1 class="ui huge icon header center-block white">
+                <i class="heart icon" style="color: #F45D5D"></i>
+                <div class="large content">
+                    {{ Lang::get("boukem.wishlist") }}
+                    <div class="sub header">{!! Lang::get("boukem.wishlist_number") !!} <br/> <br/> {{ Lang::get("boukem.wishlist_saved")}}.</div>
+                </div>
+            </h1>
+
+
         </div>
     </div>
 </div>

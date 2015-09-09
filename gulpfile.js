@@ -1,36 +1,44 @@
-var elixir = require('laravel-elixir');
+/*******************************
+ Set-up
+ *******************************/
 
-/*
- |--------------------------------------------------------------------------
- | Elixir Asset Management
- |--------------------------------------------------------------------------
- |
- | Elixir provides a clean, fluent API for defining some basic Gulp tasks
- | for your Laravel application. By default, we are compiling the Less
- | file for our application, as well as publishing vendor resources.
- |
- */
+var gulp = require('gulp'),
+    concat = require('gulp-concat'),
+    concatCss = require('gulp-concat-css'),
+    uglify = require('gulp-uglify');
 
-elixir(function(mix) {
-    mix.scripts([
-        "../../../public/js/dev/components/checkout/billing.js",
-        "../../../public/js/dev/components/checkout/estimate.js",
-        "../../../public/js/dev/components/checkout/location.js",
-        "../../../public/js/dev/components/checkout/payment.js",
-        "../../../public/js/dev/components/layout/cart-drawer.js",
-        "../../../public/js/dev/components/layout/header.js",
-        "../../../public/js/dev/components/layout/payment-overlay.js",
-        "../../../public/js/dev/components/products/layout/product-layout-favorite.js",
-        "../../../public/js/dev/components/products/product-format.js",
-        "../../../public/js/dev/components/site/category/category.js",
-        "../../../public/js/dev/components/site/wishlist.js",
-        "../../../public/js/dev/utils/utility.js",
-        "../../../public/js/dev/actions/checkout/checkout-init.js",
-        "../../../public/js/dev/actions/checkout/checkout-logic.js",
-        "../../../public/js/dev/actions/checkout/checkout-validation.js",
-        "../../../public/js/dev/actions/layout/cart-drawer-logic.js",
-        "../../../public/js/dev/actions/layout/cart-drawer-init.js",
-        "../../../public/js/dev/actions/site/wishlist-logic.js",
-        "../../../public/js/dev/actions/init.js"
-    ], "public/js/prod/boukem2.js");
+
+/*******************************
+ Tasks
+ *******************************/
+
+// Takes all scripts in public/js/dev and creates a minified, uglified production script.
+gulp.task('js', function () {
+    return gulp.src(['public/js/dev/utils/*.js', 'public/js/dev/components/**/*.js', 'public/js/dev/actions/**/*.js' ])
+        .pipe(concat('boukem2.js'))
+        //.pipe(uglify())
+        .pipe(gulp.dest('public/js/prod')) //the destination folder
 });
+
+
+    /*******************************
+     Semantic UI tasks.
+     *******************************/
+// Task responsible for minifying semantic css and js.
+gulp.task('semantic-css', function() {
+    return gulp.src(['public/semantic/dev/css/*.css'])
+        .pipe(concatCss('semantic.css'))
+        .pipe(gulp.dest('public/semantic/prod'))
+});
+
+gulp.task('semantic-js', function () {
+    return gulp.src(['public/semantic/dev/js/*.js'])
+        .pipe(concat('semantic.js'))
+        //.pipe(uglify())
+        .pipe(gulp.dest('public/semantic/prod'))
+});
+
+
+// Default task.
+gulp.task('semantic', ['semantic-css', 'semantic-js']);
+gulp.task('default', ['js', 'semantic']);

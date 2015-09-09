@@ -8,7 +8,7 @@
             <h1 class="category-title">{{ $presentation->title }}</h1>
 
             {{--subtitle--}}
-            <h4 class="category-subtitle">{{ $presentation->subtitle }}</h4>
+            <h3 class="category-subtitle">{{ $presentation->subtitle }}</h3>
         </div>
     </div>
 </div>

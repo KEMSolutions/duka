@@ -1,94 +1,62 @@
-<section class="slice color-one home_mixed">
+{{-- SECTION: MIXED --}}
+
+<section class="mixed-section color-one">
 
     @if ($showTab)
         @include("site.homepage._tab", ["tabTitle" => $layoutData["mixed"]["tabTitle"]])
     @endif
 
-    <div class="w-section inverse">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8">
+        <div class="ui grid container">
 
-                    @foreach($layoutData["mixed"]["products"] as $product)
-                        <div class="col-xs-12">
-                            <div class="aside-feature">
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <div class="img-feature">
-                                            <a href="{{ route('product', ['slug' => $product->slug]) }}">
-                                                <img src="{{ Products::imgFeatured($product->id) }}" class="img-thumbnail center-block" alt="{{ $product->localization->name }}"/>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <p>
-                                            <a href="/{{ $locale }}/prod/{{ $product->slug }}" class="strong"></a>
-                                            <a href="{{ route('product', ['slug' => $product->slug]) }}" class="strong">
-                                                {{ $product->localization->name }}
-                                            </a>
-                                                <span class="pull-right">
-                                                    <strong><i class="fa fa-star"></i> {{ Lang::get("boukem.featured") }}</strong>
-                                                </span>
-                                        </p>
+            {{-- Product section. --}}
+            <div class="eleven wide column">
+                <div class="ui three cards">
+                @foreach($layoutData["mixed"]["products"] as $product)
+                    <div class="card">
+                        <a href="{{ route('product', ['slug' => $product->slug]) }}">
+                            <img class="ui tiny image center-block" src="{{ Products::imgFeatured($product->id) }}" alt="{{ Products::imgFeatured($product->id) }}"/>
+                        </a>
 
-                                        <p>
-                                            {{ str_limit(strip_tags($product->localization->short_description), 140, "...") }}
+                        <div class="content">
+                            <a href="{{ route('product', ['slug' => $product->slug]) }}" class="header">
+                                {{ $product->localization->name }}
+                            </a>
 
-                                            <br/>
-                                            @if(count($product->formats) != 0)
-                                                @foreach($product->formats as $format)
-                                                    <button class="btn btn-one btn-sm buybutton"
-                                                            data-product="{{ $format->id }}"
-                                                            data-price="{{ $format->price }}"
-                                                            data-thumbnail="{{ Products::thumbnail($product) }}"
-                                                            data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
-                                                            data-name="{{ $product->localization->name . " - " . $format->name }}"
-                                                            data-quantity="1"
-                                                            data-link="{{ route('product', ['slug' => $product->slug]) }}"
-                                                            >
-
-                                                        @if(count($product->formats) > 1)
-                                                            <p class="ui sub header gray">{{ $format->name }}</p>
-                                                        @endif
-
-                                                        <i class="fa fa-shopping-cart"></i>
-                                                        $ {{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
-                                                    </button>
-                                                @endforeach
-                                            @endif
-                                        </p>
-                                    </div>
-                                </div>
+                            <div class="meta">
+                                <span>{{ str_limit(strip_tags($product->localization->short_description), 100, "...") }}</span>
                             </div>
                         </div>
-                    @endforeach
-                </div> <!-- col-md-8 -->
 
-                <div class="col-md-4">
-                    <div class="widget">
-                        <form class="form-inline" method="get" action="{{ route('search') }}">
-                            <div class="input-group col-xs-12">
-                                <input type="search" class="form-control" name="q" placeholder="{{ Lang::get("boukem.search") }}" value="" autocomplete="off" spellcheck="false">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-one" type="submit"><span class="fa fa-search"><span class="sr-only">{{ Lang::get("boukem.search") }}</span></span></button>
-                                        </span>
-                            </div>
-                        </form>
+                        <div class="extra content">
+                            Rating:
+                            <div class="ui star rating" data-rating="4"></div>
+                        </div>
                     </div>
+                @endforeach
+                </div>
+            </div>
 
-                    <div class="widget">
-                        <h4 class="widget-heading">{{ Lang::get("boukem.shortcuts") }}</h4>
-                    </div>
+            {{-- Search and Widget section. --}}
+            <div class="four wide column large screen only">
+                <div class="widget">
+                    <form action="{{ route('search') }}" method="get">
+                        <div class="ui fluid action input">
+                            <input type="search" name="q" id="searchBar" value="" autocomplete="off" spellcheck="false" placeholder="@lang('boukem.search')">
+                            <button type="submit" class="ui button">@lang("boukem.search")</button>
+                        </div>
+                    </form>
+                </div>
 
-                    <ul class="categories highlight">
-                        {{-- TODO : Nothing for now ...--}}
-                    </ul>
+                <div class="widget">
+                    <h3 class="ui header white">{{ Lang::get("boukem.shortcuts") }}</h3>
+                </div>
 
-                </div> <!-- col-md-4 -->
+                <ul class="categories highlight">
+                    {{--TODO : Nothing for now ...--}}
+                </ul>
+            </div>
+        </div>
 
-            </div><!-- row -->
-
-        </div> <!-- container -->
-    </div> <!-- w-section inverse -->
-
+        <br/>
+        <br/>
 </section>

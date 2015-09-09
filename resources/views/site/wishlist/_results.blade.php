@@ -1,3 +1,7 @@
-<div class="container list-layout-element-container">
+<div class="container">
+    <div class="ui items list-layout-element-container">
+        <br/>
 
+    </div>
 </div>
+

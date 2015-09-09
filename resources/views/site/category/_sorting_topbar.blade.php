@@ -1,36 +1,36 @@
-<div class="col-md-10 sorting-topbar">
-    <ul class="list-unstyled list-inline">
-        <li>
+<div class="row sorting-topbar horizontally-padded">
+    <div class="ui horizontal list full-width">
+        <div class="item">
             <span>
-              <div class="ui inline dropdown dropdown-select top left pointing button labeled large" id="sort-by-box">
-                  Sort by:
+              <div class="ui inline dropdown dropdown-select top left pointing button labeled tiny" id="sort-by-box">
+                  @lang("boukem.sort_by")
                   <div class="text">
-                      <i class="fa fa-link"></i>
-                      Relevance
+                      <i class="linkify icon"></i>
+                      @lang("boukem.relevance")
                   </div>
                   <i class="dropdown icon"></i>
                   <div class="menu sort-by">
                       <div class="item" data-sort="-relevance">
-                          <i class="fa fa-link"></i>
-                          Relevance
+                          <i class="linkify icon"></i>
+                          @lang("boukem.relevance")
                       </div>
                       <div class="item" data-sort="price">
-                          <i class="fa fa-usd"></i>
-                          Price: Low to High
+                          <i class="dollar icon"></i>
+                          @lang("boukem.price_low_to_high")
                       </div>
                       <div class="item" data-sort="-price">
-                          <i class="fa fa-usd"></i>
-                          Price: High to Low
+                          <i class="dollar icon"></i>
+                          @lang("boukem.price_high_to_low")
                       </div>
                   </div>
               </div>
             </span>
-        </li>
+        </div>
 
-        <li>
+        <div class="item">
             <span>
-                <div class="ui inline dropdown dropdown-select top right pointing button labeled large" id="items-per-page-box">
-                    Items per page:
+                <div class="ui inline dropdown dropdown-select top right pointing button labeled tiny" id="items-per-page-box">
+                    @lang("boukem.items_per_page")
                     <div class="text">
                         8
                     </div>
@@ -51,31 +51,17 @@
                     </div>
                 </div>
             </span>
-        </li>
+        </div>
 
-        <li class="pull-right">
-            <span>
-              Layout:
-              <ul class="list-unstyled list-inline inline-block" id="category-result-layout">
-                  <li>
-                      <button class="ui labeled icon button large" id="grid-layout">
-                          <i class="fa fa-th-large icon"></i>
-                          Grid
-                      </button>
-                  </li>
-
-                  <li>
-                      <button class="ui labeled icon button large" id="list-layout">
-                          <i class="fa fa-bars icon"></i>
-                          List
-                      </button>
-                  </li>
-              </ul>
+        <div class="item">
+            {{-- Grid layout is set by default. --}}
+                <span>
+              @lang("boukem.switch_layout")
+                    <button class="ui labeled icon button tiny" id="category-layout-switcher">
+                        <i class="list layout icon"></i>
+                        @lang("boukem.list")
+                    </button>
             </span>
-        </li>
-
-    </ul>
-
-
-
+        </div>
+    </div>
 </div>

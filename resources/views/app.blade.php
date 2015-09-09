@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ Localization::getCurrentLocale() }}" >
 <head>
-	{{-- TODO : include b2b functionnality --}}
 
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,7 +8,6 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}"/>
 	<link rel="icon" href="{{ url('/') . "/img/favicon.png"}}"/>
 
-	{{-- TODO : include dynamic name based on each store name--}}
 	<title>{{ Store::info()->name }}</title>
 
 	{{-- TODO: include page description if any--}}
@@ -19,24 +17,14 @@
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
 	<!-- Required -->
-	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 	<link href="//cdn.kem.guru/css/outdatedBrowser.min.css" rel="stylesheet">
 
-	<!-- Semantic UI css dependencies -->
-	<link rel="stylesheet" href="{{ asset('css/semantic-ui/transition.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/dropdown.css') }}">
-	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/label.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/button.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/icon.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/input.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/header.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/form.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/grid.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/container.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/css/semantic-ui/accordion.css') }}"/>
-
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.0.8/semantic.css"/>
+
+	<!-- Semantic UI css dependencies -->
+	<link rel="stylesheet" href="{{ asset('/semantic/prod/semantic.css') }}"/>
 
 	<!-- Custom css -->
 	@yield("custom_css")
@@ -70,12 +58,9 @@
 	<script src="//cdn.kem.guru/boukem/spirit/js/gcc_ressources.js.gz"></script>
 	<script src="/js_assets/mixitup/jquery.mixitup.init.js"></script>
 	<script src="/js_assets/blur/blur.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
 	<!-- Semantic ui dependencies -->
-	<script src="/js_assets/semantic-ui/transition.min.js"></script>
-	<script src="/js_assets/semantic-ui/dropdown.min.js"></script>
-	<script src="/js_assets/semantic-ui/accordion.min.js"></script>
+	<script src="/semantic/prod/semantic.js"></script>
 
 	@include("_dynamic_resources")
 

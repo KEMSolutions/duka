@@ -52,6 +52,11 @@ Product page
     color: #656565;
 }
 
+.pricing-plans .plan-info {
+    margin: 1rem 0 ;
+    padding: 1rem;
+}
+
 .pricing-plans .price-tag {
     margin: 0;
     height: 90px;
@@ -95,7 +100,7 @@ ul.categories.highlight li a {
     color: #F7F7F7!important;
 }
 
-.pinterest_share_button a:link {
+.pinterest_share_button a {
     background-color: #EFEFEF!important;
     color: #BD091F!important;
 }
@@ -122,7 +127,7 @@ ul.categories.highlight li a {
     margin-left: 4px;
 }
 
-.blog-post ul.meta-list {
+#product-description ul.meta-list {
     margin: 0;
     padding: 10px 15px 15px 15px;
     display: block;

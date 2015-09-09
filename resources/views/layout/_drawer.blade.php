@@ -1,15 +1,15 @@
 <aside id="cart-container" style="margin-right: 0">
     <div class="cart">
         <header class="cart-header">
-            <button class="pull-left no-border fa-2x" id="back">&times;</button>
+            <button class="pull-left no-border" id="back">&times;</button>
             <h2>{{ Lang::get("boukem.cart") }}</h2>
         </header>
 
         <div id="cart-items">
             <h4 class="text-center empty-cart hidden">{{ Lang::get("boukem.empty_cart") }}</h4>
-            <ul class="cart-items-list">
+                <div class="ui divided items cart-items-list">
 
-            </ul>
+                </div>
         </div>
 
         <div class="cart-footer">

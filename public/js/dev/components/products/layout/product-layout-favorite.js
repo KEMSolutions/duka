@@ -9,7 +9,7 @@ var productLayoutFavoriteContainer = {
      *
      */
     fadeInFavoriteIcon: function() {
-        $(".dense_product").hover(function() {
+        $(".dense-product").hover(function() {
             $(this).children(".favorite-wrapper").fadeIn();
         }, function () {
             $(this).children(".favorite-wrapper").hide();
@@ -62,7 +62,7 @@ var productLayoutFavoriteContainer = {
             if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
                 for(var j = 0; j<$(".favorite-wrapper").length; j++)
                 {
-                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === parseInt($(".favorite-wrapper")[j].dataset.product))
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
                     {
                         $(".favorite-wrapper")[j].className += " favorited";
                     }
