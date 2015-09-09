@@ -17,7 +17,7 @@
             {{-- Left column. --}}
             <div class="ten wide column" id="product-description" data-product="{{ $product->id }}">
 
-                <div class="ui raised very padded text container segment">
+                <div class="ui raised very padded segment">
 
                     {{-- Product image. --}}
                     <img src="{{ Products::mainImage($product->id) }}" alt="{{ $product->localization->name }}" class="center-block" itemprop="image"/>
