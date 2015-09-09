@@ -1,9 +1,9 @@
 <section class="cart-checkout">
     <div class="col-md-5 color-two cart-checkout-content">
 
-        <div id="cart-items" style="height: auto !important";>
-            <ul class="cart-items-list">
-            </ul>
+        <div id="cart-items" style="margin-top: 2rem;">
+            <div class="ui divided items cart-items-list">
+            </div>
         </div>
 
         <div class="cart-content-giftcard">

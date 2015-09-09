@@ -124,8 +124,8 @@ var cartLogicContainer = {
      */
     modifyQuantity : function() {
         $("#cart-items").on("change", ".quantity", function() {
-            $container = $(this).closest("li");
-            $product_price = $container.find(".product-price");
+            $container = $(this).closest(".item");
+            $product_price = $container.find(".price");
 
             //update the total value
             $product_price.text("$" + ($product_price.data("price") * $(this).val()).toFixed(2));
