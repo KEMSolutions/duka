@@ -14,7 +14,7 @@
 
             --}}
             @if(count($product->formats) != 0)
-                <span class="pull-right favorite-wrapper" data-product="{{ $product->formats[0]->id }}" data-description="{{ $product->localization->short_description }}" >
+                <span class="pull-right favorite-wrapper" data-product="{{$product->id . '-' . $product->formats[0]->id }}" data-description="{{ $product->localization->short_description }}" >
                     <i class="icon heart favorite-heart"></i>
                 </span>
             @endif
@@ -57,7 +57,7 @@
                 @if(count($product->formats) != 0)
                     @foreach($product->formats as $format)
                         <button class="ui icon btn btn-two buybutton"
-                                data-product="{{ $format->id }}"
+                                data-product="{{ $product->id . '-' . $format->id }}"
                                 data-price="{{ $format->price }}"
                                 data-thumbnail="{{ Products::thumbnail($product) }}"
                                 data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
