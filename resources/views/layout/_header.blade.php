@@ -153,9 +153,9 @@
         <div class="three wide column text-center border-right">
             <div class="ui dropdown dropdown-no-select pointing item">
 
-                <span class="text header-banner-align safari-header-banner-align">
+                <span class="text">
                     <span class="light">{{ Lang::get("boukem.shop_by") }}</span><strong class="bold"> {{ Lang::get("boukem.categories") }}</strong>
-                    <i class="caret down icon"></i>
+                    <span style="font-size: 0.685rem;color: #fff;padding: 0 0.585rem;">&#x25BC;</span>
                 </span>
 
                 <div class="menu fluid">
