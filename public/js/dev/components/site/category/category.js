@@ -30,9 +30,8 @@ var categoryContainer = {
     },
 
 
-    // SORTING FEATURE
     /**
-     * TODO: REFACTOR ALL LOGIC INTO ITS OWN CONTAINER
+     * Sets a number of items per page and set the value to the appropriate input.
      *
      */
     itemsPerPage: function () {
@@ -44,6 +43,11 @@ var categoryContainer = {
         $('#items-per-page-box').dropdown('set selected', this.searchParameters.per_page);
     },
 
+
+    /**
+     * Sets the sort by filter and set the value to the appropriate input.
+     *
+     */
     sortBy: function () {
         $(".sort-by .item").on("click", function() {
             UtilityContainer.urlAddParameters("order", $(this).data("sort"));
@@ -114,11 +118,14 @@ var categoryContainer = {
 
             function(event)
             {
-                var ID = $(this).data("filter"), filterList = categoryContainer.searchParameters[event.data.filter];
+                var ID = $(this).data("filter"),
+                    filterList = categoryContainer.searchParameters[event.data.filter],
+                    filter = $(this);
 
                 // Add brand to filter.
                 if ($(this).prop("checked")) {
                     filterList.push(ID);
+
                 }
 
                 // Or remove it.
@@ -155,7 +162,26 @@ var categoryContainer = {
         el.find(".item").each(function() {
             $(this).prop("checked", categoryContainer.searchParameters[type].indexOf(""+ $(this).data("filter")) > -1);
         });
+
+
     },
+
+    /**
+     * Create a new tag to be appended to the tags list.
+     *
+     * @param filter (filter being the checkbox DOM node)
+     */
+    addFilterToTagList: function (filter) {
+        var item =
+        '<div class="item">' +
+        '<a class="ui grey tag label" data-id="' + filter.data("filter") + '">' + filter.data("name") +
+        '<i class="icon remove right floated"></i>' +
+        '</a>' +
+        '</div>';
+
+        $(".tags-list").append(item);
+    },
+
 
     /**
      * Switch between grid or list layout.

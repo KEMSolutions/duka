@@ -1347,6 +1347,100 @@ var wishlistContainer = {
     }
 }
 /**
+ * Object responsible for adding products to a user's wishlist.
+ *
+ * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
+ */
+var productLayoutFavoriteContainer = {
+    /**
+     * Fade in the favorite icon (heart icon) when hovering on a product tile.
+     *
+     */
+    fadeInFavoriteIcon: function() {
+        $(".dense-product").hover(function() {
+            $(this).children(".favorite-wrapper").fadeIn();
+        }, function () {
+            $(this).children(".favorite-wrapper").hide();
+        });
+    },
+
+    /**
+     * Update the value of .wishlist_badge when adding or deleting elements.
+     *
+     */
+    setWishlistBadgeQuantity : function() {
+        var total = UtilityContainer.getNumberOfProductsInWishlist();
+
+        $(".wishlist_badge").text(total);
+    },
+
+    /**
+     * Add the clicked product to the wish list.
+     *
+     */
+    addToFavorite: function() {
+        var self = productLayoutFavoriteContainer,
+            item;
+
+        $(".favorite-wrapper").on("click", function() {
+            //No favorited class.
+            if (!$(this).hasClass("favorited")) {
+                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
+                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+
+                $(this).addClass("favorited");
+
+                self.setWishlistBadgeQuantity();
+            }
+            else
+            //Has a favorited class. We remove it, then delete the element from local Storage.
+            {
+                self.removeFromFavorite($(this), self);
+            }
+        });
+    },
+
+    /**
+     * Persist the heart icon next to products already marked as wished.
+     *
+     */
+    persistFavorite: function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
+                for(var j = 0; j<$(".favorite-wrapper").length; j++)
+                {
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
+                    {
+                        $(".favorite-wrapper")[j].className += " favorited";
+                    }
+                }
+            }
+        };
+    },
+
+    /**
+     * Delete the clicked element from the wish list.
+     *
+     * @param context
+     */
+    removeFromFavorite: function (element, context) {
+        element.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + element.data("product"));
+        context.setWishlistBadgeQuantity();
+    },
+
+    init: function () {
+        var self = productLayoutFavoriteContainer;
+
+
+        self.addToFavorite();
+        self.persistFavorite();
+        self.fadeInFavoriteIcon();
+        self.setWishlistBadgeQuantity();
+    }
+}
+/**
  * Object responsible for the view component of each category page.
  *
  * @type {{blurBackground: Function, init: Function}}
@@ -1378,9 +1472,8 @@ var categoryContainer = {
     },
 
 
-    // SORTING FEATURE
     /**
-     * TODO: REFACTOR ALL LOGIC INTO ITS OWN CONTAINER
+     * Sets a number of items per page and set the value to the appropriate input.
      *
      */
     itemsPerPage: function () {
@@ -1392,6 +1485,11 @@ var categoryContainer = {
         $('#items-per-page-box').dropdown('set selected', this.searchParameters.per_page);
     },
 
+
+    /**
+     * Sets the sort by filter and set the value to the appropriate input.
+     *
+     */
     sortBy: function () {
         $(".sort-by .item").on("click", function() {
             UtilityContainer.urlAddParameters("order", $(this).data("sort"));
@@ -1454,56 +1552,81 @@ var categoryContainer = {
             return;
         }
 
-        // Add the event listeners to each child element.
-        el.find(".item").on("change",
-            {
-                filter : type || "brands"
-            },
+        //// Add the event listeners to each child element.
+        //el.find(".item").on("change",
+        //    {
+        //        filter : type || "brands"
+        //    },
+        //
+        //    function(event)
+        //    {
+        //        var ID = $(this).data("filter"),
+        //            filterList = categoryContainer.searchParameters[event.data.filter],
+        //            filter = $(this);
+        //
+        //        // Add brand to filter.
+        //        if ($(this).prop("checked")) {
+        //            filterList.push(ID);
+        //
+        //            categoryContainer.addFilterToTagList(filter);
+        //            console.log(filter);
+        //        }
+        //
+        //        // Or remove it.
+        //        else
+        //        {
+        //            var newList = [];
+        //
+        //            if (filterList.length > 1) {
+        //                for (var index in filterList) {
+        //                    if (filterList[index] != ID) {
+        //                        newList.push(filterList[index]);
+        //                    }
+        //                }
+        //            }
+        //
+        //            filterList = newList;
+        //        }
+        //
+        //        // Reorder filter list.
+        //        filterList.sort(function(a, b) {
+        //            return a - b;
+        //        });
+        //
+        //        // Update page.
+        //        if (filterList.length > 0) {
+        //            var filter = filterList.length > 1 ? filterList.join(';') : filterList[0];
+        //            UtilityContainer.urlAddParameters(event.data.filter, filter);
+        //        } else {
+        //            UtilityContainer.urlRemoveParameters(event.data.filter);
+        //        }
+        //});
+        //
+        //// Update selected checkboxes. IDs are stored as strings in "categoryContainer.searchParameters".
+        //el.find(".item").each(function() {
+        //    $(this).prop("checked", categoryContainer.searchParameters[type].indexOf(""+ $(this).data("filter")) > -1);
+        //});
 
-            function(event)
-            {
-                var ID = $(this).data("filter"), filterList = categoryContainer.searchParameters[event.data.filter];
 
-                // Add brand to filter.
-                if ($(this).prop("checked")) {
-                    filterList.push(ID);
-                }
-
-                // Or remove it.
-                else
-                {
-                    var newList = [];
-
-                    if (filterList.length > 1) {
-                        for (var index in filterList) {
-                            if (filterList[index] != ID) {
-                                newList.push(filterList[index]);
-                            }
-                        }
-                    }
-
-                    filterList = newList;
-                }
-
-                // Reorder filter list.
-                filterList.sort(function(a, b) {
-                    return a - b;
-                });
-
-                // Update page.
-                if (filterList.length > 0) {
-                    var filter = filterList.length > 1 ? filterList.join(';') : filterList[0];
-                    UtilityContainer.urlAddParameters(event.data.filter, filter);
-                } else {
-                    UtilityContainer.urlRemoveParameters(event.data.filter);
-                }
+        // Storing all filters in localStorage to allow filters persistance.
+        el.find(".item").on("change", function () {
+           console.log("hello");
         });
 
-        // Update selected checkboxes. IDs are stored as strings in "categoryContainer.searchParameters".
-        el.find(".item").each(function() {
-            $(this).prop("checked", categoryContainer.searchParameters[type].indexOf(""+ $(this).data("filter")) > -1);
-        });
     },
+
+
+    addFilterToTagList: function (filter) {
+        var item =
+        '<div class="item">' +
+        '<a class="ui grey tag label" data-id="' + filter.data("filter") + '">' + filter.data("name") +
+        '<i class="icon remove right floated"></i>' +
+        '</a>' +
+        '</div>';
+
+        $(".tags-list").append(item);
+    },
+
 
     /**
      * Switch between grid or list layout.
@@ -1605,100 +1728,6 @@ var categoryContainer = {
 };
 
 
-/**
- * Object responsible for adding products to a user's wishlist.
- *
- * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
- */
-var productLayoutFavoriteContainer = {
-    /**
-     * Fade in the favorite icon (heart icon) when hovering on a product tile.
-     *
-     */
-    fadeInFavoriteIcon: function() {
-        $(".dense-product").hover(function() {
-            $(this).children(".favorite-wrapper").fadeIn();
-        }, function () {
-            $(this).children(".favorite-wrapper").hide();
-        });
-    },
-
-    /**
-     * Update the value of .wishlist_badge when adding or deleting elements.
-     *
-     */
-    setWishlistBadgeQuantity : function() {
-        var total = UtilityContainer.getNumberOfProductsInWishlist();
-
-        $(".wishlist_badge").text(total);
-    },
-
-    /**
-     * Add the clicked product to the wish list.
-     *
-     */
-    addToFavorite: function() {
-        var self = productLayoutFavoriteContainer,
-            item;
-
-        $(".favorite-wrapper").on("click", function() {
-            //No favorited class.
-            if (!$(this).hasClass("favorited")) {
-                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
-                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
-
-                $(this).addClass("favorited");
-
-                self.setWishlistBadgeQuantity();
-            }
-            else
-            //Has a favorited class. We remove it, then delete the element from local Storage.
-            {
-                self.removeFromFavorite($(this), self);
-            }
-        });
-    },
-
-    /**
-     * Persist the heart icon next to products already marked as wished.
-     *
-     */
-    persistFavorite: function() {
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
-                for(var j = 0; j<$(".favorite-wrapper").length; j++)
-                {
-                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
-                    {
-                        $(".favorite-wrapper")[j].className += " favorited";
-                    }
-                }
-            }
-        };
-    },
-
-    /**
-     * Delete the clicked element from the wish list.
-     *
-     * @param context
-     */
-    removeFromFavorite: function (element, context) {
-        element.removeClass("favorited");
-        localStorage.removeItem("_wish_product " + element.data("product"));
-        context.setWishlistBadgeQuantity();
-    },
-
-    init: function () {
-        var self = productLayoutFavoriteContainer;
-
-
-        self.addToFavorite();
-        self.persistFavorite();
-        self.fadeInFavoriteIcon();
-        self.setWishlistBadgeQuantity();
-    }
-}
 /**
  * Entry point of script.
  *

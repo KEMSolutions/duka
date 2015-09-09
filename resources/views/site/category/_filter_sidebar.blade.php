@@ -17,7 +17,7 @@
                                 @foreach(Categories::getAllCategories() as $category)
                                     <li>
                                         <label>
-                                            <input type="checkbox" class="item" data-filter="{{ $category->id }}"/> {{ $category->name }}
+                                            <input type="checkbox" class="item" data-name="{{ $category->name }}" data-filter="{{ $category->id }}"/> {{ $category->name }}
                                         </label>
                                     </li>
                                 @endforeach
@@ -37,7 +37,7 @@
                                 @foreach(Brands::getAllBrands() as $brand)
                                     <li>
                                         <label>
-                                            <input type="checkbox" class="item" data-filter="{{ $brand->id }}"/> {{ $brand->name }}
+                                            <input type="checkbox" class="item" data-name="{{ $brand->name }}" data-filter="{{ $brand->id }}"/> {{ $brand->name }}
                                         </label>
                                     </li>
                                 @endforeach
