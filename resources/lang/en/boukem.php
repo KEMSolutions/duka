@@ -194,7 +194,7 @@ return [
     "expected_delivery" =>"Expected delivery (days)",
     "optional"          =>"Optional",
     "get_estimate_label"=>"Enter your location to get a price estimate.",
-    "calculate"         =>"Calculate",
+    "estimate"          =>"Estimate",
     "or"                =>"or",
     "change_location"   =>"Change location",
     "pending_order"     =>"Your order #:command has not been paid.",
