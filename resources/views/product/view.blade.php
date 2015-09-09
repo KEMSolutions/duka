@@ -108,7 +108,7 @@
                             <div class="form-group">
                                 <div class="input-group horizontal-align" style="">
                                     <span class="input-group-addon bootstrap-touchspin-prefix"></span>
-                                    <input type="text" class="form-control input-qty text-center" id="item_quantity" value="1">
+                                    <input type="text" class="form-control input-qty text-center" id="item_quantity" value="1" min="1">
                                     <span class="input-group-addon bootstrap-touchspin-postfix"></span>
                                 </div>
                             </div>
@@ -167,7 +167,7 @@
                                         data-inventory-count="{{ $product->formats[0]->inventory->count }}"
                                         data-quantity="1"
                                         data-link="{{ route('product', ['slug' => $product->slug]) }}"
-                                ">
+                                >
                                 <div class="add-cart">
                                     <i class="check circle outline icon"></i>
                                     @lang("boukem.add_cart")
