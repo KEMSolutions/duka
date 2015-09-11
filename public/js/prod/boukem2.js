@@ -333,7 +333,6 @@ var UtilityContainer = {
      */
     getShipmentTaxes : function(serviceCode, data) {
         var taxes = 0;
-        console.log(data);
 
         for(var i=0; i<data.shipping.services.length; i++)
         {
@@ -488,6 +487,93 @@ var UtilityContainer = {
 };
 
 
+/**
+ * Entry point of script.
+ *
+ */
+$(document).ready(function () {
+
+    /**
+     * Sets up the ajax token for all ajax requests
+     *
+     */
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'locale': $('html').attr('lang')
+        }
+    });
+
+    /**
+     * Initialize semantic UI modules
+     *
+     */
+    semanticInitContainer.init();
+
+    /**
+     * Initialize checkout logic.
+     *
+     */
+    checkoutInitContainer.init();
+
+    /**
+     * Initialize cart drawer logic.
+     *
+     */
+    cartDrawerInitContainer.init();
+
+    /**
+     * Initialize category container
+     *
+     */
+    categoryContainer.init();
+
+    /**
+     * Initialize overlay plugin.
+     *
+     */
+    paymentOverlayContainer.init();
+
+    /**
+     * Initialize homepage sections.
+     *
+     */
+    homepageContainer.init();
+
+    /**
+     * Initialize favorite products feature.
+     *
+     */
+    productLayoutFavoriteContainer.init();
+
+    /**
+     * Initialize product formats feature.
+     *
+     */
+    productFormatContainer.init();
+
+    /**
+     * Initialize column responsiveness in product pages.
+     *
+     */
+    productResponsive.init();
+
+    /**
+     * Initialize wishlist page.
+     *
+     */
+    wishlistLogicContainer.init();
+
+    /**
+     * Global initialization of elements.
+     *
+     */
+    //fancy plugin for product page (quantity input)
+    $(".input-qty").TouchSpin({
+        initval: 1
+    });
+
+});
 /**
  * Object responsible for handling billing information.
  *
@@ -1629,15 +1715,21 @@ var categoryContainer = {
             UtilityContainer.urlAddParameters("order", $(this).data("sort"));
         });
 
-        // Set the selected option.
-        $('#sort-by-box').dropdown('set selected', this.searchParameters.order);
+        // Find the text for the selected option.
+        $(".sort-by .item").each(function(index, element) {
+            if ($(element).data('sort') == categoryContainer.searchParameters.order) {
+                $("#sort-by-box").dropdown("set selected", $(element).html());
+                // console.log($(element).html())
+                return false;
+            }
+        });
     },
 
     /**
-     * Adds the price filter to the search query.
+     * Adds the price filter to the search query and updates the filter on the page.
      *
      */
-    priceUpdate: function() {
+    price: function() {
 
         $("#price-update").on("click", function()
         {
@@ -1658,88 +1750,63 @@ var categoryContainer = {
     },
 
     /**
-     * Adds the category filter to the search query.
+     * Adds the category filter to the search query and updates the filter on the page.
      *
      */
-    categoriesUpdate: function() {
-        this.filterListUpdate($("#refine-by-category"), "categories");
+    categories: function() {
+        this.updateFilterList($("#refine-by-category"), "categories");
     },
 
     /**
-     * Adds the brands filter to the search query.
+     * Adds the brands filter to the search query and updates the filter on the page.
      *
      */
-    brandsUpdate: function() {
-        this.filterListUpdate($("#refine-by-brand"), "brands");
+    brands: function() {
+        this.updateFilterList($("#refine-by-brand"), "brands");
     },
 
     /**
      * Shortcut to handle filter lists such as brands and categories.
      *
-     * @param el
-     * @param type
+     * @param element
+     * @param filterType
      */
-    filterListUpdate : function(el, type)
+    updateFilterList : function(element, filterType)
     {
-        // Performance check.
-        if (!el) {
-            return;
-        }
-
         // Add the event listeners to each child element.
-        el.find(".item").on("change",
+        element.find(".item").on("change",
             {
-                filter : type || "brands"
+                filter : filterType || "brands"
             },
 
             function(event)
             {
-                var ID = $(this).data("filter"),
+                var id = $(this).data("filter"),
                     filterList = categoryContainer.searchParameters[event.data.filter],
                     filter = $(this);
 
-                // Add brand to filter.
-                if ($(this).prop("checked")) {
-                    filterList.push(ID);
-
+                // If the checkbox is checked, add the filter to the list.
+                if (filter.prop("checked")) {
+                    categoryContainer.addFilter(event.data.filter, id);
                 }
 
-                // Or remove it.
-                else
-                {
-                    var newList = [];
-
-                    if (filterList.length > 1) {
-                        for (var index in filterList) {
-                            if (filterList[index] != ID) {
-                                newList.push(filterList[index]);
-                            }
-                        }
-                    }
-
-                    filterList = newList;
+                // If not, then remove it from the list.
+                else {
+                    categoryContainer.removeFilter(event.data.filter, id);
                 }
-
-                // Reorder filter list.
-                filterList.sort(function(a, b) {
-                    return a - b;
-                });
-
-                // Update page.
-                if (filterList.length > 0) {
-                    var filter = filterList.length > 1 ? filterList.join(';') : filterList[0];
-                    UtilityContainer.urlAddParameters(event.data.filter, filter);
-                } else {
-                    UtilityContainer.urlRemoveParameters(event.data.filter);
-                }
-        });
+            }
+        );
 
         // Update selected checkboxes. IDs are stored as strings in "categoryContainer.searchParameters".
-        el.find(".item").each(function() {
-            $(this).prop("checked", categoryContainer.searchParameters[type].indexOf(""+ $(this).data("filter")) > -1);
+        element.find(".item").each(function() {
+
+            $(this).prop("checked", categoryContainer.searchParameters[filterType].indexOf(""+ $(this).data("filter")) > -1);
+
+            // And add the filter as a tag.
+            if ($(this).prop("checked")) {
+                categoryContainer.addTag($(this));
+            }
         });
-
-
     },
 
     /**
@@ -1747,17 +1814,81 @@ var categoryContainer = {
      *
      * @param filter (filter being the checkbox DOM node)
      */
-    addFilterToTagList: function (filter) {
+    addTag: function (filter) {
         var item =
         '<div class="item">' +
-        '<a class="ui grey tag label" data-id="' + filter.data("filter") + '">' + filter.data("name") +
-        '<i class="icon remove right floated"></i>' +
+        '<a class="ui grey tag label">' + filter.data("name") +
+        '<i class="icon remove right floated" data-id="' + filter.data("filter") + '" data-type="' + filter.data('type') + '"></i>' +
         '</a>' +
         '</div>';
 
         $(".tags-list").append(item);
     },
 
+    /**
+     * Attaches the remove event to the tags.
+     *
+     */
+    tags: function() {
+        $(".tags-list .item .remove").on("click", function() {
+            categoryContainer.removeFilter($(this).data('type'), $(this).data('id'));
+        });
+    },
+
+    /**
+     * Adds a filter and refreshes the page.
+     *
+     * @param filterType    Either "brands" or "categories".
+     * @param id            ID of brand or category.
+     */
+    addFilter: function(filterType, id) {
+        this.searchParameters[filterType].push(id);
+        this.updateFilters(filterType);
+    },
+
+    /**
+     * Removes a filter and refreshes the page.
+     *
+     * @param filterType    Either "brands" or "categories".
+     * @param id            ID of brand or category.
+     */
+    removeFilter: function(filterType, id) {
+
+        // Retrieve filter list.
+        var filterList = this.searchParameters[filterType], newList = [];
+
+        // Rebuild a new list, without the filter we want removed.
+        if (filterList.length > 1) {
+            for (var index in filterList) {
+                if (filterList[index] != id) {
+                    newList.push(filterList[index]);
+                }
+            }
+        }
+
+        this.searchParameters[filterType] = newList;
+        this.updateFilters(filterType);
+    },
+
+    updateFilters: function(filterType) {
+
+        // Reorder filter list (this will help with caching on Laravel's end).
+        var filterList = this.searchParameters[filterType];
+        filterList.sort(function(a, b) {
+            return a - b;
+        });
+
+        // If we have filters, update the query string and refresh the page.
+        if (filterList.length > 0) {
+            var filter = filterList.length > 1 ? filterList.join(';') : filterList[0];
+            UtilityContainer.urlAddParameters(filterType, filter);
+        }
+
+        // If we don't have any filters left, refresh the page without the filter parameter.
+        else {
+            UtilityContainer.urlRemoveParameters(filterType);
+        }
+    },
 
     /**
      * Switch between grid or list layout.
@@ -1851,13 +1982,13 @@ var categoryContainer = {
         self.blurBackground();
         self.itemsPerPage();
         self.sortBy();
-        self.priceUpdate();
-        self.categoriesUpdate();
-        self.brandsUpdate();
+        self.price();
+        self.categories();
+        self.brands();
+        self.tags();
         self.toggleLayout();
     }
 };
-
 
 /**
  * Object responsible for specific behaviours of homepage sections.
@@ -2492,90 +2623,3 @@ var wishlistContainer = {
         self.setNumberOfProductsInHeader();
     }
 }
-/**
- * Entry point of script.
- *
- */
-$(document).ready(function () {
-
-    /**
-     * Sets up the ajax token for all ajax requests
-     *
-     */
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            'locale': $('html').attr('lang')
-        }
-    });
-
-    /**
-     * Initialize semantic UI modules
-     *
-     */
-    semanticInitContainer.init();
-
-    /**
-     * Initialize checkout logic.
-     *
-     */
-    checkoutInitContainer.init();
-
-    /**
-     * Initialize cart drawer logic.
-     *
-     */
-    cartDrawerInitContainer.init();
-
-    /**
-     * Initialize category container
-     *
-     */
-    categoryContainer.init();
-
-    /**
-     * Initialize overlay plugin.
-     *
-     */
-    paymentOverlayContainer.init();
-
-    /**
-     * Initialize homepage sections.
-     *
-     */
-    homepageContainer.init();
-
-    /**
-     * Initialize favorite products feature.
-     *
-     */
-    productLayoutFavoriteContainer.init();
-
-    /**
-     * Initialize product formats feature.
-     *
-     */
-    productFormatContainer.init();
-
-    /**
-     * Initialize column responsiveness in product pages.
-     *
-     */
-    productResponsive.init();
-
-    /**
-     * Initialize wishlist page.
-     *
-     */
-    wishlistLogicContainer.init();
-
-    /**
-     * Global initialization of elements.
-     *
-     */
-    //fancy plugin for product page (quantity input)
-    $(".input-qty").TouchSpin({
-        initval: 1
-    });
-
-});
