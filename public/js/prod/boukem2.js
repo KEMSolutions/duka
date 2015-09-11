@@ -489,396 +489,6 @@ var UtilityContainer = {
 
 
 /**
- * Object responsible for displaying the cart drawer.
- * Logic handled in dev/actions/layout/cart-drawer-logic.js
- *
- * @type {{$el: {$back: (*|jQuery|HTMLElement), $proceed: (*|jQuery|HTMLElement), $trigger: (*|jQuery|HTMLElement), $container: (*|jQuery|HTMLElement), $checkout: (*|jQuery|HTMLElement), $body: (*|jQuery|HTMLElement)}, displayOn: Function, displayOff: Function, animateIn: Function, animateOut: Function, setCartItemsHeight: Function, computeCartItemsHeight: Function, init: Function}}
- */
-var cartDisplayContainer = {
-    $el : {
-        $back : $("#back"),
-        $proceed : $("#proceed"),
-        $trigger : $(".view-cart"),
-        $container : $("#cart-container"),
-        $checkout : $("#checkout"),
-        $body : $("body")
-    },
-
-    displayOn: function() {
-        var _width = cartDisplayContainer.$el.$container.width();
-        cartDisplayContainer.$el.$container.css( {
-            "margin-right" : -_width
-        });
-
-        cartDisplayContainer.$el.$trigger.click(function() {
-            cartDisplayContainer.animateIn();
-        });
-    },
-
-    displayOff : function() {
-        cartDisplayContainer.$el.$back.click(function() {
-            cartDisplayContainer.animateOut();
-        });
-        cartDisplayContainer.$el.$checkout.click(function() {
-            sessionStorage.isDisplayed = false;
-        });
-    },
-
-    animateIn : function() {
-        cartDisplayContainer.$el.$container.show();
-        cartDisplayContainer.$el.$container.animate( {
-            "margin-right" : 0
-        }, 400);
-        sessionStorage.isDisplayed = true;
-    },
-
-    animateOut: function() {
-        var _width = cartDisplayContainer.$el.$container.width();
-        cartDisplayContainer.$el.$container.animate( {
-            "margin-right" : -_width
-        }, 400, function() {
-            $(this).hide();
-        });
-        sessionStorage.isDisplayed = false;
-    },
-
-    setCartItemsHeight : function() {
-        cartDisplayContainer.computeCartItemsHeight();
-
-        $(window).on("resize", function() {
-            cartDisplayContainer.computeCartItemsHeight();
-        });
-
-        cartDisplayContainer.$el.$trigger.on("click", function() {
-            cartDisplayContainer.computeCartItemsHeight();
-        })
-    },
-
-    computeCartItemsHeight : function() {
-        var cartItemsHeight = $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
-
-        $("#cart-items").css("height", cartItemsHeight);
-    },
-
-    init : function() {
-        cartDisplayContainer.displayOn();
-        cartDisplayContainer.displayOff();
-        UtilityContainer.populateCountry($("html").attr("lang"));
-
-        if (sessionStorage.isDisplayed == "true")
-        {
-            cartDisplayContainer.$el.$container.css("margin-right", 0);
-            cartDisplayContainer.$el.$container.show();
-        }
-
-    }
-};
-/**
- * Object responsible for handling the payment overlay behaviour.
- *
- * @type {{cancelOrder: Function, init: Function}}
- */
-var paymentOverlayContainer = {
-
-    /**
-     * Cancels an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_unpaid_orders");
-
-            $("#cancelledOrder .jumbotron").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-
-        });
-    },
-
-    /**
-     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_unpaid_orders')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(data) {
-                    if (data.status == 'pending')
-                        paymentOverlayContainer.showPaymentNotice();
-                    else
-                        Cookies.remove('_unpaid_orders');
-                }
-            });
-        }
-
-    },
-
-    /**
-     * Shows payment notice.
-     *
-     */
-    showPaymentNotice : function() {
-
-        // Retrieve order details.
-        var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-        // Display notice.
-        $('body').prepend(
-            '<div class="container overlay fullScreen" id="cancelledOrder">'+
-            '<div class="jumbotron vertical-align color-one">'+
-            '<div class="text-center">'+
-            '<h2>'+
-            Localization.pending_order.replace(':command', order.id) +
-            '</h2>'+
-            '<h4>'+ Localization.what_to_do +'</h4>'+
-            '<br />'+
-            '<ul class="list-inline">' +
-            '<li>' +
-            '<a href="'+
-            ApiEndpoints.orders.pay.replace(':id', order.id)
-                .replace(':verification', order.verification) +'">'+
-            '<button class="btn btn-success" id="payOrder">'+ Localization.pay_now +'</button>'+
-            '</a>'+
-            '</li>' +
-            '<li>' +
-            '<button class="btn btn-danger" id="cancelOrder">'+
-            Localization.cancel_order +
-            '</button>'+
-            '</li>'+
-            '</ul>'+
-            '</div>'+
-            '</div>'+
-            '</div>'
-        );
-    },
-
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-        self.checkPendingOrders();
-    }
-}
-
-/**
- * Object responsible for handling different formats of the same product.
- *
- * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
- */
-var productFormatContainer = {
-
-    /**
-     * Sets the right price, inventory count and format text according to the format of the hovered product.
-     *
-     */
-    displaySyncedProductInformation: function() {
-
-        const self = productFormatContainer,
-            $formatSelection = $(".format-selection");
-
-        $formatSelection.on("click", function () {
-            // Set the right format in product title
-            $("#product-format").text($(this).data("format"));
-
-            // Set the right price and the right inventory count
-            self.setPriceTag($(this).data("price"));
-            self.setInventoryCount($(this).data("inventory-count"));
-
-            // Toggle active class on right format
-            self.toggleActiveClass($(this));
-
-            // Creates an appropriate buybutton according to the info.
-            self.setBuybuttonInformation($(this));
-        });
-
-    },
-
-    /**
-     * Sets the inventory text and value according to the inventory count of the product.
-     *
-     * @param count
-     */
-    setInventoryCount: function (count) {
-        const $inventoryCount = $("#inventory-count"),
-            countryCode = $inventoryCount.data("country-code"),
-            expressShipping = Localization.express_shipping,
-            stockLeft = Localization.stock_left.replace(":quantity", count),
-            shippingTime = Localization.shipping_time,
-            shippingMethod = (countryCode === "US" || countryCode === "CA") ? "fa-truck" : "fa-plane";
-
-        var inventoryDescription = '';
-
-       if (count > 5) {
-            inventoryDescription =
-                '<link itemprop="availability" href="http://schema.org/InStock">' +
-                    '<li class="text-success">' +
-                    '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-                    expressShipping;
-       }
-       else if (count > 0) {
-           inventoryDescription =
-               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
-               '<li class="text-warning">' +
-                   '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-                   stockLeft;
-       }
-        else {
-           inventoryDescription =
-               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
-           '<li class="text-warning">' +
-           '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-           shippingTime;
-       }
-
-        $inventoryCount.html(inventoryDescription);
-
-    },
-
-    /**
-     * Sets the price tag according to the format.
-     *
-     * @param price
-     */
-    setPriceTag: function (price) {
-        $(".price-tag").text("$ " + price);
-    },
-
-    /**
-     * Recreates a buybutton with relevant information every time we switch format.
-     *
-     * @param format (html5 data in format buttons)
-     */
-    setBuybuttonInformation: function(format) {
-        var $buybuttonWrapper = $(".buybutton-format-selection-wrapper"),
-            buybutton =
-                '<button class="btn btn-three buybutton horizontal-align"' +
-                    'data-product="' + format.data("product") +'"' +
-                'data-price="' + format.data("price") +'"' +
-                'data-thumbnail="' + format.data("thumbnail") +'"' +
-                'data-thumbnail_lg="' + format.data("thumbnail_lg") +'"' +
-                'data-name="' + format.data("name") +'"' +
-                'data-format="' + format.data("format") +'"' +
-                'data-inventory-count="' + format.data("inventory-count") +'"' +
-                'data-quantity="' + format.data("quantity") + '"' +
-                'data-link="' + format.data("link") +'"' +
-                    '>' +
-                '<div class="add-cart">' +
-                    '<i class="fa fa-check-circle"></i> ' +
-                    Localization.add_cart +
-                    '</div> </button>';
-
-        $buybuttonWrapper.empty();
-
-        $buybuttonWrapper.append(buybutton);
-    },
-
-    /**
-     * Toggles the .active class when clicked on a format.
-     *
-     * @param format
-     */
-    toggleActiveClass: function (format) {
-        $(".format-selection.active").removeClass("active");
-        format.addClass("active");
-    },
-
-    init: function () {
-        const self = productFormatContainer;
-
-        self.displaySyncedProductInformation();
-
-    }
-}
-var productResponsive = {
-    invertPriceAndDescriptionColumn: function () {
-        $(window).on("load resize", function () {
-            if($(this).width() < 768)
-            {
-                $("#product-description").before($("#product-info-box"));
-            }
-            else
-            {
-                $("#product-description").after($("#product-info-box"));
-            }
-        });
-    },
-
-    init: function () {
-        var self = productResponsive;
-
-        self.invertPriceAndDescriptionColumn();
-    }
-}
-/**
- * Object responsible for activating semantic ui features.
- *
- * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
- */
-var semanticInitContainer = {
-
-    /**
-     * Initialize modules
-     *
-     */
-    module: {
-        /**
-         * Initialize dropdown module.
-         *
-         */
-        initDropdownModule: function() {
-            //Enable selection on clicked items
-            $(".ui.dropdown-select").dropdown();
-
-            //Prevent selection on clicked items
-            $(".ui.dropdown-no-select").dropdown({
-                    action: "select"
-                }
-            );
-        },
-
-        /**
-         * Initialize rating module.
-         *
-         */
-        initRatingModule: function () {
-            $(".ui.rating").rating();
-        }
-    },
-
-    /**
-     * Specify semantic custom behavior.
-     *
-     */
-    behaviors: {
-
-    },
-
-
-
-    init: function () {
-        var self = semanticInitContainer,
-            module = self.module;
-
-        module.initDropdownModule();
-        module.initRatingModule();
-    }
-}
-/**
  * Object responsible for handling billing information.
  *
  * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
@@ -949,6 +559,265 @@ var billingContainer = {
         self.setDifferentBillingAddress(self);
     }
 }
+/**
+ * Container responsible for initializing the checkout page.
+ * Overall logic is handled in js/dev/actions/checkout/*.js
+ * View component is handled in js/dev/components/checkout/*.js
+ *
+ * @type {{estimateButtonClick: Function, init: Function}}
+ */
+var checkoutInitContainer = {
+
+    /**
+     * Event triggered when the "Continue" button is hit.
+     * If the input fields entered are appropriate, make the ajax call to "/api/estimate".
+     * If they are not, display the relevant error message(s)
+     *
+     */
+    estimateButtonClick : function() {
+        $("#estimateButton").on("click", function(e) {
+            var email = $("#customer_email"),
+                phone = $("#customer_phone"),
+                shippingFirstName = $("#shippingFirstname"),
+                shippingLastName = $("#shippingLastname"),
+                shippingAddress1 = $("#shippingAddress1"),
+                shippingCity = $("#shippingCity"),
+                shippingCountry = $("#shippingCountry").val(),
+                shippingPostcode = $("#shippingPostcode"),
+                billingFirstName = $("#billingFirstname"),
+                billingLastName = $("#billingLastname"),
+                billingAddress1 = $("#billingAddress1"),
+                billingCity = $("#billingCity"),
+                billingCountry = $("#billingCountry").val(),
+                billingPostcode = ("#billingPostcode"),
+                shippingInformation = {
+                    "country" : shippingCountry,
+                    "postcode" : $("#shippingPostcode").val(),
+                    "postcodeInput" : $("#shippingPostcode")
+                },
+                fields = [
+                    shippingFirstName,
+                    shippingLastName,
+                    shippingAddress1,
+                    shippingCity,
+                    billingFirstName,
+                    billingLastName,
+                    billingAddress1,
+                    billingCity,
+                    email,
+                    phone
+                ];
+
+            e.preventDefault();
+
+            //Auto fill billing address if checkbox is checked.
+            billingContainer.autoFillBillingAddress(fields, shippingInformation.postcodeInput);
+
+            //Build the billing information object (from auto fill or entered by hand)
+            var billingInformation = {
+                "country" : billingCountry,
+                "postcode" : $("#billingPostcode").val(),
+                "postcodeInput" : $("#billingPostcode")
+            };
+
+            //Validate all fields and make the ajax call!
+            checkoutValidationContainer.init(fields, email, shippingInformation, billingInformation);
+        });
+    },
+
+    init: function () {
+        /**
+         * Populate select lists and set up billing address container behaviour.
+         * Set the form focus on first name field
+         *
+         */
+        locationContainer.init();
+        billingContainer.init();
+        $("#shippingFirstname").focus();
+
+        var self = checkoutInitContainer;
+        self.estimateButtonClick();
+    }
+}
+/**
+ * Object responsible for handling the overall logic of the checkout process.
+ * After clicking on "Proceed to checkout", create a cookie and make an ajax call to get all the data before redirecting the user to the payment page.
+ *
+ * When a user changes the quantity or deletes an item, fadeOut the shipping estimate and payment panel. Replace the Continue button with "Update".
+ *
+ * @type {{createOrdersCookie: Function, placeOrderAjaxCall: Function, init: Function}}
+ */
+var checkoutLogicContainer = {
+
+    /**
+     * Create a localStorage object containing the id and the verification code.
+     *
+     * @param data
+     */
+    createOrdersCookie: function(data) {
+        var paymentId = data.id,
+            paymentVerification = data.verification;
+
+        Cookies.set("_unpaid_orders", JSON.stringify( {
+            id : paymentId,
+            verification : paymentVerification
+        }));
+    },
+
+    /**
+     * Makes an ajax call to api/orders with the values from the form
+     *
+     * @param self
+     */
+    placeOrderAjaxCall: function(self) {
+        $.ajax({
+            method: "POST",
+            url: ApiEndpoints.placeOrder,
+            data: $("#cart_form").serialize(),
+            cache: false,
+            success: function(data) {
+                console.log(data);
+
+                self.createOrdersCookie(data);
+
+                //redirect the user to the checkout page if he backs from the payment page
+                history.pushState({data: data}, "Checkout ","/dev/cart");
+
+                //Redirect to success url
+                window.location.replace(data.payment_details.payment_url);
+            },
+            error: function(xhr, e) {
+                console.log(xhr);
+                console.log(e);
+            }
+        })
+
+    },
+
+    /**
+     * Hide the panels by fading them up then adding a hidden class.
+     *
+     * @param self
+     */
+    hidePanels: function (self) {
+        $(".quantity, #shippingPostcode, #shippingCity").on("change", function () {
+            UtilityContainer.addFadeOutUpClass($("#estimate"));
+            UtilityContainer.addFadeOutUpClass($("#payment"));
+
+            self.updateEstimateButtonValue();
+        });
+
+        $(".close-button").on("click", function() {
+            UtilityContainer.addFadeOutUpClass($("#estimate"));
+            UtilityContainer.addFadeOutUpClass($("#payment"));
+
+            self.updateEstimateButtonValue();
+        });
+    },
+
+    /**
+     * Updates the estimate button with "Update" while making it bouncy ;)
+     *
+     */
+    updateEstimateButtonValue: function() {
+        $("#estimateButton")
+            .removeClass("btn-one animated rubberBand")
+            .addClass("animated rubberBand btn-three")
+            .text(Localization.update);
+    },
+
+    /**
+     * Register methods for outside calling.
+     *
+     */
+    init: function() {
+        var self = checkoutLogicContainer;
+
+        $("#checkoutButton").on("click", function (e) {
+            e.preventDefault();
+
+            $('#checkoutButton').html('<i class="fa fa-spinner fa-spin"></i>');
+
+            self.placeOrderAjaxCall(self);
+
+        });
+
+        self.hidePanels(self);
+    }
+}
+/**
+ * Object responsible for validating all the information entered by the user.
+ * Will trigger the ajax call only when all the inputs entered match their validation rules.
+ *
+ * @type {{removeErrorClassFromEmail: Function, removeErrorClassFromPostcode: Function, init: Function}}
+ */
+var checkoutValidationContainer = {
+
+    removeErrorClassFromEmail: function(email) {
+        if (UtilityContainer.validateEmail(email.val()) && email.parent().hasClass("has-error"))
+            email.parent().removeClass("has-error");
+    },
+
+    removeErrorClassFromPostcode: function(postcode, country) {
+        if (UtilityContainer.validatePostCode(postcode.val(), country) && postcode.parent().hasClass("has-error"))
+            postcode.parent().removeClass("has-error");
+    },
+
+    /**
+     * If all validation pass, spin the button, clean the shipment table and trigger the ajax call.
+     * If there are errors, warn the users about which inputs is faulty.
+     *
+     * @param fields
+     * @param email
+     * @param postcode
+     * @param country
+     */
+    init : function(fields, email, shippingInformation, billingInformation) {
+        var self = checkoutValidationContainer;
+
+        if (UtilityContainer.validateEmptyFields(fields)
+            && UtilityContainer.validateEmail(email.val())
+            && UtilityContainer.validatePostCode(shippingInformation.postcode, shippingInformation.country)
+            && UtilityContainer.validatePostCode(billingInformation.postcode, billingInformation.country))
+        {
+            $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
+
+            //delete previously uploaded shipping method (if any)
+            if($("#estimate .table-striped").children().length > 0) {
+                $("#estimate .table-striped tbody").empty();
+            }
+
+            estimateContainer.ajaxCall();
+        }
+        else
+        {
+            UtilityContainer.addErrorClassToFields(fields);
+
+            if(!UtilityContainer.validatePostCode(shippingInformation.postcode, shippingInformation.country))
+            {
+                UtilityContainer.addErrorClassToFieldsWithRules(shippingInformation.postcodeInput);
+            }
+
+            if(!UtilityContainer.validatePostCode(billingInformation.postcode, billingInformation.country))
+            {
+                UtilityContainer.addErrorClassToFieldsWithRules(billingInformation.postcodeInput);
+            }
+
+            if(!UtilityContainer.validateEmail(email.val()))
+            {
+                UtilityContainer.addErrorClassToFieldsWithRules(email);
+                $("#why_email").removeClass("hidden").addClass("animated bounceInRight").tooltip();
+            }
+
+        }
+
+        UtilityContainer.removeErrorClassFromFields(fields);
+        self.removeErrorClassFromEmail(email);
+        self.removeErrorClassFromPostcode(shippingInformation.postcodeInput, shippingInformation.country);
+        self.removeErrorClassFromPostcode(billingInformation.postcodeInput, billingInformation.country);
+    }
+}
+
 /**
  * Object responsible for handling the estimation of user's purchase.
  *
@@ -1307,63 +1176,234 @@ var paymentContainer = {
     }
 }
 /**
- * Object responsible for specific behaviours of homepage sections.
+ * Object responsible for handling the payment overlay behaviour.
  *
- * @type {{mixed: {toggleSixteenWideColumn: Function}, init: Function}}
+ * @type {{cancelOrder: Function, init: Function}}
  */
-var homepageContainer = {
+var paymentOverlayContainer = {
 
     /**
-     * Mixed section
+     * Cancels an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
      *
      */
-    mixed: {
-        toggleSixteenWideColumn: function () {
-                var $productColumn = $(".mixed-section .eleven"),
-                $widgetColumn = $(".mixed-section .four");
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            Cookies.remove("_unpaid_orders");
 
-            $(window).on("load resize", function() {
-                if(!$widgetColumn.is(":visible")) {
-                    $productColumn.removeClass().addClass("sixteen wide column");
-                }
-                else {
-                    $productColumn.removeClass().addClass("eleven wide column");
+            $("#cancelledOrder .jumbotron").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+
+        });
+    },
+
+    /**
+     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_unpaid_orders')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(data) {
+                    if (data.status == 'pending')
+                        paymentOverlayContainer.showPaymentNotice();
+                    else
+                        Cookies.remove('_unpaid_orders');
                 }
             });
-
         }
+
+    },
+
+    /**
+     * Shows payment notice.
+     *
+     */
+    showPaymentNotice : function() {
+
+        // Retrieve order details.
+        var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+        // Display notice.
+        $('body').prepend(
+            '<div class="container overlay fullScreen" id="cancelledOrder">'+
+            '<div class="jumbotron vertical-align color-one">'+
+            '<div class="text-center">'+
+            '<h2>'+
+            Localization.pending_order.replace(':command', order.id) +
+            '</h2>'+
+            '<h4>'+ Localization.what_to_do +'</h4>'+
+            '<br />'+
+            '<ul class="list-inline">' +
+            '<li>' +
+            '<a href="'+
+            ApiEndpoints.orders.pay.replace(':id', order.id)
+                .replace(':verification', order.verification) +'">'+
+            '<button class="btn btn-success" id="payOrder">'+ Localization.pay_now +'</button>'+
+            '</a>'+
+            '</li>' +
+            '<li>' +
+            '<button class="btn btn-danger" id="cancelOrder">'+
+            Localization.cancel_order +
+            '</button>'+
+            '</li>'+
+            '</ul>'+
+            '</div>'+
+            '</div>'+
+            '</div>'
+        );
+    },
+
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+        self.checkPendingOrders();
+    }
+}
+
+/**
+ * Object responsible for handling different formats of the same product.
+ *
+ * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
+ */
+var productFormatContainer = {
+
+    /**
+     * Sets the right price, inventory count and format text according to the format of the hovered product.
+     *
+     */
+    displaySyncedProductInformation: function() {
+
+        const self = productFormatContainer,
+            $formatSelection = $(".format-selection");
+
+        $formatSelection.on("click", function () {
+            // Set the right format in product title
+            $("#product-format").text($(this).data("format"));
+
+            // Set the right price and the right inventory count
+            self.setPriceTag($(this).data("price"));
+            self.setInventoryCount($(this).data("inventory-count"));
+
+            // Toggle active class on right format
+            self.toggleActiveClass($(this));
+
+            // Creates an appropriate buybutton according to the info.
+            self.setBuybuttonInformation($(this));
+        });
+
+    },
+
+    /**
+     * Sets the inventory text and value according to the inventory count of the product.
+     *
+     * @param count
+     */
+    setInventoryCount: function (count) {
+        const $inventoryCount = $("#inventory-count"),
+            countryCode = $inventoryCount.data("country-code"),
+            expressShipping = Localization.express_shipping,
+            stockLeft = Localization.stock_left.replace(":quantity", count),
+            shippingTime = Localization.shipping_time,
+            shippingMethod = (countryCode === "US" || countryCode === "CA") ? "fa-truck" : "fa-plane";
+
+        var inventoryDescription = '';
+
+       if (count > 5) {
+            inventoryDescription =
+                '<link itemprop="availability" href="http://schema.org/InStock">' +
+                    '<li class="text-success">' +
+                    '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+                    expressShipping;
+       }
+       else if (count > 0) {
+           inventoryDescription =
+               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
+               '<li class="text-warning">' +
+                   '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+                   stockLeft;
+       }
+        else {
+           inventoryDescription =
+               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
+           '<li class="text-warning">' +
+           '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+           shippingTime;
+       }
+
+        $inventoryCount.html(inventoryDescription);
+
+    },
+
+    /**
+     * Sets the price tag according to the format.
+     *
+     * @param price
+     */
+    setPriceTag: function (price) {
+        $(".price-tag").text("$ " + price);
+    },
+
+    /**
+     * Recreates a buybutton with relevant information every time we switch format.
+     *
+     * @param format (html5 data in format buttons)
+     */
+    setBuybuttonInformation: function(format) {
+        var $buybuttonWrapper = $(".buybutton-format-selection-wrapper"),
+            buybutton =
+                '<button class="btn btn-three buybutton horizontal-align"' +
+                    'data-product="' + format.data("product") +'"' +
+                'data-price="' + format.data("price") +'"' +
+                'data-thumbnail="' + format.data("thumbnail") +'"' +
+                'data-thumbnail_lg="' + format.data("thumbnail_lg") +'"' +
+                'data-name="' + format.data("name") +'"' +
+                'data-format="' + format.data("format") +'"' +
+                'data-inventory-count="' + format.data("inventory-count") +'"' +
+                'data-quantity="' + format.data("quantity") + '"' +
+                'data-link="' + format.data("link") +'"' +
+                    '>' +
+                '<div class="add-cart">' +
+                    '<i class="fa fa-check-circle"></i> ' +
+                    Localization.add_cart +
+                    '</div> </button>';
+
+        $buybuttonWrapper.empty();
+
+        $buybuttonWrapper.append(buybutton);
+    },
+
+    /**
+     * Toggles the .active class when clicked on a format.
+     *
+     * @param format
+     */
+    toggleActiveClass: function (format) {
+        $(".format-selection.active").removeClass("active");
+        format.addClass("active");
     },
 
     init: function () {
-        var self = homepageContainer,
-            mixed = self.mixed;
+        const self = productFormatContainer;
 
-        mixed.toggleSixteenWideColumn();
-    }
-}
-/**
- * Object responsible for the view component of the wish list page.
- * Logic handled in dev/actions/site/wishlist-logic.js
- *
- * @type {{setNumberOfProductsInHeader: Function, init: Function}}
- */
-var wishlistContainer = {
+        self.displaySyncedProductInformation();
 
-    /**
-     * Sets the number of products in the header (singular / plural).
-     *
-     */
-    setNumberOfProductsInHeader: function() {
-        var quantity = "";
-        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
-        $("#quantity-wishlist").text(quantity);
-    },
-
-
-    init: function() {
-        var self = wishlistContainer;
-
-        self.setNumberOfProductsInHeader();
     }
 }
 /**
@@ -1458,6 +1498,80 @@ var productLayoutFavoriteContainer = {
         self.persistFavorite();
         self.fadeInFavoriteIcon();
         self.setWishlistBadgeQuantity();
+    }
+}
+var productResponsive = {
+    invertPriceAndDescriptionColumn: function () {
+        $(window).on("load resize", function () {
+            if($(this).width() < 768)
+            {
+                $("#product-description").before($("#product-info-box"));
+            }
+            else
+            {
+                $("#product-description").after($("#product-info-box"));
+            }
+        });
+    },
+
+    init: function () {
+        var self = productResponsive;
+
+        self.invertPriceAndDescriptionColumn();
+    }
+}
+/**
+ * Object responsible for activating semantic ui features.
+ *
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
+ */
+var semanticInitContainer = {
+
+    /**
+     * Initialize modules
+     *
+     */
+    module: {
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule: function() {
+            //Enable selection on clicked items
+            $(".ui.dropdown-select").dropdown();
+
+            //Prevent selection on clicked items
+            $(".ui.dropdown-no-select").dropdown({
+                    action: "select"
+                }
+            );
+        },
+
+        /**
+         * Initialize rating module.
+         *
+         */
+        initRatingModule: function () {
+            $(".ui.rating").rating();
+        }
+    },
+
+    /**
+     * Specify semantic custom behavior.
+     *
+     */
+    behaviors: {
+
+    },
+
+
+
+    init: function () {
+        var self = semanticInitContainer,
+            module = self.module;
+
+        module.initDropdownModule();
+        module.initRatingModule();
     }
 }
 /**
@@ -1746,347 +1860,40 @@ var categoryContainer = {
 
 
 /**
- * Entry point of script.
+ * Object responsible for specific behaviours of homepage sections.
  *
+ * @type {{mixed: {toggleSixteenWideColumn: Function}, init: Function}}
  */
-$(document).ready(function () {
+var homepageContainer = {
 
     /**
-     * Sets up the ajax token for all ajax requests
+     * Mixed section
      *
      */
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            'locale': $('html').attr('lang')
+    mixed: {
+        toggleSixteenWideColumn: function () {
+                var $productColumn = $(".mixed-section .eleven"),
+                $widgetColumn = $(".mixed-section .four");
+
+            $(window).on("load resize", function() {
+                if(!$widgetColumn.is(":visible")) {
+                    $productColumn.removeClass().addClass("sixteen wide column");
+                }
+                else {
+                    $productColumn.removeClass().addClass("eleven wide column");
+                }
+            });
+
         }
-    });
-
-    /**
-     * Initialize semantic UI modules
-     *
-     */
-    semanticInitContainer.init();
-
-    /**
-     * Initialize checkout logic.
-     *
-     */
-    checkoutInitContainer.init();
-
-    /**
-     * Initialize cart drawer logic.
-     *
-     */
-    cartDrawerInitContainer.init();
-
-    /**
-     * Initialize category container
-     *
-     */
-    categoryContainer.init();
-
-    /**
-     * Initialize overlay plugin.
-     *
-     */
-    paymentOverlayContainer.init();
-
-    /**
-     * Initialize homepage sections.
-     *
-     */
-    homepageContainer.init();
-
-    /**
-     * Initialize favorite products feature.
-     *
-     */
-    productLayoutFavoriteContainer.init();
-
-    /**
-     * Initialize product formats feature.
-     *
-     */
-    productFormatContainer.init();
-
-    productResponsive.init();
-
-    /**
-     * Initialize wishlist page.
-     *
-     */
-    wishlistLogicContainer.init();
-
-    /**
-     * Global initialization of elements.
-     *
-     */
-    //fancy plugin for product page (quantity input)
-    $(".input-qty").TouchSpin({
-        initval: 1
-    });
-
-});
-/**
- * Container responsible for initializing the checkout page.
- * Overall logic is handled in js/dev/actions/checkout/*.js
- * View component is handled in js/dev/components/checkout/*.js
- *
- * @type {{estimateButtonClick: Function, init: Function}}
- */
-var checkoutInitContainer = {
-
-    /**
-     * Event triggered when the "Continue" button is hit.
-     * If the input fields entered are appropriate, make the ajax call to "/api/estimate".
-     * If they are not, display the relevant error message(s)
-     *
-     */
-    estimateButtonClick : function() {
-        $("#estimateButton").on("click", function(e) {
-            var email = $("#customer_email"),
-                phone = $("#customer_phone"),
-                shippingFirstName = $("#shippingFirstname"),
-                shippingLastName = $("#shippingLastname"),
-                shippingAddress1 = $("#shippingAddress1"),
-                shippingCity = $("#shippingCity"),
-                shippingCountry = $("#shippingCountry").val(),
-                shippingPostcode = $("#shippingPostcode"),
-                billingFirstName = $("#billingFirstname"),
-                billingLastName = $("#billingLastname"),
-                billingAddress1 = $("#billingAddress1"),
-                billingCity = $("#billingCity"),
-                billingCountry = $("#billingCountry").val(),
-                billingPostcode = ("#billingPostcode"),
-                shippingInformation = {
-                    "country" : shippingCountry,
-                    "postcode" : $("#shippingPostcode").val(),
-                    "postcodeInput" : $("#shippingPostcode")
-                },
-                fields = [
-                    shippingFirstName,
-                    shippingLastName,
-                    shippingAddress1,
-                    shippingCity,
-                    billingFirstName,
-                    billingLastName,
-                    billingAddress1,
-                    billingCity,
-                    email,
-                    phone
-                ];
-
-            e.preventDefault();
-
-            //Auto fill billing address if checkbox is checked.
-            billingContainer.autoFillBillingAddress(fields, shippingInformation.postcodeInput);
-
-            //Build the billing information object (from auto fill or entered by hand)
-            var billingInformation = {
-                "country" : billingCountry,
-                "postcode" : $("#billingPostcode").val(),
-                "postcodeInput" : $("#billingPostcode")
-            };
-
-            //Validate all fields and make the ajax call!
-            checkoutValidationContainer.init(fields, email, shippingInformation, billingInformation);
-        });
     },
 
     init: function () {
-        /**
-         * Populate select lists and set up billing address container behaviour.
-         * Set the form focus on first name field
-         *
-         */
-        locationContainer.init();
-        billingContainer.init();
-        $("#shippingFirstname").focus();
+        var self = homepageContainer,
+            mixed = self.mixed;
 
-        var self = checkoutInitContainer;
-        self.estimateButtonClick();
+        mixed.toggleSixteenWideColumn();
     }
 }
-/**
- * Object responsible for handling the overall logic of the checkout process.
- * After clicking on "Proceed to checkout", create a cookie and make an ajax call to get all the data before redirecting the user to the payment page.
- *
- * When a user changes the quantity or deletes an item, fadeOut the shipping estimate and payment panel. Replace the Continue button with "Update".
- *
- * @type {{createOrdersCookie: Function, placeOrderAjaxCall: Function, init: Function}}
- */
-var checkoutLogicContainer = {
-
-    /**
-     * Create a localStorage object containing the id and the verification code.
-     *
-     * @param data
-     */
-    createOrdersCookie: function(data) {
-        var paymentId = data.id,
-            paymentVerification = data.verification;
-
-        Cookies.set("_unpaid_orders", JSON.stringify( {
-            id : paymentId,
-            verification : paymentVerification
-        }));
-    },
-
-    /**
-     * Makes an ajax call to api/orders with the values from the form
-     *
-     * @param self
-     */
-    placeOrderAjaxCall: function(self) {
-        $.ajax({
-            method: "POST",
-            url: ApiEndpoints.placeOrder,
-            data: $("#cart_form").serialize(),
-            cache: false,
-            success: function(data) {
-                console.log(data);
-
-                self.createOrdersCookie(data);
-
-                //redirect the user to the checkout page if he backs from the payment page
-                history.pushState({data: data}, "Checkout ","/dev/cart");
-
-                //Redirect to success url
-                window.location.replace(data.payment_details.payment_url);
-            },
-            error: function(xhr, e) {
-                console.log(xhr);
-                console.log(e);
-            }
-        })
-
-    },
-
-    /**
-     * Hide the panels by fading them up then adding a hidden class.
-     *
-     * @param self
-     */
-    hidePanels: function (self) {
-        $(".quantity, #shippingPostcode, #shippingCity").on("change", function () {
-            UtilityContainer.addFadeOutUpClass($("#estimate"));
-            UtilityContainer.addFadeOutUpClass($("#payment"));
-
-            self.updateEstimateButtonValue();
-        });
-
-        $(".close-button").on("click", function() {
-            UtilityContainer.addFadeOutUpClass($("#estimate"));
-            UtilityContainer.addFadeOutUpClass($("#payment"));
-
-            self.updateEstimateButtonValue();
-        });
-    },
-
-    /**
-     * Updates the estimate button with "Update" while making it bouncy ;)
-     *
-     */
-    updateEstimateButtonValue: function() {
-        $("#estimateButton")
-            .removeClass("btn-one animated rubberBand")
-            .addClass("animated rubberBand btn-three")
-            .text(Localization.update);
-    },
-
-    /**
-     * Register methods for outside calling.
-     *
-     */
-    init: function() {
-        var self = checkoutLogicContainer;
-
-        $("#checkoutButton").on("click", function (e) {
-            e.preventDefault();
-
-            $('#checkoutButton').html('<i class="fa fa-spinner fa-spin"></i>');
-
-            self.placeOrderAjaxCall(self);
-
-        });
-
-        self.hidePanels(self);
-    }
-}
-/**
- * Object responsible for validating all the information entered by the user.
- * Will trigger the ajax call only when all the inputs entered match their validation rules.
- *
- * @type {{removeErrorClassFromEmail: Function, removeErrorClassFromPostcode: Function, init: Function}}
- */
-var checkoutValidationContainer = {
-
-    removeErrorClassFromEmail: function(email) {
-        if (UtilityContainer.validateEmail(email.val()) && email.parent().hasClass("has-error"))
-            email.parent().removeClass("has-error");
-    },
-
-    removeErrorClassFromPostcode: function(postcode, country) {
-        if (UtilityContainer.validatePostCode(postcode.val(), country) && postcode.parent().hasClass("has-error"))
-            postcode.parent().removeClass("has-error");
-    },
-
-    /**
-     * If all validation pass, spin the button, clean the shipment table and trigger the ajax call.
-     * If there are errors, warn the users about which inputs is faulty.
-     *
-     * @param fields
-     * @param email
-     * @param postcode
-     * @param country
-     */
-    init : function(fields, email, shippingInformation, billingInformation) {
-        var self = checkoutValidationContainer;
-
-        if (UtilityContainer.validateEmptyFields(fields)
-            && UtilityContainer.validateEmail(email.val())
-            && UtilityContainer.validatePostCode(shippingInformation.postcode, shippingInformation.country)
-            && UtilityContainer.validatePostCode(billingInformation.postcode, billingInformation.country))
-        {
-            $('#estimateButton').html('<i class="fa fa-spinner fa-spin"></i>');
-
-            //delete previously uploaded shipping method (if any)
-            if($("#estimate .table-striped").children().length > 0) {
-                $("#estimate .table-striped tbody").empty();
-            }
-
-            estimateContainer.ajaxCall();
-        }
-        else
-        {
-            UtilityContainer.addErrorClassToFields(fields);
-
-            if(!UtilityContainer.validatePostCode(shippingInformation.postcode, shippingInformation.country))
-            {
-                UtilityContainer.addErrorClassToFieldsWithRules(shippingInformation.postcodeInput);
-            }
-
-            if(!UtilityContainer.validatePostCode(billingInformation.postcode, billingInformation.country))
-            {
-                UtilityContainer.addErrorClassToFieldsWithRules(billingInformation.postcodeInput);
-            }
-
-            if(!UtilityContainer.validateEmail(email.val()))
-            {
-                UtilityContainer.addErrorClassToFieldsWithRules(email);
-                $("#why_email").removeClass("hidden").addClass("animated bounceInRight").tooltip();
-            }
-
-        }
-
-        UtilityContainer.removeErrorClassFromFields(fields);
-        self.removeErrorClassFromEmail(email);
-        self.removeErrorClassFromPostcode(shippingInformation.postcodeInput, shippingInformation.country);
-        self.removeErrorClassFromPostcode(billingInformation.postcodeInput, billingInformation.country);
-    }
-}
-
 /**
  * Container responsible for initializing the cart drawer feature.
  *
@@ -2464,6 +2271,91 @@ var cartLogicContainer = {
 };
 
 /**
+ * Object responsible for displaying the cart drawer.
+ * Logic handled in dev/actions/layout/cart-drawer-logic.js
+ *
+ * @type {{$el: {$back: (*|jQuery|HTMLElement), $proceed: (*|jQuery|HTMLElement), $trigger: (*|jQuery|HTMLElement), $container: (*|jQuery|HTMLElement), $checkout: (*|jQuery|HTMLElement), $body: (*|jQuery|HTMLElement)}, displayOn: Function, displayOff: Function, animateIn: Function, animateOut: Function, setCartItemsHeight: Function, computeCartItemsHeight: Function, init: Function}}
+ */
+var cartDisplayContainer = {
+    $el : {
+        $back : $("#back"),
+        $proceed : $("#proceed"),
+        $trigger : $(".view-cart"),
+        $container : $("#cart-container"),
+        $checkout : $("#checkout"),
+        $body : $("body")
+    },
+
+    displayOn: function() {
+        var _width = cartDisplayContainer.$el.$container.width();
+        cartDisplayContainer.$el.$container.css( {
+            "margin-right" : -_width
+        });
+
+        cartDisplayContainer.$el.$trigger.click(function() {
+            cartDisplayContainer.animateIn();
+        });
+    },
+
+    displayOff : function() {
+        cartDisplayContainer.$el.$back.click(function() {
+            cartDisplayContainer.animateOut();
+        });
+        cartDisplayContainer.$el.$checkout.click(function() {
+            sessionStorage.isDisplayed = false;
+        });
+    },
+
+    animateIn : function() {
+        cartDisplayContainer.$el.$container.show();
+        cartDisplayContainer.$el.$container.animate( {
+            "margin-right" : 0
+        }, 400);
+        sessionStorage.isDisplayed = true;
+    },
+
+    animateOut: function() {
+        var _width = cartDisplayContainer.$el.$container.width();
+        cartDisplayContainer.$el.$container.animate( {
+            "margin-right" : -_width
+        }, 400, function() {
+            $(this).hide();
+        });
+        sessionStorage.isDisplayed = false;
+    },
+
+    setCartItemsHeight : function() {
+        cartDisplayContainer.computeCartItemsHeight();
+
+        $(window).on("resize", function() {
+            cartDisplayContainer.computeCartItemsHeight();
+        });
+
+        cartDisplayContainer.$el.$trigger.on("click", function() {
+            cartDisplayContainer.computeCartItemsHeight();
+        })
+    },
+
+    computeCartItemsHeight : function() {
+        var cartItemsHeight = $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
+
+        $("#cart-items").css("height", cartItemsHeight);
+    },
+
+    init : function() {
+        cartDisplayContainer.displayOn();
+        cartDisplayContainer.displayOff();
+        UtilityContainer.populateCountry($("html").attr("lang"));
+
+        if (sessionStorage.isDisplayed == "true")
+        {
+            cartDisplayContainer.$el.$container.css("margin-right", 0);
+            cartDisplayContainer.$el.$container.show();
+        }
+
+    }
+};
+/**
  * Container responsible for handling the logic of the wish list page.
  * Layout handled in dev/components/site/wishlist.js
  *
@@ -2575,3 +2467,115 @@ var wishlistLogicContainer = {
     }
 
 }
+/**
+ * Object responsible for the view component of the wish list page.
+ * Logic handled in dev/actions/site/wishlist-logic.js
+ *
+ * @type {{setNumberOfProductsInHeader: Function, init: Function}}
+ */
+var wishlistContainer = {
+
+    /**
+     * Sets the number of products in the header (singular / plural).
+     *
+     */
+    setNumberOfProductsInHeader: function() {
+        var quantity = "";
+        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
+        $("#quantity-wishlist").text(quantity);
+    },
+
+
+    init: function() {
+        var self = wishlistContainer;
+
+        self.setNumberOfProductsInHeader();
+    }
+}
+/**
+ * Entry point of script.
+ *
+ */
+$(document).ready(function () {
+
+    /**
+     * Sets up the ajax token for all ajax requests
+     *
+     */
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'locale': $('html').attr('lang')
+        }
+    });
+
+    /**
+     * Initialize semantic UI modules
+     *
+     */
+    semanticInitContainer.init();
+
+    /**
+     * Initialize checkout logic.
+     *
+     */
+    checkoutInitContainer.init();
+
+    /**
+     * Initialize cart drawer logic.
+     *
+     */
+    cartDrawerInitContainer.init();
+
+    /**
+     * Initialize category container
+     *
+     */
+    categoryContainer.init();
+
+    /**
+     * Initialize overlay plugin.
+     *
+     */
+    paymentOverlayContainer.init();
+
+    /**
+     * Initialize homepage sections.
+     *
+     */
+    homepageContainer.init();
+
+    /**
+     * Initialize favorite products feature.
+     *
+     */
+    productLayoutFavoriteContainer.init();
+
+    /**
+     * Initialize product formats feature.
+     *
+     */
+    productFormatContainer.init();
+
+    /**
+     * Initialize column responsiveness in product pages.
+     *
+     */
+    productResponsive.init();
+
+    /**
+     * Initialize wishlist page.
+     *
+     */
+    wishlistLogicContainer.init();
+
+    /**
+     * Global initialization of elements.
+     *
+     */
+    //fancy plugin for product page (quantity input)
+    $(".input-qty").TouchSpin({
+        initval: 1
+    });
+
+});
