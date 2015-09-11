@@ -17,11 +17,8 @@
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
 	<!-- Required -->
-	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 	<link href="//cdn.kem.guru/css/outdatedBrowser.min.css" rel="stylesheet">
-
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.0.8/semantic.css"/>
 
 	<!-- Semantic UI css dependencies -->
 	<link rel="stylesheet" href="{{ asset('/semantic/prod/semantic.css') }}"/>
@@ -56,7 +53,6 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="/js_assets/js.cookie.js"></script>
 	<script src="//cdn.kem.guru/boukem/spirit/js/gcc_ressources.js.gz"></script>
-	<script src="/js_assets/mixitup/jquery.mixitup.init.js"></script>
 	<script src="/js_assets/blur/blur.js"></script>
 
 	<!-- Semantic ui dependencies -->
