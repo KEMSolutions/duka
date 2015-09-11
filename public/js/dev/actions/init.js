@@ -64,6 +64,12 @@ $(document).ready(function () {
     productFormatContainer.init();
 
     /**
+     * Initialize column responsiveness in product pages.
+     *
+     */
+    productResponsive.init();
+
+    /**
      * Initialize wishlist page.
      *
      */

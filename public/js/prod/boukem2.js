@@ -489,6 +489,396 @@ var UtilityContainer = {
 
 
 /**
+ * Object responsible for displaying the cart drawer.
+ * Logic handled in dev/actions/layout/cart-drawer-logic.js
+ *
+ * @type {{$el: {$back: (*|jQuery|HTMLElement), $proceed: (*|jQuery|HTMLElement), $trigger: (*|jQuery|HTMLElement), $container: (*|jQuery|HTMLElement), $checkout: (*|jQuery|HTMLElement), $body: (*|jQuery|HTMLElement)}, displayOn: Function, displayOff: Function, animateIn: Function, animateOut: Function, setCartItemsHeight: Function, computeCartItemsHeight: Function, init: Function}}
+ */
+var cartDisplayContainer = {
+    $el : {
+        $back : $("#back"),
+        $proceed : $("#proceed"),
+        $trigger : $(".view-cart"),
+        $container : $("#cart-container"),
+        $checkout : $("#checkout"),
+        $body : $("body")
+    },
+
+    displayOn: function() {
+        var _width = cartDisplayContainer.$el.$container.width();
+        cartDisplayContainer.$el.$container.css( {
+            "margin-right" : -_width
+        });
+
+        cartDisplayContainer.$el.$trigger.click(function() {
+            cartDisplayContainer.animateIn();
+        });
+    },
+
+    displayOff : function() {
+        cartDisplayContainer.$el.$back.click(function() {
+            cartDisplayContainer.animateOut();
+        });
+        cartDisplayContainer.$el.$checkout.click(function() {
+            sessionStorage.isDisplayed = false;
+        });
+    },
+
+    animateIn : function() {
+        cartDisplayContainer.$el.$container.show();
+        cartDisplayContainer.$el.$container.animate( {
+            "margin-right" : 0
+        }, 400);
+        sessionStorage.isDisplayed = true;
+    },
+
+    animateOut: function() {
+        var _width = cartDisplayContainer.$el.$container.width();
+        cartDisplayContainer.$el.$container.animate( {
+            "margin-right" : -_width
+        }, 400, function() {
+            $(this).hide();
+        });
+        sessionStorage.isDisplayed = false;
+    },
+
+    setCartItemsHeight : function() {
+        cartDisplayContainer.computeCartItemsHeight();
+
+        $(window).on("resize", function() {
+            cartDisplayContainer.computeCartItemsHeight();
+        });
+
+        cartDisplayContainer.$el.$trigger.on("click", function() {
+            cartDisplayContainer.computeCartItemsHeight();
+        })
+    },
+
+    computeCartItemsHeight : function() {
+        var cartItemsHeight = $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
+
+        $("#cart-items").css("height", cartItemsHeight);
+    },
+
+    init : function() {
+        cartDisplayContainer.displayOn();
+        cartDisplayContainer.displayOff();
+        UtilityContainer.populateCountry($("html").attr("lang"));
+
+        if (sessionStorage.isDisplayed == "true")
+        {
+            cartDisplayContainer.$el.$container.css("margin-right", 0);
+            cartDisplayContainer.$el.$container.show();
+        }
+
+    }
+};
+/**
+ * Object responsible for handling the payment overlay behaviour.
+ *
+ * @type {{cancelOrder: Function, init: Function}}
+ */
+var paymentOverlayContainer = {
+
+    /**
+     * Cancels an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     *
+     */
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            Cookies.remove("_unpaid_orders");
+
+            $("#cancelledOrder .jumbotron").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+
+        });
+    },
+
+    /**
+     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_unpaid_orders')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(data) {
+                    if (data.status == 'pending')
+                        paymentOverlayContainer.showPaymentNotice();
+                    else
+                        Cookies.remove('_unpaid_orders');
+                }
+            });
+        }
+
+    },
+
+    /**
+     * Shows payment notice.
+     *
+     */
+    showPaymentNotice : function() {
+
+        // Retrieve order details.
+        var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+        // Display notice.
+        $('body').prepend(
+            '<div class="container overlay fullScreen" id="cancelledOrder">'+
+            '<div class="jumbotron vertical-align color-one">'+
+            '<div class="text-center">'+
+            '<h2>'+
+            Localization.pending_order.replace(':command', order.id) +
+            '</h2>'+
+            '<h4>'+ Localization.what_to_do +'</h4>'+
+            '<br />'+
+            '<ul class="list-inline">' +
+            '<li>' +
+            '<a href="'+
+            ApiEndpoints.orders.pay.replace(':id', order.id)
+                .replace(':verification', order.verification) +'">'+
+            '<button class="btn btn-success" id="payOrder">'+ Localization.pay_now +'</button>'+
+            '</a>'+
+            '</li>' +
+            '<li>' +
+            '<button class="btn btn-danger" id="cancelOrder">'+
+            Localization.cancel_order +
+            '</button>'+
+            '</li>'+
+            '</ul>'+
+            '</div>'+
+            '</div>'+
+            '</div>'
+        );
+    },
+
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+        self.checkPendingOrders();
+    }
+}
+
+/**
+ * Object responsible for handling different formats of the same product.
+ *
+ * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
+ */
+var productFormatContainer = {
+
+    /**
+     * Sets the right price, inventory count and format text according to the format of the hovered product.
+     *
+     */
+    displaySyncedProductInformation: function() {
+
+        const self = productFormatContainer,
+            $formatSelection = $(".format-selection");
+
+        $formatSelection.on("click", function () {
+            // Set the right format in product title
+            $("#product-format").text($(this).data("format"));
+
+            // Set the right price and the right inventory count
+            self.setPriceTag($(this).data("price"));
+            self.setInventoryCount($(this).data("inventory-count"));
+
+            // Toggle active class on right format
+            self.toggleActiveClass($(this));
+
+            // Creates an appropriate buybutton according to the info.
+            self.setBuybuttonInformation($(this));
+        });
+
+    },
+
+    /**
+     * Sets the inventory text and value according to the inventory count of the product.
+     *
+     * @param count
+     */
+    setInventoryCount: function (count) {
+        const $inventoryCount = $("#inventory-count"),
+            countryCode = $inventoryCount.data("country-code"),
+            expressShipping = Localization.express_shipping,
+            stockLeft = Localization.stock_left.replace(":quantity", count),
+            shippingTime = Localization.shipping_time,
+            shippingMethod = (countryCode === "US" || countryCode === "CA") ? "fa-truck" : "fa-plane";
+
+        var inventoryDescription = '';
+
+       if (count > 5) {
+            inventoryDescription =
+                '<link itemprop="availability" href="http://schema.org/InStock">' +
+                    '<li class="text-success">' +
+                    '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+                    expressShipping;
+       }
+       else if (count > 0) {
+           inventoryDescription =
+               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
+               '<li class="text-warning">' +
+                   '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+                   stockLeft;
+       }
+        else {
+           inventoryDescription =
+               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
+           '<li class="text-warning">' +
+           '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+           shippingTime;
+       }
+
+        $inventoryCount.html(inventoryDescription);
+
+    },
+
+    /**
+     * Sets the price tag according to the format.
+     *
+     * @param price
+     */
+    setPriceTag: function (price) {
+        $(".price-tag").text("$ " + price);
+    },
+
+    /**
+     * Recreates a buybutton with relevant information every time we switch format.
+     *
+     * @param format (html5 data in format buttons)
+     */
+    setBuybuttonInformation: function(format) {
+        var $buybuttonWrapper = $(".buybutton-format-selection-wrapper"),
+            buybutton =
+                '<button class="btn btn-three buybutton horizontal-align"' +
+                    'data-product="' + format.data("product") +'"' +
+                'data-price="' + format.data("price") +'"' +
+                'data-thumbnail="' + format.data("thumbnail") +'"' +
+                'data-thumbnail_lg="' + format.data("thumbnail_lg") +'"' +
+                'data-name="' + format.data("name") +'"' +
+                'data-format="' + format.data("format") +'"' +
+                'data-inventory-count="' + format.data("inventory-count") +'"' +
+                'data-quantity="' + format.data("quantity") + '"' +
+                'data-link="' + format.data("link") +'"' +
+                    '>' +
+                '<div class="add-cart">' +
+                    '<i class="fa fa-check-circle"></i> ' +
+                    Localization.add_cart +
+                    '</div> </button>';
+
+        $buybuttonWrapper.empty();
+
+        $buybuttonWrapper.append(buybutton);
+    },
+
+    /**
+     * Toggles the .active class when clicked on a format.
+     *
+     * @param format
+     */
+    toggleActiveClass: function (format) {
+        $(".format-selection.active").removeClass("active");
+        format.addClass("active");
+    },
+
+    init: function () {
+        const self = productFormatContainer;
+
+        self.displaySyncedProductInformation();
+
+    }
+}
+var productResponsive = {
+    invertPriceAndDescriptionColumn: function () {
+        $(window).on("load resize", function () {
+            if($(this).width() < 768)
+            {
+                $("#product-description").before($("#product-info-box"));
+            }
+            else
+            {
+                $("#product-description").after($("#product-info-box"));
+            }
+        });
+    },
+
+    init: function () {
+        var self = productResponsive;
+
+        self.invertPriceAndDescriptionColumn();
+    }
+}
+/**
+ * Object responsible for activating semantic ui features.
+ *
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
+ */
+var semanticInitContainer = {
+
+    /**
+     * Initialize modules
+     *
+     */
+    module: {
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule: function() {
+            //Enable selection on clicked items
+            $(".ui.dropdown-select").dropdown();
+
+            //Prevent selection on clicked items
+            $(".ui.dropdown-no-select").dropdown({
+                    action: "select"
+                }
+            );
+        },
+
+        /**
+         * Initialize rating module.
+         *
+         */
+        initRatingModule: function () {
+            $(".ui.rating").rating();
+        }
+    },
+
+    /**
+     * Specify semantic custom behavior.
+     *
+     */
+    behaviors: {
+
+    },
+
+
+
+    init: function () {
+        var self = semanticInitContainer,
+            module = self.module;
+
+        module.initDropdownModule();
+        module.initRatingModule();
+    }
+}
+/**
  * Object responsible for handling billing information.
  *
  * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
@@ -917,376 +1307,6 @@ var paymentContainer = {
     }
 }
 /**
- * Object responsible for displaying the cart drawer.
- * Logic handled in dev/actions/layout/cart-drawer-logic.js
- *
- * @type {{$el: {$back: (*|jQuery|HTMLElement), $proceed: (*|jQuery|HTMLElement), $trigger: (*|jQuery|HTMLElement), $container: (*|jQuery|HTMLElement), $checkout: (*|jQuery|HTMLElement), $body: (*|jQuery|HTMLElement)}, displayOn: Function, displayOff: Function, animateIn: Function, animateOut: Function, setCartItemsHeight: Function, computeCartItemsHeight: Function, init: Function}}
- */
-var cartDisplayContainer = {
-    $el : {
-        $back : $("#back"),
-        $proceed : $("#proceed"),
-        $trigger : $(".view-cart"),
-        $container : $("#cart-container"),
-        $checkout : $("#checkout"),
-        $body : $("body")
-    },
-
-    displayOn: function() {
-        var _width = cartDisplayContainer.$el.$container.width();
-        cartDisplayContainer.$el.$container.css( {
-            "margin-right" : -_width
-        });
-
-        cartDisplayContainer.$el.$trigger.click(function() {
-            cartDisplayContainer.animateIn();
-        });
-    },
-
-    displayOff : function() {
-        cartDisplayContainer.$el.$back.click(function() {
-            cartDisplayContainer.animateOut();
-        });
-        cartDisplayContainer.$el.$checkout.click(function() {
-            sessionStorage.isDisplayed = false;
-        });
-    },
-
-    animateIn : function() {
-        cartDisplayContainer.$el.$container.show();
-        cartDisplayContainer.$el.$container.animate( {
-            "margin-right" : 0
-        }, 400);
-        sessionStorage.isDisplayed = true;
-    },
-
-    animateOut: function() {
-        var _width = cartDisplayContainer.$el.$container.width();
-        cartDisplayContainer.$el.$container.animate( {
-            "margin-right" : -_width
-        }, 400, function() {
-            $(this).hide();
-        });
-        sessionStorage.isDisplayed = false;
-    },
-
-    setCartItemsHeight : function() {
-        cartDisplayContainer.computeCartItemsHeight();
-
-        $(window).on("resize", function() {
-            cartDisplayContainer.computeCartItemsHeight();
-        });
-
-        cartDisplayContainer.$el.$trigger.on("click", function() {
-            cartDisplayContainer.computeCartItemsHeight();
-        })
-    },
-
-    computeCartItemsHeight : function() {
-        var cartItemsHeight = $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
-
-        $("#cart-items").css("height", cartItemsHeight);
-    },
-
-    init : function() {
-        cartDisplayContainer.displayOn();
-        cartDisplayContainer.displayOff();
-        UtilityContainer.populateCountry($("html").attr("lang"));
-
-        if (sessionStorage.isDisplayed == "true")
-        {
-            cartDisplayContainer.$el.$container.css("margin-right", 0);
-            cartDisplayContainer.$el.$container.show();
-        }
-
-    }
-};
-/**
- * Object responsible for handling the payment overlay behaviour.
- *
- * @type {{cancelOrder: Function, init: Function}}
- */
-var paymentOverlayContainer = {
-
-    /**
-     * Cancels an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_unpaid_orders");
-
-            $("#cancelledOrder .jumbotron").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-
-        });
-    },
-
-    /**
-     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_unpaid_orders')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(data) {
-                    if (data.status == 'pending')
-                        paymentOverlayContainer.showPaymentNotice();
-                    else
-                        Cookies.remove('_unpaid_orders');
-                }
-            });
-        }
-
-    },
-
-    /**
-     * Shows payment notice.
-     *
-     */
-    showPaymentNotice : function() {
-
-        // Retrieve order details.
-        var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-        // Display notice.
-        $('body').prepend(
-            '<div class="container overlay fullScreen" id="cancelledOrder">'+
-            '<div class="jumbotron vertical-align color-one">'+
-            '<div class="text-center">'+
-            '<h2>'+
-            Localization.pending_order.replace(':command', order.id) +
-            '</h2>'+
-            '<h4>'+ Localization.what_to_do +'</h4>'+
-            '<br />'+
-            '<ul class="list-inline">' +
-            '<li>' +
-            '<a href="'+
-            ApiEndpoints.orders.pay.replace(':id', order.id)
-                .replace(':verification', order.verification) +'">'+
-            '<button class="btn btn-success" id="payOrder">'+ Localization.pay_now +'</button>'+
-            '</a>'+
-            '</li>' +
-            '<li>' +
-            '<button class="btn btn-danger" id="cancelOrder">'+
-            Localization.cancel_order +
-            '</button>'+
-            '</li>'+
-            '</ul>'+
-            '</div>'+
-            '</div>'+
-            '</div>'
-        );
-    },
-
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-        self.checkPendingOrders();
-    }
-}
-
-/**
- * Object responsible for handling different formats of the same product.
- *
- * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
- */
-var productFormatContainer = {
-
-    /**
-     * Sets the right price, inventory count and format text according to the format of the hovered product.
-     *
-     */
-    displaySyncedProductInformation: function() {
-
-        const self = productFormatContainer,
-            $formatSelection = $(".format-selection");
-
-        $formatSelection.on("click", function () {
-            // Set the right format in product title
-            $("#product-format").text($(this).data("format"));
-
-            // Set the right price and the right inventory count
-            self.setPriceTag($(this).data("price"));
-            self.setInventoryCount($(this).data("inventory-count"));
-
-            // Toggle active class on right format
-            self.toggleActiveClass($(this));
-
-            // Creates an appropriate buybutton according to the info.
-            self.setBuybuttonInformation($(this));
-        });
-
-    },
-
-    /**
-     * Sets the inventory text and value according to the inventory count of the product.
-     *
-     * @param count
-     */
-    setInventoryCount: function (count) {
-        const $inventoryCount = $("#inventory-count"),
-            countryCode = $inventoryCount.data("country-code"),
-            expressShipping = Localization.express_shipping,
-            stockLeft = Localization.stock_left.replace(":quantity", count),
-            shippingTime = Localization.shipping_time,
-            shippingMethod = (countryCode === "US" || countryCode === "CA") ? "fa-truck" : "fa-plane";
-
-        var inventoryDescription = '';
-
-       if (count > 5) {
-            inventoryDescription =
-                '<link itemprop="availability" href="http://schema.org/InStock">' +
-                    '<li class="text-success">' +
-                    '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-                    expressShipping;
-       }
-       else if (count > 0) {
-           inventoryDescription =
-               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
-               '<li class="text-warning">' +
-                   '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-                   stockLeft;
-       }
-        else {
-           inventoryDescription =
-               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
-           '<li class="text-warning">' +
-           '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-           shippingTime;
-       }
-
-        $inventoryCount.html(inventoryDescription);
-
-    },
-
-    /**
-     * Sets the price tag according to the format.
-     *
-     * @param price
-     */
-    setPriceTag: function (price) {
-        $(".price-tag").text("$ " + price);
-    },
-
-    /**
-     * Recreates a buybutton with relevant information every time we switch format.
-     *
-     * @param format (html5 data in format buttons)
-     */
-    setBuybuttonInformation: function(format) {
-        var $buybuttonWrapper = $(".buybutton-format-selection-wrapper"),
-            buybutton =
-                '<button class="btn btn-three buybutton horizontal-align"' +
-                    'data-product="' + format.data("product") +'"' +
-                'data-price="' + format.data("price") +'"' +
-                'data-thumbnail="' + format.data("thumbnail") +'"' +
-                'data-thumbnail_lg="' + format.data("thumbnail_lg") +'"' +
-                'data-name="' + format.data("name") +'"' +
-                'data-format="' + format.data("format") +'"' +
-                'data-inventory-count="' + format.data("inventory-count") +'"' +
-                'data-quantity="' + format.data("quantity") + '"' +
-                'data-link="' + format.data("link") +'"' +
-                    '>' +
-                '<div class="add-cart">' +
-                    '<i class="fa fa-check-circle"></i> ' +
-                    Localization.add_cart +
-                    '</div> </button>';
-
-        $buybuttonWrapper.empty();
-
-        $buybuttonWrapper.append(buybutton);
-    },
-
-    /**
-     * Toggles the .active class when clicked on a format.
-     *
-     * @param format
-     */
-    toggleActiveClass: function (format) {
-        $(".format-selection.active").removeClass("active");
-        format.addClass("active");
-    },
-
-    init: function () {
-        const self = productFormatContainer;
-
-        self.displaySyncedProductInformation();
-
-    }
-}
-/**
- * Object responsible for activating semantic ui features.
- *
- * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
- */
-var semanticInitContainer = {
-
-    /**
-     * Initialize modules
-     *
-     */
-    module: {
-        /**
-         * Initialize dropdown module.
-         *
-         */
-        initDropdownModule: function() {
-            //Enable selection on clicked items
-            $(".ui.dropdown-select").dropdown();
-
-            //Prevent selection on clicked items
-            $(".ui.dropdown-no-select").dropdown({
-                    action: "select"
-                }
-            );
-        },
-
-        /**
-         * Initialize rating module.
-         *
-         */
-        initRatingModule: function () {
-            $(".ui.rating").rating();
-        }
-    },
-
-    /**
-     * Specify semantic custom behavior.
-     *
-     */
-    behaviors: {
-
-    },
-
-
-
-    init: function () {
-        var self = semanticInitContainer,
-            module = self.module;
-
-        module.initDropdownModule();
-        module.initRatingModule();
-    }
-}
-/**
  * Object responsible for specific behaviours of homepage sections.
  *
  * @type {{mixed: {toggleSixteenWideColumn: Function}, init: Function}}
@@ -1552,70 +1572,67 @@ var categoryContainer = {
             return;
         }
 
-        //// Add the event listeners to each child element.
-        //el.find(".item").on("change",
-        //    {
-        //        filter : type || "brands"
-        //    },
-        //
-        //    function(event)
-        //    {
-        //        var ID = $(this).data("filter"),
-        //            filterList = categoryContainer.searchParameters[event.data.filter],
-        //            filter = $(this);
-        //
-        //        // Add brand to filter.
-        //        if ($(this).prop("checked")) {
-        //            filterList.push(ID);
-        //
-        //            categoryContainer.addFilterToTagList(filter);
-        //            console.log(filter);
-        //        }
-        //
-        //        // Or remove it.
-        //        else
-        //        {
-        //            var newList = [];
-        //
-        //            if (filterList.length > 1) {
-        //                for (var index in filterList) {
-        //                    if (filterList[index] != ID) {
-        //                        newList.push(filterList[index]);
-        //                    }
-        //                }
-        //            }
-        //
-        //            filterList = newList;
-        //        }
-        //
-        //        // Reorder filter list.
-        //        filterList.sort(function(a, b) {
-        //            return a - b;
-        //        });
-        //
-        //        // Update page.
-        //        if (filterList.length > 0) {
-        //            var filter = filterList.length > 1 ? filterList.join(';') : filterList[0];
-        //            UtilityContainer.urlAddParameters(event.data.filter, filter);
-        //        } else {
-        //            UtilityContainer.urlRemoveParameters(event.data.filter);
-        //        }
-        //});
-        //
-        //// Update selected checkboxes. IDs are stored as strings in "categoryContainer.searchParameters".
-        //el.find(".item").each(function() {
-        //    $(this).prop("checked", categoryContainer.searchParameters[type].indexOf(""+ $(this).data("filter")) > -1);
-        //});
+        // Add the event listeners to each child element.
+        el.find(".item").on("change",
+            {
+                filter : type || "brands"
+            },
 
+            function(event)
+            {
+                var ID = $(this).data("filter"),
+                    filterList = categoryContainer.searchParameters[event.data.filter],
+                    filter = $(this);
 
-        // Storing all filters in localStorage to allow filters persistance.
-        el.find(".item").on("change", function () {
-           console.log("hello");
+                // Add brand to filter.
+                if ($(this).prop("checked")) {
+                    filterList.push(ID);
+
+                }
+
+                // Or remove it.
+                else
+                {
+                    var newList = [];
+
+                    if (filterList.length > 1) {
+                        for (var index in filterList) {
+                            if (filterList[index] != ID) {
+                                newList.push(filterList[index]);
+                            }
+                        }
+                    }
+
+                    filterList = newList;
+                }
+
+                // Reorder filter list.
+                filterList.sort(function(a, b) {
+                    return a - b;
+                });
+
+                // Update page.
+                if (filterList.length > 0) {
+                    var filter = filterList.length > 1 ? filterList.join(';') : filterList[0];
+                    UtilityContainer.urlAddParameters(event.data.filter, filter);
+                } else {
+                    UtilityContainer.urlRemoveParameters(event.data.filter);
+                }
         });
+
+        // Update selected checkboxes. IDs are stored as strings in "categoryContainer.searchParameters".
+        el.find(".item").each(function() {
+            $(this).prop("checked", categoryContainer.searchParameters[type].indexOf(""+ $(this).data("filter")) > -1);
+        });
+
 
     },
 
-
+    /**
+     * Create a new tag to be appended to the tags list.
+     *
+     * @param filter (filter being the checkbox DOM node)
+     */
     addFilterToTagList: function (filter) {
         var item =
         '<div class="item">' +
@@ -1792,6 +1809,8 @@ $(document).ready(function () {
      *
      */
     productFormatContainer.init();
+
+    productResponsive.init();
 
     /**
      * Initialize wishlist page.
