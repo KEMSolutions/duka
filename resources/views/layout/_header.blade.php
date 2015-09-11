@@ -151,42 +151,44 @@
     <div class="row header-banner color-one hidden-xs">
 
         <div class="three wide column text-center border-right">
-            <div class="ui dropdown dropdown-no-select pointing item">
+            <button type="button" class="btn btn-link">
+                <div class="ui pointing dropdown dropdown-select top left white">
+                    <span class="text">
+                        <span class="light">{{ Lang::get("boukem.shop_by") }}</span><strong class="bold"> {{ Lang::get("boukem.categories") }}</strong>
+                        <i class="caret down icon"></i>
+                    </span>
 
-                <span class="text">
-                    <span class="light">{{ Lang::get("boukem.shop_by") }}</span><strong class="bold"> {{ Lang::get("boukem.categories") }}</strong>
-                    <span style="font-size: 0.685rem;color: #fff;padding: 0 0.585rem;">&#x25BC;</span>
-                </span>
-
-                <div class="menu fluid">
-                    @foreach(Categories::getAllCategories() as $category)
-                        @if(count($category->children) > 0)
-                            <div class="item">
-                                <span class="text">{{ $category->name }}</span>
-                                <i class="fa fa-caret-right pull-right"></i>
-                                <div class="menu">
-                                    @foreach($category->children as $children)
-                                        <div class="item">
-                                            <a class="dark" href="/{{ Localization::getCurrentLocale() }}/cat/{{ $children->slug }}">{{ $children->name }}</a>
-                                        </div>
-                                    @endforeach
+                    <div class="menu fluid">
+                        @foreach(Categories::getAllCategories() as $category)
+                            @if(count($category->children) > 0)
+                                <div class="item">
+                                    <span class="text">{{ $category->name }}</span>
+                                    <i class="fa fa-caret-right pull-right"></i>
+                                    <div class="menu">
+                                        @foreach($category->children as $children)
+                                            <div class="item">
+                                                <a class="dark" href="/{{ Localization::getCurrentLocale() }}/cat/{{ $children->slug }}">{{ $children->name }}</a>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
-                            </div>
-                        @else
-                            <div class="item">
-                                @if(isset($category->slug) && isset($category->name))
-                                    <a class="dark no-decoration"
-                                       href="/{{ Localization::getCurrentLocale() }}/cat/{{ $category->slug }}">
-                                        <div class="item">
-                                            {{ $category->name }}
-                                        </div>
-                                    </a>
-                                @endif
-                            </div>
-                        @endif
-                    @endforeach
+                            @else
+                                <div class="item">
+                                    @if(isset($category->slug) && isset($category->name))
+                                        <a class="dark no-decoration"
+                                           href="/{{ Localization::getCurrentLocale() }}/cat/{{ $category->slug }}">
+                                            <div class="item">
+                                                {{ $category->name }}
+                                            </div>
+                                        </a>
+                                    @endif
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            </button>
+
         </div>
 
             {{-- Back to store link. --}}
