@@ -103,8 +103,6 @@ class CategoryController extends Controller
             $perPage = max(4, min(80, $perPage));
             $page = max(1, min($page, ceil($object->paginationTotal / $perPage)));
 
-            // dd($perPage);
-
             // Setup the paginator.
             $paginator = new LengthAwarePaginator($object->products, $object->paginationTotal, $perPage, $page);
             $paginator->appends(['per_page' => $perPage]);

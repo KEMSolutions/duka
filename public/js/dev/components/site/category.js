@@ -160,10 +160,13 @@ var categoryContainer = {
 
         // Update selected checkboxes. IDs are stored as strings in "categoryContainer.searchParameters".
         el.find(".item").each(function() {
+
             $(this).prop("checked", categoryContainer.searchParameters[type].indexOf(""+ $(this).data("filter")) > -1);
+
+            if ($(this).prop("checked")) {
+                categoryContainer.addFilterToTagList($(this));
+            }
         });
-
-
     },
 
     /**
@@ -281,4 +284,3 @@ var categoryContainer = {
         self.toggleLayout();
     }
 };
-
