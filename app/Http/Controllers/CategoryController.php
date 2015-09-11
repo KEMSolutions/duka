@@ -141,4 +141,3 @@ class CategoryController extends Controller
         return str_replace(["{width}", "{height}"], [$width, $height], $background);
     }
 }
-
