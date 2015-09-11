@@ -230,6 +230,8 @@ return [
     "items_per_page"    =>"Articles par page: ",
     "switch_layout"     =>"Vue: ",
     "grid"              =>"Grille",
-    "list"              =>"Liste"
+    "list"              =>"Liste",
+    "favorite"          =>"Favoris",
+    "rating"            =>"Avis"
 
 ];

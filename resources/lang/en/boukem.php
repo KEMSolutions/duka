@@ -230,6 +230,8 @@ return [
     "items_per_page"    =>"Items per page: ",
     "switch_layout"     =>"Switch layout: ",
     "grid"              =>"Grid",
-    "list"              =>"List"
+    "list"              =>"List",
+    "favorite"          =>"Favorite",
+    "rating"            =>"Rating"
 
 ];
