@@ -35,7 +35,7 @@ class CategoryController extends Controller
                 return redirect(route('brand', ['slug' => $brand->slug]));
             }
 
-            abort(404);
+            abort(404, Lang::get('boukem.error_occurred'));
         }
 
         // If we have a brand, redirect to proper route.
@@ -100,8 +100,10 @@ class CategoryController extends Controller
             $perPage = $this->getRequestParams()['per_page'];
 
             // Make sure we have valid query settings.
-            $perPage = max(4, min(40, $perPage));
+            $perPage = max(4, min(80, $perPage));
             $page = max(1, min($page, ceil($object->paginationTotal / $perPage)));
+
+            // dd($perPage);
 
             // Setup the paginator.
             $paginator = new LengthAwarePaginator($object->products, $object->paginationTotal, $perPage, $page);
