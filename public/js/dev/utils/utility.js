@@ -333,7 +333,6 @@ var UtilityContainer = {
      */
     getShipmentTaxes : function(serviceCode, data) {
         var taxes = 0;
-        console.log(data);
 
         for(var i=0; i<data.shipping.services.length; i++)
         {
