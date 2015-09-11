@@ -115,7 +115,7 @@ class CategoryController extends Controller
     protected function getView($object, $paginator, $isBrand = true)
     {
         return view('site.category.index', [
-            'background'    => $this->sanitizeBackground($object->presentation->background->image, '1500', '200'),
+            'background'    => isset($object->presentation->background->image) ? $this->sanitizeBackground($object->presentation->background->image, '1500', '200') : "",
             'children'      => $object->children,
             'featured'      => isset($object->featured) ? $object->featured : null,
             'locale'        => Localization::getCurrentLocale(),

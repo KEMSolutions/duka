@@ -1,14 +1,18 @@
-<div class="container-fluid category-header no-padding" style="background-image: url('{{ $background }}')">
-    <div class="category-overlay">
-        <div class="center-block text-center category-header-text">
-            {{--logo--}}
-            <img class="category-logo" src="{{ $presentation->logo->image }}" alt="{{ $name }}"/>
+{{-- Display a presentation banner if the presentation object is not set to null. --}}
 
-            {{--title--}}
-            <h1 class="category-title">{{ $presentation->title }}</h1>
+@if(!is_null($presentation))
+    <div class="container-fluid category-header no-padding" style="background-image: url('{{ $background }}')">
+        <div class="category-overlay">
+            <div class="center-block text-center category-header-text">
+                {{--logo--}}
+                <img class="category-logo" src="{{ $presentation->logo->image }}" alt="{{ $name }}"/>
 
-            {{--subtitle--}}
-            <h3 class="category-subtitle">{{ $presentation->subtitle }}</h3>
+                {{--title--}}
+                <h1 class="category-title">{{ $presentation->title }}</h1>
+
+                {{--subtitle--}}
+                <h3 class="category-subtitle">{{ $presentation->subtitle }}</h3>
+            </div>
         </div>
     </div>
-</div>
+@endif
