@@ -7,26 +7,6 @@
         <nav>
             <ul class="nav list-unstyled">
 
-                {{--Only display category filter on brand page --}}
-                @if ($isBrand)
-                    <li>
-                        <div class="refine-search-component">
-                            <h5 class="ui header">@lang('boukem.categories')</h5>
-                            <ul class="list-unstyled absolute-scrollable" id="refine-by-category">
-
-                                @foreach(Categories::getAllCategories() as $category)
-                                    <li>
-                                        <label>
-                                            <input type="checkbox" class="item" data-name="{{ $category->name }}" data-filter="{{ $category->id }}"/> {{ $category->name }}
-                                        </label>
-                                    </li>
-                                @endforeach
-
-                            </ul>
-                        </div>
-                    </li>
-                @endif
-
                 {{--Only show brands filter on category page --}}
                 @if (!$isBrand)
                     <li>
@@ -37,7 +17,7 @@
                                 @foreach(Brands::getAllBrands() as $brand)
                                     <li>
                                         <label>
-                                            <input type="checkbox" class="item" data-name="{{ $brand->name }}" data-filter="{{ $brand->id }}"/> {{ $brand->name }}
+                                            <input type="checkbox" class="item" data-name="{{ $brand->name }}" data-filter="{{ $brand->id }}" data-type="brands"/> {{ $brand->name }}
                                         </label>
                                     </li>
                                 @endforeach

@@ -24,7 +24,7 @@ class BrandController extends CategoryController
                 return redirect(route('category', ['slug' => $cat->slug]));
             }
 
-            abort(404);
+            abort(404, Lang::get('boukem.error_occurred'));
         }
 
         // If we have a category, redirect to proper route.
@@ -39,4 +39,3 @@ class BrandController extends CategoryController
         return $this->getView($brand, $paginator);
     }
 }
-

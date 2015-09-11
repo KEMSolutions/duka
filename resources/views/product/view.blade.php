@@ -208,7 +208,7 @@
 
                         <li>
                             <i class="tags icon"></i>
-                            <a href="{{ Store::info()->url }}/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a>
+                            <a href="{{ route('brand', ['slug' => $product->brand->slug]) }}">{{ $product->brand->name }}</a>
                         </li>
                     </ul>
                 </div>
