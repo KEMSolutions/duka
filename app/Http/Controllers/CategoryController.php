@@ -76,6 +76,8 @@ class CategoryController extends Controller
         }
         if ($brands = Request::input('brands')) {
             $filters[] = 'brands:'. $brands;
+        } elseif ($categories = Request::input('categories')) {
+            $filters[] = 'categories:'. $categories;
         }
         if (count($filters)) {
             $this->requestParams['filters'] = implode(',', $filters);
