@@ -4443,8 +4443,10 @@ section.slice {
   border-right: 1px solid #EBEBEB;
 }
 
-.refine-search-component:last-child {
-  padding-bottom: 20px;
+.refine-search-component {
+  height: 500px;
+  overflow: auto;
+  margin: 1rem 0 2rem 0;
 }
 
 .refine-search-input {
