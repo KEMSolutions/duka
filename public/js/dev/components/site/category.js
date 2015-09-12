@@ -56,8 +56,7 @@ var categoryContainer = {
         // Find the text for the selected option.
         $(".sort-by .item").each(function(index, element) {
             if ($(element).data('sort') == categoryContainer.searchParameters.order) {
-                $("#sort-by-box").dropdown("set selected", $(element).html());
-                // console.log($(element).html())
+                $("#sort-by-box").dropdown("set selected", $(element).data('sort'));
                 return false;
             }
         });

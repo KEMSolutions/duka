@@ -10,15 +10,15 @@
                   </div>
                   <i class="dropdown icon"></i>
                   <div class="menu sort-by">
-                      <div class="item" data-sort="-relevance">
+                      <div class="item" data-sort="-relevance" data-value="-relevance">
                           <i class="linkify icon"></i>
                           @lang("boukem.relevance")
                       </div>
-                      <div class="item" data-sort="price">
+                      <div class="item" data-sort="price" data-value="price">
                           <i class="dollar icon"></i>
                           @lang("boukem.price_low_to_high")
                       </div>
-                      <div class="item" data-sort="-price">
+                      <div class="item" data-sort="-price" data-value="-price">
                           <i class="dollar icon"></i>
                           @lang("boukem.price_high_to_low")
                       </div>
