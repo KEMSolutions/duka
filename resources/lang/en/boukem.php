@@ -232,6 +232,7 @@ return [
     "grid"              =>"Grid",
     "list"              =>"List",
     "favorite"          =>"Favorite",
-    "rating"            =>"Rating"
+    "rating"            =>"Rating",
+    "loading"           =>"Loading"
 
 ];
