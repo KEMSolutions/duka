@@ -9,6 +9,10 @@ html {
   font-size: 14px;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+body {
+  font-family: "Roboto Condensed", sans-serif !important;
+}
+
 hr {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -4370,18 +4374,6 @@ section.slice {
   display: inline-block;
 }
 
-/* Selector hack for safari: setting a line-height cause the header second row to be shifted down. */
-@media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0) { @media
-{
-  .safari-header-banner-align {
-    line-height: normal !important;
-  }
-}}
-
-.header-banner-align {
-  line-height: 53px;
-  vertical-align: middle;
-}
 
 .wishlist-button{
   color: #333;
@@ -4453,4 +4445,15 @@ section.slice {
 .sorting-topbar {
   height: 50px;
   line-height: 50px;
+}
+
+/*-----------------------------------*/
+/*-----------------------------------*/
+/*-----------------------------------*/
+/* Style for Product's page */
+/*-----------------------------------*/
+/*-----------------------------------*/
+/*-----------------------------------*/
+.product-view, footer {
+  font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }

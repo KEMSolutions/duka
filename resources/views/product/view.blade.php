@@ -9,7 +9,7 @@
 @section("content")
     @include("product._breadcrumb", ["product" => $product])
 
-    <div class="ui container stackable grid" itemscope itemtype="http://schema.org/Product">
+    <div class="ui container stackable grid product-view" itemscope itemtype="http://schema.org/Product">
 
         {{-- Firt row includes product description, pricing plans, sharing and categories --}}
         <div class="row">
