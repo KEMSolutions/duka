@@ -87,11 +87,11 @@
 .price-estimate-update {
     display: none;
     position: absolute;
-    top: 60px;
+    top: 40px;
     left: 0;
     width: 400px;
     background-color: #FFF;
-    height: 120px;
+    height: 140px;
     padding-top: 30px;
 }
 
