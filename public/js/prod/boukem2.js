@@ -488,6 +488,93 @@ var UtilityContainer = {
 
 
 /**
+ * Entry point of script.
+ *
+ */
+$(document).ready(function () {
+
+    /**
+     * Sets up the ajax token for all ajax requests
+     *
+     */
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'locale': $('html').attr('lang')
+        }
+    });
+
+    /**
+     * Initialize semantic UI modules
+     *
+     */
+    semanticInitContainer.init();
+
+    /**
+     * Initialize checkout logic.
+     *
+     */
+    checkoutInitContainer.init();
+
+    /**
+     * Initialize cart drawer logic.
+     *
+     */
+    cartDrawerInitContainer.init();
+
+    /**
+     * Initialize category container
+     *
+     */
+    categoryContainer.init();
+
+    /**
+     * Initialize overlay plugin.
+     *
+     */
+    paymentOverlayContainer.init();
+
+    /**
+     * Initialize homepage sections.
+     *
+     */
+    homepageContainer.init();
+
+    /**
+     * Initialize favorite products feature.
+     *
+     */
+    productLayoutFavoriteContainer.init();
+
+    /**
+     * Initialize product formats feature.
+     *
+     */
+    productFormatContainer.init();
+
+    /**
+     * Initialize column responsiveness in product pages.
+     *
+     */
+    productResponsive.init();
+
+    /**
+     * Initialize wishlist page.
+     *
+     */
+    wishlistLogicContainer.init();
+
+    /**
+     * Global initialization of elements.
+     *
+     */
+    //fancy plugin for product page (quantity input)
+    $(".input-qty").TouchSpin({
+        initval: 1
+    });
+
+});
+/**
  * Object responsible for handling billing information.
  *
  * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
@@ -2317,7 +2404,7 @@ var cartLogicContainer = {
 
         $(".changeLocation").click(function() {
             $("dl.calculation").addClass("hidden");
-            $(".getEstimate").html(Localization.calculate);
+            $(".getEstimate").html(Localization.update);
             $(".price-estimate-update").fadeOut();
             $(".price-estimate").fadeIn();
 
@@ -2329,7 +2416,7 @@ var cartLogicContainer = {
             if(!UtilityContainer.validateEmptyCart()) {
                 setTimeout(function() {
                     $(".price-estimate-update .getEstimate").parent().fadeOut(300);
-                    $(".price-estimate-update .getEstimate").html(Localization.calculate);
+                    $(".price-estimate-update .getEstimate").html(Localization.update);
                 }, 2250);
             }
         });
@@ -2569,90 +2656,3 @@ var wishlistContainer = {
         self.setNumberOfProductsInHeader();
     }
 }
-/**
- * Entry point of script.
- *
- */
-$(document).ready(function () {
-
-    /**
-     * Sets up the ajax token for all ajax requests
-     *
-     */
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            'locale': $('html').attr('lang')
-        }
-    });
-
-    /**
-     * Initialize semantic UI modules
-     *
-     */
-    semanticInitContainer.init();
-
-    /**
-     * Initialize checkout logic.
-     *
-     */
-    checkoutInitContainer.init();
-
-    /**
-     * Initialize cart drawer logic.
-     *
-     */
-    cartDrawerInitContainer.init();
-
-    /**
-     * Initialize category container
-     *
-     */
-    categoryContainer.init();
-
-    /**
-     * Initialize overlay plugin.
-     *
-     */
-    paymentOverlayContainer.init();
-
-    /**
-     * Initialize homepage sections.
-     *
-     */
-    homepageContainer.init();
-
-    /**
-     * Initialize favorite products feature.
-     *
-     */
-    productLayoutFavoriteContainer.init();
-
-    /**
-     * Initialize product formats feature.
-     *
-     */
-    productFormatContainer.init();
-
-    /**
-     * Initialize column responsiveness in product pages.
-     *
-     */
-    productResponsive.init();
-
-    /**
-     * Initialize wishlist page.
-     *
-     */
-    wishlistLogicContainer.init();
-
-    /**
-     * Global initialization of elements.
-     *
-     */
-    //fancy plugin for product page (quantity input)
-    $(".input-qty").TouchSpin({
-        initval: 1
-    });
-
-});

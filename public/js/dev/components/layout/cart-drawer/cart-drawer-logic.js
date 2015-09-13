@@ -284,7 +284,7 @@ var cartLogicContainer = {
 
         $(".changeLocation").click(function() {
             $("dl.calculation").addClass("hidden");
-            $(".getEstimate").html(Localization.calculate);
+            $(".getEstimate").html(Localization.update);
             $(".price-estimate-update").fadeOut();
             $(".price-estimate").fadeIn();
 
@@ -296,7 +296,7 @@ var cartLogicContainer = {
             if(!UtilityContainer.validateEmptyCart()) {
                 setTimeout(function() {
                     $(".price-estimate-update .getEstimate").parent().fadeOut(300);
-                    $(".price-estimate-update .getEstimate").html(Localization.calculate);
+                    $(".price-estimate-update .getEstimate").html(Localization.update);
                 }, 2250);
             }
         });
