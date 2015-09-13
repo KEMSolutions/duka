@@ -3,6 +3,6 @@
 @extends('errors.template')
 @section('status', 401)
 @section('details')
-    <div>Unauthorized.</div>
+    @lang("boukem.401")
 @endsection
 

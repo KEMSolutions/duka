@@ -3,6 +3,6 @@
 @extends('errors.template')
 @section('status', 501)
 @section('details')
-    <div>Method Not Implemented.</div>
+    @lang("boukem.501")
 @endsection
 

@@ -233,6 +233,19 @@ return [
     "list"              =>"Liste",
     "favorite"          =>"Favoris",
     "rating"            =>"Avis",
-    "loading"           =>"Chargement"
+    "loading"           =>"Chargement",
+    "error_message"     =>"Oops... Une erreur est survenue.",
+    "button_error"      =>"Seule option: cliquer ici!",
+    "400"               =>"Mauvaise requête :(",
+    "401"               =>"Halte! Une authentification est nécessaire pour accéder à la ressource.",
+    "403"               =>"Accès refusé. :/",
+    "404"               =>"La page recherchée n'a pas été trouvée. Désolé :(",
+    "405"               =>"Méthode de requête non autorisée.",
+    "408"               =>"Temps d’attente d’une réponse du serveur écoulé. Renvoyez la requête!.",
+    "500"               =>"Erreur à l'interne. Contactez l'administrateur technique pour congédier les personnes reponsables. ",
+    "501"               =>"Vous avez tenté d'accéder à une fonctionnalité non implémentée... pour l'instant.",
+    "503"               =>"Service temporairement indisponible indépendamment de notre volonté. Désolé :("
+
+
 
 ];

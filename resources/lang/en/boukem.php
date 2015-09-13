@@ -233,6 +233,18 @@ return [
     "list"              =>"List",
     "favorite"          =>"Favorite",
     "rating"            =>"Rating",
-    "loading"           =>"Loading"
+    "loading"           =>"Loading",
+    "error_message"     =>"Oops... Something went wrong.",
+    "button_error"      =>"Click here to get somewhere safe.",
+    "400"               =>"Bad Request :(",
+    "401"               =>"Unauthorized access! Who are you? Authenticate yourself!",
+    "403"               =>"Forbidden. There is no way you should see this. :O",
+    "404"               =>"The requested URL was not found on our server. Sorry :(",
+    "405"               =>"Method not allowed. What are you trying to make me do?",
+    "408"               =>"I'm timing out waiting for your request! Please request again :)",
+    "500"               =>"Internal Error. Contact your system administrator to fire him.",
+    "501"               =>"Back to the future? This feature is not yet implemented :(",
+    "503"               =>"We are taking a nap right now. Be right back :)"
+
 
 ];

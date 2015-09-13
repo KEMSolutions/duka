@@ -40,7 +40,7 @@ var checkoutLogicContainer = {
                 self.createOrdersCookie(data);
 
                 //redirect the user to the checkout page if he backs from the payment page
-                history.pushState({data: data}, "Checkout ","/dev/cart");
+                history.pushState({data: data}, "Checkout ","/cart");
 
                 //Redirect to success url
                 window.location.replace(data.payment_details.payment_url);

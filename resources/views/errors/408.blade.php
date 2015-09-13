@@ -3,6 +3,6 @@
 @extends('errors.template')
 @section('status', 408)
 @section('details')
-    <div>Request Timeout.</div>
+    @lang("boukem.408")
 @endsection
 
