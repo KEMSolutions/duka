@@ -130,7 +130,7 @@
                                                 {!! 'active' !!}
                                             @endif
                                                 "
-                                                data-product="{{ $format->id }}"
+                                                data-product="{{ $product->id . '-' . $format->id }}"
                                                 data-price="{{ $format->price }}"
                                                 data-thumbnail="{{ Products::thumbnail($product) }}"
                                                 data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
@@ -161,7 +161,7 @@
                             <div class="buybutton-format-selection-wrapper">
                                 <button
                                         class="btn btn-three buybutton horizontal-align"
-                                        data-product="{{ $product->formats[0]->id }}"
+                                        data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
                                         data-price="{{ $product->formats[0]->price }}"
                                         data-thumbnail="{{ Products::thumbnail($product) }}"
                                         data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
