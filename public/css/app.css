@@ -1779,7 +1779,7 @@ fieldset[disabled] .btn-danger.active {
   color: #337ab7;
   font-weight: normal;
   border-radius: 0;
-  padding: 0 12px;
+  padding: 2px 12px;
 }
 .btn-link,
 .btn-link:active,

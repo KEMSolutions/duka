@@ -151,7 +151,7 @@
     <div class="row header-banner color-one hidden-xs">
 
         <div class="three wide column text-center border-right">
-            <button type="button" class="btn btn-link">
+            <div class="btn btn-link">
                 <div class="ui pointing dropdown dropdown-select top left white">
                     <span class="text">
                         <span class="light">{{ Lang::get("boukem.shop_by") }}</span><strong class="bold"> {{ Lang::get("boukem.categories") }}</strong>
@@ -187,28 +187,28 @@
                         @endforeach
                     </div>
                 </div>
-            </button>
+            </div>
 
         </div>
 
             {{-- Back to store link. --}}
             @if(strlen(Store::info()->url))
-                <button type="button" class="btn btn-link">
+                <div class="btn btn-link">
                     <a href="{{ Store::info()->url }}">Back to site</a>
-                </button>
+                </div>
             @endif
 
             {{-- Links to custom pages. --}}
             @if (count(Pages::all()))
                 @foreach (Pages::all() as $page)
-                    <button type="button" class="btn btn-link">
+                    <div class="btn btn-link">
                         <a href="{{ route('page', ['slug' => $page->slug]) }}">{{ $page->title }}</a>
-                    </button>
+                    </div>
                 @endforeach
             @endif
 
         {{-- Store contact info. --}}
-            <button type="button" class="btn btn-link">
+            <div class="btn btn-link">
                 <div class="ui pointing dropdown dropdown-select top left white">
                     <span class="text">
                         {{ Lang::get("boukem.contact") }}
@@ -227,7 +227,7 @@
                         </div>
                     </div>
                 </div>
-            </button>
+            </div>
     </div>
     {{-- End of second row. --}}
 
