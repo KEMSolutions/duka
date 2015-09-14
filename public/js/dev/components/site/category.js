@@ -36,6 +36,7 @@ var categoryContainer = {
      */
     itemsPerPage: function () {
         $(".items-per-page .item").on("click", function() {
+            categoryContainer.addDimmer();
             UtilityContainer.urlAddParameters("per_page", $(this).data("sort"));
         });
 
@@ -50,14 +51,14 @@ var categoryContainer = {
      */
     sortBy: function () {
         $(".sort-by .item").on("click", function() {
+            categoryContainer.addDimmer();
             UtilityContainer.urlAddParameters("order", $(this).data("sort"));
         });
 
         // Find the text for the selected option.
         $(".sort-by .item").each(function(index, element) {
             if ($(element).data('sort') == categoryContainer.searchParameters.order) {
-                $("#sort-by-box").dropdown("set selected", $(element).html());
-                // console.log($(element).html())
+                $("#sort-by-box").dropdown("set selected", $(element).data('sort'));
                 return false;
             }
         });
@@ -71,6 +72,8 @@ var categoryContainer = {
 
         $("#price-update").on("click", function()
         {
+            categoryContainer.addDimmer();
+
             UtilityContainer.urlAddParameters({
                 min_price : $("#min-price").val(),
                 max_price : $("#max-price").val()
@@ -219,6 +222,7 @@ var categoryContainer = {
         // If we have filters, update the query string and refresh the page.
         if (filterList.length > 0) {
             var filter = filterList.length > 1 ? filterList.join(';') : filterList[0];
+            categoryContainer.addDimmer();
             UtilityContainer.urlAddParameters(filterType, filter);
         }
 
@@ -311,6 +315,35 @@ var categoryContainer = {
                 this.searchParameters[key] = [query[key]];
             }
         }
+    },
+
+    /**
+     * Localize the dimmer text with the appropriate message.
+     *
+     */
+    localizeDimmer: function () {
+        $(".loading-text").text(Localization.loading + "...");
+    },
+
+    /**
+     * Add a dimmer to the body when adding / removing a new filter.
+     *
+     */
+    addDimmer: function () {
+        var dimmer =
+        '<div class="ui page dimmer">' +
+        '<div class="content">' +
+        '<div class="center"><h1 class="ui header loading-text"></h1></div>' +
+        '</div>' +
+        '</div>';
+
+        $("body").append(dimmer);
+
+        categoryContainer.localizeDimmer();
+
+        $('.ui.dimmer')
+            .dimmer('show')
+        ;
     },
 
     init: function () {

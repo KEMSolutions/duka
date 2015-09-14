@@ -2,42 +2,61 @@
 	<head>
 		<link href='//fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
 
+		<link rel="stylesheet" href="{{ asset('/semantic/prod/semantic.css') }}"/>
+
 		<style>
+			.super-big-title {
+				font-size: 7rem !important;
+			}
+
+			.big-title {
+				font-size: 2rem !important;
+			}
+
+			title {
+				font-size: 1rem !important;
+			}
+
 			body {
-				margin: 0;
-				padding: 0;
-				width: 100%;
-				height: 100%;
-				color: #B0BEC5;
-				display: table;
-				font-weight: 100;
-				font-family: 'Lato';
+				background-color: #fff;
+				color: #333;
 			}
 
-			.container {
-				text-align: center;
-				display: table-cell;
-				vertical-align: middle;
+			.error-template {
+				padding-top: 10%;
 			}
 
-			.content {
-				text-align: center;
-				display: inline-block;
-			}
-
-			.title {
-				font-size: 72px;
-				margin-bottom: 40px;
-			}
 		</style>
 	</head>
 	<body>
-		<div class="container">
-			<div class="content">
-			    <h2>Oops... An error has occured!</h2>
-				<div class="title">@yield('status', '??')</div>
+
+		<div class="ui container error-template">
+
+			<h1 class="ui header super-big-title">
+				:(
+				
+				<span style="float:right">
+					<img src="{{  Store::logo() }}" alt="{{ Store::info()->name }}"/>
+				</span>
+			</h1>
+
+			<h2 class="ui header big-title">
+				@lang("boukem.error_message")
+			</h2>
+
+			<h3 class="ui header title">
 				@yield('details')
-			</div>
+			</h3>
+
+			<p style="text-align: center; margin-top: 2rem">Code: @yield('status', '??')</p>
+
+			<a href="{{ route("home") }}">
+				<button class="ui inverted green button">
+					@lang("boukem.button_error")
+				</button>
+			</a>
+
+
 		</div>
 	</body>
 </html>

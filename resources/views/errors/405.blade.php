@@ -3,6 +3,6 @@
 @extends('errors.template')
 @section('status', 405)
 @section('details')
-    <div>Method Not Allowed.</div>
+    @lang("boukem.405")
 @endsection
 

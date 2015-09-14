@@ -6,7 +6,12 @@
 
         <div class="right floated column">
             <div class="ui breadcrumb pull-right">
-                <a class="section" href="/{{ $locale }}/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a>
+
+                {{-- Some products are without brands. --}}
+                @if(count($product->brand))
+                    <a class="section" href="/{{ $locale }}/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a>
+                @endif
+
                 <i class="right chevron icon divider"></i>
                 <a class="active section">{{ $product->localization->name }}</a>
             </div>

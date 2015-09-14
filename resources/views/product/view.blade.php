@@ -9,7 +9,7 @@
 @section("content")
     @include("product._breadcrumb", ["product" => $product])
 
-    <div class="ui container stackable grid" itemscope itemtype="http://schema.org/Product">
+    <div class="ui container stackable grid product-view" itemscope itemtype="http://schema.org/Product">
 
         {{-- Firt row includes product description, pricing plans, sharing and categories --}}
         <div class="row">
@@ -34,10 +34,13 @@
                                 <span class="bold" itemprop="gtin13">{{ isset($product->formats[0]->barcode) }}</span>
                             </li>
 
-                            <li itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
-                                <span>{{ Lang::get("boukem.brand") }}</span>
-                                <span class="bold" itemprop="name">{{ $product->brand->name }}</span>
-                            </li>
+                            {{-- Some products are without brands. --}}
+                            @if(count($product->brand))
+                                <li itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
+                                    <span>{{ Lang::get("boukem.brand") }}</span>
+                                    <span class="bold" itemprop="name">{{ $product->brand->name }}</span>
+                                </li>
+                            @endif
 
                         </ul>
                     </div>
@@ -127,7 +130,7 @@
                                                 {!! 'active' !!}
                                             @endif
                                                 "
-                                                data-product="{{ $format->id }}"
+                                                data-product="{{ $product->id . '-' . $format->id }}"
                                                 data-price="{{ $format->price }}"
                                                 data-thumbnail="{{ Products::thumbnail($product) }}"
                                                 data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
@@ -158,7 +161,7 @@
                             <div class="buybutton-format-selection-wrapper">
                                 <button
                                         class="btn btn-three buybutton horizontal-align"
-                                        data-product="{{ $product->formats[0]->id }}"
+                                        data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
                                         data-price="{{ $product->formats[0]->price }}"
                                         data-thumbnail="{{ Products::thumbnail($product) }}"
                                         data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
@@ -200,18 +203,24 @@
 
 
                 {{-- Categories related to the product. --}}
-                <div class="ui basic segment">
-                    <h4 class="ui header">{{ Lang::get("boukem.categories") }}</h4>
-                    <ul class="tags-list">
 
-                        {{-- TOOD: INTEGRATE THE RIGHT CATEGORIES--}}
+                {{-- TODO: we do not display any categories if there is no brand associated with a product.
+                           As of the launch of boukem2, the only thing that appears here is the brand.
+                 --}}
+                @if(count($product->brand))
+                    <div class="ui basic segment">
+                        <h4 class="ui header">{{ Lang::get("boukem.categories") }}</h4>
+                        <ul class="tags-list">
 
-                        <li>
-                            <i class="tags icon"></i>
-                            <a href="{{ route('brand', ['slug' => $product->brand->slug]) }}">{{ $product->brand->name }}</a>
-                        </li>
-                    </ul>
-                </div>
+                            {{-- TOOD: INTEGRATE THE RIGHT CATEGORIES--}}
+
+                            <li>
+                                <i class="tags icon"></i>
+                                <a href="{{ route('brand', ['slug' => $product->brand->slug]) }}">{{ $product->brand->name }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                @endif
                 {{-- End of related categories. --}}
 
             </div>
