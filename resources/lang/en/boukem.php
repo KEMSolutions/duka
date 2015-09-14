@@ -130,6 +130,7 @@ return [
     "track_orders"  =>"Track your orders",
     "reorder"       =>"Reorder easily",
     "save_address"  =>"Avoid retyping your billing and mailing address",
+    "add_address"   =>"Add a new address",
     "useful_rec"    =>"Get useful recommendations",
     "regular_price" =>"Regular price:",
     "deals"         =>"Hot deals",

@@ -130,6 +130,7 @@ return [
     "track_orders"  =>"Retrouvez l'historique de vos commandes",
     "reorder"       =>"Dupliquez vos commandes récentes",
     "save_address"  =>"Sauvez du temps en sauvegardant vos adresses",
+    "add_address"   =>"Ajouter une nouvelle adresse",
     "useful_rec"    =>"Bénéficiez de meilleures recommandations",
     "regular_price" =>"Prix régulier:",
     "deals"         =>"Promotions",

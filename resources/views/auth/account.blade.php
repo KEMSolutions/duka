@@ -22,7 +22,7 @@
 
 <br />
 <div class="ui grid container">
-    <form class="ui form" role="form" method="post" action="{{ route('auth.account.action') }}">
+    <form class="ui form" role="form" method="post" action="{{ route('auth.account.action') }}" style="width: 100%">
         {!! csrf_field() !!}
 
         {{-- Personal details --}}
@@ -75,7 +75,8 @@
         </div>
 
         {{-- Addresses --}}
-        <h4 class="ui dividing header">@lang('boukem.address')</h4>
+        {{-- Temporarily disabled --}}
+        <!-- <h4 class="ui dividing header">@lang('boukem.address')</h4>
         <div class="ui accordion">
             @if (count($user->addresses) > 0)
                 @foreach ($user->addresses as $address)
@@ -89,7 +90,7 @@
             @include('auth._address', [
                 'address' => $user->newAddressObject()
             ])
-        </div>
+        </div> -->
 
         <br /><br />
         <button class="ui button" type="submit">@lang('boukem.update')</button>

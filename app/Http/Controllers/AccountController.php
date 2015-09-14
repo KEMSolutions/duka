@@ -75,9 +75,9 @@ class AccountController extends Controller
 
         // Update addresses. We keep these decoupled from the customer so that we may
         // update them independently if we ever need to.
-        if (!Customers::isError($result))
+        if (!Customers::isError($result) && $request->has('addresses'))
         {
-            foreach ($request->input('addesses') as $address)
+            foreach ($request->input('addresses') as $address)
             {
                 // Validate address details.
                 if (!Customers::validateAddress($address)) {
@@ -89,13 +89,11 @@ class AccountController extends Controller
                     ? Customers::addAddress($address)
                     : Customers::updateAddress($address);
             }
-
-            $message = Lang::get('boukem.account_saved');
         }
 
-        else {
-            $message = Lang::get('boukem.account_not_saved');
-        }
+        $message = Customers::isError($result)
+            ? Lang::get('boukem.account_not_saved')
+            : Lang::get('boukem.account_saved');
 
         return redirect(route('auth.account'))->withMessages([$message]);
     }
@@ -125,7 +123,7 @@ class AccountController extends Controller
 
 		// Since we don't have a password_resets table, we'll attach the customer's ID to this token
 		// so that we may easily retrieve their record later on.
-		$link = Crypt::encrypt($customer->id .':'. $token);
+		$link = Crypt::encrypt($customer->id .','. $token);
 
 		// Store the token.
 		$customer->metadata['password_token'] = $token;
@@ -165,7 +163,7 @@ class AccountController extends Controller
 		}
 
 		// The email token includes the password token and customer ID.
-		$emailToken = @explode(':', $emailToken, 2);
+		$emailToken = @explode(',', $emailToken, 2);
 		$customerId = (int) $emailToken[0];
 		$passwordToken = $emailToken[1];
 		if ($customerId < 1 || strlen($passwordToken) < 1) {
@@ -181,7 +179,7 @@ class AccountController extends Controller
 		}
 
 		$checkToken = $customer->metadata['password_token'];
-		$customer->metadata['password_token'] == '';
+        unset($customer->metadata['password_token']);
 		Customers::update($customer, []);
 
 		// Validate the password token.

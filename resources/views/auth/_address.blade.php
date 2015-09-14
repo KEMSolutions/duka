@@ -1,6 +1,6 @@
 
 <div class="title">
-    {{ $address->id > 0 ? $address->line1 .' / '. $address->postcode : 'New address [TODO: localize]' }}
+    {{ $address->id > 0 ? $address->line1 .' / '. $address->postcode : Lang::get('boukem.add_address') }}
 </div>
 
 <div class="content">

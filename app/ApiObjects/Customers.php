@@ -5,6 +5,7 @@ use Auth;
 use Cache;
 use Crypt;
 use KemAPI;
+use Validator;
 use Localization;
 
 use Carbon\Carbon;
@@ -126,12 +127,12 @@ class Customers extends BaseObject
         // Update address.
         $id = (int) $id;
         if ($id > 0) {
-            // $result = KemAPI::put($this->addressRequest .'/'. $id, $details);
+            $result = KemAPI::put($this->addressRequest .'/'. $id, $details);
         }
 
         // Or create a new one.
         else {
-            // $result = KemAPI::post($this->addressRequest, $details);
+            $result = KemAPI::post($this->addressRequest, $details);
         }
 
         return $result;
