@@ -68,26 +68,12 @@ Route::group([
     //
 
 
-    Route::group(['prefix' => 'dev'], function()
-    {
-        Route::get('list-customers', function() {
-            return Illuminate\Support\Collection::make(Customers::all());
-        });
-
-        Route::get('get-customer', function() {
-            return Illuminate\Support\Collection::make(Customers::get(base64_encode('kevin@kemsolutions.com')));
-        });
-
-        Route::get('store-info', function() {
-            return Illuminate\Support\Collection::make(Store::info());
-        });
-
-        Route::get('error/{status}', function($status) {
-            abort($status);
-        });
-
-        Route::get('categories/{id}', 'ApiController@getCategory');
-    });
+    // Route::group(['prefix' => 'dev'], function()
+    // {
+    //     Route::get('error/{status}', function($status) {
+    //         abort($status);
+    //     });
+    // });
 });
 
 // Console webhooks endpoint
