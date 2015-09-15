@@ -4358,8 +4358,10 @@ section.slice {
   text-color: #222;
 }
 
-.header-topbar .four.wide > * {
-  margin-top: 2px;
+@media (max-width: 767px) {
+  .header-topbar .four.wide > * {
+    margin-top: 2px;
+  }
 }
 
 /*-----------------------------------*/
