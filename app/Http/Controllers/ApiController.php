@@ -11,6 +11,7 @@ use Request;
 use Session;
 use Products;
 use Redirect;
+use Customers;
 use Categories;
 use Localization;
 
@@ -64,6 +65,26 @@ class ApiController extends Controller
             'filters' => Request::input('filters'),
             'order' => Request::input('order')
         ]));
+    }
+
+
+    //
+    // Customers related methods.
+    //
+
+
+    /**
+     *
+     */
+    public function getCustomers() {
+        return $this->send(Customers::all());
+    }
+
+    /**
+     *
+     */
+    public function getCustomer() {
+        return $this->send(Auth::user());
     }
 
 
@@ -220,7 +241,7 @@ class ApiController extends Controller
 
 
     //
-    // Other generic methods.
+    // Helper methods.
     //
 
 

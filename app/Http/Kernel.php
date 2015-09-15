@@ -24,7 +24,9 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $routeMiddleware = [
+        'api.csrf' => 'App\Http\Middleware\VerifyApiCsrfToken',
 		'auth' => 'App\Http\Middleware\Authenticate',
+		'auth.api' => 'App\Http\Middleware\ApiBasicAuthentication',
 		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
 		'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
 		'validateWebhook'=>'App\Http\Middleware\ValidateWebhook',

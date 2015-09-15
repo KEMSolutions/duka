@@ -80,7 +80,7 @@ Route::group([
 Route::post('webhooks', ['uses' => 'WebhooksController@postReceive', 'middleware' => ['validateWebhook']]);
 
 // API endpoints.
-Route::group(['prefix' => 'api'], function()
+Route::group(['prefix' => 'api', 'middleware' => 'api.csrf'], function()
 {
     // Set locale.
     Request::has('locale') ? Localization::setLocale(Request::input('locale', 'en')) : null;
@@ -92,17 +92,24 @@ Route::group(['prefix' => 'api'], function()
     // Layout endpoints.
     Route::get('layouts/{id?}',     ['as' => 'api.layouts', 'uses' => 'ApiController@getLayout']);
 
-    // Orders endpoints.
-    Route::post('orders',           ['as' => 'api.orders', 'uses' => 'ApiController@placeOrder']);
-    Route::get('orders/{id}/{verification}', ['as' => 'api.orders.view', 'uses' => 'ApiController@getOrderDetails']);
-    Route::get('orders/pay/{id}/{verification}',
-        ['as' => 'api.orders.pay', 'uses' => 'ApiController@redirectToPaymentPage']);
-    Route::get('orders/return',     ['as' => 'api.orders.return', 'uses' => 'ApiController@returningFromPayment']);
-
     // Product endpoints.
     Route::get('products/{id}',     ['as' => 'api.products', 'uses' => 'ApiController@getProduct']);
     Route::get('search/{query}',    ['as' => 'api.search', 'uses' => 'ApiController@searchProducts']);
-    Route::post('estimate',         ['as' => 'api.estimate', 'uses' => 'ApiController@getOrderEstimate']);
+
+    // Endpoints accessible through basic authentication.
+    Route::group(['middleware' => 'auth.api'], function()
+    {
+        // Customers endpoints.
+        Route::get('customers',     ['as' => 'api.customers', 'uses' => 'ApiController@getCustomers']);
+        Route::get('customer',      ['as' => 'api.customer', 'uses' => 'ApiController@getCustomer']);
+
+        // Orders endpoints.
+        Route::post('estimate', ['as' => 'api.estimate', 'uses' => 'ApiController@getOrderEstimate']);
+        Route::post('orders', ['as' => 'api.orders', 'uses' => 'ApiController@placeOrder']);
+        Route::get('orders/{id}/{verification}', ['as' => 'api.orders.view', 'uses' => 'ApiController@getOrderDetails']);
+        Route::get('orders/pay/{id}/{verification}', ['as' => 'api.orders.pay', 'uses' => 'ApiController@redirectToPaymentPage']);
+        Route::get('orders/return', ['as' => 'api.orders.return', 'uses' => 'ApiController@returningFromPayment']);
+    });
 
     // Return '400 Bad Request' on all other requests.
     Route::any('/{catchAll?}', function($catchAll = null) {
