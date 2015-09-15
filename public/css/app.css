@@ -3956,41 +3956,12 @@ footer .copyright{color:#EEE;}
   margin-top: 1rem; /* Since semantic's .ui margin-top: -1rem; */
 }
 
-.headline-section .description-dark {
-  color: #fff;
+.headline-section .dark {
+  color: #fff !important;
 }
 
-.headline-section .description-white {
-  color: #333;
-}
-
-.headline-section .description.fluid-center {
-  width: 100%;
-  padding: 50px;
-  left: 0;
-  margin: 0px;
-}
-
-.headline-section .description .title {
-  font-weight: 500;
-  font-size:2.5rem;
-  line-height: 2.5rem;
-  display:block;
-}
-
-.headline-section .description.fluid-center .title{
-  margin-bottom: 30px;
-  display: block;
-  text-align: center;
-}
-
-.headline-section .description.fluid-center .subtitle{
-  font-size:1.3rem;
-  line-height: 1.3rem;
-  margin:0;
-  display:block;
-  text-align:center;
-  padding: 0
+.headline-section .white {
+  color: #333 !important;
 }
 
 .headline-section .headline-section-background {
@@ -3998,6 +3969,10 @@ footer .copyright{color:#EEE;}
   background-size: cover;
   background-position: 0% 0%;
   height: 260px;
+}
+
+.headline-section .headline-section-text {
+  margin-top: 2%;
 }
 
 /*-----------------------------------*/
@@ -4374,7 +4349,6 @@ section.slice {
   display: inline-block;
 }
 
-
 .wishlist-button{
   color: #333;
 }
@@ -4384,6 +4358,11 @@ section.slice {
   text-color: #222;
 }
 
+@media (max-width: 767px) {
+  .header-topbar .four.wide > * {
+    margin-top: 2px;
+  }
+}
 
 /*-----------------------------------*/
 /*-----------------------------------*/

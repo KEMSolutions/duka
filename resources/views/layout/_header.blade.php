@@ -7,7 +7,7 @@
     There are 2 rows, the second one hidden when the viewport is less than 768px.
 
 --}}
-<div class="ui stackable vertically padded grid middle aligned">
+<div class="ui stackable vertically padded grid middle aligned header-topbar">
 
     {{-- First row. --}}
     <div class="row">
@@ -134,7 +134,17 @@
                 </div>
             </div>
 
-            <a class="view-cart">
+            {{-- Show alternatvie checkout button on mobile devices. --}}
+            <button class="ui btn btn-one visible-xs-inline-block">
+                <a href="{{ route("cart") }}">
+                    <i class="fa fa-shopping-cart icon-cart color-one-text"></i>
+                    @lang("boukem.cart")
+                    <span class="badge cart_badge">0</span>
+                    <span class="sr-only">items</span>
+                </a>
+            </button>
+
+            <a class="view-cart hidden-xs">
                 <button class="ui btn btn-one" id="view-cart-wrapper">
                     <i class="fa fa-shopping-cart icon-cart color-one-text"></i>
                     <span id="cart-description">{{ " " . Lang::get("boukem.cart") . " " }}</span>

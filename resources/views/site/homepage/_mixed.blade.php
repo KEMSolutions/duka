@@ -10,7 +10,7 @@
 
         {{-- Product section. --}}
         <div class="sixteen wide column">
-            <div class="ui four cards">
+            <div class="ui four cards stackable">
                 @foreach($layoutData["mixed"]["products"] as $product)
 
                     <div class="card">
