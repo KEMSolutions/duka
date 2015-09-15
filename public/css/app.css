@@ -4374,7 +4374,6 @@ section.slice {
   display: inline-block;
 }
 
-
 .wishlist-button{
   color: #333;
 }
@@ -4384,6 +4383,9 @@ section.slice {
   text-color: #222;
 }
 
+.header-topbar .four.wide > * {
+  margin-top: 2px;
+}
 
 /*-----------------------------------*/
 /*-----------------------------------*/
