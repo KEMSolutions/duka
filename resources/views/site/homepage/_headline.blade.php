@@ -13,9 +13,9 @@
                 @include("site.homepage._tab", ["tabTitle" => $layoutData["headline"]["tabTitle"]])
             @endif
 
-            <div class="description description-{{ $layoutData["headline"]["style"] }} fluid-center">
-                <span class="title">{{ $layoutData["headline"]["title"] }}</span>
-                <span class="subtitle">{{ $layoutData["headline"]["subtitle"] }}</span>
+            <div class="ui text container {{ $layoutData["headline"]["style"] }} headline-section-text">
+                <h1 class="ui header centered aligned">{{ $layoutData["headline"]["title"] }}</h1>
+                <h3 class="ui header centered aligned">{{ $layoutData["headline"]["subtitle"] }}</h3>
             </div>
 
         </div>
