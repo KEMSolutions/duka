@@ -1,4 +1,4 @@
-<div class="row border-bottom-clear horizontally-padded">
+<div class="row border-bottom-clear hidden">
     <h4 class="ui header">{{ Lang::get("boukem.filter_by") }}: </h4>
 
     <button class="btn btn-black btn-xs pull-right">{{ Lang::get("boukem.reset") }}</button>

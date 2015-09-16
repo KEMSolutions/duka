@@ -915,7 +915,9 @@ ol.ui.horizontal.list li:before,
 /*******************************
          Theme Overrides
 *******************************/
-
+.ui.horizontal.list > .item {
+   margin-left: 0;
+}
 
 
 /*******************************

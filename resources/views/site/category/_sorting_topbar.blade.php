@@ -53,7 +53,7 @@
             </span>
         </div>
 
-        <div class="item">
+        <div class="item pull-right">
             {{-- Grid layout is set by default. --}}
                 <span>
               @lang("boukem.switch_layout")
