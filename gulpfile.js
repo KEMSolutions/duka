@@ -5,7 +5,8 @@
 var gulp = require('gulp'),
     concat = require('gulp-concat'),
     concatCss = require('gulp-concat-css'),
-    uglify = require('gulp-uglify');
+    uglify = require('gulp-uglify'),
+    minifyCss = require('gulp-minify-css');
 
 
 /*******************************
@@ -17,7 +18,14 @@ gulp.task('js', function () {
     return gulp.src(['public/js/dev/utils/*.js', 'public/js/dev/components/**/*.js' ])
         .pipe(concat('boukem2.js'))
         //.pipe(uglify())
-        .pipe(gulp.dest('public/js/prod')) //the destination folder
+        .pipe(gulp.dest('public/js/prod'))
+});
+
+// Minify app.css
+gulp.task('css', function () {
+    return gulp.src("public/css/app.css")
+        .pipe(minifyCss())
+        .pipe(gulp.dest('public/css/prod'))
 });
 
 
@@ -28,6 +36,7 @@ gulp.task('js', function () {
 gulp.task('semantic-css', function() {
     return gulp.src(['public/semantic/dev/css/*.css'])
         .pipe(concatCss('semantic.css'))
+        .pipe(minifyCss())
         .pipe(gulp.dest('public/semantic/prod'))
 });
 
@@ -41,4 +50,4 @@ gulp.task('semantic-js', function () {
 
 // Default task.
 gulp.task('semantic', ['semantic-css', 'semantic-js']);
-gulp.task('default', ['js', 'semantic']);
+gulp.task('default', ['js', 'css', 'semantic']);

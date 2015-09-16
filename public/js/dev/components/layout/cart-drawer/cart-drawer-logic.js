@@ -85,7 +85,7 @@ var cartLogicContainer = {
      */
     deleteItem: function() {
         $(document).on('click', ".close-button", function() {
-            $parent = $(this).closest(".animated").addClass("animated bounceOutLeft");
+            var $parent = $(this).closest(".animated").addClass("animated bounceOutLeft");
             $parent.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
                 $(this).remove();
             });
@@ -110,8 +110,8 @@ var cartLogicContainer = {
      */
     modifyQuantity : function() {
         $("#cart-items").on("change", ".quantity", function() {
-            $container = $(this).closest(".item");
-            $product_price = $container.find(".price");
+            var $container = $(this).closest(".item"),
+                $product_price = $container.find(".price");
 
             //update the total value
             $product_price.text("$" + ($product_price.data("price") * $(this).val()).toFixed(2));
@@ -152,7 +152,7 @@ var cartLogicContainer = {
             // Set quantity in html5 data attributes for each format selection button.
             $formatSelection.each(function() {
                 this.dataset.quantity = parseInt(self.val());
-            })
+            });
 
             // Set quantity in html5 data attribute for buybutton.
             $buybutton.data("quantity", parseInt(self.val()));

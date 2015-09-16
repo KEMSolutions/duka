@@ -1,4 +1,4 @@
-<div class="container">
+<div class="ui container">
     <div class="ui items list-layout-element-container">
         <br/>
 

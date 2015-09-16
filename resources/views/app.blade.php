@@ -18,7 +18,7 @@
 
 	<!-- Required -->
 	<link href="//cdn.kem.guru/css/outdatedBrowser.min.css" rel="stylesheet">
-	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
+	<link href="{{ asset('/css/prod/app.css') }}" rel="stylesheet">
 
 	<!-- Semantic UI css dependencies -->
 	<link rel="stylesheet" href="{{ asset('/semantic/prod/semantic.css') }}"/>

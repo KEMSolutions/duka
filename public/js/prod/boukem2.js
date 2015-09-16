@@ -1175,108 +1175,6 @@ var paymentContainer = {
     }
 }
 /**
- * Object responsible for handling the payment overlay behaviour.
- *
- * @type {{cancelOrder: Function, init: Function}}
- */
-var paymentOverlayContainer = {
-
-    /**
-     * Cancels an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_unpaid_orders");
-
-            $("#cancelledOrder .jumbotron").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-
-        });
-    },
-
-    /**
-     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_unpaid_orders')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(data) {
-                    if (data.status == 'pending')
-                        paymentOverlayContainer.showPaymentNotice();
-                    else
-                        Cookies.remove('_unpaid_orders');
-                }
-            });
-        }
-
-    },
-
-    /**
-     * Shows payment notice.
-     *
-     */
-    showPaymentNotice : function() {
-
-        // Retrieve order details.
-        var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-        // Display notice.
-        $('body').prepend(
-            '<div class="container overlay fullScreen" id="cancelledOrder">'+
-            '<div class="jumbotron vertical-align color-one">'+
-            '<div class="text-center">'+
-            '<h2>'+
-            Localization.pending_order.replace(':command', order.id) +
-            '</h2>'+
-            '<h4>'+ Localization.what_to_do +'</h4>'+
-            '<br />'+
-            '<ul class="list-inline">' +
-            '<li>' +
-            '<a href="'+
-            ApiEndpoints.orders.pay.replace(':id', order.id)
-                .replace(':verification', order.verification) +'">'+
-            '<button class="btn btn-success" id="payOrder">'+ Localization.pay_now +'</button>'+
-            '</a>'+
-            '</li>' +
-            '<li>' +
-            '<button class="btn btn-danger" id="cancelOrder">'+
-            Localization.cancel_order +
-            '</button>'+
-            '</li>'+
-            '</ul>'+
-            '</div>'+
-            '</div>'+
-            '</div>'
-        );
-    },
-
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-        self.checkPendingOrders();
-    }
-}
-
-/**
  * Object responsible for handling different formats of the same product.
  *
  * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
@@ -1573,6 +1471,108 @@ var semanticInitContainer = {
         module.initRatingModule();
     }
 }
+/**
+ * Object responsible for handling the payment overlay behaviour.
+ *
+ * @type {{cancelOrder: Function, init: Function}}
+ */
+var paymentOverlayContainer = {
+
+    /**
+     * Cancels an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     *
+     */
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            Cookies.remove("_unpaid_orders");
+
+            $("#cancelledOrder .jumbotron").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+
+        });
+    },
+
+    /**
+     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_unpaid_orders')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(data) {
+                    if (data.status == 'pending')
+                        paymentOverlayContainer.showPaymentNotice();
+                    else
+                        Cookies.remove('_unpaid_orders');
+                }
+            });
+        }
+
+    },
+
+    /**
+     * Shows payment notice.
+     *
+     */
+    showPaymentNotice : function() {
+
+        // Retrieve order details.
+        var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+        // Display notice.
+        $('body').prepend(
+            '<div class="container overlay fullScreen" id="cancelledOrder">'+
+            '<div class="jumbotron vertical-align color-one">'+
+            '<div class="text-center">'+
+            '<h2>'+
+            Localization.pending_order.replace(':command', order.id) +
+            '</h2>'+
+            '<h4>'+ Localization.what_to_do +'</h4>'+
+            '<br />'+
+            '<ul class="list-inline">' +
+            '<li>' +
+            '<a href="'+
+            ApiEndpoints.orders.pay.replace(':id', order.id)
+                .replace(':verification', order.verification) +'">'+
+            '<button class="btn btn-success" id="payOrder">'+ Localization.pay_now +'</button>'+
+            '</a>'+
+            '</li>' +
+            '<li>' +
+            '<button class="btn btn-danger" id="cancelOrder">'+
+            Localization.cancel_order +
+            '</button>'+
+            '</li>'+
+            '</ul>'+
+            '</div>'+
+            '</div>'+
+            '</div>'
+        );
+    },
+
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+        self.checkPendingOrders();
+    }
+}
+
 /**
  * Object responsible for the view component of each category page.
  *
@@ -2122,7 +2122,7 @@ var cartLogicContainer = {
      */
     deleteItem: function() {
         $(document).on('click', ".close-button", function() {
-            $parent = $(this).closest(".animated").addClass("animated bounceOutLeft");
+            var $parent = $(this).closest(".animated").addClass("animated bounceOutLeft");
             $parent.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
                 $(this).remove();
             });
@@ -2147,8 +2147,8 @@ var cartLogicContainer = {
      */
     modifyQuantity : function() {
         $("#cart-items").on("change", ".quantity", function() {
-            $container = $(this).closest(".item");
-            $product_price = $container.find(".price");
+            var $container = $(this).closest(".item"),
+                $product_price = $container.find(".price");
 
             //update the total value
             $product_price.text("$" + ($product_price.data("price") * $(this).val()).toFixed(2));
@@ -2189,7 +2189,7 @@ var cartLogicContainer = {
             // Set quantity in html5 data attributes for each format selection button.
             $formatSelection.each(function() {
                 this.dataset.quantity = parseInt(self.val());
-            })
+            });
 
             // Set quantity in html5 data attribute for buybutton.
             $buybutton.data("quantity", parseInt(self.val()));
@@ -2353,6 +2353,10 @@ var cartDisplayContainer = {
         $body : $("body")
     },
 
+    /**
+     * Display the cart drawer on first load if localStorage cookie "isDisplayed" is set to true.
+     *
+     */
     displayOn: function() {
         var _width = cartDisplayContainer.$el.$container.width();
         cartDisplayContainer.$el.$container.css( {
@@ -2364,6 +2368,10 @@ var cartDisplayContainer = {
         });
     },
 
+    /**
+     * Hide the cart drawer on first load if localStorage cookie "isDisplayed" is set to false.
+     *
+     */
     displayOff : function() {
         cartDisplayContainer.$el.$back.click(function() {
             cartDisplayContainer.animateOut();
@@ -2373,6 +2381,10 @@ var cartDisplayContainer = {
         });
     },
 
+    /**
+     * Animate in the cart drawer (sets its margin right to +width).
+     *
+     */
     animateIn : function() {
         cartDisplayContainer.$el.$container.show();
         cartDisplayContainer.$el.$container.animate( {
@@ -2381,6 +2393,10 @@ var cartDisplayContainer = {
         sessionStorage.isDisplayed = true;
     },
 
+    /**
+     * Animate out the cart drawer (sets its margin right to -width).
+     *
+     */
     animateOut: function() {
         var _width = cartDisplayContainer.$el.$container.width();
         cartDisplayContainer.$el.$container.animate( {
@@ -2391,6 +2407,10 @@ var cartDisplayContainer = {
         sessionStorage.isDisplayed = false;
     },
 
+    /**
+     * Set the appropriate height for #cart-items list.
+     *
+     */
     setCartItemsHeight : function() {
         cartDisplayContainer.computeCartItemsHeight();
 
@@ -2403,12 +2423,20 @@ var cartDisplayContainer = {
         })
     },
 
+    /**
+     * Compute the appropriate height for #cart-items list.
+     *
+     */
     computeCartItemsHeight : function() {
         var cartItemsHeight = $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
 
         $("#cart-items").css("height", cartItemsHeight);
     },
 
+    /**
+     * Fade in the cart dimmer.
+     *
+     */
     fadeInDimmer: function () {
         $('.ui.dimmer')
             .dimmer('show')
