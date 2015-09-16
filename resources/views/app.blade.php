@@ -63,6 +63,9 @@
 	<script src="/js/prod/boukem2.js"></script>
 
 	@yield("scripts")
+
+	{{-- Include cart dimmer for mobile --}}
+	@include("layout._dimmer")
 </body>
 
 

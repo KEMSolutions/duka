@@ -4134,6 +4134,10 @@ footer .copyright{color:#EEE;}
   float: none;
 }
 
+.dimmer {
+  overflow: auto;
+}
+
 /*----------------------------------------*/
 
 /* Button */

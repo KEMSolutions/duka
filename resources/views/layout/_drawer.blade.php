@@ -6,10 +6,13 @@
         </header>
 
         <div id="cart-items">
-            <h4 class="text-center empty-cart hidden">{{ Lang::get("boukem.empty_cart") }}</h4>
-                <div class="ui divided items cart-items-list">
+            <h4 class="text-center empty-cart hidden">
+                {{ Lang::get("boukem.empty_cart") }}
+            </h4>
 
-                </div>
+            <div class="ui divided items cart-items-list">
+            </div>
+
         </div>
 
         <div class="cart-footer">

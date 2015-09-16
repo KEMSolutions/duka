@@ -14,6 +14,10 @@ var cartDisplayContainer = {
         $body : $("body")
     },
 
+    /**
+     * Display the cart drawer on first load if localStorage cookie "isDisplayed" is set to true.
+     *
+     */
     displayOn: function() {
         var _width = cartDisplayContainer.$el.$container.width();
         cartDisplayContainer.$el.$container.css( {
@@ -25,6 +29,10 @@ var cartDisplayContainer = {
         });
     },
 
+    /**
+     * Hide the cart drawer on first load if localStorage cookie "isDisplayed" is set to false.
+     *
+     */
     displayOff : function() {
         cartDisplayContainer.$el.$back.click(function() {
             cartDisplayContainer.animateOut();
@@ -34,6 +42,10 @@ var cartDisplayContainer = {
         });
     },
 
+    /**
+     * Animate in the cart drawer (sets its margin right to +width).
+     *
+     */
     animateIn : function() {
         cartDisplayContainer.$el.$container.show();
         cartDisplayContainer.$el.$container.animate( {
@@ -42,6 +54,10 @@ var cartDisplayContainer = {
         sessionStorage.isDisplayed = true;
     },
 
+    /**
+     * Animate out the cart drawer (sets its margin right to -width).
+     *
+     */
     animateOut: function() {
         var _width = cartDisplayContainer.$el.$container.width();
         cartDisplayContainer.$el.$container.animate( {
@@ -52,6 +68,10 @@ var cartDisplayContainer = {
         sessionStorage.isDisplayed = false;
     },
 
+    /**
+     * Set the appropriate height for #cart-items list.
+     *
+     */
     setCartItemsHeight : function() {
         cartDisplayContainer.computeCartItemsHeight();
 
@@ -64,10 +84,24 @@ var cartDisplayContainer = {
         })
     },
 
+    /**
+     * Compute the appropriate height for #cart-items list.
+     *
+     */
     computeCartItemsHeight : function() {
         var cartItemsHeight = $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
 
         $("#cart-items").css("height", cartItemsHeight);
+    },
+
+    /**
+     * Fade in the cart dimmer.
+     *
+     */
+    fadeInDimmer: function () {
+        $('.ui.dimmer')
+            .dimmer('show')
+        ;
     },
 
     init : function() {

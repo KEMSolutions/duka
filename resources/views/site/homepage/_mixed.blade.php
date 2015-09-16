@@ -31,7 +31,7 @@
 
                         <div class="extra content">
                             <button class="ui icon btn btn-two buybutton"
-                                    data-product="{{ $product->id }}"
+                                    data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
                                     data-price="{{ $product->formats[0]->price }}"
                                     data-thumbnail="{{ Products::thumbnail($product) }}"
                                     data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"

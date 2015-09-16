@@ -326,21 +326,11 @@ h4 {
     background-color: #333;
 }
 
-/*#checkout {*/
-    /*text-align: center;*/
-    /*vertical-align: middle;*/
-    /*border: 1px solid rgba(0, 0, 0, 0);*/
-    /*padding: 20px 50px;*/
-    /*font-size: 14px;*/
-    /*line-height: 20px;*/
-    /*font-weight: 700;*/
-    /*letter-spacing: 1px;*/
-    /*cursor: pointer;*/
-    /*-webkit-user-select: none;*/
-    /*-moz-user-select: none;*/
-    /*-ms-user-select: none;*/
-    /*user-select: none;*/
-    /*text-transform: uppercase;*/
-/*}*/
+.cart-content {
+    margin-top: 2.958rem;
+}
 
+.dimmer .cart-content {
+    margin-top: 0;
+}
 
