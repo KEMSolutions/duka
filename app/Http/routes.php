@@ -3,7 +3,7 @@
 // Set all localized routes here.
 Route::group([
     'prefix' => Localization::setLocale(),
-    'middleware' => ['localeSessionRedirect', 'localizationRedirect']],
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'csrf']],
     function() {
 
     // Homepage.
