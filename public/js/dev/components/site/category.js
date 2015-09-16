@@ -317,6 +317,10 @@ var categoryContainer = {
         }
     },
 
+    toggleTagsList: function () {
+        $(".tags-list").children().size() > 0 ? $(".tags-list").parent().removeClass("hidden") : "";
+    },
+
     /**
      * Localize the dimmer text with the appropriate message.
      *
@@ -331,7 +335,7 @@ var categoryContainer = {
      */
     addDimmer: function () {
         var dimmer =
-        '<div class="ui page dimmer">' +
+        '<div class="ui page dimmer loading-dimmer">' +
         '<div class="content">' +
         '<div class="center"><h1 class="ui header loading-text"></h1></div>' +
         '</div>' +
@@ -341,7 +345,7 @@ var categoryContainer = {
 
         categoryContainer.localizeDimmer();
 
-        $('.ui.dimmer')
+        $('.ui.dimmer.loading-dimmer')
             .dimmer('show')
         ;
     },
@@ -358,5 +362,6 @@ var categoryContainer = {
         self.brands();
         self.tags();
         self.toggleLayout();
+        self.toggleTagsList();
     }
 };
