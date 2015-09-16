@@ -17,7 +17,7 @@ var gulp = require('gulp'),
 gulp.task('js', function () {
     return gulp.src(['public/js/dev/utils/*.js', 'public/js/dev/components/**/*.js' ])
         .pipe(concat('boukem2.js'))
-        //.pipe(uglify())
+        .pipe(uglify())
         .pipe(gulp.dest('public/js/prod'))
 });
 
