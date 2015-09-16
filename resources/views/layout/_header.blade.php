@@ -136,7 +136,7 @@
 
             {{-- Show alternatvie checkout button on mobile devices. --}}
             <button class="ui btn btn-one visible-xs-inline-block">
-                <a href="{{ route("cart") }}">
+                <a href="{{ route("cart") }}" style="color: inherit">
                     <i class="fa fa-shopping-cart icon-cart color-one-text"></i>
                     @lang("boukem.cart")
                     <span class="badge cart_badge">0</span>
