@@ -109,7 +109,7 @@ var cartLogicContainer = {
      * Update Cookie quantity
      */
     modifyQuantity : function() {
-        $("#cart-items").on("change", ".quantity", function() {
+        $(".cart-items-list").on("change", ".quantity", function() {
             var $container = $(this).closest(".item"),
                 $product_price = $container.find(".price");
 
