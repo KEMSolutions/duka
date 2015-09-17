@@ -100,7 +100,6 @@ Route::group(['prefix' => 'api', 'middleware' => 'api.csrf'], function()
     Route::group(['middleware' => 'auth.api'], function()
     {
         // Customers endpoints.
-        Route::get('customers',     ['as' => 'api.customers', 'uses' => 'ApiController@getCustomers']);
         Route::get('customer',      ['as' => 'api.customer', 'uses' => 'ApiController@getCustomer']);
 
         // Orders endpoints.
