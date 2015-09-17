@@ -84,35 +84,55 @@ class ApiController extends Controller
     /**
      * Retrieves the details for a brand.
      *
-     * @param $id
+     * @param int $id
      * @return \Symfony\Component\HttpFoundation\Response|static
      */
-    public function getBrand($id)
+    public function getBrand($id = null)
     {
-        return $this->send(Brands::get($id, [
-            'page' => Request::input('page', 1),
-            'per_page' => Request::input('per_page', 40),
-            'embed' => ['products', 'presentation'],
-            'filters' => Request::input('filters'),
-            'order' => Request::input('order')
-        ]));
+        // If no ID was provided, assume we want all brands.
+        if ($id < 1) {
+            $result = Brands::all();
+        }
+
+        else
+        {
+            $result = Brands::get($id, [
+                'page' => Request::input('page', 1),
+                'per_page' => Request::input('per_page', 40),
+                'embed' => ['products', 'presentation'],
+                'filters' => Request::input('filters'),
+                'order' => Request::input('order')
+            ]);
+        }
+
+        return $this->send($result);
     }
 
     /**
      * Retrieves the details for a category.
      *
-     * @param $id
+     * @param int $id
      * @return \Symfony\Component\HttpFoundation\Response|static
      */
-    public function getCategory($id)
+    public function getCategory($id = null)
     {
-        return $this->send(Categories::get($id, [
-            'page' => Request::input('page', 1),
-            'per_page' => Request::input('per_page', 40),
-            'embed' => ['products', 'presentation'],
-            'filters' => Request::input('filters'),
-            'order' => Request::input('order')
-        ]));
+        // If no ID was provided, assume we want all brands.
+        if ($id < 1) {
+            $result = Categories::all();
+        }
+
+        else
+        {
+            $result = Categories::get($id, [
+                'page' => Request::input('page', 1),
+                'per_page' => Request::input('per_page', 40),
+                'embed' => ['products', 'presentation'],
+                'filters' => Request::input('filters'),
+                'order' => Request::input('order')
+            ]);
+        }
+
+        return $this->send($result);
     }
 
 

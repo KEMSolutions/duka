@@ -73,8 +73,8 @@ Route::group(['prefix' => 'api', 'middleware' => 'api.csrf'], function()
     Request::has('locale') ? Localization::setLocale(Request::input('locale', 'en')) : null;
 
     // Categories & Brands.
-    Route::get('brands/{id}',       ['as' => 'api.brands', 'uses' => 'ApiController@getBrand']);
-    Route::get('categories/{id}',   ['as' => 'api.categories', 'uses' => 'ApiController@getCategory']);
+    Route::get('brands/{id?}',      ['as' => 'api.brands', 'uses' => 'ApiController@getBrand']);
+    Route::get('categories/{id?}',  ['as' => 'api.categories', 'uses' => 'ApiController@getCategory']);
 
     // Layout endpoints.
     Route::get('layouts/{id?}',     ['as' => 'api.layouts', 'uses' => 'ApiController@getLayout']);
