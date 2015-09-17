@@ -129,8 +129,12 @@ class ApiController extends Controller
         // Retrieve customer details.
         $details = (array) Auth::user();
 
+        // Make sure we only return those fields specified by the main API and that are
+        // relevant to the requesting client.
+        $keep = ['id', 'email', 'postcode', 'name', 'locale', 'language', 'phone'];
+
         // Remove unwanted fields.
-        return $this->send(array_except($details, ['metadata', 'remember_token']));
+        return $this->send(array_only($details, $keep));
     }
 
 
