@@ -61,19 +61,6 @@ Route::group([
     Route::get('prod/{slug}', function($slug) {
         return redirect(route('product', ['slug' => $slug]));
     });
-
-
-    //
-    // Temporary routes (used for development).
-    //
-
-
-    // Route::group(['prefix' => 'dev'], function()
-    // {
-    //     Route::get('error/{status}', function($status) {
-    //         abort($status);
-    //     });
-    // });
 });
 
 // Console webhooks endpoint
@@ -82,10 +69,10 @@ Route::post('webhooks', ['uses' => 'WebhooksController@postReceive', 'middleware
 // API endpoints.
 Route::group(['prefix' => 'api', 'middleware' => 'api.csrf'], function()
 {
-    // Set locale.
+    // Set the locale if was sent through the request.
     Request::has('locale') ? Localization::setLocale(Request::input('locale', 'en')) : null;
 
-    // Category endpoints.
+    // Categories & Brands.
     Route::get('brands/{id}',       ['as' => 'api.brands', 'uses' => 'ApiController@getBrand']);
     Route::get('categories/{id}',   ['as' => 'api.categories', 'uses' => 'ApiController@getCategory']);
 
@@ -99,8 +86,14 @@ Route::group(['prefix' => 'api', 'middleware' => 'api.csrf'], function()
     // Endpoints accessible through basic authentication.
     Route::group(['middleware' => 'auth.api'], function()
     {
-        // Customers endpoints.
-        Route::get('customer',      ['as' => 'api.customer', 'uses' => 'ApiController@getCustomer']);
+        // Addresses.
+        Route::get('addresses',         'ApiController@getAddresses');
+        Route::get('addresses/{id}',    'ApiController@getAddress');
+        Route::post('addresses',        'ApiController@createAddress');
+        Route::put('addresses/{id}',    'ApiController@updateAddress');
+
+        // Customers.
+        Route::get('customers/{id?}',   'ApiController@getCustomer');
 
         // Orders endpoints.
         Route::post('estimate', ['as' => 'api.estimate', 'uses' => 'ApiController@getOrderEstimate']);

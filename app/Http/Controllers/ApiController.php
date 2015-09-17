@@ -29,6 +29,54 @@ class ApiController extends Controller
 
 
     //
+    // Addresses related methods.
+    //
+
+
+    /**
+     * Gets the addresses of an authenticated user.
+     */
+    public function getAddresses() {
+        return $this->send(Auth::user()->addresses);
+    }
+
+    /**
+     * Retrieves a specific address.
+     */
+    public function getAddress($id)
+    {
+        // Since we will only return the address if it belongs to the authenticated user,
+        // we will pull from that list directly instead of requesting /addresses/{id} on
+        // the main API.
+        $address = null;
+        foreach (Auth::user()->addresses as $object)
+        {
+            if ($object->id == $id)
+            {
+                $address = $object;
+                break;
+            }
+        }
+
+        return $this->send($address);
+    }
+
+    /**
+     * Creates an address under the currently authenticated user.
+     */
+    public function createAddress() {
+        return $this->badRequest('Not Implemented.', 501);
+    }
+
+    /**
+     * Updates an address belonging to the currently authenticated user.
+     */
+    public function updateAddress() {
+        return $this->badRequest('Not Implemented.', 501);
+    }
+
+
+    //
     // Categories related methods.
     //
 
@@ -71,7 +119,7 @@ class ApiController extends Controller
     //
     // Customers related methods.
     //
-    
+
 
     /**
      * Gets a customer object (without the "metadata" field).
@@ -247,7 +295,7 @@ class ApiController extends Controller
         return JsonResponse::create($data, 200);
     }
 
-    public function badRequest($msg = 'Bad Request.') {
-        return JsonResponse::create(['status' => 400, 'error' => $msg], 400);
+    public function badRequest($msg = 'Bad Request.', $status = 400) {
+        return JsonResponse::create(['status' => $status, 'error' => $msg], $status);
     }
 }
