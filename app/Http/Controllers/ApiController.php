@@ -71,14 +71,7 @@ class ApiController extends Controller
     //
     // Customers related methods.
     //
-
-
-    /**
-     *
-     */
-    public function getCustomers() {
-        return $this->send(Customers::all());
-    }
+    
 
     /**
      * Gets a customer object (without the "metadata" field).
