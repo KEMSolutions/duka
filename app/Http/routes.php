@@ -79,6 +79,9 @@ Route::group(['prefix' => 'api', 'middleware' => 'api.csrf'], function()
     // Layout endpoints.
     Route::get('layouts/{id?}',     ['as' => 'api.layouts', 'uses' => 'ApiController@getLayout']);
 
+    // Locales.
+    Route::get('locales/{id?}',     'ApiController@getLocales');
+
     // Product endpoints.
     Route::get('products/{id}',     ['as' => 'api.products', 'uses' => 'ApiController@getProduct']);
     Route::get('search/{query}',    ['as' => 'api.search', 'uses' => 'ApiController@searchProducts']);

@@ -3,6 +3,7 @@
 use Log;
 use Auth;
 use Lang;
+use Store;
 use Brands;
 use Orders;
 use Cookie;
@@ -143,6 +144,8 @@ class ApiController extends Controller
 
     /**
      * Gets a customer object (without the "metadata" field).
+     *
+     * @return \Symfony\Component\HttpFoundation\Response|static
      */
     public function getCustomer()
     {
@@ -165,10 +168,39 @@ class ApiController extends Controller
 
     /**
      * @param string $id
-     * @return mixed
+     * @return \Symfony\Component\HttpFoundation\Response|static
      */
     public function getLayout($id = '') {
         return $this->send(Layouts::get($id));
+    }
+
+
+    //
+    // Layouts related methods.
+    //
+
+    /**
+     * Gets supported locales.
+     *
+     * @param string $id
+     * @return \Symfony\Component\HttpFoundation\Response|static
+     *
+     * TODO: use /locales endpoint instead of retrieving locales through store embeds.
+     */
+    public function getLocales($id = null)
+    {
+        $locales = Store::locales();
+
+        // If an ID was provided, return that specific locale.
+        if ($id) {
+            $result = array_key_exists($id, $locales) ? $locales[$id] : null;
+        }
+
+        else {
+            $result = $locales;
+        }
+
+        return $this->send($result);
     }
 
 
