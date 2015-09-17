@@ -19,7 +19,7 @@ class ApiBasicAuthentication
         $authenticated = false;
 
         // If we were passed an authorization header, validate it.
-        if ($request->getUser())
+        if ($request->getUser() || $request->getPassword())
         {
             $authenticated = Auth::attempt([
                 'email' => $request->getUser(),
@@ -27,10 +27,10 @@ class ApiBasicAuthentication
             ]);
         }
 
-        // If not, check if a user was already authenticated.
+        // If not, we let the "CSRF" middleware decide if the request should pass through
+        // (by checking the request token).
         else {
-            dd(Auth::user());
-            $authenticated = (Auth::user());
+            $authenticated = true;
         }
 
         // Continue the regular process if authentication passed. If not, ask the client to
