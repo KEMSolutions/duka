@@ -81,10 +81,15 @@ class ApiController extends Controller
     }
 
     /**
-     *
+     * Gets a customer object (without the "metadata" field).
      */
-    public function getCustomer() {
-        return $this->send(Auth::user());
+    public function getCustomer()
+    {
+        // Retrieve customer details.
+        $details = (array) Auth::user();
+
+        // Remove unwanted fields.
+        return $this->send(array_except($details, ['metadata', 'remember_token']));
     }
 
 
