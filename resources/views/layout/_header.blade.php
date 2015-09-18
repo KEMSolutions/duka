@@ -162,7 +162,7 @@
 
         <div class="three wide column text-center border-right">
             <div class="btn btn-link">
-                <div class="ui pointing dropdown dropdown-select top left white">
+                <div class="ui pointing dropdown dropdown-no-select top left white">
                     <span class="text">
                         <span class="light">{{ Lang::get("boukem.shop_by") }}</span><strong class="bold"> {{ Lang::get("boukem.categories") }}</strong>
                         <i class="caret down icon"></i>
