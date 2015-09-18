@@ -40,7 +40,7 @@ var cartLogicContainer = {
         '</div>' +
         '</div>';
 
-        if (!$(".cart-items-list [data-product='" + item.product + "']").length){
+        if (!$(".cart-items-list .item [data-product='" + item.product + "']").length){
             $(".cart-items-list").append(sidebarElement);
         }
 
