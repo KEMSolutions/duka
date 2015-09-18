@@ -66,10 +66,10 @@ class Customers extends BaseObject
         $customer->metadata = json_encode($customer->metadata);
 
         // Create customer record.
-        $result = (array) KemAPI::post($this->baseRequest, $customer);
+        $result = KemAPI::post($this->baseRequest, $customer);
 
         // Return instance of App\Models\Customer.
-        return new Customer($result);
+        return static::isError($result) ? $result : new Customer((array) $result);
     }
 
     /**

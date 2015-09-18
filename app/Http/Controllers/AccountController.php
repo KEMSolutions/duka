@@ -211,11 +211,40 @@ class AccountController extends Controller
      */
     public function create(array $data)
     {
+        // Check if customer already has an account.
+        $check = Customers::get($data['email']);
+        if (!Customers::isError($check))
+        {
+            // If they don't already have a password setup, we'll save the incoming one for them.
+            if (empty($check->metadata) || !isset($check->metadata['password']))
+            {
+                $result = Customers::update($check, $data, $data['password']);
+
+                if (Customers::isError($result)) {
+                    Session::push('messages', Lang::get('boukem.error_occurred'));
+                }
+
+                return $check;
+            }
+
+            else {
+                Session::push('messages', Lang::get('boukem.account_exists'));
+            }
+
+            // While we're at it, log them in.
+            return $check;
+        }
+
         // Create customer object.
         $customer = new Customer($data);
         $customer->metadata['password'] = bcrypt($data['password']);
 
         // Save details on main server.
-        return Customers::create($customer);
+        $result = Customers::create($customer);
+        if (Customers::isError($result)) {
+            Session::push('messages', Lang::get('boukem.error_occurred'));
+        }
+
+        return $customer;
     }
 }
