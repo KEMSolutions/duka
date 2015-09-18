@@ -57,26 +57,27 @@ abstract class BaseObject
     public function all()
     {
         // Retrieve object from cache, or make an API call.
-        if (!$object = Cache::get($this->cacheNamespace . 'list'))
+        $array = Cache::get($this->cacheNamespace . 'list');
+        if (is_null($array))
         {
-            $object = KemAPI::get($this->baseRequest);
+            $array = KemAPI::get($this->baseRequest);
 
             // Check for errors.
-            if (!$object ||
-                (is_object($object) && property_exists($object, 'error')) ||
-                (!is_object($object) && !is_array($object))) {
+            if (is_null($array) ||
+                (is_object($array) && property_exists($array, 'error')) ||
+                (!is_object($array) && !is_array($array))) {
 
-                return $object;
+                return $array;
             }
 
             // Cache result.
-            $this->cache($object, 'list');
+            $this->cache($array, 'list');
 
             // Look for products to cache within results.
-            $this->findAndCache($object);
+            $this->findAndCache($array);
         }
 
-        return $object;
+        return $array;
     }
 
     /**
@@ -281,10 +282,14 @@ abstract class BaseObject
                 continue;
             }
 
+            // We cache the products by ID, slug, and by appending empty parameter strings (i.e. [])
+            // to try and cover all cases.
             Log::debug('Caching "'. $namespace . $item->id .'" until "'. $expires .'"');
             Cache::put($namespace . $item->id, $item, $expires);
+            Cache::put($namespace . $item->id .'.[]', $item, $expires);
             if (isset($item->slug) && strlen($item->slug)) {
                 Cache::put($namespace . $item->slug, $item, $expires);
+                Cache::put($namespace . $item->slug .'.[]', $item, $expires);
             }
         }
     }
