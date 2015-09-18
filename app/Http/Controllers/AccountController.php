@@ -20,7 +20,9 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 class AccountController extends Controller
 {
-	use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    use AuthenticatesAndRegistersUsers, ThrottlesLogins {
+        AuthenticatesAndRegistersUsers::postLogin as postLoginTrait;
+    }
 
 	public function __construct()
 	{
@@ -96,6 +98,29 @@ class AccountController extends Controller
             : Lang::get('boukem.account_saved');
 
         return redirect(route('auth.account'))->withMessages([$message]);
+    }
+
+    /**
+     * Handle a login request to the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function postLogin(Request $request)
+    {
+        // Check if user has an account without a password.
+        $user = Customers::get($request->input('email'));
+        if (!Customers::isError($user) && !isset($user->metadata['password']))
+        {
+            // If they have an account with no password set, log them in and invite them
+            // to create one.
+            Auth::login($user);
+            Session::push('messages', Lang::get('boukem.please_create_password'));
+
+            return redirect(route('auth.account'));
+        }
+
+        return $this->postLoginTrait($request);
     }
 
 	/**
