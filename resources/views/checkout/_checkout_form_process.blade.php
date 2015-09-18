@@ -211,7 +211,7 @@
 
         </table>
 
-        <div class="panel-body text-right">
+        <div class="panel-body pull-right">
             <button class="btn btn-three btn-lg" id="checkoutButton">{{ Lang::get("boukem.checkout") }}</button><br>
             <small class="hidden-xs">
                 <i class="fa fa-lock"></i> {{ Lang::get("boukem.secure_payment") }}
