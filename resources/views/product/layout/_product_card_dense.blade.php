@@ -53,8 +53,7 @@
 
             {{-- Buybutton --}}
             <div class="price">
-
-                @if(count($product->formats) != 0)
+                @if(count($product->formats) > 0)
                     @foreach($product->formats as $format)
                         <button class="ui icon btn btn-two buybutton"
                                 data-product="{{ $product->id . '-' . $format->id }}"
@@ -67,12 +66,10 @@
                                 data-link="{{ route('product', ['slug' => $product->slug]) }}"
                                 >
 
-                            @if(count($product->formats) > 1)
                                 <p class="ui sub header gray">{{ $format->name }}</p>
-                            @endif
 
                             <i class="icon shop"></i>
-                            $ {{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
+                            $ {{ number_format((float)$format->price, 2, '.', '') }}
                         </button>
                     @endforeach
                 @endif
