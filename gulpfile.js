@@ -17,13 +17,14 @@ var gulp = require('gulp'),
 gulp.task('js', function () {
     return gulp.src(['public/js/dev/utils/*.js', 'public/js/dev/components/**/*.js' ])
         .pipe(concat('boukem2.js'))
-        .pipe(uglify())
+        //.pipe(uglify())
         .pipe(gulp.dest('public/js/prod'))
 });
 
 // Minify app.css
 gulp.task('css', function () {
-    return gulp.src("public/css/app.css")
+    return gulp.src(['public/css/app.css', 'public/css/product_card.css', 'public/css/cartdrawer.css', 'public/css/animate.css'])
+        .pipe(concat('app.css'))
         .pipe(minifyCss())
         .pipe(gulp.dest('public/css/prod'))
 });

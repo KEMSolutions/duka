@@ -60,7 +60,7 @@ var paymentOverlayContainer = {
 
         // Display notice.
         $('body').prepend(
-            '<div class="container overlay fullScreen" id="cancelledOrder">'+
+            '<div class="container fullScreen" id="cancelledOrder">'+
             '<div class="jumbotron vertical-align color-one">'+
             '<div class="text-center">'+
             '<h2>'+
@@ -73,11 +73,11 @@ var paymentOverlayContainer = {
             '<a href="'+
             ApiEndpoints.orders.pay.replace(':id', order.id)
                 .replace(':verification', order.verification) +'">'+
-            '<button class="btn btn-success" id="payOrder">'+ Localization.pay_now +'</button>'+
+            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
             '</a>'+
             '</li>' +
             '<li>' +
-            '<button class="btn btn-danger" id="cancelOrder">'+
+            '<button class="ui button red" id="cancelOrder">'+
             Localization.cancel_order +
             '</button>'+
             '</li>'+
