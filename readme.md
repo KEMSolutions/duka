@@ -19,56 +19,37 @@ Boukem 2 source code contains a Procfile, allowing it to run on Heroku on apache
 
 # Quick Reference
 
-## Front-end 
+## Javascript
 
-#####Javascript
-######Global
-The script entry point is located in `js/dev/actions/init.js`, where all the modules are registered. 
-
-Every module has its own namespace (suffixed by `Container`).
-
-We are using Gulp to create a minified version of all the scripts. 
-The gulpfile is located at the root of the project and uses Laravel Elixir.
-
-######File structure (as of 20/07/2015)
-```
-js
-│
-└───dev
-|    └───actions
-|    |   └─── checkout
-|    |   └─── layout
-|    |   └─── products
-|    |   └─── site
-|    |
-|    └─── init.js
-|    |
-|    └─── components
-|    |    └─── checkout
-|    |    └─── layout
-|    |    └─── products
-|    |    └─── site
-|    |   
-|    └─── utils
-|
-└───prod
-```
-We are trying to be as consistent as possible with the `resources/views` filetree, so as to be the most clear about each script responsability.  
-The subfolder `actions` holds every view specific overall logic whereas `components` owns only individual modules.  
-There is one Utility module providing miscellaneous functions , located in `js/dev/utils/utility.js`.  
-After gulping all the scripts in the `dev` folder, there will be one minified and optimized script located in `js/prod/boukem2.js`.  
-The master page refers to this production script.
+Boukem 2 makes use of a combination of [Semantic UI](http://semantic-ui.com) features and custom components. We are using Gulp to create a minified, uglified production script.  
+The script entry point is located in `public/js/dev/components/init.js`, where all independant modules should be called. 
 
 
-######Modules. 
-Every module (whether under `actions`, `components` or `utils`) follows the same naming and coding convention, thus allowing a better and more consistent understanding.  
-All modules' namespaces are suffixed with the keyword `Container`.  
-The last method inside a module is an `init` method, registering all methods that wished to be called outside of the container.
 
-*Note that `UtilityContainer` available in `utility.js` do not have an `init` method due to its helper nature.
+###### File structure (as of 18/09/2015)
 
-#####Views
-Coming later...
+The `/public/js` folder contains 3 subfolders:  
+* data
+* dev
+* prod
+
+--`data`  
+This folder contains json resources to be taken advantage of. (country list, world states, ...).
+
+--`dev/components`  
+Every component should be stored here. We tried to roughly follow the same folder hierarchy that is in the `/resources/views` since each component should be responsible for a specific view feature.  
+Some components require more than one file to enable their full feature (eg. cart-drawer), the `*InitContainer*` should be the one called in `init.js`.
+
+--`utils`  
+This folder regroups all helper, miscellaneous, utilities functions. In our case, the `UtilityContainer` plays that role. 
+
+--`prod`  
+This folder should only contain production scripts. Ideally, only one minified script combining all components located in `dev/components` should be here. 
+
+###### Components. 
+Every component are created in independant files and are suffixed by the keyword `Container`.  
+If a component can stand on its own (eg. with no component dependencies), its last method should be an `init` method that is registered in `public/js/dev/components/init.js`. 
+
 
 ## Routing
 

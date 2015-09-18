@@ -1,25 +1,14 @@
-<section class="slice color-one">
-    <div class="w-section inverse">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="aside-feature">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div class="text-center">
-                                    <h2>{{ Lang::get("boukem.empty_cart") }}</h2>
-                                    <h1 class="font-lg">
-                                        <i class="fa fa-shopping-cart"></i>
-                                    </h1>
-                                    <span class="clearfix"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<div class="ui fluid container color-one" style="
+    padding: 5%;
+    border-top: 1px solid #fff;
+    margin-bottom: -14px;"
+        >
 
-{{--@include("site._recent")--}}
+    <h2 class="ui center aligned icon header">
+        <i class="shop icon"></i>
+        <div class="content">
+            @lang("boukem.empty_cart")
+        </div>
+    </h2>
+
+</div>

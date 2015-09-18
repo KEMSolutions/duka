@@ -85,9 +85,20 @@ var cartLogicContainer = {
      */
     deleteItem: function() {
         $(document).on('click', ".close-button", function() {
-            var $parent = $(this).closest(".animated").addClass("animated bounceOutLeft");
+
+            // We have two cart-items-list now ! (cart drawer and dimmer)
+            // So when deleting on one list, we should also delete the item on the other.
+            var $parent = $(this).closest(".animated").addClass("animated bounceOutLeft"),
+                $otherList = $(this).closest(".cart-items-list").hasClass("dimmered") ?
+                    $(".cart-items-list.dimmered") :
+                    $(".cart-items-list").not(".dimmered");
+
+
+
+
             $parent.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
                 $(this).remove();
+                console.log($otherList);
             });
 
             localStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
