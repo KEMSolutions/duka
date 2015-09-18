@@ -30,24 +30,29 @@
 
 
                         <div class="extra content">
-                            <button class="ui icon btn btn-two buybutton"
-                                    data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
-                                    data-price="{{ $product->formats[0]->price }}"
-                                    data-thumbnail="{{ Products::thumbnail($product) }}"
-                                    data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
-                                    data-name="{{ $product->localization->name }}"
-                                    data-quantity="1"
-                                    data-description="{{ $product->localization->short_description }}"
-                                    data-link="{{ route('product', ['slug' => $product->slug]) }}"
-                                    >
+                            @if(count($product->formats) > 0)
+                                @foreach($product->formats as $format)
+                                    <button class="ui icon btn btn-two buybutton"
+                                            data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
+                                            data-price="{{ $product->formats[0]->price }}"
+                                            data-thumbnail="{{ Products::thumbnail($product) }}"
+                                            data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
+                                            data-name="{{ $product->localization->name }}"
+                                            data-quantity="1"
+                                            data-description="{{ $product->localization->short_description }}"
+                                            data-link="{{ route('product', ['slug' => $product->slug]) }}"
+                                            >
 
-                                @if(count($product->formats) > 1)
-                                    <p class="ui sub header gray">{{ $format->name }}</p>
-                                @endif
+                                        <p class="ui sub header gray">{{ $format->name }}</p>
 
-                                <i class="icon shop"></i>
-                                $ {{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
-                            </button>
+                                        <i class="icon shop"></i>
+                                        $ {{ number_format((float)$format->price, 2, '.', '') }}
+
+                                    </button>
+
+
+                                @endforeach
+                            @endif
 
                             @if(!is_null($product->rating))
                                 <span class="right floated" style="padding-top: 7.5px">
