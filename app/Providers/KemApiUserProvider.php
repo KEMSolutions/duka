@@ -33,7 +33,9 @@ class KemApiUserProvider implements UserProvider
      */
     public function retrieveById($identifier)
     {
-        return new Customer((array) Customers::get($identifier));
+        $customer = Customers::get($identifier);
+
+        return Customers::isError($customer) ? null : $customer;
     }
 
     /**
@@ -45,10 +47,13 @@ class KemApiUserProvider implements UserProvider
      */
     public function retrieveByToken($identifier, $token)
     {
-        $customer = $this->retrieveById($identifier);
+        if ($customer = $this->retrieveById($identifier))
+        {
+            // Check if customer has a "remember me" token.
+            return Arr::has($customer->metadata, 'remember_token') ? $customer : null;
+        }
 
-        // Check if customer has a "remember me" token.
-        return Arr::has($customer->metadata, 'remember_token') ? $customer : null;
+        return null;
     }
 
     /**
@@ -79,7 +84,7 @@ class KemApiUserProvider implements UserProvider
             return null;
         }
 
-        return new Customer((array) $record);
+        return $record;
     }
 
     /**

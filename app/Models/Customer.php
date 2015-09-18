@@ -79,7 +79,7 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
      * @return string
      */
     public function getAuthPassword() {
-        return $this->metadata['password'];
+        return isset($this->metadata['password']) ? $this->metadata['password'] : null;
     }
 
     /**
