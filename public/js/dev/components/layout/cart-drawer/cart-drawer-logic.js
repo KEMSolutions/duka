@@ -90,15 +90,12 @@ var cartLogicContainer = {
             // So when deleting on one list, we should also delete the item on the other.
             var $parent = $(this).closest(".animated").addClass("animated bounceOutLeft"),
                 $otherList = $(this).closest(".cart-items-list").hasClass("dimmered") ?
-                    $(".cart-items-list.dimmered") :
-                    $(".cart-items-list").not(".dimmered");
-
-
-
+                    $(".cart-items-list").not(".dimmered") :
+                    $(".cart-items-list.dimmered");
 
             $parent.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
                 $(this).remove();
-                console.log($otherList);
+                $otherList.find('[data-product="' + $parent.data("product") + '"]').remove();
             });
 
             localStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
