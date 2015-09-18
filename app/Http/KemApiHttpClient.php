@@ -40,7 +40,8 @@ class KemApiHttpClient
     private $locale = 'en';
 
     /**
-     * The constructor takes the API user and API secrets as strings, as well as other config options as an array.
+     * The constructor takes the API user and API secrets as strings, as well as other config
+     * options as an array.
      *
      * @param $apiUser      API user ID.
      * @param $apiSecret    API user secret.
@@ -135,7 +136,6 @@ class KemApiHttpClient
             'Content-Type' => 'application/json'
         ], $headers);
 
-        // Log requrest.
         Log::debug(
             "\n\nMaking API request:".
             "\n\tMethod: $method" .
@@ -158,6 +158,7 @@ class KemApiHttpClient
         {
             // Log error.
             Log::error($e->getMessage());
+            // Log::error((string) $response);
             return $returnResponse ? null : (object) [
                 'status' => $e->getCode(),
                 'error' => $e->getMessage()
