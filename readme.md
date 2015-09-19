@@ -1,27 +1,27 @@
-# Boukem 2
+# Duka
 
-Boukem 2 is a fully functional e-commerce application built using the [KEM API](http://docs.kem.guru).
+Duka is a fully functional eCommerce application built on the [KEM API](http://docs.kem.guru). Duka is open source and released under the [MIT license](http://opensource.org/licenses/MIT).
 
 # Setup
 
-Boukem 2 is built on the popular PHP framework [Laravel](http://laravel.com). To get started, make sure
+Duka is built on the popular PHP framework [Laravel](http://laravel.com). To get started, make sure
 [composer is installed](https://getcomposer.org/).
 
 1. Fork this repository and clone it on your machine.
 2. Create an environment file: `cp .env.sample .env` and update the values accordingly.
 4. Install the dependencies: `composer install`.
 
-Since running composer doesn't require root access, Boukem 2 can be deployed on almost any shared hosting running PHP 5.5.9+. Note that you might also have to create a symlink to boukem's /public folder:
+Since running composer doesn't require root access, Duka can be deployed on almost any shared hosting running PHP 5.5.9+. Note that you might also have to create a symlink to boukem's /public folder:
 
-E.g. on Cpanel: ```ln -s my-boukem-fork/public public_html```
+E.g. on Cpanel: ```ln -s my-duka-fork/public public_html```
 
-Boukem 2 source code contains a Procfile, allowing it to run on Heroku on apache2, out of the box. At this moment, nginx is not supported.
+Duka source code contains a Procfile, allowing it to run on Heroku on apache2, out of the box. At this moment, nginx is not supported.
 
 # Quick Reference
 
 ## Javascript
 
-Boukem 2 makes use of a combination of [Semantic UI](http://semantic-ui.com) features and custom components. We are using Gulp to create a minified, uglified production script.  
+Duka makes use of a combination of [Semantic UI](http://semantic-ui.com) features and custom components. We are using Gulp to create a minified, uglified production script.  
 The script entry point is located in `public/js/dev/components/init.js`, where all independant modules should be called. 
 
 
