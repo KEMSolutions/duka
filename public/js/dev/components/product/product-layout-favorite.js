@@ -9,11 +9,30 @@ var productLayoutFavoriteContainer = {
      *
      */
     fadeInFavoriteIcon: function() {
+        self = productLayoutFavoriteContainer;
+
         $(".dense-product").hover(function() {
+
             $(this).children(".favorite-wrapper").fadeIn();
+            self.setPopupText($(this).children(".favorite-wrapper"));
+
         }, function () {
             $(this).children(".favorite-wrapper").hide();
         });
+    },
+
+    /**
+     * Set popup text according to current state of the wrapper.
+     *
+     * @param wrapper
+     */
+    setPopupText: function (wrapper) {
+        if($(wrapper).hasClass("favorited")){
+            $(wrapper).attr("title", Localization.wishlist_remove);
+        }
+        else {
+            $(wrapper).attr("title", Localization.wishlist_add);
+        }
     },
 
     /**
@@ -40,8 +59,10 @@ var productLayoutFavoriteContainer = {
                 item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
                 localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
 
+                //Set the favorite icon to be displayed
                 $(this).addClass("favorited");
 
+                //Set wishlist badge quantity
                 self.setWishlistBadgeQuantity();
             }
             else
@@ -68,12 +89,13 @@ var productLayoutFavoriteContainer = {
                     }
                 }
             }
-        };
+        }
     },
 
     /**
      * Delete the clicked element from the wish list.
      *
+     * @param element
      * @param context
      */
     removeFromFavorite: function (element, context) {
@@ -85,7 +107,7 @@ var productLayoutFavoriteContainer = {
     init: function () {
         var self = productLayoutFavoriteContainer;
 
-
+        self.setPopupText();
         self.addToFavorite();
         self.persistFavorite();
         self.fadeInFavoriteIcon();

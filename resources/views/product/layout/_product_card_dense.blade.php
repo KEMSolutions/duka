@@ -14,8 +14,12 @@
 
             --}}
             @if(count($product->formats) != 0)
-                <span class="pull-right favorite-wrapper" data-product="{{$product->id . '-' . $product->formats[0]->id }}" data-description="{{ $product->localization->short_description }}" >
-                    <i class="icon heart favorite-heart"></i>
+                <span class="pull-right favorite-wrapper popup"
+                      data-product="{{$product->id . '-' . $product->formats[0]->id }}"
+                      data-description="{{ $product->localization->short_description }}"
+                      title='@lang("boukem.wishlist_add")'
+                      data-variation="tiny">
+                    <i class="circular icon heart favorite-heart"></i>
                 </span>
             @endif
 

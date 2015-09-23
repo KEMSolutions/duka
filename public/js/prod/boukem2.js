@@ -488,6 +488,97 @@ var UtilityContainer = {
 
 
 /**
+ * Entry point of script.
+ *
+ */
+; (function(window, document, $) {
+    $(document).ready(function () {
+
+        /**
+         * Sets up the ajax token for all ajax requests
+         *
+         */
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'locale': $('html').attr('lang')
+            }
+        });
+
+        /**
+         * Initialize semantic UI modules
+         *
+         */
+        semanticInitContainer.init();
+
+        /**
+         * Initialize checkout logic.
+         *
+         */
+        checkoutInitContainer.init();
+
+        /**
+         * Initialize cart drawer logic.
+         *
+         */
+        cartDrawerInitContainer.init();
+
+        /**
+         * Initialize category container
+         *
+         */
+        categoryContainer.init();
+
+        /**
+         * Initialize overlay plugin.
+         *
+         */
+        paymentOverlayContainer.init();
+
+        /**
+         * Initialize homepage sections.
+         *
+         */
+        homepageContainer.init();
+
+        /**
+         * Initialize favorite products feature.
+         *
+         */
+        productLayoutFavoriteContainer.init();
+
+        /**
+         * Initialize product formats feature.
+         *
+         */
+        productFormatContainer.init();
+
+        /**
+         * Initialize column responsiveness in product pages.
+         *
+         */
+        productResponsive.init();
+
+        /**
+         * Initialize wishlist page.
+         *
+         */
+        wishlistLogicContainer.init();
+
+        /**
+         * Global initialization of elements.
+         *
+         */
+            //fancy plugin for product page (quantity input)
+        $(".input-qty").TouchSpin({
+            initval: 1
+        });
+
+    });
+
+})(window, this.document, jQuery, undefined)
+
+/**
  * Object responsible for handling billing information.
  *
  * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
@@ -1416,11 +1507,25 @@ var productLayoutFavoriteContainer = {
      *
      */
     fadeInFavoriteIcon: function() {
+        self = productLayoutFavoriteContainer;
+
         $(".dense-product").hover(function() {
+
             $(this).children(".favorite-wrapper").fadeIn();
+            self.setPopupText($(this).children(".favorite-wrapper"));
+
         }, function () {
             $(this).children(".favorite-wrapper").hide();
         });
+    },
+
+    setPopupText: function (wrapper) {
+        if($(wrapper).hasClass("favorited")){
+            $(wrapper).attr("title", Localization.wishlist_remove);
+        }
+        else {
+            $(wrapper).attr("title", Localization.wishlist_add);
+        }
     },
 
     /**
@@ -1447,8 +1552,10 @@ var productLayoutFavoriteContainer = {
                 item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
                 localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
 
+                //Set the favorite icon to be displayed
                 $(this).addClass("favorited");
 
+                //Set wishlist badge quantity
                 self.setWishlistBadgeQuantity();
             }
             else
@@ -1492,7 +1599,7 @@ var productLayoutFavoriteContainer = {
     init: function () {
         var self = productLayoutFavoriteContainer;
 
-
+        self.setPopupText();
         self.addToFavorite();
         self.persistFavorite();
         self.fadeInFavoriteIcon();
@@ -1552,6 +1659,14 @@ var semanticInitContainer = {
          */
         initRatingModule: function () {
             $(".ui.rating").rating();
+        },
+
+        /**
+         * Initialize popup module.
+         *
+         */
+        initPopupModule: function () {
+            $(".popup").popup();
         }
     },
 
@@ -1571,6 +1686,7 @@ var semanticInitContainer = {
 
         module.initDropdownModule();
         module.initRatingModule();
+        module.initPopupModule();
     }
 }
 /**
@@ -2606,93 +2722,3 @@ var wishlistContainer = {
         self.setNumberOfProductsInHeader();
     }
 }
-/**
- * Entry point of script.
- *
- */
-; (function(window, document, $) {
-    $(document).ready(function () {
-
-        /**
-         * Sets up the ajax token for all ajax requests
-         *
-         */
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'locale': $('html').attr('lang')
-            }
-        });
-
-        /**
-         * Initialize semantic UI modules
-         *
-         */
-        semanticInitContainer.init();
-
-        /**
-         * Initialize checkout logic.
-         *
-         */
-        checkoutInitContainer.init();
-
-        /**
-         * Initialize cart drawer logic.
-         *
-         */
-        cartDrawerInitContainer.init();
-
-        /**
-         * Initialize category container
-         *
-         */
-        categoryContainer.init();
-
-        /**
-         * Initialize overlay plugin.
-         *
-         */
-        paymentOverlayContainer.init();
-
-        /**
-         * Initialize homepage sections.
-         *
-         */
-        homepageContainer.init();
-
-        /**
-         * Initialize favorite products feature.
-         *
-         */
-        productLayoutFavoriteContainer.init();
-
-        /**
-         * Initialize product formats feature.
-         *
-         */
-        productFormatContainer.init();
-
-        /**
-         * Initialize column responsiveness in product pages.
-         *
-         */
-        productResponsive.init();
-
-        /**
-         * Initialize wishlist page.
-         *
-         */
-        wishlistLogicContainer.init();
-
-        /**
-         * Global initialization of elements.
-         *
-         */
-            //fancy plugin for product page (quantity input)
-        $(".input-qty").TouchSpin({
-            initval: 1
-        });
-
-    });
-
-})(window, this.document, jQuery, undefined)

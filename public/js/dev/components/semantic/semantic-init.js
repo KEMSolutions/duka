@@ -31,6 +31,14 @@ var semanticInitContainer = {
          */
         initRatingModule: function () {
             $(".ui.rating").rating();
+        },
+
+        /**
+         * Initialize popup module.
+         *
+         */
+        initPopupModule: function () {
+            $(".popup").popup();
         }
     },
 
@@ -50,5 +58,6 @@ var semanticInitContainer = {
 
         module.initDropdownModule();
         module.initRatingModule();
+        module.initPopupModule();
     }
 }

@@ -347,7 +347,9 @@
          Theme Overrides
 *******************************/
 
-
+.popup {
+    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+}
 
 /*******************************
         User Overrides

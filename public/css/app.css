@@ -3499,15 +3499,14 @@ section.slice {
   cursor: pointer;
   display: none;
   padding: 3px 3px 2px 7px;
-  border: 1px solid #E1E1E1;
   border-radius: 2px;
 
   transition: all 0.1s ease-in;
 }
 
 
-.favorite-wrapper:hover, .favorite-wrapper:active {
-  border: 1px solid #F45D5D;
+.favorite-heart:hover, .favorite-heart:active {
+  color: #E8634D;
 }
 
 .favorited {

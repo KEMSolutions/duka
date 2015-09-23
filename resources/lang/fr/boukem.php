@@ -214,6 +214,7 @@ return [
     "wishlist_number"   =>"Vous avez <span id='quantity-wishlist'>0 item</span> dans votre liste d'envies.",
     "wishlist_saved"    =>"Votre liste d'envies sera sauvegardée tant que votre historique ne sera pas effacé",
     "wishlist_remove"   =>"Retirer de la liste",
+    "wishlist_add"      =>"Liste d'envie!",
     "payment_successful" => "Merci pour votre paiement.",
     "results_found"     =>":total résultats trouvés",
     "filter_by"         =>"Filtrer par",
