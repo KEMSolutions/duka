@@ -4,38 +4,50 @@
             <div class="ui divided items cart-items-list">
             </div>
         </div>
+
+        <hr>
+        <div class="cart-content-agreement">
+            <p>@lang("boukem.conditions")</p>
+        </div>
     </div>
 
 
     <div class="nine wide column">
 
-        <div class="ui segment">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+        <div class="ui segment shippingInformation">
             <h4 class="ui dividing header">Shipping Information</h4>
             <div class="field">
                 <label>Name</label>
                 <div class="two fields">
                     <div class="field">
-                        <input type="text" name="shipping[first-name]" placeholder="First Name">
+                        <input type="text" name="shipping_address[firstname]" id="shippingFirstname" class="firstname" placeholder="First Name" required>
                     </div>
                     <div class="field">
-                        <input type="text" name="shipping[last-name]" placeholder="Last Name">
+                        <input type="text" name="shipping_address[lastname]" id="shippingLastname" class="lastname" placeholder="Last Name" required>
                     </div>
                 </div>
             </div>
 
-            <div class="field">
-                <label>Shipping Address</label>
-                <input type="text" name="shipping[address]" placeholder="Address line 1">
+            <div class="field disabled">
+                <label>Name</label>
+                <input type="text" name="shipping_address[name]" id="shippingName" class="name" value="{{ Customers::getDefaultAddress()->name }}" disabled/>
             </div>
 
             <div class="field">
-                <input type="text" name="shipping[address-2]" placeholder="Address line 2 (optional)">
+                <label>Shipping Address</label>
+                <input type="text" name="shipping_address[line1]" id="shippingAddress1" class="address1" placeholder="Address line 1" value="{{ Customers::getDefaultAddress()->line1 }}" required>
+            </div>
+
+            <div class="field">
+                <input type="text" name="shipping_address[line2]" id="shippingAddress2" class="address2" placeholder="Address line 2 (optional)" value="{{ Customers::getDefaultAddress()->line2 }}">
             </div>
 
             <div class="two fields">
                 <div class="field">
                     <label>Country</label>
-                    <select class="ui fluid search selection dropdown dropdown-select">
+                    <select name="shipping_address[country]" id="shippingCountry" class="ui fluid search selection dropdown dropdown-select country">
                         <option value="AF">Afghanistan</option>
                         <option value="AX">Åland Islands</option>
                         <option value="AL">Albania</option>
@@ -75,7 +87,7 @@
                         <option value="BI">Burundi</option>
                         <option value="KH">Cambodia</option>
                         <option value="CM">Cameroon</option>
-                        <option value="CA">Canada</option>
+                        <option value="CA" selected>Canada</option>
                         <option value="CV">Cape Verde</option>
                         <option value="KY">Cayman Islands</option>
                         <option value="CF">Central African Republic</option>
@@ -291,8 +303,8 @@
 
                 <div class="field">
                     <label>Province/State/Region</label>
-                    <select class="ui fluid search selection dropdown dropdown-select">
-                        <optgroup data-country="CA" label="@lang("boukem.ca_province")">
+                    <select name="shipping_address[province]" id="shippingProvince" class="ui fluid search selection dropdown dropdown-select province">
+                        <div class="ui horizontal divider">@lang("boukem.ca_province")</div>
                             <option value="AB">Alberta</option>
                             <option value="BC">British Columbia</option>
                             <option value="MB">Manitoba</option>
@@ -301,7 +313,7 @@
                             <option value="NS">Nova Scotia</option>
                             <option value="ON">Ontario</option>
                             <option value="PE">Prince Edward Island</option>
-                            <option value="QC">Quebec</option>
+                            <option value="QC" selected>Quebec</option>
                             <option value="SK">Saskatchewan</option>
                             <option value="NT">Northwest Territories</option>
                             <option value="NU">Nunavut</option>
@@ -403,35 +415,42 @@
             <div class="two fields">
                 <div class="field">
                     <label>City</label>
-                    <input type="text" placeholder="City"/>
+                    <input type="text" placeholder="City" name="shipping_address[city]" id="shippingCity" class="city" value="{{ Customers::getDefaultAddress()->city }}" required/>
                 </div>
 
                 <div class="field">
                     <label>ZIP Code</label>
-                    <input type="text" placeholder="A1A 1A1"/>
+                    <input type="text" placeholder="A1A 1A1" name="shipping_address[postcode]" id="shippingPostcode" value="" class="postcode" value="{{ Customers::getDefaultAddress()->postcode }}" required/>
                 </div>
             </div>
 
             <div class="two fields">
                 <div class="field">
                     <label>Email</label>
-                    <input type="text" placeholder="you@you.com"/>
+                    <input type="email" placeholder="you@you.com" name="email" id="customer_email" value="{{ Customers::getDefault()->email }}" required/>
                 </div>
 
                 <div class="field">
                     <label>Phone number</label>
-                    <input type="text" placeholder="(xxx) xxx xxx"/>
+                    <input type="text" placeholder="(xxx) xxx xxx" name="shipping_address[phone]" id="customer_phone" value="{{ Customers::getDefaultAddress()->phone }}" required/>
                 </div>
             </div>
 
-            <div class="ui checkbox">
-                <input type="checkbox" tabindex="0" class="hidden">
-                <label style="color: green">Use same address for billing.</label>
+            <div class="ui checkbox billing-checkbox">
+                <input
+                        type="checkbox"
+                        tabindex="0"
+                        class="hidden"
+                        checked
+                        name="use_shipping_address"
+                        id="checkboxSuccess"
+                />
+                <label style="color: green">@lang("boukem.ship_billing")</label>
             </div>
         </div>
 
 
-        <div class="ui segment">
+        <div class="ui segment hidden billingInformation">
             <h4 class="ui dividing header">Billing Information</h4>
 
             <div class="field">
@@ -835,20 +854,9 @@
                 </div>
             </div>
 
-            <div class="two fields">
-                <div class="field">
-                    <label>Email</label>
-                    <input type="text" placeholder="you@you.com"/>
-                </div>
-
-                <div class="field">
-                    <label>Phone number</label>
-                    <input type="text" placeholder="(xxx) xxx xxx"/>
-                </div>
-            </div>
         </div>
 
-        <button class="ui right labeled green icon button right floated">
+        <button class="ui right labeled green icon button right floated address-next">
             <i class="right arrow icon"></i>
             Next
         </button>

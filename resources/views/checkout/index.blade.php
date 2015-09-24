@@ -9,7 +9,7 @@
         @if (!isset($_COOKIE["quantityCart"]) || base64_decode($_COOKIE["quantityCart"]) == "0")
             @include("checkout._empty")
         @else
-            <form method="post" action="{{ route('api.orders')  }}" id="cart_form" class="{{ base64_decode($_COOKIE["quantityCart"]) == "0" ? "hidden" : "" }} ui form" autocomplete="on">
+            <form method="post" action="{{ route('api.orders')  }}" id="cart_form" class="{{ base64_decode($_COOKIE["quantityCart"]) == "0" ? "hidden" : "" }} ui form form-checkout" autocomplete="on">
                 @include("checkout._checkout_form")
             </form>
         @endif
