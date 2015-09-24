@@ -3624,3 +3624,14 @@ section.slice {
 .product-view, footer {
   font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
+
+/*-----------------------------------*/
+/*-----------------------------------*/
+/*-----------------------------------*/
+/* Style for checkout page */
+/*-----------------------------------*/
+/*-----------------------------------*/
+/*-----------------------------------*/
+.field label {
+  font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}

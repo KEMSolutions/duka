@@ -579,6 +579,776 @@ var UtilityContainer = {
 })(window, this.document, jQuery, undefined)
 
 /**
+ * Object responsible for handling different formats of the same product.
+ *
+ * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
+ */
+var productFormatContainer = {
+
+    /**
+     * Sets the right price, inventory count and format text according to the format of the hovered product.
+     *
+     */
+    displaySyncedProductInformation: function() {
+
+        const self = productFormatContainer,
+            $formatSelection = $(".format-selection");
+
+        $formatSelection.on("click", function () {
+            // Set the right format in product title
+            $("#product-format").text($(this).data("format"));
+
+            // Set the right price and the right inventory count
+            self.setPriceTag($(this).data("price"));
+            self.setInventoryCount($(this).data("inventory-count"));
+
+            // Toggle active class on right format
+            self.toggleActiveClass($(this));
+
+            // Creates an appropriate buybutton according to the info.
+            self.setBuybuttonInformation($(this));
+        });
+
+    },
+
+    /**
+     * Sets the inventory text and value according to the inventory count of the product.
+     *
+     * @param count
+     */
+    setInventoryCount: function (count) {
+        const $inventoryCount = $("#inventory-count"),
+            countryCode = $inventoryCount.data("country-code"),
+            expressShipping = Localization.express_shipping,
+            stockLeft = Localization.stock_left.replace(":quantity", count),
+            shippingTime = Localization.shipping_time,
+            shippingMethod = (countryCode === "US" || countryCode === "CA") ? "fa-truck" : "fa-plane";
+
+        var inventoryDescription = '';
+
+       if (count > 5) {
+            inventoryDescription =
+                '<link itemprop="availability" href="http://schema.org/InStock">' +
+                    '<li class="text-success">' +
+                    '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+                    expressShipping;
+       }
+       else if (count > 0) {
+           inventoryDescription =
+               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
+               '<li class="text-warning">' +
+                   '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+                   stockLeft;
+       }
+        else {
+           inventoryDescription =
+               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
+           '<li class="text-warning">' +
+           '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+           shippingTime;
+       }
+
+        $inventoryCount.html(inventoryDescription);
+
+    },
+
+    /**
+     * Sets the price tag according to the format.
+     *
+     * @param price
+     */
+    setPriceTag: function (price) {
+        $(".price-tag").text("$ " + price);
+    },
+
+    /**
+     * Recreates a buybutton with relevant information every time we switch format.
+     *
+     * @param format (html5 data in format buttons)
+     */
+    setBuybuttonInformation: function(format) {
+        var $buybuttonWrapper = $(".buybutton-format-selection-wrapper"),
+            buybutton =
+                '<button class="btn btn-three buybutton horizontal-align"' +
+                    'data-product="' + format.data("product") +'"' +
+                'data-price="' + format.data("price") +'"' +
+                'data-thumbnail="' + format.data("thumbnail") +'"' +
+                'data-thumbnail_lg="' + format.data("thumbnail_lg") +'"' +
+                'data-name="' + format.data("name") +'"' +
+                'data-format="' + format.data("format") +'"' +
+                'data-inventory-count="' + format.data("inventory-count") +'"' +
+                'data-quantity="' + format.data("quantity") + '"' +
+                'data-link="' + format.data("link") +'"' +
+                    '>' +
+                '<div class="add-cart">' +
+                    '<i class="fa fa-check-circle"></i> ' +
+                    Localization.add_cart +
+                    '</div> </button>';
+
+        $buybuttonWrapper.empty();
+
+        $buybuttonWrapper.append(buybutton);
+    },
+
+    /**
+     * Toggles the .active class when clicked on a format.
+     *
+     * @param format
+     */
+    toggleActiveClass: function (format) {
+        $(".format-selection.active").removeClass("active");
+        format.addClass("active");
+    },
+
+    init: function () {
+        const self = productFormatContainer;
+
+        self.displaySyncedProductInformation();
+
+    }
+}
+/**
+ * Object responsible for adding products to a user's wishlist.
+ *
+ * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
+ */
+var productLayoutFavoriteContainer = {
+    /**
+     * Fade in the favorite icon (heart icon) when hovering on a product tile.
+     *
+     */
+    fadeInFavoriteIcon: function() {
+        self = productLayoutFavoriteContainer;
+
+        $(".dense-product").hover(function() {
+
+            $(this).children(".favorite-wrapper").fadeIn();
+            self.setPopupText($(this).children(".favorite-wrapper"));
+
+        }, function () {
+            $(this).children(".favorite-wrapper").hide();
+        });
+    },
+
+    /**
+     * Set popup text according to current state of the wrapper.
+     *
+     * @param wrapper
+     */
+    setPopupText: function (wrapper) {
+        if($(wrapper).hasClass("favorited")){
+            $(wrapper).attr("title", Localization.wishlist_remove);
+        }
+        else {
+            $(wrapper).attr("title", Localization.wishlist_add);
+        }
+    },
+
+    /**
+     * Update the value of .wishlist_badge when adding or deleting elements.
+     *
+     */
+    setWishlistBadgeQuantity : function() {
+        var total = UtilityContainer.getNumberOfProductsInWishlist();
+
+        $(".wishlist_badge").text(total);
+    },
+
+    /**
+     * Add the clicked product to the wish list.
+     *
+     */
+    addToFavorite: function() {
+        var self = productLayoutFavoriteContainer,
+            item;
+
+        $(".favorite-wrapper").on("click", function() {
+            //No favorited class.
+            if (!$(this).hasClass("favorited")) {
+                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
+                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+
+                //Set the favorite icon to be displayed
+                $(this).addClass("favorited");
+
+                //Set wishlist badge quantity
+                self.setWishlistBadgeQuantity();
+            }
+            else
+            //Has a favorited class. We remove it, then delete the element from local Storage.
+            {
+                self.removeFromFavorite($(this), self);
+            }
+        });
+    },
+
+    /**
+     * Persist the heart icon next to products already marked as wished.
+     *
+     */
+    persistFavorite: function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
+                for(var j = 0; j<$(".favorite-wrapper").length; j++)
+                {
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
+                    {
+                        $(".favorite-wrapper")[j].className += " favorited";
+                    }
+                }
+            }
+        }
+    },
+
+    /**
+     * Delete the clicked element from the wish list.
+     *
+     * @param element
+     * @param context
+     */
+    removeFromFavorite: function (element, context) {
+        element.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + element.data("product"));
+        context.setWishlistBadgeQuantity();
+    },
+
+    init: function () {
+        var self = productLayoutFavoriteContainer;
+
+        self.setPopupText();
+        self.addToFavorite();
+        self.persistFavorite();
+        self.fadeInFavoriteIcon();
+        self.setWishlistBadgeQuantity();
+    }
+}
+var productResponsive = {
+    invertPriceAndDescriptionColumn: function () {
+        $(window).on("load resize", function () {
+            if($(this).width() < 768)
+            {
+                $("#product-description").before($("#product-info-box"));
+            }
+            else
+            {
+                $("#product-description").after($("#product-info-box"));
+            }
+        });
+    },
+
+    init: function () {
+        var self = productResponsive;
+
+        self.invertPriceAndDescriptionColumn();
+    }
+}
+/**
+ * Object responsible for the view component of each category page.
+ *
+ * @type {{blurBackground: Function, init: Function}}
+ */
+var categoryContainer = {
+
+    /**
+     * Contains the updated URL parameters,
+     *
+     */
+    searchParameters: {
+        page: 1,
+        per_page: 8,
+        order: 'relevance',
+        min_price: null,
+        max_price: null,
+        brands: [],
+        categories: []
+    },
+
+    /**
+     * Blurs the background of each category's page header.
+     *
+     */
+    blurBackground: function () {
+        $(".category-header").blurjs({
+            source: ".category-header"
+        });
+    },
+
+
+    /**
+     * Sets a number of items per page and set the value to the appropriate input.
+     *
+     */
+    itemsPerPage: function () {
+        $(".items-per-page .item").on("click", function() {
+            categoryContainer.addDimmer();
+            UtilityContainer.urlAddParameters("per_page", $(this).data("sort"));
+        });
+
+        // Set the selected option.
+        $('#items-per-page-box').dropdown('set selected', this.searchParameters.per_page);
+    },
+
+
+    /**
+     * Sets the sort by filter and set the value to the appropriate input.
+     *
+     */
+    sortBy: function () {
+        $(".sort-by .item").on("click", function() {
+            categoryContainer.addDimmer();
+            UtilityContainer.urlAddParameters("order", $(this).data("sort"));
+        });
+
+        // Find the text for the selected option.
+        $(".sort-by .item").each(function(index, element) {
+            if ($(element).data('sort') == categoryContainer.searchParameters.order) {
+                $("#sort-by-box").dropdown("set selected", $(element).data('sort'));
+                return false;
+            }
+        });
+    },
+
+    /**
+     * Adds the price filter to the search query and updates the filter on the page.
+     *
+     */
+    price: function() {
+
+        $("#price-update").on("click", function()
+        {
+            categoryContainer.addDimmer();
+
+            UtilityContainer.urlAddParameters({
+                min_price : $("#min-price").val(),
+                max_price : $("#max-price").val()
+            });
+        });
+
+        // Set the specified price range.
+        if (this.searchParameters.min_price) {
+            $('#min-price').val(this.searchParameters.min_price);
+        }
+
+        if (this.searchParameters.max_price) {
+            $('#max-price').val(this.searchParameters.max_price);
+        }
+    },
+
+    /**
+     * Adds the category filter to the search query and updates the filter on the page.
+     *
+     */
+    categories: function() {
+        this.updateFilterList($("#refine-by-category"), "categories");
+    },
+
+    /**
+     * Adds the brands filter to the search query and updates the filter on the page.
+     *
+     */
+    brands: function() {
+        this.updateFilterList($("#refine-by-brand"), "brands");
+    },
+
+    /**
+     * Shortcut to handle filter lists such as brands and categories.
+     *
+     * @param element
+     * @param filterType
+     */
+    updateFilterList : function(element, filterType)
+    {
+        // Add the event listeners to each child element.
+        element.find(".item").on("change",
+            {
+                filter : filterType || "brands"
+            },
+
+            function(event)
+            {
+                var id = $(this).data("filter"),
+                    filterList = categoryContainer.searchParameters[event.data.filter],
+                    filter = $(this);
+
+                // If the checkbox is checked, add the filter to the list.
+                if (filter.prop("checked")) {
+                    categoryContainer.addFilter(event.data.filter, id);
+                }
+
+                // If not, then remove it from the list.
+                else {
+                    categoryContainer.removeFilter(event.data.filter, id);
+                }
+            }
+        );
+
+        // Update selected checkboxes. IDs are stored as strings in "categoryContainer.searchParameters".
+        element.find(".item").each(function() {
+
+            $(this).prop("checked", categoryContainer.searchParameters[filterType].indexOf(""+ $(this).data("filter")) > -1);
+
+            // And add the filter as a tag.
+            if ($(this).prop("checked")) {
+                categoryContainer.addTag($(this));
+            }
+        });
+    },
+
+    /**
+     * Create a new tag to be appended to the tags list.
+     *
+     * @param filter (filter being the checkbox DOM node)
+     */
+    addTag: function (filter) {
+        var item =
+        '<div class="item">' +
+        '<a class="ui grey tag label">' + filter.data("name") +
+        '<i class="icon remove right floated" data-id="' + filter.data("filter") + '" data-type="' + filter.data('type') + '"></i>' +
+        '</a>' +
+        '</div>';
+
+        $(".tags-list").append(item);
+    },
+
+    /**
+     * Attaches the remove event to the tags.
+     *
+     */
+    tags: function() {
+        $(".tags-list .item .remove").on("click", function() {
+            categoryContainer.removeFilter($(this).data('type'), $(this).data('id'));
+        });
+    },
+
+    /**
+     * Adds a filter and refreshes the page.
+     *
+     * @param filterType    Either "brands" or "categories".
+     * @param id            ID of brand or category.
+     */
+    addFilter: function(filterType, id) {
+        this.searchParameters[filterType].push(id);
+        this.updateFilters(filterType);
+    },
+
+    /**
+     * Removes a filter and refreshes the page.
+     *
+     * @param filterType    Either "brands" or "categories".
+     * @param id            ID of brand or category.
+     */
+    removeFilter: function(filterType, id) {
+
+        // Retrieve filter list.
+        var filterList = this.searchParameters[filterType], newList = [];
+
+        // Rebuild a new list, without the filter we want removed.
+        if (filterList.length > 1) {
+            for (var index in filterList) {
+                if (filterList[index] != id) {
+                    newList.push(filterList[index]);
+                }
+            }
+        }
+
+        this.searchParameters[filterType] = newList;
+        this.updateFilters(filterType);
+    },
+
+    updateFilters: function(filterType) {
+
+        // Reorder filter list (this will help with caching on Laravel's end).
+        var filterList = this.searchParameters[filterType];
+        filterList.sort(function(a, b) {
+            return a - b;
+        });
+
+        // If we have filters, update the query string and refresh the page.
+        if (filterList.length > 0) {
+            var filter = filterList.length > 1 ? filterList.join(';') : filterList[0];
+            categoryContainer.addDimmer();
+            UtilityContainer.urlAddParameters(filterType, filter);
+        }
+
+        // If we don't have any filters left, refresh the page without the filter parameter.
+        else {
+            UtilityContainer.urlRemoveParameters(filterType);
+        }
+    },
+
+    /**
+     * Switch between grid or list layout.
+     *
+     */
+    toggleLayout: function () {
+        var self= categoryContainer,
+            $container = $(".layout-toggle-container"),
+            $product = $(".dense-product"),
+            $product_img = $(".product-image"),
+            $product_buybutton = $(".dense-product .buybutton"),
+            $product_shortDescription = $(".dense-product .short-description"),
+            $product_name = $(".dense-product .name a");
+
+        $("#category-layout-switcher").on("click", function () {
+
+            if($container.hasClass("grid-layout"))
+            {
+                // List layout
+                $container.removeClass("grid-layout").addClass("list-layout");
+
+                $product.removeClass("four wide column text-center no-border")
+                    .addClass("sixteen wide column border-bottom-clear");
+
+                $product_shortDescription.removeClass("hidden");
+
+                $product_name.addClass("ui medium header");
+
+                $product_img.removeClass("center-block").addClass("pull-left").css("margin-right", "5%");
+
+                $product_buybutton.css("margin-top", "2rem");
+
+                self.localizeSwitcher($(this), "grid");
+            }
+            else if ($container.hasClass("list-layout"))
+            {
+                // Grid layout
+                $container.removeClass("list-layout").addClass("grid-layout");
+
+                $product.removeClass("sixteen wide column border-bottom-clear").
+                    addClass("four wide column text-center no-border");
+
+                $product_img.addClass("center-block").removeClass("pull-left").css("margin-right", "0");
+
+                $product_shortDescription.addClass("hidden");
+
+                $product_name.removeClass("medium").addClass("tiny");
+
+                $product_buybutton.css("margin-top", "0");
+
+                self.localizeSwitcher($(this), "list");
+            }
+        })
+    },
+
+    /**
+     * Utility function to localize the layout switch button in the appropriate locale.
+     *
+     * @param element
+     * @param layout
+     */
+    localizeSwitcher: function(element, layout) {
+        layout === "list" ?
+            element.html("<i class='list layout icon'></i>" + Localization.list) :
+            element.html("<i class='grid layout icon'></i>" + Localization.grid);
+    },
+
+    /**
+     * Retrieves the query parameters from the URL and stores them locally.
+     *
+     */
+    retrieveSearchParameters: function() {
+
+        var query = UtilityContainer.urlGetParameters();
+
+        for (var key in query)
+        {
+            this.searchParameters[key] = query[key];
+
+            // For brands and categories, the value should be an array.
+            if (["brands", "categories"].indexOf(key) > -1 && typeof query[key] != 'object') {
+                this.searchParameters[key] = [query[key]];
+            }
+        }
+    },
+
+    toggleTagsList: function () {
+        $(".tags-list").children().size() > 0 ? $(".tags-list").parent().removeClass("hidden") : "";
+    },
+
+    /**
+     * Localize the dimmer text with the appropriate message.
+     *
+     */
+    localizeDimmer: function () {
+        $(".loading-text").text(Localization.loading + "...");
+    },
+
+    /**
+     * Add a dimmer to the body when adding / removing a new filter.
+     *
+     */
+    addDimmer: function () {
+        var dimmer =
+        '<div class="ui page dimmer loading-dimmer">' +
+        '<div class="content">' +
+        '<div class="center"><h1 class="ui header loading-text"></h1></div>' +
+        '</div>' +
+        '</div>';
+
+        $("body").append(dimmer);
+
+        categoryContainer.localizeDimmer();
+
+        $('.ui.dimmer.loading-dimmer')
+            .dimmer('show')
+        ;
+    },
+
+    init: function () {
+        var self = categoryContainer;
+
+        self.retrieveSearchParameters();
+        self.blurBackground();
+        self.itemsPerPage();
+        self.sortBy();
+        self.price();
+        self.categories();
+        self.brands();
+        self.tags();
+        self.toggleLayout();
+        self.toggleTagsList();
+    }
+};
+
+/**
+ * Object responsible for specific behaviours of homepage sections.
+ *
+ * @type {{mixed: {toggleSixteenWideColumn: Function}, init: Function}}
+ */
+var homepageContainer = {
+
+    /**
+     * Mixed section
+     *
+     */
+    mixed: {
+        toggleSixteenWideColumn: function () {
+                var $productColumn = $(".mixed-section .eleven"),
+                $widgetColumn = $(".mixed-section .four");
+
+            $(window).on("load resize", function() {
+                if(!$widgetColumn.is(":visible")) {
+                    $productColumn.removeClass().addClass("sixteen wide column");
+                }
+                else {
+                    $productColumn.removeClass().addClass("eleven wide column");
+                }
+            });
+
+        }
+    },
+
+    init: function () {
+        var self = homepageContainer,
+            mixed = self.mixed;
+
+        mixed.toggleSixteenWideColumn();
+    }
+}
+/**
+ * Object responsible for handling the payment overlay behaviour.
+ *
+ * @type {{cancelOrder: Function, init: Function}}
+ */
+var paymentOverlayContainer = {
+
+    /**
+     * Cancels an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     *
+     */
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            Cookies.remove("_unpaid_orders");
+
+            $("#cancelledOrder .jumbotron").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+
+        });
+    },
+
+    /**
+     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_unpaid_orders')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(data) {
+                    if (data.status == 'pending')
+                        paymentOverlayContainer.showPaymentNotice();
+                    else
+                        Cookies.remove('_unpaid_orders');
+                }
+            });
+        }
+
+    },
+
+    /**
+     * Shows payment notice.
+     *
+     */
+    showPaymentNotice : function() {
+
+        // Retrieve order details.
+        var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+        // Display notice.
+        $('body').prepend(
+            '<div class="container fullScreen" id="cancelledOrder">'+
+            '<div class="jumbotron vertical-align color-one">'+
+            '<div class="text-center">'+
+            '<h2>'+
+            Localization.pending_order.replace(':command', order.id) +
+            '</h2>'+
+            '<h4>'+ Localization.what_to_do +'</h4>'+
+            '<br />'+
+            '<ul class="list-inline">' +
+            '<li>' +
+            '<a href="'+
+            ApiEndpoints.orders.pay.replace(':id', order.id)
+                .replace(':verification', order.verification) +'">'+
+            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
+            '</a>'+
+            '</li>' +
+            '<li>' +
+            '<button class="ui button red" id="cancelOrder">'+
+            Localization.cancel_order +
+            '</button>'+
+            '</li>'+
+            '</ul>'+
+            '</div>'+
+            '</div>'+
+            '</div>'
+        );
+    },
+
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+        self.checkPendingOrders();
+    }
+}
+
+/**
  * Object responsible for handling billing information.
  *
  * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
@@ -1266,367 +2036,6 @@ var paymentContainer = {
     }
 }
 /**
- * Object responsible for handling the payment overlay behaviour.
- *
- * @type {{cancelOrder: Function, init: Function}}
- */
-var paymentOverlayContainer = {
-
-    /**
-     * Cancels an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_unpaid_orders");
-
-            $("#cancelledOrder .jumbotron").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-
-        });
-    },
-
-    /**
-     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_unpaid_orders')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(data) {
-                    if (data.status == 'pending')
-                        paymentOverlayContainer.showPaymentNotice();
-                    else
-                        Cookies.remove('_unpaid_orders');
-                }
-            });
-        }
-
-    },
-
-    /**
-     * Shows payment notice.
-     *
-     */
-    showPaymentNotice : function() {
-
-        // Retrieve order details.
-        var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-        // Display notice.
-        $('body').prepend(
-            '<div class="container fullScreen" id="cancelledOrder">'+
-            '<div class="jumbotron vertical-align color-one">'+
-            '<div class="text-center">'+
-            '<h2>'+
-            Localization.pending_order.replace(':command', order.id) +
-            '</h2>'+
-            '<h4>'+ Localization.what_to_do +'</h4>'+
-            '<br />'+
-            '<ul class="list-inline">' +
-            '<li>' +
-            '<a href="'+
-            ApiEndpoints.orders.pay.replace(':id', order.id)
-                .replace(':verification', order.verification) +'">'+
-            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
-            '</a>'+
-            '</li>' +
-            '<li>' +
-            '<button class="ui button red" id="cancelOrder">'+
-            Localization.cancel_order +
-            '</button>'+
-            '</li>'+
-            '</ul>'+
-            '</div>'+
-            '</div>'+
-            '</div>'
-        );
-    },
-
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-        self.checkPendingOrders();
-    }
-}
-
-/**
- * Object responsible for handling different formats of the same product.
- *
- * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
- */
-var productFormatContainer = {
-
-    /**
-     * Sets the right price, inventory count and format text according to the format of the hovered product.
-     *
-     */
-    displaySyncedProductInformation: function() {
-
-        const self = productFormatContainer,
-            $formatSelection = $(".format-selection");
-
-        $formatSelection.on("click", function () {
-            // Set the right format in product title
-            $("#product-format").text($(this).data("format"));
-
-            // Set the right price and the right inventory count
-            self.setPriceTag($(this).data("price"));
-            self.setInventoryCount($(this).data("inventory-count"));
-
-            // Toggle active class on right format
-            self.toggleActiveClass($(this));
-
-            // Creates an appropriate buybutton according to the info.
-            self.setBuybuttonInformation($(this));
-        });
-
-    },
-
-    /**
-     * Sets the inventory text and value according to the inventory count of the product.
-     *
-     * @param count
-     */
-    setInventoryCount: function (count) {
-        const $inventoryCount = $("#inventory-count"),
-            countryCode = $inventoryCount.data("country-code"),
-            expressShipping = Localization.express_shipping,
-            stockLeft = Localization.stock_left.replace(":quantity", count),
-            shippingTime = Localization.shipping_time,
-            shippingMethod = (countryCode === "US" || countryCode === "CA") ? "fa-truck" : "fa-plane";
-
-        var inventoryDescription = '';
-
-       if (count > 5) {
-            inventoryDescription =
-                '<link itemprop="availability" href="http://schema.org/InStock">' +
-                    '<li class="text-success">' +
-                    '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-                    expressShipping;
-       }
-       else if (count > 0) {
-           inventoryDescription =
-               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
-               '<li class="text-warning">' +
-                   '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-                   stockLeft;
-       }
-        else {
-           inventoryDescription =
-               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
-           '<li class="text-warning">' +
-           '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-           shippingTime;
-       }
-
-        $inventoryCount.html(inventoryDescription);
-
-    },
-
-    /**
-     * Sets the price tag according to the format.
-     *
-     * @param price
-     */
-    setPriceTag: function (price) {
-        $(".price-tag").text("$ " + price);
-    },
-
-    /**
-     * Recreates a buybutton with relevant information every time we switch format.
-     *
-     * @param format (html5 data in format buttons)
-     */
-    setBuybuttonInformation: function(format) {
-        var $buybuttonWrapper = $(".buybutton-format-selection-wrapper"),
-            buybutton =
-                '<button class="btn btn-three buybutton horizontal-align"' +
-                    'data-product="' + format.data("product") +'"' +
-                'data-price="' + format.data("price") +'"' +
-                'data-thumbnail="' + format.data("thumbnail") +'"' +
-                'data-thumbnail_lg="' + format.data("thumbnail_lg") +'"' +
-                'data-name="' + format.data("name") +'"' +
-                'data-format="' + format.data("format") +'"' +
-                'data-inventory-count="' + format.data("inventory-count") +'"' +
-                'data-quantity="' + format.data("quantity") + '"' +
-                'data-link="' + format.data("link") +'"' +
-                    '>' +
-                '<div class="add-cart">' +
-                    '<i class="fa fa-check-circle"></i> ' +
-                    Localization.add_cart +
-                    '</div> </button>';
-
-        $buybuttonWrapper.empty();
-
-        $buybuttonWrapper.append(buybutton);
-    },
-
-    /**
-     * Toggles the .active class when clicked on a format.
-     *
-     * @param format
-     */
-    toggleActiveClass: function (format) {
-        $(".format-selection.active").removeClass("active");
-        format.addClass("active");
-    },
-
-    init: function () {
-        const self = productFormatContainer;
-
-        self.displaySyncedProductInformation();
-
-    }
-}
-/**
- * Object responsible for adding products to a user's wishlist.
- *
- * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
- */
-var productLayoutFavoriteContainer = {
-    /**
-     * Fade in the favorite icon (heart icon) when hovering on a product tile.
-     *
-     */
-    fadeInFavoriteIcon: function() {
-        self = productLayoutFavoriteContainer;
-
-        $(".dense-product").hover(function() {
-
-            $(this).children(".favorite-wrapper").fadeIn();
-            self.setPopupText($(this).children(".favorite-wrapper"));
-
-        }, function () {
-            $(this).children(".favorite-wrapper").hide();
-        });
-    },
-
-    setPopupText: function (wrapper) {
-        if($(wrapper).hasClass("favorited")){
-            $(wrapper).attr("title", Localization.wishlist_remove);
-        }
-        else {
-            $(wrapper).attr("title", Localization.wishlist_add);
-        }
-    },
-
-    /**
-     * Update the value of .wishlist_badge when adding or deleting elements.
-     *
-     */
-    setWishlistBadgeQuantity : function() {
-        var total = UtilityContainer.getNumberOfProductsInWishlist();
-
-        $(".wishlist_badge").text(total);
-    },
-
-    /**
-     * Add the clicked product to the wish list.
-     *
-     */
-    addToFavorite: function() {
-        var self = productLayoutFavoriteContainer,
-            item;
-
-        $(".favorite-wrapper").on("click", function() {
-            //No favorited class.
-            if (!$(this).hasClass("favorited")) {
-                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
-                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
-
-                //Set the favorite icon to be displayed
-                $(this).addClass("favorited");
-
-                //Set wishlist badge quantity
-                self.setWishlistBadgeQuantity();
-            }
-            else
-            //Has a favorited class. We remove it, then delete the element from local Storage.
-            {
-                self.removeFromFavorite($(this), self);
-            }
-        });
-    },
-
-    /**
-     * Persist the heart icon next to products already marked as wished.
-     *
-     */
-    persistFavorite: function() {
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
-                for(var j = 0; j<$(".favorite-wrapper").length; j++)
-                {
-                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
-                    {
-                        $(".favorite-wrapper")[j].className += " favorited";
-                    }
-                }
-            }
-        };
-    },
-
-    /**
-     * Delete the clicked element from the wish list.
-     *
-     * @param context
-     */
-    removeFromFavorite: function (element, context) {
-        element.removeClass("favorited");
-        localStorage.removeItem("_wish_product " + element.data("product"));
-        context.setWishlistBadgeQuantity();
-    },
-
-    init: function () {
-        var self = productLayoutFavoriteContainer;
-
-        self.setPopupText();
-        self.addToFavorite();
-        self.persistFavorite();
-        self.fadeInFavoriteIcon();
-        self.setWishlistBadgeQuantity();
-    }
-}
-var productResponsive = {
-    invertPriceAndDescriptionColumn: function () {
-        $(window).on("load resize", function () {
-            if($(this).width() < 768)
-            {
-                $("#product-description").before($("#product-info-box"));
-            }
-            else
-            {
-                $("#product-description").after($("#product-info-box"));
-            }
-        });
-    },
-
-    init: function () {
-        var self = productResponsive;
-
-        self.invertPriceAndDescriptionColumn();
-    }
-}
-/**
  * Object responsible for activating semantic ui features.
  *
  * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
@@ -1667,6 +2076,16 @@ var semanticInitContainer = {
          */
         initPopupModule: function () {
             $(".popup").popup();
+        },
+
+        /**
+         * Initialize checkbox module.
+         *
+         */
+        initCheckboxModule: function () {
+            $('.ui.checkbox')
+                .checkbox()
+            ;
         }
     },
 
@@ -1687,409 +2106,144 @@ var semanticInitContainer = {
         module.initDropdownModule();
         module.initRatingModule();
         module.initPopupModule();
+        module.initCheckboxModule();
     }
 }
 /**
- * Object responsible for the view component of each category page.
+ * Container responsible for handling the logic of the wish list page.
+ * Layout handled in dev/components/site/wishlist.js
  *
- * @type {{blurBackground: Function, init: Function}}
+ * @type {{createWishlistElement: Function, renderWishlist: Function, removeWishlistElement: Function, init: Function}}
  */
-var categoryContainer = {
+var wishlistLogicContainer = {
 
     /**
-     * Contains the updated URL parameters,
+     * Create a list layout element from the information passed as an argument.
      *
-     */
-    searchParameters: {
-        page: 1,
-        per_page: 8,
-        order: 'relevance',
-        min_price: null,
-        max_price: null,
-        brands: [],
-        categories: []
-    },
-
-    /**
-     * Blurs the background of each category's page header.
+     * Rounding to 2 decimals, courtesy of http://stackoverflow.com/a/6134070.
      *
+     * @param item
      */
-    blurBackground: function () {
-        $(".category-header").blurjs({
-            source: ".category-header"
-        });
-    },
-
-
-    /**
-     * Sets a number of items per page and set the value to the appropriate input.
-     *
-     */
-    itemsPerPage: function () {
-        $(".items-per-page .item").on("click", function() {
-            categoryContainer.addDimmer();
-            UtilityContainer.urlAddParameters("per_page", $(this).data("sort"));
-        });
-
-        // Set the selected option.
-        $('#items-per-page-box').dropdown('set selected', this.searchParameters.per_page);
-    },
-
-
-    /**
-     * Sets the sort by filter and set the value to the appropriate input.
-     *
-     */
-    sortBy: function () {
-        $(".sort-by .item").on("click", function() {
-            categoryContainer.addDimmer();
-            UtilityContainer.urlAddParameters("order", $(this).data("sort"));
-        });
-
-        // Find the text for the selected option.
-        $(".sort-by .item").each(function(index, element) {
-            if ($(element).data('sort') == categoryContainer.searchParameters.order) {
-                $("#sort-by-box").dropdown("set selected", $(element).data('sort'));
-                return false;
-            }
-        });
-    },
-
-    /**
-     * Adds the price filter to the search query and updates the filter on the page.
-     *
-     */
-    price: function() {
-
-        $("#price-update").on("click", function()
-        {
-            categoryContainer.addDimmer();
-
-            UtilityContainer.urlAddParameters({
-                min_price : $("#min-price").val(),
-                max_price : $("#max-price").val()
-            });
-        });
-
-        // Set the specified price range.
-        if (this.searchParameters.min_price) {
-            $('#min-price').val(this.searchParameters.min_price);
-        }
-
-        if (this.searchParameters.max_price) {
-            $('#max-price').val(this.searchParameters.max_price);
-        }
-    },
-
-    /**
-     * Adds the category filter to the search query and updates the filter on the page.
-     *
-     */
-    categories: function() {
-        this.updateFilterList($("#refine-by-category"), "categories");
-    },
-
-    /**
-     * Adds the brands filter to the search query and updates the filter on the page.
-     *
-     */
-    brands: function() {
-        this.updateFilterList($("#refine-by-brand"), "brands");
-    },
-
-    /**
-     * Shortcut to handle filter lists such as brands and categories.
-     *
-     * @param element
-     * @param filterType
-     */
-    updateFilterList : function(element, filterType)
-    {
-        // Add the event listeners to each child element.
-        element.find(".item").on("change",
-            {
-                filter : filterType || "brands"
-            },
-
-            function(event)
-            {
-                var id = $(this).data("filter"),
-                    filterList = categoryContainer.searchParameters[event.data.filter],
-                    filter = $(this);
-
-                // If the checkbox is checked, add the filter to the list.
-                if (filter.prop("checked")) {
-                    categoryContainer.addFilter(event.data.filter, id);
-                }
-
-                // If not, then remove it from the list.
-                else {
-                    categoryContainer.removeFilter(event.data.filter, id);
-                }
-            }
-        );
-
-        // Update selected checkboxes. IDs are stored as strings in "categoryContainer.searchParameters".
-        element.find(".item").each(function() {
-
-            $(this).prop("checked", categoryContainer.searchParameters[filterType].indexOf(""+ $(this).data("filter")) > -1);
-
-            // And add the filter as a tag.
-            if ($(this).prop("checked")) {
-                categoryContainer.addTag($(this));
-            }
-        });
-    },
-
-    /**
-     * Create a new tag to be appended to the tags list.
-     *
-     * @param filter (filter being the checkbox DOM node)
-     */
-    addTag: function (filter) {
-        var item =
-        '<div class="item">' +
-        '<a class="ui grey tag label">' + filter.data("name") +
-        '<i class="icon remove right floated" data-id="' + filter.data("filter") + '" data-type="' + filter.data('type') + '"></i>' +
-        '</a>' +
-        '</div>';
-
-        $(".tags-list").append(item);
-    },
-
-    /**
-     * Attaches the remove event to the tags.
-     *
-     */
-    tags: function() {
-        $(".tags-list .item .remove").on("click", function() {
-            categoryContainer.removeFilter($(this).data('type'), $(this).data('id'));
-        });
-    },
-
-    /**
-     * Adds a filter and refreshes the page.
-     *
-     * @param filterType    Either "brands" or "categories".
-     * @param id            ID of brand or category.
-     */
-    addFilter: function(filterType, id) {
-        this.searchParameters[filterType].push(id);
-        this.updateFilters(filterType);
-    },
-
-    /**
-     * Removes a filter and refreshes the page.
-     *
-     * @param filterType    Either "brands" or "categories".
-     * @param id            ID of brand or category.
-     */
-    removeFilter: function(filterType, id) {
-
-        // Retrieve filter list.
-        var filterList = this.searchParameters[filterType], newList = [];
-
-        // Rebuild a new list, without the filter we want removed.
-        if (filterList.length > 1) {
-            for (var index in filterList) {
-                if (filterList[index] != id) {
-                    newList.push(filterList[index]);
-                }
-            }
-        }
-
-        this.searchParameters[filterType] = newList;
-        this.updateFilters(filterType);
-    },
-
-    updateFilters: function(filterType) {
-
-        // Reorder filter list (this will help with caching on Laravel's end).
-        var filterList = this.searchParameters[filterType];
-        filterList.sort(function(a, b) {
-            return a - b;
-        });
-
-        // If we have filters, update the query string and refresh the page.
-        if (filterList.length > 0) {
-            var filter = filterList.length > 1 ? filterList.join(';') : filterList[0];
-            categoryContainer.addDimmer();
-            UtilityContainer.urlAddParameters(filterType, filter);
-        }
-
-        // If we don't have any filters left, refresh the page without the filter parameter.
-        else {
-            UtilityContainer.urlRemoveParameters(filterType);
-        }
-    },
-
-    /**
-     * Switch between grid or list layout.
-     *
-     */
-    toggleLayout: function () {
-        var self= categoryContainer,
-            $container = $(".layout-toggle-container"),
-            $product = $(".dense-product"),
-            $product_img = $(".product-image"),
-            $product_buybutton = $(".dense-product .buybutton"),
-            $product_shortDescription = $(".dense-product .short-description"),
-            $product_name = $(".dense-product .name a");
-
-        $("#category-layout-switcher").on("click", function () {
-
-            if($container.hasClass("grid-layout"))
-            {
-                // List layout
-                $container.removeClass("grid-layout").addClass("list-layout");
-
-                $product.removeClass("four wide column text-center no-border")
-                    .addClass("sixteen wide column border-bottom-clear");
-
-                $product_shortDescription.removeClass("hidden");
-
-                $product_name.addClass("ui medium header");
-
-                $product_img.removeClass("center-block").addClass("pull-left").css("margin-right", "5%");
-
-                $product_buybutton.css("margin-top", "2rem");
-
-                self.localizeSwitcher($(this), "grid");
-            }
-            else if ($container.hasClass("list-layout"))
-            {
-                // Grid layout
-                $container.removeClass("list-layout").addClass("grid-layout");
-
-                $product.removeClass("sixteen wide column border-bottom-clear").
-                    addClass("four wide column text-center no-border");
-
-                $product_img.addClass("center-block").removeClass("pull-left").css("margin-right", "0");
-
-                $product_shortDescription.addClass("hidden");
-
-                $product_name.removeClass("medium").addClass("tiny");
-
-                $product_buybutton.css("margin-top", "0");
-
-                self.localizeSwitcher($(this), "list");
-            }
-        })
-    },
-
-    /**
-     * Utility function to localize the layout switch button in the appropriate locale.
-     *
-     * @param element
-     * @param layout
-     */
-    localizeSwitcher: function(element, layout) {
-        layout === "list" ?
-            element.html("<i class='list layout icon'></i>" + Localization.list) :
-            element.html("<i class='grid layout icon'></i>" + Localization.grid);
-    },
-
-    /**
-     * Retrieves the query parameters from the URL and stores them locally.
-     *
-     */
-    retrieveSearchParameters: function() {
-
-        var query = UtilityContainer.urlGetParameters();
-
-        for (var key in query)
-        {
-            this.searchParameters[key] = query[key];
-
-            // For brands and categories, the value should be an array.
-            if (["brands", "categories"].indexOf(key) > -1 && typeof query[key] != 'object') {
-                this.searchParameters[key] = [query[key]];
-            }
-        }
-    },
-
-    toggleTagsList: function () {
-        $(".tags-list").children().size() > 0 ? $(".tags-list").parent().removeClass("hidden") : "";
-    },
-
-    /**
-     * Localize the dimmer text with the appropriate message.
-     *
-     */
-    localizeDimmer: function () {
-        $(".loading-text").text(Localization.loading + "...");
-    },
-
-    /**
-     * Add a dimmer to the body when adding / removing a new filter.
-     *
-     */
-    addDimmer: function () {
-        var dimmer =
-        '<div class="ui page dimmer loading-dimmer">' +
-        '<div class="content">' +
-        '<div class="center"><h1 class="ui header loading-text"></h1></div>' +
+    createWishlistElement: function(item) {
+        var self = wishlistLogicContainer,
+            element =
+        '<div class="item list-layout-element">' +
+        '<div class="ui tiny image">' +
+        '<img src=' + item.thumbnail_lg + '>' +
         '</div>' +
-        '</div>';
+        '<div class="middle aligned content">' +
+        '<div class="header">' +
+        '<a href=' + item.link + '>' + item.name + '</a>' +
+        '</div>' +
+        '<div class="description">' +
+        '<p>' + item.description + '</p>' +
+            '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
+        '</div>' +
+        '<div class="extra">' +
+        '<button class="ui right floated button green buybutton"' +
+        'data-product="' + item.product + '"' +
+        'data-price="' + item.price + '"' +
+        'data-thumbnail="' + item.thumbnail + '"' +
+        'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
+        'data-name="' + item.name + '"' +
+        'data-description="' + item.description + '"' +
+        'data-quantity="' + item.quantity  + '"' + ">" +
+        'Add to cart </button>' +
+        '</button>' +
+        '<button class="ui right floated button inverted red removeFavoriteButton" data-product="' + item.product + '">' +
+        'Remove from wishlist' +
+        '</button>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<hr/>';
 
-        $("body").append(dimmer);
 
-        categoryContainer.localizeDimmer();
+        //Localize button (default in english)
+        self.localizeWishlistButton();
 
-        $('.ui.dimmer.loading-dimmer')
-            .dimmer('show')
-        ;
+        //Append elements
+        $(".list-layout-element-container").append(element);
     },
 
-    init: function () {
-        var self = categoryContainer;
-
-        self.retrieveSearchParameters();
-        self.blurBackground();
-        self.itemsPerPage();
-        self.sortBy();
-        self.price();
-        self.categories();
-        self.brands();
-        self.tags();
-        self.toggleLayout();
-        self.toggleTagsList();
-    }
-};
-
-/**
- * Object responsible for specific behaviours of homepage sections.
- *
- * @type {{mixed: {toggleSixteenWideColumn: Function}, init: Function}}
- */
-var homepageContainer = {
-
     /**
-     * Mixed section
+     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
+     * The creation is handled in createWishlistElement function.
      *
      */
-    mixed: {
-        toggleSixteenWideColumn: function () {
-                var $productColumn = $(".mixed-section .eleven"),
-                $widgetColumn = $(".mixed-section .four");
+    renderWishlist: function() {
+        var self = wishlistLogicContainer;
 
-            $(window).on("load resize", function() {
-                if(!$widgetColumn.is(":visible")) {
-                    $productColumn.removeClass().addClass("sixteen wide column");
-                }
-                else {
-                    $productColumn.removeClass().addClass("eleven wide column");
-                }
-            });
-
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
+            {
+                self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
+            }
         }
     },
 
-    init: function () {
-        var self = homepageContainer,
-            mixed = self.mixed;
+    localizeWishlistButton: function() {
+        $(".list-layout-element .buybutton").text(Localization.add_cart);
+        $(".list-layout-element .removeFavoriteButton").text(Localization.wishlist_remove);
+    },
 
-        mixed.toggleSixteenWideColumn();
+    /**
+     * Remove the element from the wishlist after a subtle animation.
+     *
+     */
+    removeWishlistElement: function () {
+        $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
+            //Animate the element.
+            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
+            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element").next());
+
+            //Delete the element from localStorage.
+            localStorage.removeItem("_wish_product " + $(this).data("product"));
+
+            //Set wishlist header quantity.
+            wishlistContainer.setNumberOfProductsInHeader();
+
+            //Set wishlist badge
+            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
+        });
+    },
+
+    init: function () {
+        var self = wishlistLogicContainer;
+
+        //Calls the layout container (wishlistContainer).
+        wishlistContainer.init();
+
+        //Initialize the logic.
+        self.renderWishlist();
+        self.removeWishlistElement();
+    }
+
+}
+/**
+ * Object responsible for the view component of the wish list page.
+ * Logic handled in dev/actions/site/wishlist-logic.js
+ *
+ * @type {{setNumberOfProductsInHeader: Function, init: Function}}
+ */
+var wishlistContainer = {
+
+    /**
+     * Sets the number of products in the header (singular / plural).
+     *
+     */
+    setNumberOfProductsInHeader: function() {
+        var quantity = "";
+        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
+        $("#quantity-wishlist").text(quantity);
+    },
+
+
+    init: function() {
+        var self = wishlistContainer;
+
+        self.setNumberOfProductsInHeader();
     }
 }
 /**
@@ -2585,140 +2739,3 @@ var cartDisplayContainer = {
 
     }
 };
-/**
- * Container responsible for handling the logic of the wish list page.
- * Layout handled in dev/components/site/wishlist.js
- *
- * @type {{createWishlistElement: Function, renderWishlist: Function, removeWishlistElement: Function, init: Function}}
- */
-var wishlistLogicContainer = {
-
-    /**
-     * Create a list layout element from the information passed as an argument.
-     *
-     * Rounding to 2 decimals, courtesy of http://stackoverflow.com/a/6134070.
-     *
-     * @param item
-     */
-    createWishlistElement: function(item) {
-        var self = wishlistLogicContainer,
-            element =
-        '<div class="item list-layout-element">' +
-        '<div class="ui tiny image">' +
-        '<img src=' + item.thumbnail_lg + '>' +
-        '</div>' +
-        '<div class="middle aligned content">' +
-        '<div class="header">' +
-        '<a href=' + item.link + '>' + item.name + '</a>' +
-        '</div>' +
-        '<div class="description">' +
-        '<p>' + item.description + '</p>' +
-            '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
-        '</div>' +
-        '<div class="extra">' +
-        '<button class="ui right floated button green buybutton"' +
-        'data-product="' + item.product + '"' +
-        'data-price="' + item.price + '"' +
-        'data-thumbnail="' + item.thumbnail + '"' +
-        'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
-        'data-name="' + item.name + '"' +
-        'data-description="' + item.description + '"' +
-        'data-quantity="' + item.quantity  + '"' + ">" +
-        'Add to cart </button>' +
-        '</button>' +
-        '<button class="ui right floated button inverted red removeFavoriteButton" data-product="' + item.product + '">' +
-        'Remove from wishlist' +
-        '</button>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '<hr/>';
-
-
-        //Localize button (default in english)
-        self.localizeWishlistButton();
-
-        //Append elements
-        $(".list-layout-element-container").append(element);
-    },
-
-    /**
-     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
-     * The creation is handled in createWishlistElement function.
-     *
-     */
-    renderWishlist: function() {
-        var self = wishlistLogicContainer;
-
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
-            {
-                self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
-            }
-        }
-    },
-
-    localizeWishlistButton: function() {
-        $(".list-layout-element .buybutton").text(Localization.add_cart);
-        $(".list-layout-element .removeFavoriteButton").text(Localization.wishlist_remove);
-    },
-
-    /**
-     * Remove the element from the wishlist after a subtle animation.
-     *
-     */
-    removeWishlistElement: function () {
-        $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
-            //Animate the element.
-            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
-            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element").next());
-
-            //Delete the element from localStorage.
-            localStorage.removeItem("_wish_product " + $(this).data("product"));
-
-            //Set wishlist header quantity.
-            wishlistContainer.setNumberOfProductsInHeader();
-
-            //Set wishlist badge
-            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
-        });
-    },
-
-    init: function () {
-        var self = wishlistLogicContainer;
-
-        //Calls the layout container (wishlistContainer).
-        wishlistContainer.init();
-
-        //Initialize the logic.
-        self.renderWishlist();
-        self.removeWishlistElement();
-    }
-
-}
-/**
- * Object responsible for the view component of the wish list page.
- * Logic handled in dev/actions/site/wishlist-logic.js
- *
- * @type {{setNumberOfProductsInHeader: Function, init: Function}}
- */
-var wishlistContainer = {
-
-    /**
-     * Sets the number of products in the header (singular / plural).
-     *
-     */
-    setNumberOfProductsInHeader: function() {
-        var quantity = "";
-        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
-        $("#quantity-wishlist").text(quantity);
-    },
-
-
-    init: function() {
-        var self = wishlistContainer;
-
-        self.setNumberOfProductsInHeader();
-    }
-}
