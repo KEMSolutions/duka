@@ -57,7 +57,7 @@ abstract class BaseObject
     public function all()
     {
         // Retrieve object from cache, or make an API call.
-        $array = Cache::get($this->cacheNamespace . 'list');
+        $array = Cache::get($this->getCacheKey('list'));
         if (is_null($array))
         {
             $array = KemAPI::get($this->baseRequest);
@@ -205,6 +205,9 @@ abstract class BaseObject
         return $params;
     }
 
+    /**
+     *
+     */
     protected function sortBy($property, $array)
     {
         // Create temporary array.
@@ -235,14 +238,14 @@ abstract class BaseObject
         // Cache object by ID.
         $expires = $expires ?: Carbon::now()->addHours(3);
         $requestID = $requestID ?: $object->id;
-        Cache::put($this->cacheNamespace . $requestID, $object, $expires);
+        Cache::put($this->getCacheKey($requestID), $object, $expires);
 
         // If the object has a slug, cache it under that name too.
         if (is_object($object) && property_exists($object, 'slug')) {
             Cache::put($this->cacheNamespace . $object->slug, $object, $expires);
         }
 
-        Log::info('Caching "'. $this->cacheNamespace . $requestID .'" until "'. $expires .'"');
+        Log::info('Caching "'. $this->getCacheKey($requestID) .'" until "'. $expires .'"');
     }
 
     /**
@@ -276,9 +279,13 @@ abstract class BaseObject
         $expires = Carbon::now()->addHours(3);
         foreach ($list as $item)
         {
-            if (empty($item) || !isset($item->id) || empty($item->id) || Cache::has($namespace . $item->id)) {
+            if (empty($item) || !isset($item->id) || empty($item->id) || Cache::has($namespace . $item->id))
+            {
+                // Log reason for skipping this item.
                 empty($item) ? Log::debug('Skipping empty object...') : null;
+
                 (!isset($item->id) || empty($item->id)) ? Log::debug('Skipping object without ID...') : null;
+
                 continue;
             }
 
