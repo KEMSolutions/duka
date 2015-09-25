@@ -87,7 +87,7 @@ class Orders extends BaseObject
         }
 
         // Retrieve estimate from cache.
-        $key = json_encode($body);
+        $key = $this->getCacheKey(json_encode($body));
         if (Cache::has($key)) {
             return Cache::get($key);
         }
