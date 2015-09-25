@@ -1,19 +1,26 @@
 var checkoutContainer = {
 
     validateFormFields: function () {
+        var self = checkoutContainer;
+
+        var validationRules =
+        {
+            shippingFirstname: 'empty',
+            shippingLastname : 'empty',
+            shippingAddress1 : 'empty',
+            shippingCity     : 'empty',
+            shippingPostcode : 'empty',
+            customer_email   : ['empty', 'email'],
+            customer_phone   : ['empty', 'number']
+        };
+
         $(".form-checkout").form({
-            fields: {
-                shippingFirstname: 'empty',
-                shippingLastname : 'empty',
-                shippingAddress1 : 'empty',
-                shippingCity     : 'empty',
-                shippingPostcode : 'empty',
-                customer_email   : ['empty', 'email'],
-                customer_phone   : ['empty', 'number']
-            }
+            fields: validationRules,
+            inline: true,
+            on    : 'submit'
         });
 
-        console.log("validated");
+        self.onFormSuccess(self.displayShipmentMethod());
     },
 
     fadeInBillingInformation: function () {
@@ -31,18 +38,30 @@ var checkoutContainer = {
     },
 
 
+    displayShipmentMethod: function () {
+        console.log("display shipment called");
+    },
+
+    onFormSuccess: function (callback) {
+        $(".form-checkout").form({
+            onSuccess: callback
+        });
+    },
+
+    preventDefault: function () {
+        $(".address-next").on("click", function (e) {
+            e.preventDefault();
+        });
+    },
+
+
     init: function () {
         var self = checkoutContainer;
         self.validateFormFields();
         self.fadeInBillingInformation();
+        self.preventDefault();
 
 
-        $(".address-next").on("click", function (e) {
-            //e.preventDefault();
-
-
-            console.log("clicked");
-        })
 
 
     }

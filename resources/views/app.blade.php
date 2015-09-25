@@ -56,7 +56,7 @@
 	<script src="/js_assets/blur/blur.js"></script>
 
 	<!-- Semantic ui dependencies -->
-	<script src="/semantic/prod/semantic.js"></script>
+	<script src="/semantic/prod/semantic-2.1.4.js"></script>
 
 	@include("_dynamic_resources")
 

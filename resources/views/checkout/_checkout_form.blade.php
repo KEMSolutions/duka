@@ -14,18 +14,16 @@
 
     <div class="nine wide column">
 
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
         <div class="ui segment shippingInformation">
             <h4 class="ui dividing header">Shipping Information</h4>
             <div class="field">
                 <label>Name</label>
                 <div class="two fields">
                     <div class="field">
-                        <input type="text" name="shipping_address[firstname]" id="shippingFirstname" class="firstname" placeholder="First Name" required>
+                        <input type="text" name="shipping_address[firstname]" id="shippingFirstname" class="firstname" placeholder="First Name">
                     </div>
                     <div class="field">
-                        <input type="text" name="shipping_address[lastname]" id="shippingLastname" class="lastname" placeholder="Last Name" required>
+                        <input type="text" name="shipping_address[lastname]" id="shippingLastname" class="lastname" placeholder="Last Name">
                     </div>
                 </div>
             </div>
@@ -37,7 +35,7 @@
 
             <div class="field">
                 <label>Shipping Address</label>
-                <input type="text" name="shipping_address[line1]" id="shippingAddress1" class="address1" placeholder="Address line 1" value="{{ Customers::getDefaultAddress()->line1 }}" required>
+                <input type="text" name="shipping_address[line1]" id="shippingAddress1" class="address1" placeholder="Address line 1" value="{{ Customers::getDefaultAddress()->line1 }}" >
             </div>
 
             <div class="field">
@@ -415,24 +413,24 @@
             <div class="two fields">
                 <div class="field">
                     <label>City</label>
-                    <input type="text" placeholder="City" name="shipping_address[city]" id="shippingCity" class="city" value="{{ Customers::getDefaultAddress()->city }}" required/>
+                    <input type="text" placeholder="City" name="shipping_address[city]" id="shippingCity" class="city" value="{{ Customers::getDefaultAddress()->city }}"/>
                 </div>
 
                 <div class="field">
                     <label>ZIP Code</label>
-                    <input type="text" placeholder="A1A 1A1" name="shipping_address[postcode]" id="shippingPostcode" value="" class="postcode" value="{{ Customers::getDefaultAddress()->postcode }}" required/>
+                    <input type="text" placeholder="A1A 1A1" name="shipping_address[postcode]" id="shippingPostcode" value="" class="postcode" value="{{ Customers::getDefaultAddress()->postcode }}"/>
                 </div>
             </div>
 
             <div class="two fields">
                 <div class="field">
                     <label>Email</label>
-                    <input type="email" placeholder="you@you.com" name="email" id="customer_email" value="{{ Customers::getDefault()->email }}" required/>
+                    <input type="email" placeholder="you@you.com" name="email" id="customer_email" value="{{ Customers::getDefault()->email }}"/>
                 </div>
 
                 <div class="field">
                     <label>Phone number</label>
-                    <input type="text" placeholder="(xxx) xxx xxx" name="shipping_address[phone]" id="customer_phone" value="{{ Customers::getDefaultAddress()->phone }}" required/>
+                    <input type="text" placeholder="(xxx) xxx xxx" name="shipping_address[phone]" id="customer_phone" value="{{ Customers::getDefaultAddress()->phone }}"/>
                 </div>
             </div>
 
@@ -856,7 +854,7 @@
 
         </div>
 
-        <button class="ui right labeled green icon button right floated address-next">
+        <button class="ui right labeled green icon button right floated address-next submit">
             <i class="right arrow icon"></i>
             Next
         </button>
