@@ -18,7 +18,7 @@ abstract class BaseObject
     public $baseRequest = '';
 
     /**
-     * Current locale. Used for caching purposes.
+     * Current locale. Used for the cache namespace.
      */
     public $locale = 'en';
 
@@ -46,7 +46,7 @@ abstract class BaseObject
         $this->locale = Localization::getCurrentLocale();
 
         // Build the cache namespace.
-        $this->cacheNamespace = $this->locale .'.api.'. $this->baseRequest .'.';
+        $this->cacheNamespace = config('services.kemapi.user') .'.'. $this->locale .'.api.'. $this->baseRequest .'.';
     }
 
     /**
