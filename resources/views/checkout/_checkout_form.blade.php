@@ -455,27 +455,27 @@
                 <label>Name</label>
                 <div class="two fields">
                     <div class="field">
-                        <input type="text" name="shipping[first-name]" placeholder="First Name">
+                        <input type="text" name="billing[first-name]" id="billingFirstname" placeholder="First Name">
                     </div>
                     <div class="field">
-                        <input type="text" name="shipping[last-name]" placeholder="Last Name">
+                        <input type="text" name="billing[last-name]" id="billingLastname" placeholder="Last Name">
                     </div>
                 </div>
             </div>
 
             <div class="field">
                 <label>Shipping Address</label>
-                <input type="text" name="shipping[address]" placeholder="Address line 1">
+                <input type="text" name="billing[address]" id="billingAddress1" placeholder="Address line 1">
             </div>
 
             <div class="field">
-                <input type="text" name="shipping[address-2]" placeholder="Address line 2 (optional)">
+                <input type="text" name="billing[address-2]" id="billingAddress2" placeholder="Address line 2 (optional)">
             </div>
 
             <div class="two fields">
                 <div class="field">
                     <label>Country</label>
-                    <select class="ui fluid search selection dropdown dropdown-select">
+                    <select class="ui fluid search selection dropdown dropdown-select" name="billing_address[country]" id="billingCountry">
                         <option value="AF">Afghanistan</option>
                         <option value="AX">Åland Islands</option>
                         <option value="AL">Albania</option>
@@ -515,7 +515,7 @@
                         <option value="BI">Burundi</option>
                         <option value="KH">Cambodia</option>
                         <option value="CM">Cameroon</option>
-                        <option value="CA">Canada</option>
+                        <option value="CA" selected>Canada</option>
                         <option value="CV">Cape Verde</option>
                         <option value="KY">Cayman Islands</option>
                         <option value="CF">Central African Republic</option>
@@ -731,7 +731,7 @@
 
                 <div class="field">
                     <label>Province/State/Region</label>
-                    <select class="ui fluid search selection dropdown dropdown-select">
+                    <select class="ui fluid search selection dropdown dropdown-select" name="billing_address[province]" id="billingProvince">
                         <optgroup data-country="CA" label="@lang("boukem.ca_province")">
                             <option value="AB">Alberta</option>
                             <option value="BC">British Columbia</option>
@@ -741,7 +741,7 @@
                             <option value="NS">Nova Scotia</option>
                             <option value="ON">Ontario</option>
                             <option value="PE">Prince Edward Island</option>
-                            <option value="QC">Quebec</option>
+                            <option value="QC" selected>Quebec</option>
                             <option value="SK">Saskatchewan</option>
                             <option value="NT">Northwest Territories</option>
                             <option value="NU">Nunavut</option>
@@ -843,18 +843,18 @@
             <div class="two fields">
                 <div class="field">
                     <label>City</label>
-                    <input type="text" placeholder="City"/>
+                    <input type="text" placeholder="City" name="billing_address[city]" id="billingCity"/>
                 </div>
 
                 <div class="field">
                     <label>ZIP Code</label>
-                    <input type="text" placeholder="A1A 1A1"/>
+                    <input type="text" placeholder="A1A 1A1" name="billing_address[postcode]" id="billingPostcode"/>
                 </div>
             </div>
 
         </div>
 
-        <button class="ui right labeled green icon button right floated address-next submit">
+        <button class="ui right labeled green icon button right floated shipment-trigger submit">
             <i class="right arrow icon"></i>
             Next
         </button>
