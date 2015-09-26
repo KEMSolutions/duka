@@ -86,10 +86,12 @@ var checkoutContainer = {
         self.validateFormFields();
         self.fadeInBillingInformation();
 
-        $(".shipment-trigger").on("click", function () {
+        $(".shipment-trigger").on("click", function (e) {
             if ($(".billing-checkbox").checkbox("is checked")) {
                 self.autofillBillingAddress();
             }
+
+            e.preventDefault();
         });
 
 

@@ -449,7 +449,7 @@
 
 
         <div class="ui segment hidden billingInformation">
-            <h4 class="ui dividing header">Billing Information</h4>
+            <h4 class="ui dividing header">@lang("boukem.billing_info")</h4>
 
             <div class="field">
                 <label>@lang("boukem.name")</label>
