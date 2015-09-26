@@ -90,9 +90,6 @@ var checkoutContainer = {
             if ($(".billing-checkbox").checkbox("is checked")) {
                 self.autofillBillingAddress();
             }
-            else {
-                self.clearFields($(".billingInformation"), "input:text");
-            }
         });
 
 

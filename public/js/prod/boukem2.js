@@ -488,270 +488,97 @@ var UtilityContainer = {
 
 
 /**
- * Object responsible for handling different formats of the same product.
+ * Entry point of script.
  *
- * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
  */
-var productFormatContainer = {
+; (function(window, document, $) {
+    $(document).ready(function () {
 
-    /**
-     * Sets the right price, inventory count and format text according to the format of the hovered product.
-     *
-     */
-    displaySyncedProductInformation: function() {
-
-        const self = productFormatContainer,
-            $formatSelection = $(".format-selection");
-
-        $formatSelection.on("click", function () {
-            // Set the right format in product title
-            $("#product-format").text($(this).data("format"));
-
-            // Set the right price and the right inventory count
-            self.setPriceTag($(this).data("price"));
-            self.setInventoryCount($(this).data("inventory-count"));
-
-            // Toggle active class on right format
-            self.toggleActiveClass($(this));
-
-            // Creates an appropriate buybutton according to the info.
-            self.setBuybuttonInformation($(this));
-        });
-
-    },
-
-    /**
-     * Sets the inventory text and value according to the inventory count of the product.
-     *
-     * @param count
-     */
-    setInventoryCount: function (count) {
-        const $inventoryCount = $("#inventory-count"),
-            countryCode = $inventoryCount.data("country-code"),
-            expressShipping = Localization.express_shipping,
-            stockLeft = Localization.stock_left.replace(":quantity", count),
-            shippingTime = Localization.shipping_time,
-            shippingMethod = (countryCode === "US" || countryCode === "CA") ? "fa-truck" : "fa-plane";
-
-        var inventoryDescription = '';
-
-       if (count > 5) {
-            inventoryDescription =
-                '<link itemprop="availability" href="http://schema.org/InStock">' +
-                    '<li class="text-success">' +
-                    '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-                    expressShipping;
-       }
-       else if (count > 0) {
-           inventoryDescription =
-               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
-               '<li class="text-warning">' +
-                   '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-                   stockLeft;
-       }
-        else {
-           inventoryDescription =
-               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
-           '<li class="text-warning">' +
-           '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
-           shippingTime;
-       }
-
-        $inventoryCount.html(inventoryDescription);
-
-    },
-
-    /**
-     * Sets the price tag according to the format.
-     *
-     * @param price
-     */
-    setPriceTag: function (price) {
-        $(".price-tag").text("$ " + price);
-    },
-
-    /**
-     * Recreates a buybutton with relevant information every time we switch format.
-     *
-     * @param format (html5 data in format buttons)
-     */
-    setBuybuttonInformation: function(format) {
-        var $buybuttonWrapper = $(".buybutton-format-selection-wrapper"),
-            buybutton =
-                '<button class="btn btn-three buybutton horizontal-align"' +
-                    'data-product="' + format.data("product") +'"' +
-                'data-price="' + format.data("price") +'"' +
-                'data-thumbnail="' + format.data("thumbnail") +'"' +
-                'data-thumbnail_lg="' + format.data("thumbnail_lg") +'"' +
-                'data-name="' + format.data("name") +'"' +
-                'data-format="' + format.data("format") +'"' +
-                'data-inventory-count="' + format.data("inventory-count") +'"' +
-                'data-quantity="' + format.data("quantity") + '"' +
-                'data-link="' + format.data("link") +'"' +
-                    '>' +
-                '<div class="add-cart">' +
-                    '<i class="fa fa-check-circle"></i> ' +
-                    Localization.add_cart +
-                    '</div> </button>';
-
-        $buybuttonWrapper.empty();
-
-        $buybuttonWrapper.append(buybutton);
-    },
-
-    /**
-     * Toggles the .active class when clicked on a format.
-     *
-     * @param format
-     */
-    toggleActiveClass: function (format) {
-        $(".format-selection.active").removeClass("active");
-        format.addClass("active");
-    },
-
-    init: function () {
-        const self = productFormatContainer;
-
-        self.displaySyncedProductInformation();
-
-    }
-}
-/**
- * Object responsible for adding products to a user's wishlist.
- *
- * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
- */
-var productLayoutFavoriteContainer = {
-    /**
-     * Fade in the favorite icon (heart icon) when hovering on a product tile.
-     *
-     */
-    fadeInFavoriteIcon: function() {
-        self = productLayoutFavoriteContainer;
-
-        $(".dense-product").hover(function() {
-
-            $(this).children(".favorite-wrapper").fadeIn();
-            self.setPopupText($(this).children(".favorite-wrapper"));
-
-        }, function () {
-            $(this).children(".favorite-wrapper").hide();
-        });
-    },
-
-    /**
-     * Set popup text according to current state of the wrapper.
-     *
-     * @param wrapper
-     */
-    setPopupText: function (wrapper) {
-        if($(wrapper).hasClass("favorited")){
-            $(wrapper).attr("title", Localization.wishlist_remove);
-        }
-        else {
-            $(wrapper).attr("title", Localization.wishlist_add);
-        }
-    },
-
-    /**
-     * Update the value of .wishlist_badge when adding or deleting elements.
-     *
-     */
-    setWishlistBadgeQuantity : function() {
-        var total = UtilityContainer.getNumberOfProductsInWishlist();
-
-        $(".wishlist_badge").text(total);
-    },
-
-    /**
-     * Add the clicked product to the wish list.
-     *
-     */
-    addToFavorite: function() {
-        var self = productLayoutFavoriteContainer,
-            item;
-
-        $(".favorite-wrapper").on("click", function() {
-            //No favorited class.
-            if (!$(this).hasClass("favorited")) {
-                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
-                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
-
-                //Set the favorite icon to be displayed
-                $(this).addClass("favorited");
-
-                //Set wishlist badge quantity
-                self.setWishlistBadgeQuantity();
-            }
-            else
-            //Has a favorited class. We remove it, then delete the element from local Storage.
-            {
-                self.removeFromFavorite($(this), self);
+        /**
+         * Sets up the ajax token for all ajax requests
+         *
+         */
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'locale': $('html').attr('lang')
             }
         });
-    },
 
-    /**
-     * Persist the heart icon next to products already marked as wished.
-     *
-     */
-    persistFavorite: function() {
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
-                for(var j = 0; j<$(".favorite-wrapper").length; j++)
-                {
-                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
-                    {
-                        $(".favorite-wrapper")[j].className += " favorited";
-                    }
-                }
-            }
-        }
-    },
+        /**
+         * Initialize semantic UI modules
+         *
+         */
+        semanticInitContainer.init();
 
-    /**
-     * Delete the clicked element from the wish list.
-     *
-     * @param element
-     * @param context
-     */
-    removeFromFavorite: function (element, context) {
-        element.removeClass("favorited");
-        localStorage.removeItem("_wish_product " + element.data("product"));
-        context.setWishlistBadgeQuantity();
-    },
+        /**
+         * Initialize checkout logic.
+         *
+         */
+        //checkoutInitContainer.init();
+        checkoutContainer.init();
 
-    init: function () {
-        var self = productLayoutFavoriteContainer;
+        /**
+         * Initialize cart drawer logic.
+         *
+         */
+        cartDrawerInitContainer.init();
 
-        self.setPopupText();
-        self.addToFavorite();
-        self.persistFavorite();
-        self.fadeInFavoriteIcon();
-        self.setWishlistBadgeQuantity();
-    }
-}
-var productResponsive = {
-    invertPriceAndDescriptionColumn: function () {
-        $(window).on("load resize", function () {
-            if($(this).width() < 768)
-            {
-                $("#product-description").before($("#product-info-box"));
-            }
-            else
-            {
-                $("#product-description").after($("#product-info-box"));
-            }
+        /**
+         * Initialize category container
+         *
+         */
+        categoryContainer.init();
+
+        /**
+         * Initialize overlay plugin.
+         *
+         */
+        paymentOverlayContainer.init();
+
+        /**
+         * Initialize homepage sections.
+         *
+         */
+        homepageContainer.init();
+
+        /**
+         * Initialize favorite products feature.
+         *
+         */
+        productLayoutFavoriteContainer.init();
+
+        /**
+         * Initialize product formats feature.
+         *
+         */
+        productFormatContainer.init();
+
+        /**
+         * Initialize column responsiveness in product pages.
+         *
+         */
+        productResponsive.init();
+
+        /**
+         * Initialize wishlist page.
+         *
+         */
+        wishlistLogicContainer.init();
+
+        /**
+         * Global initialization of elements.
+         *
+         */
+            //fancy plugin for product page (quantity input)
+        $(".input-qty").TouchSpin({
+            initval: 1
         });
-    },
 
-    init: function () {
-        var self = productResponsive;
+    });
 
-        self.invertPriceAndDescriptionColumn();
-    }
-}
+})(window, this.document, jQuery, undefined)
+
 /**
  * Object responsible for handling billing information.
  *
@@ -1173,9 +1000,6 @@ var checkoutContainer = {
         $(".shipment-trigger").on("click", function () {
             if ($(".billing-checkbox").checkbox("is checked")) {
                 self.autofillBillingAddress();
-            }
-            else {
-                self.clearFields($(".billingInformation"), "input:text");
             }
         });
 
@@ -1645,6 +1469,271 @@ var paymentOverlayContainer = {
     }
 }
 
+/**
+ * Object responsible for handling different formats of the same product.
+ *
+ * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
+ */
+var productFormatContainer = {
+
+    /**
+     * Sets the right price, inventory count and format text according to the format of the hovered product.
+     *
+     */
+    displaySyncedProductInformation: function() {
+
+        const self = productFormatContainer,
+            $formatSelection = $(".format-selection");
+
+        $formatSelection.on("click", function () {
+            // Set the right format in product title
+            $("#product-format").text($(this).data("format"));
+
+            // Set the right price and the right inventory count
+            self.setPriceTag($(this).data("price"));
+            self.setInventoryCount($(this).data("inventory-count"));
+
+            // Toggle active class on right format
+            self.toggleActiveClass($(this));
+
+            // Creates an appropriate buybutton according to the info.
+            self.setBuybuttonInformation($(this));
+        });
+
+    },
+
+    /**
+     * Sets the inventory text and value according to the inventory count of the product.
+     *
+     * @param count
+     */
+    setInventoryCount: function (count) {
+        const $inventoryCount = $("#inventory-count"),
+            countryCode = $inventoryCount.data("country-code"),
+            expressShipping = Localization.express_shipping,
+            stockLeft = Localization.stock_left.replace(":quantity", count),
+            shippingTime = Localization.shipping_time,
+            shippingMethod = (countryCode === "US" || countryCode === "CA") ? "fa-truck" : "fa-plane";
+
+        var inventoryDescription = '';
+
+       if (count > 5) {
+            inventoryDescription =
+                '<link itemprop="availability" href="http://schema.org/InStock">' +
+                    '<li class="text-success">' +
+                    '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+                    expressShipping;
+       }
+       else if (count > 0) {
+           inventoryDescription =
+               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
+               '<li class="text-warning">' +
+                   '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+                   stockLeft;
+       }
+        else {
+           inventoryDescription =
+               '<link itemprop="availability" href="http://schema.org/LimitedAvailability" >' +
+           '<li class="text-warning">' +
+           '<i class="fa ' + shippingMethod + ' fa-fw"></i> ' +
+           shippingTime;
+       }
+
+        $inventoryCount.html(inventoryDescription);
+
+    },
+
+    /**
+     * Sets the price tag according to the format.
+     *
+     * @param price
+     */
+    setPriceTag: function (price) {
+        $(".price-tag").text("$ " + price);
+    },
+
+    /**
+     * Recreates a buybutton with relevant information every time we switch format.
+     *
+     * @param format (html5 data in format buttons)
+     */
+    setBuybuttonInformation: function(format) {
+        var $buybuttonWrapper = $(".buybutton-format-selection-wrapper"),
+            buybutton =
+                '<button class="btn btn-three buybutton horizontal-align"' +
+                    'data-product="' + format.data("product") +'"' +
+                'data-price="' + format.data("price") +'"' +
+                'data-thumbnail="' + format.data("thumbnail") +'"' +
+                'data-thumbnail_lg="' + format.data("thumbnail_lg") +'"' +
+                'data-name="' + format.data("name") +'"' +
+                'data-format="' + format.data("format") +'"' +
+                'data-inventory-count="' + format.data("inventory-count") +'"' +
+                'data-quantity="' + format.data("quantity") + '"' +
+                'data-link="' + format.data("link") +'"' +
+                    '>' +
+                '<div class="add-cart">' +
+                    '<i class="fa fa-check-circle"></i> ' +
+                    Localization.add_cart +
+                    '</div> </button>';
+
+        $buybuttonWrapper.empty();
+
+        $buybuttonWrapper.append(buybutton);
+    },
+
+    /**
+     * Toggles the .active class when clicked on a format.
+     *
+     * @param format
+     */
+    toggleActiveClass: function (format) {
+        $(".format-selection.active").removeClass("active");
+        format.addClass("active");
+    },
+
+    init: function () {
+        const self = productFormatContainer;
+
+        self.displaySyncedProductInformation();
+
+    }
+}
+/**
+ * Object responsible for adding products to a user's wishlist.
+ *
+ * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
+ */
+var productLayoutFavoriteContainer = {
+    /**
+     * Fade in the favorite icon (heart icon) when hovering on a product tile.
+     *
+     */
+    fadeInFavoriteIcon: function() {
+        self = productLayoutFavoriteContainer;
+
+        $(".dense-product").hover(function() {
+
+            $(this).children(".favorite-wrapper").fadeIn();
+            self.setPopupText($(this).children(".favorite-wrapper"));
+
+        }, function () {
+            $(this).children(".favorite-wrapper").hide();
+        });
+    },
+
+    /**
+     * Set popup text according to current state of the wrapper.
+     *
+     * @param wrapper
+     */
+    setPopupText: function (wrapper) {
+        if($(wrapper).hasClass("favorited")){
+            $(wrapper).attr("title", Localization.wishlist_remove);
+        }
+        else {
+            $(wrapper).attr("title", Localization.wishlist_add);
+        }
+    },
+
+    /**
+     * Update the value of .wishlist_badge when adding or deleting elements.
+     *
+     */
+    setWishlistBadgeQuantity : function() {
+        var total = UtilityContainer.getNumberOfProductsInWishlist();
+
+        $(".wishlist_badge").text(total);
+    },
+
+    /**
+     * Add the clicked product to the wish list.
+     *
+     */
+    addToFavorite: function() {
+        var self = productLayoutFavoriteContainer,
+            item;
+
+        $(".favorite-wrapper").on("click", function() {
+            //No favorited class.
+            if (!$(this).hasClass("favorited")) {
+                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
+                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+
+                //Set the favorite icon to be displayed
+                $(this).addClass("favorited");
+
+                //Set wishlist badge quantity
+                self.setWishlistBadgeQuantity();
+            }
+            else
+            //Has a favorited class. We remove it, then delete the element from local Storage.
+            {
+                self.removeFromFavorite($(this), self);
+            }
+        });
+    },
+
+    /**
+     * Persist the heart icon next to products already marked as wished.
+     *
+     */
+    persistFavorite: function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
+                for(var j = 0; j<$(".favorite-wrapper").length; j++)
+                {
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
+                    {
+                        $(".favorite-wrapper")[j].className += " favorited";
+                    }
+                }
+            }
+        }
+    },
+
+    /**
+     * Delete the clicked element from the wish list.
+     *
+     * @param element
+     * @param context
+     */
+    removeFromFavorite: function (element, context) {
+        element.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + element.data("product"));
+        context.setWishlistBadgeQuantity();
+    },
+
+    init: function () {
+        var self = productLayoutFavoriteContainer;
+
+        self.setPopupText();
+        self.addToFavorite();
+        self.persistFavorite();
+        self.fadeInFavoriteIcon();
+        self.setWishlistBadgeQuantity();
+    }
+}
+var productResponsive = {
+    invertPriceAndDescriptionColumn: function () {
+        $(window).on("load resize", function () {
+            if($(this).width() < 768)
+            {
+                $("#product-description").before($("#product-info-box"));
+            }
+            else
+            {
+                $("#product-description").after($("#product-info-box"));
+            }
+        });
+    },
+
+    init: function () {
+        var self = productResponsive;
+
+        self.invertPriceAndDescriptionColumn();
+    }
+}
 /**
  * Object responsible for activating semantic ui features.
  *
@@ -2120,143 +2209,6 @@ var homepageContainer = {
             mixed = self.mixed;
 
         mixed.toggleSixteenWideColumn();
-    }
-}
-/**
- * Container responsible for handling the logic of the wish list page.
- * Layout handled in dev/components/site/wishlist.js
- *
- * @type {{createWishlistElement: Function, renderWishlist: Function, removeWishlistElement: Function, init: Function}}
- */
-var wishlistLogicContainer = {
-
-    /**
-     * Create a list layout element from the information passed as an argument.
-     *
-     * Rounding to 2 decimals, courtesy of http://stackoverflow.com/a/6134070.
-     *
-     * @param item
-     */
-    createWishlistElement: function(item) {
-        var self = wishlistLogicContainer,
-            element =
-        '<div class="item list-layout-element">' +
-        '<div class="ui tiny image">' +
-        '<img src=' + item.thumbnail_lg + '>' +
-        '</div>' +
-        '<div class="middle aligned content">' +
-        '<div class="header">' +
-        '<a href=' + item.link + '>' + item.name + '</a>' +
-        '</div>' +
-        '<div class="description">' +
-        '<p>' + item.description + '</p>' +
-            '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
-        '</div>' +
-        '<div class="extra">' +
-        '<button class="ui right floated button green buybutton"' +
-        'data-product="' + item.product + '"' +
-        'data-price="' + item.price + '"' +
-        'data-thumbnail="' + item.thumbnail + '"' +
-        'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
-        'data-name="' + item.name + '"' +
-        'data-description="' + item.description + '"' +
-        'data-quantity="' + item.quantity  + '"' + ">" +
-        'Add to cart </button>' +
-        '</button>' +
-        '<button class="ui right floated button inverted red removeFavoriteButton" data-product="' + item.product + '">' +
-        'Remove from wishlist' +
-        '</button>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '<hr/>';
-
-
-        //Localize button (default in english)
-        self.localizeWishlistButton();
-
-        //Append elements
-        $(".list-layout-element-container").append(element);
-    },
-
-    /**
-     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
-     * The creation is handled in createWishlistElement function.
-     *
-     */
-    renderWishlist: function() {
-        var self = wishlistLogicContainer;
-
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
-            {
-                self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
-            }
-        }
-    },
-
-    localizeWishlistButton: function() {
-        $(".list-layout-element .buybutton").text(Localization.add_cart);
-        $(".list-layout-element .removeFavoriteButton").text(Localization.wishlist_remove);
-    },
-
-    /**
-     * Remove the element from the wishlist after a subtle animation.
-     *
-     */
-    removeWishlistElement: function () {
-        $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
-            //Animate the element.
-            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
-            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element").next());
-
-            //Delete the element from localStorage.
-            localStorage.removeItem("_wish_product " + $(this).data("product"));
-
-            //Set wishlist header quantity.
-            wishlistContainer.setNumberOfProductsInHeader();
-
-            //Set wishlist badge
-            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
-        });
-    },
-
-    init: function () {
-        var self = wishlistLogicContainer;
-
-        //Calls the layout container (wishlistContainer).
-        wishlistContainer.init();
-
-        //Initialize the logic.
-        self.renderWishlist();
-        self.removeWishlistElement();
-    }
-
-}
-/**
- * Object responsible for the view component of the wish list page.
- * Logic handled in dev/actions/site/wishlist-logic.js
- *
- * @type {{setNumberOfProductsInHeader: Function, init: Function}}
- */
-var wishlistContainer = {
-
-    /**
-     * Sets the number of products in the header (singular / plural).
-     *
-     */
-    setNumberOfProductsInHeader: function() {
-        var quantity = "";
-        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
-        $("#quantity-wishlist").text(quantity);
-    },
-
-
-    init: function() {
-        var self = wishlistContainer;
-
-        self.setNumberOfProductsInHeader();
     }
 }
 /**
@@ -2753,93 +2705,139 @@ var cartDisplayContainer = {
     }
 };
 /**
- * Entry point of script.
+ * Container responsible for handling the logic of the wish list page.
+ * Layout handled in dev/components/site/wishlist.js
  *
+ * @type {{createWishlistElement: Function, renderWishlist: Function, removeWishlistElement: Function, init: Function}}
  */
-; (function(window, document, $) {
-    $(document).ready(function () {
+var wishlistLogicContainer = {
 
-        /**
-         * Sets up the ajax token for all ajax requests
-         *
-         */
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'locale': $('html').attr('lang')
+    /**
+     * Create a list layout element from the information passed as an argument.
+     *
+     * Rounding to 2 decimals, courtesy of http://stackoverflow.com/a/6134070.
+     *
+     * @param item
+     */
+    createWishlistElement: function(item) {
+        var self = wishlistLogicContainer,
+            element =
+        '<div class="item list-layout-element">' +
+        '<div class="ui tiny image">' +
+        '<img src=' + item.thumbnail_lg + '>' +
+        '</div>' +
+        '<div class="middle aligned content">' +
+        '<div class="header">' +
+        '<a href=' + item.link + '>' + item.name + '</a>' +
+        '</div>' +
+        '<div class="description">' +
+        '<p>' + item.description + '</p>' +
+            '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
+        '</div>' +
+        '<div class="extra">' +
+        '<button class="ui right floated button green buybutton"' +
+        'data-product="' + item.product + '"' +
+        'data-price="' + item.price + '"' +
+        'data-thumbnail="' + item.thumbnail + '"' +
+        'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
+        'data-name="' + item.name + '"' +
+        'data-description="' + item.description + '"' +
+        'data-quantity="' + item.quantity  + '"' + ">" +
+        'Add to cart </button>' +
+        '</button>' +
+        '<button class="ui right floated button inverted red removeFavoriteButton" data-product="' + item.product + '">' +
+        'Remove from wishlist' +
+        '</button>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<hr/>';
+
+
+        //Localize button (default in english)
+        self.localizeWishlistButton();
+
+        //Append elements
+        $(".list-layout-element-container").append(element);
+    },
+
+    /**
+     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
+     * The creation is handled in createWishlistElement function.
+     *
+     */
+    renderWishlist: function() {
+        var self = wishlistLogicContainer;
+
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
+            {
+                self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
             }
+        }
+    },
+
+    localizeWishlistButton: function() {
+        $(".list-layout-element .buybutton").text(Localization.add_cart);
+        $(".list-layout-element .removeFavoriteButton").text(Localization.wishlist_remove);
+    },
+
+    /**
+     * Remove the element from the wishlist after a subtle animation.
+     *
+     */
+    removeWishlistElement: function () {
+        $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
+            //Animate the element.
+            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
+            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element").next());
+
+            //Delete the element from localStorage.
+            localStorage.removeItem("_wish_product " + $(this).data("product"));
+
+            //Set wishlist header quantity.
+            wishlistContainer.setNumberOfProductsInHeader();
+
+            //Set wishlist badge
+            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
         });
+    },
 
-        /**
-         * Initialize semantic UI modules
-         *
-         */
-        semanticInitContainer.init();
+    init: function () {
+        var self = wishlistLogicContainer;
 
-        /**
-         * Initialize checkout logic.
-         *
-         */
-        //checkoutInitContainer.init();
-        checkoutContainer.init();
+        //Calls the layout container (wishlistContainer).
+        wishlistContainer.init();
 
-        /**
-         * Initialize cart drawer logic.
-         *
-         */
-        cartDrawerInitContainer.init();
+        //Initialize the logic.
+        self.renderWishlist();
+        self.removeWishlistElement();
+    }
 
-        /**
-         * Initialize category container
-         *
-         */
-        categoryContainer.init();
+}
+/**
+ * Object responsible for the view component of the wish list page.
+ * Logic handled in dev/actions/site/wishlist-logic.js
+ *
+ * @type {{setNumberOfProductsInHeader: Function, init: Function}}
+ */
+var wishlistContainer = {
 
-        /**
-         * Initialize overlay plugin.
-         *
-         */
-        paymentOverlayContainer.init();
+    /**
+     * Sets the number of products in the header (singular / plural).
+     *
+     */
+    setNumberOfProductsInHeader: function() {
+        var quantity = "";
+        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
+        $("#quantity-wishlist").text(quantity);
+    },
 
-        /**
-         * Initialize homepage sections.
-         *
-         */
-        homepageContainer.init();
 
-        /**
-         * Initialize favorite products feature.
-         *
-         */
-        productLayoutFavoriteContainer.init();
+    init: function() {
+        var self = wishlistContainer;
 
-        /**
-         * Initialize product formats feature.
-         *
-         */
-        productFormatContainer.init();
-
-        /**
-         * Initialize column responsiveness in product pages.
-         *
-         */
-        productResponsive.init();
-
-        /**
-         * Initialize wishlist page.
-         *
-         */
-        wishlistLogicContainer.init();
-
-        /**
-         * Global initialization of elements.
-         *
-         */
-            //fancy plugin for product page (quantity input)
-        $(".input-qty").TouchSpin({
-            initval: 1
-        });
-
-    });
-
-})(window, this.document, jQuery, undefined)
+        self.setNumberOfProductsInHeader();
+    }
+}
