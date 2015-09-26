@@ -28,19 +28,16 @@ The script entry point is located in `public/js/dev/components/init.js`, where a
 
 ###### File structure (as of 18/09/2015)
 
-The `/public/js` folder contains 3 subfolders:  
-* data
-* dev
-* prod
+The `/public/js` folder contains 3 subfolders: *data*, *dev*, *prod*.
 
---`data`  
+-`data`  
 This folder contains json resources to be taken advantage of. (country list, world states, ...).
 
---`dev/components`  
+-`dev/components`  
 Every component should be stored here. We tried to roughly follow the same folder hierarchy that is in the `/resources/views` since each component should be responsible for a specific view feature.  
 Some components require more than one file to enable their full feature (eg. cart-drawer), the `*InitContainer*` should be the one called in `init.js`.
 
---`utils`  
+-`utils`  
 This folder regroups all helper, miscellaneous, utilities functions. In our case, the `UtilityContainer` plays that role. 
 
 --`prod`  
