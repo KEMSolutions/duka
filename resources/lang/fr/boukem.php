@@ -66,6 +66,7 @@ return [
     "ship_billing"  =>"Utiliser cette adresse pour la facturation",
     "ship_different"=>"Livrer à une adresse différente.",
     "shipping_address"=>"Adresse de livraison",
+    "shipping_info" =>"Information de livraison",
     "error_polite"          =>"Votre formulaire est incomplet.",
     "mandatory_error"       =>"Certains champs obligatoires ne sont pas correctement remplis. Retournez dans le formulaire et renseignez ces champs avant de soumettre à nouveau le formulaire.",
     "proceed_checkout"      =>"Poursuivre vers le paiement sécurisé",

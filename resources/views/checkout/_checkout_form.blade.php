@@ -15,36 +15,36 @@
     <div class="nine wide column">
 
         <div class="ui segment shippingInformation">
-            <h4 class="ui dividing header">Shipping Information</h4>
+            <h4 class="ui dividing header">@lang("boukem.shipping_info")</h4>
             <div class="field">
-                <label>Name</label>
+                <label>@lang("boukem.name")</label>
                 <div class="two fields">
                     <div class="field">
-                        <input type="text" name="shipping_address[firstname]" id="shippingFirstname" class="firstname" placeholder="First Name">
+                        <input type="text" name="shipping_address[firstname]" id="shippingFirstname" class="firstname" placeholder=@lang("boukem.first_name")>
                     </div>
                     <div class="field">
-                        <input type="text" name="shipping_address[lastname]" id="shippingLastname" class="lastname" placeholder="Last Name">
+                        <input type="text" name="shipping_address[lastname]" id="shippingLastname" class="lastname" placeholder=@lang("boukem.last_name")>
                     </div>
                 </div>
             </div>
 
             <div class="field disabled">
-                <label>Name</label>
+                <label>@lang("boukem.name")</label>
                 <input type="text" name="shipping_address[name]" id="shippingName" class="name" value="{{ Customers::getDefaultAddress()->name }}" disabled/>
             </div>
 
             <div class="field">
-                <label>Shipping Address</label>
-                <input type="text" name="shipping_address[line1]" id="shippingAddress1" class="address1" placeholder="Address line 1" value="{{ Customers::getDefaultAddress()->line1 }}" >
+                <label>@lang("boukem.shipping_address")</label>
+                <input type="text" name="shipping_address[line1]" id="shippingAddress1" class="address1" placeholder=@lang("boukem.address_1") value="{{ Customers::getDefaultAddress()->line1 }}" >
             </div>
 
             <div class="field">
-                <input type="text" name="shipping_address[line2]" id="shippingAddress2" class="address2" placeholder="Address line 2 (optional)" value="{{ Customers::getDefaultAddress()->line2 }}">
+                <input type="text" name="shipping_address[line2]" id="shippingAddress2" class="address2" placeholder="@lang("boukem.address_2") (@lang("boukem.optional"))" value="{{ Customers::getDefaultAddress()->line2 }}">
             </div>
 
             <div class="two fields">
                 <div class="field">
-                    <label>Country</label>
+                    <label>@lang("boukem.country")</label>
                     <select name="shipping_address[country]" id="shippingCountry" class="ui fluid search selection dropdown dropdown-select country">
                         <option value="AF">Afghanistan</option>
                         <option value="AX">Åland Islands</option>
@@ -300,7 +300,7 @@
                 </div>
 
                 <div class="field">
-                    <label>Province/State/Region</label>
+                    <label>@lang("boukem.province_state_reg")</label>
                     <select name="shipping_address[province]" id="shippingProvince" class="ui fluid search selection dropdown dropdown-select province">
                         <div class="ui horizontal divider">@lang("boukem.ca_province")</div>
                             <option value="AB">Alberta</option>
@@ -412,24 +412,24 @@
 
             <div class="two fields">
                 <div class="field">
-                    <label>City</label>
-                    <input type="text" placeholder="City" name="shipping_address[city]" id="shippingCity" class="city" value="{{ Customers::getDefaultAddress()->city }}"/>
+                    <label>@lang("boukem.city")</label>
+                    <input type="text" placeholder=@lang("boukem.city") name="shipping_address[city]" id="shippingCity" class="city" value="{{ Customers::getDefaultAddress()->city }}"/>
                 </div>
 
                 <div class="field">
-                    <label>ZIP Code</label>
+                    <label>@lang("boukem.postal_code")</label>
                     <input type="text" placeholder="A1A 1A1" name="shipping_address[postcode]" id="shippingPostcode" value="" class="postcode" value="{{ Customers::getDefaultAddress()->postcode }}"/>
                 </div>
             </div>
 
             <div class="two fields">
                 <div class="field">
-                    <label>Email</label>
+                    <label>@lang("boukem.email_address")</label>
                     <input type="email" placeholder="you@you.com" name="email" id="customer_email" value="{{ Customers::getDefault()->email }}"/>
                 </div>
 
                 <div class="field">
-                    <label>Phone number</label>
+                    <label>@lang("boukem.phone")</label>
                     <input type="text" placeholder="(xxx) xxx xxx" name="shipping_address[phone]" id="customer_phone" value="{{ Customers::getDefaultAddress()->phone }}"/>
                 </div>
             </div>
@@ -452,29 +452,29 @@
             <h4 class="ui dividing header">Billing Information</h4>
 
             <div class="field">
-                <label>Name</label>
+                <label>@lang("boukem.name")</label>
                 <div class="two fields">
                     <div class="field">
-                        <input type="text" name="billing[first-name]" id="billingFirstname" placeholder="First Name">
+                        <input type="text" name="billing[first-name]" id="billingFirstname" placeholder=@lang("boukem.first_name")>
                     </div>
                     <div class="field">
-                        <input type="text" name="billing[last-name]" id="billingLastname" placeholder="Last Name">
+                        <input type="text" name="billing[last-name]" id="billingLastname" placeholder=@lang("boukem.last_name")>
                     </div>
                 </div>
             </div>
 
             <div class="field">
-                <label>Shipping Address</label>
-                <input type="text" name="billing[address]" id="billingAddress1" placeholder="Address line 1">
+                <label>@lang("boukem.billing_address")</label>
+                <input type="text" name="billing[address]" id="billingAddress1" placeholder=@lang("boukem.address_1")>
             </div>
 
             <div class="field">
-                <input type="text" name="billing[address-2]" id="billingAddress2" placeholder="Address line 2 (optional)">
+                <input type="text" name="billing[address-2]" id="billingAddress2" placeholder="@lang("boukem.address_2") (@lang("boukem.optional"))">
             </div>
 
             <div class="two fields">
                 <div class="field">
-                    <label>Country</label>
+                    <label>@lang("boukem.country")</label>
                     <select class="ui fluid search selection dropdown dropdown-select" name="billing_address[country]" id="billingCountry">
                         <option value="AF">Afghanistan</option>
                         <option value="AX">Åland Islands</option>
@@ -730,7 +730,7 @@
                 </div>
 
                 <div class="field">
-                    <label>Province/State/Region</label>
+                    <label>@lang("boukem.province_state_reg")</label>
                     <select class="ui fluid search selection dropdown dropdown-select" name="billing_address[province]" id="billingProvince">
                         <optgroup data-country="CA" label="@lang("boukem.ca_province")">
                             <option value="AB">Alberta</option>
@@ -842,12 +842,12 @@
 
             <div class="two fields">
                 <div class="field">
-                    <label>City</label>
-                    <input type="text" placeholder="City" name="billing_address[city]" id="billingCity"/>
+                    <label>@lang("boukem.city")</label>
+                    <input type="text" placeholder=@lang("boukem.city") name="billing_address[city]" id="billingCity"/>
                 </div>
 
                 <div class="field">
-                    <label>ZIP Code</label>
+                    <label>@lang("boukem.postal_code")</label>
                     <input type="text" placeholder="A1A 1A1" name="billing_address[postcode]" id="billingPostcode"/>
                 </div>
             </div>
@@ -856,7 +856,7 @@
 
         <button class="ui right labeled green icon button right floated shipment-trigger submit">
             <i class="right arrow icon"></i>
-            Next
+            @lang("boukem.next")
         </button>
 
     </div>

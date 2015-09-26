@@ -66,6 +66,7 @@ return [
     "ship_billing"  =>"Use the same address for billing.",
     "ship_different"=>"Ship to a different address",
     "shipping_address"=>"Shipping Address",
+    "shipping_info" =>"Shipping Information",
     "error_polite"         =>"Sorry, but an error has been made.",
     "mandatory_error"=>"Some mandatory fields were not filled out properly. Please correct and submit the form again.",
     "proceed_checkout"=>"Proceed to secure checkout",
