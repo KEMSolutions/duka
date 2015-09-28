@@ -1,18 +1,6 @@
-<div class="ui stackable grid" style="margin-top: 2rem;">
-    <div class="six wide column">
-        <div id="cart-items">
-            <div class="ui divided items cart-items-list">
-            </div>
-        </div>
+<div class="ui stackable padded grid" style="margin-top: 2rem;">
 
-        <hr>
-        <div class="cart-content-agreement">
-            <p>@lang("boukem.conditions")</p>
-        </div>
-    </div>
-
-
-    <div class="nine wide column">
+    <div class="ten wide column">
 
         <div class="ui segment shippingInformation">
             <h4 class="ui dividing header">@lang("boukem.shipping_info")</h4>
@@ -861,4 +849,15 @@
 
     </div>
 
+    <div class="six wide column">
+        <div id="cart-items">
+            <div class="ui divided items cart-items-list">
+            </div>
+        </div>
+
+        <hr>
+        <div class="cart-content-agreement">
+            <p>@lang("boukem.conditions")</p>
+        </div>
+    </div>
 </div>
