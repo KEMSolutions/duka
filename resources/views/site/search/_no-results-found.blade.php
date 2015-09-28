@@ -19,12 +19,13 @@
                                         category or brand (eg. glucosamine or children's vitamins.).
                                     </p>
 
+@if (Store::info()->support->phone)
                                     <p>
                                         Still no luck? No problem! Call us at
-                                        <a href="tel:1-844-276-3434 ext. 8">1-844-276-3434 ext. 8</a>
+                                        <a href="tel:{{ Store::info()->support->phone->number }}">{{ Store::info()->support->phone->number }}</a>
                                         to order over the phone.
                                     </p>
-
+@endif
                                     <span class="clearfix"></span>
                                     <form class="form-inline" method="get" action="{{ route('search') }}">
                                         <div class="input-group">

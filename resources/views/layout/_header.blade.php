@@ -226,10 +226,12 @@
                     </span>
 
                     <div class="menu fluid">
+@if (Store::info()->support->phone)
                         <div class="item">
                             <i class="fa fa-phone icon"></i>
                             {{ Store::info()->support->phone->number }}
                         </div>
+@endif
                         <div class="divider"></div>
                         <div class="item">
                             <i class="fa fa-envelope-o icon"></i>
