@@ -9,31 +9,30 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="text-center">
-                                    <h2>Sorry, no results were found.</h2>
+                                    <h2>@lang("boukem.no_result")</h2>
                                     <h1 class="font-lg">
                                         <i class="fa fa-meh-o fa-4x"></i>
                                     </h1>
 
                                     <p>
-                                        Try to rephrase your request. You can search by product name,
-                                        category or brand (eg. glucosamine or children's vitamins.).
+                                        @lang("boukem.no_result_suggestion")
                                     </p>
 
 @if (Store::info()->support->phone)
                                     <p>
-                                        Still no luck? No problem! Call us at
+                                        {!! Lang::get('boukem.no_result_assistance'); !!}
                                         <a href="tel:{{ Store::info()->support->phone->number }}">{{ Store::info()->support->phone->number }}</a>
-                                        to order over the phone.
+                                        
                                     </p>
 @endif
                                     <span class="clearfix"></span>
                                     <form class="form-inline" method="get" action="{{ route('search') }}">
                                         <div class="input-group">
-                                            <input name="q" class="form-control" value="" placeholder="Product name, brand or condition" type="text">
+                                            <input name="q" class="form-control" value="" placeholder="@lang('boukem.product_name_brand_condition')" type="text">
                                             <span class="input-group-btn">
                                                 <button class="btn btn-primary" type="submit">
                                                     <i class="fa fa-search"></i>
-                                                    Search
+                                                    @lang("boukem.search")
                                                 </button>
                                             </span>
                                         </div>
