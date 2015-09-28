@@ -15,6 +15,7 @@ return [
 
     'home'          => 'Home',
     "search"        => 'Search',
+    "results_for"   => "Results for :term",
     'search_in'     =>'Search in: ',
     'toggle_nav'    =>'Toggle navigation',
     'cart'          =>'Cart',
@@ -247,6 +248,5 @@ return [
     "500"               =>"Internal Error. Contact your system administrator to fire him.",
     "501"               =>"Back to the future? This feature is not yet implemented :(",
     "503"               =>"We are taking a nap right now. Be right back :)"
-
-
+    
 ];

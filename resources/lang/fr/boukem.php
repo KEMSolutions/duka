@@ -16,6 +16,7 @@ return [
     'home'          =>'Accueil',
     'search'        =>'Rechercher',
     'search_in'     =>'Rechercher dans: ',
+    "results_for"   => "Résultats pour :term",
     'toggle_nav'    =>'Afficher le menu',
     'cart'          =>'Panier',
     'view_cart'     =>'Voir panier',
