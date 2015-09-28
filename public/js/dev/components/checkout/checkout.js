@@ -27,7 +27,8 @@ var checkoutContainer = {
             onSuccess: function (e) {
                 e.preventDefault();
 
-                self.displayShipmentMethod();
+                self.displayShipmentMethods();
+                self.ajaxCall();
                 console.log("success");
             }
         });
@@ -72,14 +73,41 @@ var checkoutContainer = {
         })
     },
 
+    displayShipmentMethods: function () {
 
-    displayShipmentMethod: function () {
-        var self = checkoutContainer;
+        var $contactInformation = $(".contactInformation");
 
-        console.log("display shipment called");
+        $contactInformation.addClass("animated fadeOutRight");
+
+        $contactInformation.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+            $(this).css("display", "none");
+            $(".shippingMethod").addClass("animated").removeClass("hidden").addClass("fadeInLeft");
+        });
     },
 
-
+    ajaxCall: function () {
+        $.ajax({
+            type: "POST",
+            url: ApiEndpoints.estimate,
+            data: {
+                email: $("#customer_email").val(),
+                shipping: {},
+                products: UtilityContainer.getProductsFromLocalStorage(),
+                shipping_address: UtilityContainer.getShippingFromForm()
+            },
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(e, status) {
+                if (e.status == 403){
+                    // TODO: replace with an actual link
+                    window.location.replace("/auth/login");
+                    return;
+                }
+                $('#estimate').html('<div class="alert alert-danger">Une erreur est survenue. Veuillez vérifier les informations fournies.</div>');
+            }
+        });
+    },
 
     init: function () {
         var self = checkoutContainer;
