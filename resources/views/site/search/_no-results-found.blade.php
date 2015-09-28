@@ -20,8 +20,8 @@
 
 @if (Store::info()->support->phone)
                                     <p>
-                                        {!! Lang::get('boukem.no_result_assistance'); !!}
-                                        <a href="tel:{{ Store::info()->support->phone->number }}">{{ Store::info()->support->phone->number }}</a>
+                                        {!! Lang::get('boukem.no_result_assistance', ["number"=>'<a href="tel:' . Store::info()->support->phone->number . '">' . Store::info()->support->phone->number . '</a>']) !!}
+                                        
                                         
                                     </p>
 @endif
