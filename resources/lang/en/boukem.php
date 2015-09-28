@@ -15,6 +15,7 @@ return [
 
     'home'          => 'Home',
     "search"        => 'Search',
+    "results_for"   => "Results for :term",
     'search_in'     =>'Search in: ',
     'toggle_nav'    =>'Toggle navigation',
     'cart'          =>'Cart',
@@ -159,6 +160,8 @@ return [
     "keep_email"    =>"We ask for your email to allow you to retrieve your cart easily, apply any discount associated with your account as well as guarantee you the quoted prices. We will not resell your email, send you any spam or subscribe you in any newsletter.",
     "calculate_shipping"=>"Please enter your postal code and select your preferred shipping method to continue.",
     "no_result"     =>"Sorry, no results were found.",
+    "no_result_suggestion"=>"Try to rephrase your request. You can search by product name, category or brand (eg. glucosamine or children's vitamins.).",
+    "no_result_assistance"=>"You need assistance to complete your order? Call us at :number to order over the phone.",
     "expired_link"  =>"The payment link has expired.",
     "cancel_payment"=>"You canceled the payment of this order. Unfortunately, we cannot process unpaid orders; please contact us if you have any question regarding the payment process.",
     "cancellation"      =>"Cancellation",
@@ -247,6 +250,5 @@ return [
     "500"               =>"Internal Error. Contact your system administrator to fire him.",
     "501"               =>"Back to the future? This feature is not yet implemented :(",
     "503"               =>"We are taking a nap right now. Be right back :)"
-
-
+    
 ];

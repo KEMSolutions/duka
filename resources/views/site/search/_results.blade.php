@@ -3,13 +3,13 @@
     <div class="container">
         <div class="row">
 
-            <h1>Search for products</h1>
-            <h3>Results for <i>{{ $query }}</i></h3>
+            <h1>@lang('boukem.search')</h1>
+            <h3>@lang('boukem.results_for', ["term" => $query])</h3>
 
             {{-- Suggested results (tags) --}}
             {{-- Hey @Rob, the tags are in $results->tags --}}
             @if (isset($results->tags) && count($results->tags))
-                <h3>Testing tags...</h3>
+                <h3>Tags</h3>
                 @include(
                     'product.layout._product_card_dense', [
                         'showTag' => false,
@@ -19,7 +19,6 @@
             @endif
 
             {{-- Search results --}}
-            <h3>Testing organic results...</h3>
             @include(
                 'product.layout._product_card_dense', [
                     'showTag' => false,
