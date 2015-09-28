@@ -81,9 +81,15 @@ var checkoutContainer = {
 
         $contactInformation.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
             $(this).css("display", "none");
+
+            // Fade the shipping method from the left.
             $(".shippingMethod").addClass("animated").removeClass("hidden").addClass("fadeInLeft");
+
+            // Add a dimmer just in case shipment methods are not fetched yet.
+            $(".shippingMethod").dimmer("show");
         });
     },
+
 
     ajaxCall: function () {
         $.ajax({
@@ -96,6 +102,7 @@ var checkoutContainer = {
                 shipping_address: UtilityContainer.getShippingFromForm()
             },
             success: function(data) {
+                checkoutContainer.fetchEstimate(data);
                 console.log(data);
             },
             error: function(e, status) {
@@ -107,6 +114,57 @@ var checkoutContainer = {
                 $('#estimate').html('<div class="alert alert-danger">Une erreur est survenue. Veuillez vérifier les informations fournies.</div>');
             }
         });
+    },
+
+    /**
+     * Get the relevant taxes according to the chosen shipping method.
+     *
+     * @param serviceCode
+     * @param data
+     * @returns {string}
+     */
+    getShipmentTaxes : function(serviceCode, data) {
+        var taxes = 0;
+
+        data.shipping.services.map(function(item) {
+           if (item.method == serviceCode) {
+               if (item.taxes.length != 0) {
+                   item.taxes.map(function(taxes) {
+                       taxes += taxes.amount;
+                   });
+               }
+           }
+        });
+
+        return taxes.toFixed(2);
+    },
+
+    fetchEstimate: function (data) {
+        var self = checkoutContainer;
+
+        for(var i = 0, shippingLength = data.shipping.services.length; i<shippingLength; i++)
+        {
+            var serviceDOM = "<tr data-service='" + data.shipping.services[i].method + "'>" +
+                "<td>" + data.shipping.services[i].name + "</td>" +
+                "<td>" + data.shipping.services[i].delivery + "</td>" +
+                "<td>" + data.shipping.services[i].price + "</td>" +
+                "<td>" +
+                "<input " +
+                "type='radio' " +
+                "name='shipping' " +
+                "class='shipping_method' " +
+                "data-taxes='" + self.getShipmentTaxes(data.shipping.services[i].method, data) + "' " +
+                "data-cost='" + data.shipping.services[i].price + "' " +
+                "data-value='" + data.shipping.services[i].method + "' " +
+                "value='" + btoa(JSON.stringify(data.shipping.services[i])) + "' >" +
+                "</td>";
+
+            $("#shippingMethod-table").append(serviceDOM);
+
+        }
+
+        //Hide the dimmer on #shippinMethod segment
+        $(".shippingMethod").dimmer("hide");
     },
 
     init: function () {

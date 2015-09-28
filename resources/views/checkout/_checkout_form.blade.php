@@ -864,31 +864,8 @@
                         <th> </th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <td>Expedited Parcel</td>
-                        <td>29/09/15</td>
-                        <td>$7.98</td>
-                        <td>
-                            <div class="field">
-                                <div class="ui radio checkbox">
-                                    <input type="radio" name="shipment" >
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>XPressPost</td>
-                        <td>29/09/15</td>
-                        <td>$27.98</td>
-                        <td>
-                            <div class="field">
-                                <div class="ui radio checkbox">
-                                    <input type="radio" name="shipment">
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                    <tbody id="shippingMethod-table">
+                        {{-- Populated with checkoutContainer.fetchEstimate(data) --}}
                     </tbody>
                 </table>
             </div>
