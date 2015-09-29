@@ -86,7 +86,7 @@ var checkoutContainer = {
             $(".shippingMethod").addClass("animated").removeClass("hidden").addClass("fadeInLeft");
 
             // Add a dimmer just in case shipment methods are not fetched yet.
-            $(".shippingMethod").dimmer("show");
+            $(".shippingMethod-table").dimmer("show");
         });
     },
 
@@ -147,7 +147,7 @@ var checkoutContainer = {
             var serviceDOM = "<tr data-service='" + data.shipping.services[i].method + "'>" +
                 "<td>" + data.shipping.services[i].name + "</td>" +
                 "<td>" + data.shipping.services[i].delivery + "</td>" +
-                "<td>" + data.shipping.services[i].price + "</td>" +
+                "<td>" + "$" + data.shipping.services[i].price + "</td>" +
                 "<td>" +
                 "<input " +
                 "type='radio' " +
@@ -159,12 +159,12 @@ var checkoutContainer = {
                 "value='" + btoa(JSON.stringify(data.shipping.services[i])) + "' >" +
                 "</td>";
 
-            $("#shippingMethod-table").append(serviceDOM);
+            $("#shippingMethod-table-tbody").append(serviceDOM);
 
         }
 
         //Hide the dimmer on #shippinMethod segment
-        $(".shippingMethod").dimmer("hide");
+        $(".shippingMethod-table").dimmer("hide");
     },
 
     init: function () {
