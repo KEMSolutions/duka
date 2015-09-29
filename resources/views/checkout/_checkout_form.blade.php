@@ -207,10 +207,32 @@
                 </table>
             </div>
 
-            <button class="ui left inverted red icon button left floated back-contact-info">
-                <i class="left arrow icon"></i>
-                @lang("boukem.back_contact_info")
-            </button>
+            <div class="ui basic segment">
+                <button class="ui inverted red icon button left floated back-contact-info">
+                    <i class="left arrow icon"></i>
+                    @lang("boukem.back_contact_info")
+                </button>
+
+                <button class="ui right labeled green icon button right floated next-payment-process">
+                    <i class="right arrow icon"></i>
+                    @lang("boukem.proceed_checkout")
+                </button>
+            </div>
+
+            <div class="ui basic segment">
+                <small class="hidden-xs ui basic small label pull-right">
+                    <i class="lock icon"></i> @lang("boukem.secure_payment")
+                    <br>
+                    <i class="paypal icon"><span class="sr-only">Paypal</span></i>
+                    <i class="visa icon"><span class="sr-only">Visa</span></i>
+                    <i class="mastercard icon"><span class="sr-only">Mastercard</span></i>
+                    <i class="american express icon"><span class="sr-only">American Express</span></i>
+                    <i class="discover icon"><span class="sr-only">Discover</span></i>
+                </small>
+            </div>
+
+
+
         </div>
 
     </div>
