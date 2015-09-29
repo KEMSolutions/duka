@@ -1,6 +1,6 @@
 <div class="ui stackable padded grid" style="margin-top: 2rem;">
 
-    <div class="ten wide column">
+    <div class="ten wide column" style="font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif">
 
         <div class="contactInformation">
             <div class="ui segment shippingInformation">
@@ -147,11 +147,14 @@
 
 
         <div class="shippingMethod hidden">
-            <div class="ui segment">
 
+            <div class="ui basic segment">
                 <h4 class="ui dividing header">@lang("boukem.shipping_methods")</h4>
+            </div>
 
-                <table class="ui padded table shippingMethod-table">
+            <div class="ui basic segment loading">
+
+                <table class="ui padded table unstackable shippingMethod-table">
                     <thead>
                     <tr>
                         <th>@lang("boukem.service_name")</th>
@@ -166,11 +169,50 @@
                 </table>
             </div>
 
+        </div>
+
+
+        <div class="priceInformation hidden">
+            <div class="ui basic segment">
+                <h4 class="ui dividing header">@lang("boukem.total_price")</h4>
+            </div>
+
+
+            <div class="ui basic segment loading">
+
+                <table class="ui padded celled table priceInformation-table">
+
+
+                    <tbody id="priceInformation-table-tbody">
+                        <tr>
+                            <td>@lang("boukem.subtotal")</td>
+                            <td class="center aligned" id="price_subtotal"></td>
+                        </tr>
+
+                        <tr>
+                            <td>@lang("boukem.shipping_methods")</td>
+                            <td class="center aligned" id="price_transport"></td>
+                        </tr>
+
+                        <tr>
+                            <td>@lang("boukem.taxes")</td>
+                            <td class="center aligned" id="price_taxes"></td>
+                        </tr>
+
+                        <tr>
+                            <td><h3>@lang("boukem.total")</h3></td>
+                            <td class="center aligned"><h3 id="price_total"></h3></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <button class="ui left inverted red icon button left floated back-contact-info">
                 <i class="left arrow icon"></i>
                 @lang("boukem.back_contact_info")
             </button>
         </div>
+
     </div>
 
     <div class="six wide column">

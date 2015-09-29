@@ -27,7 +27,7 @@ var checkoutContainer = {
             onSuccess: function (e) {
                 e.preventDefault();
 
-                self.displayShipmentMethods();
+                self.displayShipmentMethodsAndPriceInformation();
                 self.ajaxCall();
                 console.log("success");
             }
@@ -73,20 +73,21 @@ var checkoutContainer = {
         })
     },
 
-    displayShipmentMethods: function () {
+    displayShipmentMethodsAndPriceInformation: function () {
 
-        var $contactInformation = $(".contactInformation");
+        var $contactInformation = $(".contactInformation"),
+            $shippingMethod = $(".shippingMethod"),
+            $priceInformation = $(".priceInformation");
 
         $contactInformation.addClass("animated fadeOutRight");
 
         $contactInformation.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
             $(this).css("display", "none");
 
-            // Fade the shipping method from the left.
-            $(".shippingMethod").addClass("animated").removeClass("hidden").addClass("fadeInLeft");
+            // Fade the shipping methods and price info from the left.
+            $shippingMethod.addClass("animated").removeClass("hidden").addClass("fadeInLeft");
+            $priceInformation.addClass("animated").removeClass("hidden").addClass("fadeInLeft");
 
-            // Add a dimmer just in case shipment methods are not fetched yet.
-            $(".shippingMethod-table").dimmer("show");
         });
     },
 
@@ -103,6 +104,9 @@ var checkoutContainer = {
             },
             success: function(data) {
                 checkoutContainer.fetchEstimate(data);
+                checkoutContainer.fetchPayment(data);
+
+                checkoutContainer.updatePayment(data);
                 console.log(data);
             },
             error: function(e, status) {
@@ -124,19 +128,44 @@ var checkoutContainer = {
      * @returns {string}
      */
     getShipmentTaxes : function(serviceCode, data) {
-        var taxes = 0;
+        var taxes = 0,
+            self = checkoutContainer;
 
-        data.shipping.services.map(function(item) {
-           if (item.method == serviceCode) {
-               if (item.taxes.length != 0) {
-                   item.taxes.map(function(taxes) {
-                       taxes += taxes.amount;
-                   });
-               }
-           }
-        });
+        for(var i=0; i<data.shipping.services.length; i++)
+        {
+            if(data.shipping.services[i].method == serviceCode)
+            {
+                if (data.shipping.services[i].taxes.length != 0)
+                {
+                    for(var j=0; j<data.shipping.services[i].taxes.length; j++)
+                    {
+                        taxes += data.shipping.services[i].taxes[j].amount;
+                    }
+                }
+            }
+        }
 
         return taxes.toFixed(2);
+    },
+
+    /**
+     * Get the total taxes (TPS/TVQ or TVH or TPS or null) + shipping method taxes.
+     *
+     * @param data
+     * @returns {number}
+     */
+    getTaxes : function(data) {
+        var taxes = 0,
+            dataTaxesLength = data.taxes.length;
+
+        if (dataTaxesLength != 0)
+        {
+            for(var i=0; i<dataTaxesLength; i++)
+            {
+                taxes += data.taxes[i].amount;
+            }
+        }
+        return parseFloat(taxes);
     },
 
     fetchEstimate: function (data) {
@@ -163,8 +192,61 @@ var checkoutContainer = {
 
         }
 
-        //Hide the dimmer on #shippinMethod segment
-        $(".shippingMethod-table").dimmer("hide");
+        $(".shippingMethod .segment").removeClass("loading");
+        self.selectDefaultShipmentMethod();
+
+    },
+
+    fetchPayment: function (data) {
+        var subtotal = parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()).toFixed(2),
+            priceTransport = parseFloat($("input:radio.shipping_method:checked").data("cost")),
+            taxes = checkoutContainer.getTaxes(data) + parseFloat($("input:radio.shipping_method:checked").data("taxes")),
+            total = parseFloat(subtotal + priceTransport + taxes);
+
+        $("#price_subtotal").text("$" + subtotal);
+        $("#price_transport").text("$" + priceTransport);
+        $("#price_taxes").text("$" + taxes.toFixed(2));
+        $("#price_total").text("$" + total.toFixed(2));
+
+        $(".priceInformation .segment").removeClass("loading");
+    },
+
+    /**
+     * Update the payment panel with right values (shipping method)
+     *
+     * @param data
+     */
+    updatePayment : function(data) {
+        var subtotal = parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()).toFixed(2),
+            priceTransport, taxes, total;
+
+        $(".shipping_method").on("change", function() {
+            priceTransport = $(this).data("cost");
+            taxes = checkoutContainer.getTaxes(data) + parseFloat($(this).data("taxes"));
+            total = parseFloat(subtotal) + parseFloat(priceTransport) + parseFloat(taxes);
+
+            $("#price_subtotal").text("$" + subtotal);
+            $("#price_transport").text("$" + priceTransport);
+            $("#price_taxes").text("$" + taxes.toFixed(2));
+            $("#price_total").text("$" + total.toFixed(2));
+        });
+    },
+
+    /**
+     * Select the default shipment method from a predefined list.
+     *
+     */
+    selectDefaultShipmentMethod : function() {
+        var defaultShipment = ["DOM.EP", "USA.TP", "INT.TP"],
+            availableShipment = $("input[name=shipping]");
+
+        for(var i= 0, length = availableShipment.length; i<length; i++)
+        {
+            if (defaultShipment.indexOf(availableShipment[i].dataset.value) != -1)
+            {
+                availableShipment[i].checked = true;
+            }
+        }
     },
 
     init: function () {

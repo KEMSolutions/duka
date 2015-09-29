@@ -232,6 +232,7 @@ return [
     "relevance"         =>"Relevance",
     "price_low_to_high" =>"Price: low to high",
     "price_high_to_low" =>"Price: high to low",
+    "total_price"       =>"Total Price",
     "items_per_page"    =>"Items per page: ",
     "switch_layout"     =>"Switch layout: ",
     "grid"              =>"Grid",

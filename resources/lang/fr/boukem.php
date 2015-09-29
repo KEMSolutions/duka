@@ -232,6 +232,7 @@ return [
     "relevance"         =>"Pertinence",
     "price_low_to_high" =>"Prix: ordre croissant",
     "price_high_to_high" =>"Prix: ordre décroissant",
+    "total_price"       =>"Prix total",
     "items_per_page"    =>"Articles par page: ",
     "switch_layout"     =>"Vue: ",
     "grid"              =>"Grille",
