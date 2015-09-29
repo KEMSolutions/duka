@@ -198,10 +198,10 @@ var checkoutContainer = {
     },
 
     fetchPayment: function (data) {
-        var subtotal = parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()).toFixed(2),
-            priceTransport = parseFloat($("input:radio.shipping_method:checked").data("cost")),
+        var subtotal = UtilityContainer.getProductsPriceFromLocalStorage().toFixed(2),
+            priceTransport = $("input:radio.shipping_method:checked").data("cost"),
             taxes = checkoutContainer.getTaxes(data) + parseFloat($("input:radio.shipping_method:checked").data("taxes")),
-            total = parseFloat(subtotal + priceTransport + taxes);
+            total = parseFloat(subtotal) + parseFloat(priceTransport) + parseFloat(taxes);
 
         $("#price_subtotal").text("$" + subtotal);
         $("#price_transport").text("$" + priceTransport);
