@@ -488,98 +488,6 @@ var UtilityContainer = {
 
 
 /**
- * Entry point of script.
- *
- */
-; (function(window, document, $) {
-    $(document).ready(function () {
-
-        /**
-         * Sets up the ajax token for all ajax requests
-         *
-         */
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'locale': $('html').attr('lang')
-            }
-        });
-
-        /**
-         * Initialize semantic UI modules
-         *
-         */
-        semanticInitContainer.init();
-
-        /**
-         * Initialize checkout logic.
-         *
-         */
-        //checkoutInitContainer.init();
-        checkoutContainer.init();
-
-        /**
-         * Initialize cart drawer logic.
-         *
-         */
-        cartDrawerInitContainer.init();
-
-        /**
-         * Initialize category container
-         *
-         */
-        categoryContainer.init();
-
-        /**
-         * Initialize overlay plugin.
-         *
-         */
-        paymentOverlayContainer.init();
-
-        /**
-         * Initialize homepage sections.
-         *
-         */
-        homepageContainer.init();
-
-        /**
-         * Initialize favorite products feature.
-         *
-         */
-        productLayoutFavoriteContainer.init();
-
-        /**
-         * Initialize product formats feature.
-         *
-         */
-        productFormatContainer.init();
-
-        /**
-         * Initialize column responsiveness in product pages.
-         *
-         */
-        productResponsive.init();
-
-        /**
-         * Initialize wishlist page.
-         *
-         */
-        wishlistLogicContainer.init();
-
-        /**
-         * Global initialization of elements.
-         *
-         */
-            //fancy plugin for product page (quantity input)
-        $(".input-qty").TouchSpin({
-            initval: 1
-        });
-
-    });
-
-})(window, this.document, jQuery, undefined)
-
-/**
  * Object responsible for handling billing information.
  *
  * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
@@ -916,19 +824,131 @@ var checkoutContainer = {
 
         var validationRules =
         {
-            shippingFirstname: 'empty',
-            shippingLastname : 'empty',
-            shippingAddress1 : 'empty',
-            shippingCity     : 'empty',
-            shippingPostcode : 'empty',
-            customer_email   : ['empty', 'email'],
-            customer_phone   : ['empty', 'number'],
-            billingFirstname: 'empty',
-            billingLastname : 'empty',
-            billingAddress1 : 'empty',
-            billingCity     : 'empty',
-            billingPostcode : 'empty'
-        };
+            shippingFirstname: {
+                identifier: 'shippingFirstname',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_name
+                    }
+                ]
+            },
+
+            shippingLastname: {
+                identifier: 'shippingLastname',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_name
+                    }
+                ]
+            },
+
+            shippingAddress1: {
+                identifier: 'shippingAddress1',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_address_shipping
+                    }
+                ]
+            },
+
+            shippingCity: {
+                identifier: 'shippingCity',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_city_shipping
+                    }
+                ]
+            },
+
+            shippingPostcode: {
+                identifier: 'shippingPostcode',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_post_shipping
+                    }
+                ]
+            },
+
+            customer_email: {
+                identifier: 'customer_email',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_email
+                    },
+                    {
+                        type   : 'email',
+                        prompt : Localization.validation_valid_email
+                    }
+                ]
+            },
+
+            customer_phone: {
+                identifier: 'customer_phone',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_phone
+                    }
+                ]
+            },
+
+            billingFirstname: {
+                identifier: 'billingFirstname',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_name
+                    }
+                ]
+            },
+
+            billingLastname: {
+                identifier: 'billingLastname',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_name
+                    }
+                ]
+            },
+
+            billingAddress1: {
+                identifier: 'billingAddress1',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_address_billing
+                    }
+                ]
+            },
+
+            billingCity: {
+                identifier: 'billingCity',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_city_billing
+                    }
+                ]
+            },
+
+            billingPostcode: {
+                identifier: 'billingPostcode',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_post_billing
+                    }
+                ]
+            }
+        }
+
 
         $(".form-checkout").form({
             fields: validationRules,
@@ -1729,80 +1749,6 @@ var paymentOverlayContainer = {
 }
 
 /**
- * Object responsible for activating semantic ui features.
- *
- * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
- */
-var semanticInitContainer = {
-
-    /**
-     * Initialize modules
-     *
-     */
-    module: {
-        /**
-         * Initialize dropdown module.
-         *
-         */
-        initDropdownModule: function() {
-            //Enable selection on clicked items
-            $(".ui.dropdown-select").dropdown();
-
-            //Prevent selection on clicked items
-            $(".ui.dropdown-no-select").dropdown({
-                    action: "select"
-                }
-            );
-        },
-
-        /**
-         * Initialize rating module.
-         *
-         */
-        initRatingModule: function () {
-            $(".ui.rating").rating();
-        },
-
-        /**
-         * Initialize popup module.
-         *
-         */
-        initPopupModule: function () {
-            $(".popup").popup();
-        },
-
-        /**
-         * Initialize checkbox module.
-         *
-         */
-        initCheckboxModule: function () {
-            $('.ui.checkbox')
-                .checkbox()
-            ;
-        }
-    },
-
-    /**
-     * Specify semantic custom behavior.
-     *
-     */
-    behaviors: {
-
-    },
-
-
-
-    init: function () {
-        var self = semanticInitContainer,
-            module = self.module;
-
-        module.initDropdownModule();
-        module.initRatingModule();
-        module.initPopupModule();
-        module.initCheckboxModule();
-    }
-}
-/**
  * Object responsible for handling different formats of the same product.
  *
  * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
@@ -2065,6 +2011,80 @@ var productResponsive = {
         var self = productResponsive;
 
         self.invertPriceAndDescriptionColumn();
+    }
+}
+/**
+ * Object responsible for activating semantic ui features.
+ *
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
+ */
+var semanticInitContainer = {
+
+    /**
+     * Initialize modules
+     *
+     */
+    module: {
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule: function() {
+            //Enable selection on clicked items
+            $(".ui.dropdown-select").dropdown();
+
+            //Prevent selection on clicked items
+            $(".ui.dropdown-no-select").dropdown({
+                    action: "select"
+                }
+            );
+        },
+
+        /**
+         * Initialize rating module.
+         *
+         */
+        initRatingModule: function () {
+            $(".ui.rating").rating();
+        },
+
+        /**
+         * Initialize popup module.
+         *
+         */
+        initPopupModule: function () {
+            $(".popup").popup();
+        },
+
+        /**
+         * Initialize checkbox module.
+         *
+         */
+        initCheckboxModule: function () {
+            $('.ui.checkbox')
+                .checkbox()
+            ;
+        }
+    },
+
+    /**
+     * Specify semantic custom behavior.
+     *
+     */
+    behaviors: {
+
+    },
+
+
+
+    init: function () {
+        var self = semanticInitContainer,
+            module = self.module;
+
+        module.initDropdownModule();
+        module.initRatingModule();
+        module.initPopupModule();
+        module.initCheckboxModule();
     }
 }
 /**
@@ -3100,3 +3120,94 @@ var wishlistContainer = {
         self.setNumberOfProductsInHeader();
     }
 }
+/**
+ * Entry point of script.
+ *
+ */
+; (function(window, document, $) {
+    $(document).ready(function () {
+
+        /**
+         * Sets up the ajax token for all ajax requests
+         *
+         */
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'locale': $('html').attr('lang')
+            }
+        });
+
+        /**
+         * Initialize semantic UI modules
+         *
+         */
+        semanticInitContainer.init();
+
+        /**
+         * Initialize checkout logic.
+         *
+         */
+        //checkoutInitContainer.init();
+        checkoutContainer.init();
+
+        /**
+         * Initialize cart drawer logic.
+         *
+         */
+        cartDrawerInitContainer.init();
+
+        /**
+         * Initialize category container
+         *
+         */
+        categoryContainer.init();
+
+        /**
+         * Initialize overlay plugin.
+         *
+         */
+        paymentOverlayContainer.init();
+
+        /**
+         * Initialize homepage sections.
+         *
+         */
+        homepageContainer.init();
+
+        /**
+         * Initialize favorite products feature.
+         *
+         */
+        productLayoutFavoriteContainer.init();
+
+        /**
+         * Initialize product formats feature.
+         *
+         */
+        productFormatContainer.init();
+
+        /**
+         * Initialize column responsiveness in product pages.
+         *
+         */
+        productResponsive.init();
+
+        /**
+         * Initialize wishlist page.
+         *
+         */
+        wishlistLogicContainer.init();
+
+        /**
+         * Global initialization of elements.
+         *
+         */
+            //fancy plugin for product page (quantity input)
+        $(".input-qty").TouchSpin({
+            initval: 1
+        });
+
+    });
+
+})(window, this.document, jQuery, undefined)

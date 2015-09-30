@@ -251,8 +251,18 @@ return [
     "408"               =>"Temps d’attente d’une réponse du serveur écoulé. Renvoyez la requête!.",
     "500"               =>"Erreur à l'interne. Contactez l'administrateur technique pour congédier les personnes reponsables. ",
     "501"               =>"Vous avez tenté d'accéder à une fonctionnalité non implémentée... pour l'instant.",
-    "503"               =>"Service temporairement indisponible indépendamment de notre volonté. Désolé :("
+    "503"               =>"Service temporairement indisponible indépendamment de notre volonté. Désolé :(",
 
+    "validation_name"   =>"Veuillez saisir votre nom",
+    "validation_address_shipping"=>"Veuillez saisir votre adresse de livraison",
+    "validation_city_shipping"   =>"Veuillez saisir votre ville de livraision",
+    "validation_post_shipping"   =>"Veuillez saisir votre code postal de livraison",
+    "validation_email"  =>"Veuillez saisir votre adresse courriel",
+    "validation_valid_email" => "Veuillez saisir une adresse courriel valide",
+    "validation_phone"  =>"Veuillez saisir votre numéro de téléphone.",
+    "validation_address_billing"=>"Veuillez saisir votre adresse de facturation",
+    "validation_city_billing"   =>"Veuillez saisir votre ville de facturation",
+    "validation_post_billing"   =>"Veuillez saisir votre code postal de facturation"
 
 
 ];

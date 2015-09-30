@@ -67,7 +67,7 @@
 
                     <div class="field">
                         <label>@lang("boukem.phone")</label>
-                        <input type="text" placeholder="(xxx) xxx xxx" name="shipping_address[phone]" id="customer_phone" value="{{ Customers::getDefaultAddress()->phone }}"/>
+                        <input type="tel" placeholder="(xxx) xxx xxx" name="shipping_address[phone]" id="customer_phone" value="{{ Customers::getDefaultAddress()->phone }}"/>
                     </div>
                 </div>
 

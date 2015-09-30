@@ -251,7 +251,16 @@ return [
     "408"               =>"I'm timing out waiting for your request! Please request again :)",
     "500"               =>"Internal Error. Contact your system administrator to fire him.",
     "501"               =>"Back to the future? This feature is not yet implemented :(",
-    "503"               =>"We are taking a nap right now. Be right back :)"
+    "503"               =>"We are taking a nap right now. Be right back :)",
 
-
+    "validation_name"   =>"Please enter your name",
+    "validation_address_shipping"=>"Please enter your shipping address",
+    "validation_city_shipping"   =>"Please enter your shipping city",
+    "validation_post_shipping"   =>"Please enter your shipping postcode",
+    "validation_email"  =>"Please enter your email address",
+    "validation_valid_email" => "Please enter a valid email address",
+    "validation_phone"  =>"Please enter your phone number",
+    "validation_address_billing"=>"Please enter your billing address",
+    "validation_city_billing"   =>"Please enter your billing address city",
+    "validation_post_billing"   =>"Please enter your billing address postcode"
 ];

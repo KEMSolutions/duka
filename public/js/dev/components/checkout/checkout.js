@@ -5,19 +5,131 @@ var checkoutContainer = {
 
         var validationRules =
         {
-            shippingFirstname: 'empty',
-            shippingLastname : 'empty',
-            shippingAddress1 : 'empty',
-            shippingCity     : 'empty',
-            shippingPostcode : 'empty',
-            customer_email   : ['empty', 'email'],
-            customer_phone   : ['empty', 'number'],
-            billingFirstname: 'empty',
-            billingLastname : 'empty',
-            billingAddress1 : 'empty',
-            billingCity     : 'empty',
-            billingPostcode : 'empty'
-        };
+            shippingFirstname: {
+                identifier: 'shippingFirstname',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_name
+                    }
+                ]
+            },
+
+            shippingLastname: {
+                identifier: 'shippingLastname',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_name
+                    }
+                ]
+            },
+
+            shippingAddress1: {
+                identifier: 'shippingAddress1',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_address_shipping
+                    }
+                ]
+            },
+
+            shippingCity: {
+                identifier: 'shippingCity',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_city_shipping
+                    }
+                ]
+            },
+
+            shippingPostcode: {
+                identifier: 'shippingPostcode',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_post_shipping
+                    }
+                ]
+            },
+
+            customer_email: {
+                identifier: 'customer_email',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_email
+                    },
+                    {
+                        type   : 'email',
+                        prompt : Localization.validation_valid_email
+                    }
+                ]
+            },
+
+            customer_phone: {
+                identifier: 'customer_phone',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_phone
+                    }
+                ]
+            },
+
+            billingFirstname: {
+                identifier: 'billingFirstname',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_name
+                    }
+                ]
+            },
+
+            billingLastname: {
+                identifier: 'billingLastname',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_name
+                    }
+                ]
+            },
+
+            billingAddress1: {
+                identifier: 'billingAddress1',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_address_billing
+                    }
+                ]
+            },
+
+            billingCity: {
+                identifier: 'billingCity',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_city_billing
+                    }
+                ]
+            },
+
+            billingPostcode: {
+                identifier: 'billingPostcode',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_post_billing
+                    }
+                ]
+            }
+        }
+
 
         $(".form-checkout").form({
             fields: validationRules,
