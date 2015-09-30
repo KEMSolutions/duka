@@ -219,6 +219,7 @@ return [
     "wishlist_remove"   =>"Retirer de la liste",
     "wishlist_add"      =>"Liste d'envie!",
     "payment_successful" => "Merci pour votre paiement.",
+    "payment_redirect"  =>"Nous vous redirigeons vers la page de paiement...",
     "results_found"     =>":total résultats trouvés",
     "filter_by"         =>"Filtrer par",
     "reset"             =>"Tout effacer",

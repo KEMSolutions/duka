@@ -1040,11 +1040,82 @@ var checkoutContainer = {
             onSuccess: function (e) {
                 e.preventDefault();
 
-                self.displayShipmentMethodsAndPriceInformation();
-                self.ajaxCall();
-                console.log("success");
+                self.dispatchButtonsActions();
             }
         });
+
+    },
+
+    dispatchButtonsActions: function () {
+        var self = checkoutContainer;
+
+        self.displayShipmentMethodsAndPriceInformation();
+        self.ajaxCall();
+
+        $(".back-contact-info").on("click", function (e) {
+            e.preventDefault();
+
+            self.displayContactInformation();
+        });
+
+        $(".next-payment-process").on("click", function (e) {
+            e.preventDefault();
+
+            var dimmer = '<div class="ui page dimmer redirect-dimmer">' +
+                '<div class="content">' +
+                '<div class="center"><h3 class="ui header">' + Localization.payment_redirect +'</h3></div>' +
+                '</div>' +
+                '</div>';
+
+            $(dimmer).appendTo("body");
+            $(".redirect-dimmer").dimmer("show");
+
+            self.placeOrderAjaxCall();
+        });
+    },
+
+    /**
+     * Create a localStorage object containing the id and the verification code.
+     *
+     * @param data
+     */
+    createOrdersCookie: function(data) {
+        var paymentId = data.id,
+            paymentVerification = data.verification;
+
+        Cookies.set("_unpaid_orders", JSON.stringify( {
+            id : paymentId,
+            verification : paymentVerification
+        }));
+    },
+
+    /**
+     * Makes an ajax call to api/orders with the values from the form
+     *
+     * @param self
+     */
+    placeOrderAjaxCall: function() {
+        $.ajax({
+            method: "POST",
+            url: ApiEndpoints.placeOrder,
+            data: $("#cart_form").serialize(),
+            cache: false,
+            success: function(data) {
+                var self = checkoutContainer;
+
+                //self.createOrdersCookie(data);
+
+                //redirect the user to the checkout page if he backs from the payment page
+                history.pushState({data: data}, "Checkout ","/cart");
+
+                //Redirect to success url
+                window.location.replace(data.payment_details.payment_url);
+            },
+            error: function(xhr, e) {
+                console.log(xhr);
+                console.log(e);
+            }
+        })
 
     },
 
@@ -1092,16 +1163,32 @@ var checkoutContainer = {
             $shippingMethod = $(".shippingMethod"),
             $priceInformation = $(".priceInformation");
 
-        $contactInformation.addClass("animated fadeOutRight");
+        $contactInformation.removeClass("animated fadeOutRight fadeInLeft").addClass("animated fadeOutRight");
 
         $contactInformation.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-            $(this).css("display", "none");
+            $(this).hide();
 
             // Fade the shipping methods and price info from the left.
-            $shippingMethod.addClass("animated").removeClass("hidden").addClass("fadeInLeft");
-            $priceInformation.addClass("animated").removeClass("hidden").addClass("fadeInLeft");
+            $shippingMethod.removeClass("hidden animated fadeOutLeft").addClass("animated fadeInLeft");
+            $priceInformation.removeClass("hidden animated fadeOutLeft").addClass("animated fadeInLeft");
 
         });
+    },
+
+    displayContactInformation: function () {
+        var $contactInformation = $(".contactInformation"),
+            $shippingMethod = $(".shippingMethod"),
+            $priceInformation = $(".priceInformation");
+
+        $priceInformation.addClass("animated fadeOutLeft");
+        $shippingMethod.addClass("animated fadeOutLeft");
+
+        $(".shippingMethod, .priceInformation").one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
+            $(this).addClass("hidden");
+            $contactInformation.removeClass("animated fadeOutRight").fadeIn();
+        });
+
+
     },
 
 
