@@ -258,6 +258,8 @@ var checkoutContainer = {
     fetchEstimate: function (data) {
         var self = checkoutContainer;
 
+        $("#shippingMethod-table-tbody").empty();
+
         for(var i = 0, shippingLength = data.shipping.services.length; i<shippingLength; i++)
         {
             var serviceDOM = "<tr data-service='" + data.shipping.services[i].method + "'>" +
