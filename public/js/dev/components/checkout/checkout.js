@@ -35,6 +35,27 @@ var checkoutContainer = {
                 ]
             },
 
+
+            shippingCountry: {
+                identifier: 'shippingCountry',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_address_shipping
+                    }
+                ]
+            },
+
+            shippingProvince: {
+                identifier: 'shippingProvince',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_address_shipping
+                    }
+                ]
+            },
+
             shippingCity: {
                 identifier: 'shippingCity',
                 rules: [
@@ -109,6 +130,26 @@ var checkoutContainer = {
                 ]
             },
 
+            billingCountry: {
+                identifier: 'billingCountry',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_address_shipping
+                    }
+                ]
+            },
+
+            billingCountry: {
+                identifier: 'billingProvince',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_address_shipping
+                    }
+                ]
+            },
+
             billingCity: {
                 identifier: 'billingCity',
                 rules: [
@@ -154,7 +195,7 @@ var checkoutContainer = {
         $(".back-contact-info").on("click", function (e) {
             e.preventDefault();
 
-            self.displayContactInformation();
+            self.displayContactInformation(e);
         });
 
         $(".next-payment-process").on("click", function (e) {
@@ -262,32 +303,35 @@ var checkoutContainer = {
             $shippingMethod = $(".shippingMethod"),
             $priceInformation = $(".priceInformation");
 
-        $contactInformation.removeClass("animated fadeOutRight fadeInLeft").addClass("animated fadeOutRight");
+        $contactInformation.fadeOut(300, function() {
+            $(".shippingMethod .loadable-segment, .priceInformation .loadable-segment").addClass("loading");
 
-        $contactInformation.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-            $(this).hide();
+            //Fade the shipping methods and price info from the left.
+            $shippingMethod.show(0, function() {
+                $(this).removeClass("hidden animated fadeInLeft").addClass("animated fadeInLeft");
+            });
 
-            // Fade the shipping methods and price info from the left.
-            $shippingMethod.removeClass("hidden animated fadeOutLeft").addClass("animated fadeInLeft");
-            $priceInformation.removeClass("hidden animated fadeOutLeft").addClass("animated fadeInLeft");
 
+            $priceInformation.show(0, function() {
+                $(this).removeClass("hidden animated fadeInLeft").addClass("animated fadeInLeft");
+            });
         });
+
+
     },
 
-    displayContactInformation: function () {
+    displayContactInformation: function (e) {
         var $contactInformation = $(".contactInformation"),
             $shippingMethod = $(".shippingMethod"),
             $priceInformation = $(".priceInformation");
 
-        $priceInformation.addClass("animated fadeOutLeft");
-        $shippingMethod.addClass("animated fadeOutLeft");
-
-        $(".shippingMethod, .priceInformation").one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-            $(this).addClass("hidden");
-            $contactInformation.removeClass("animated fadeOutRight").fadeIn();
+        $priceInformation.fadeOut(300);
+        $shippingMethod.fadeOut(300, function() {
+            $contactInformation.fadeIn();
         });
 
-
+        e.stopPropagation();
+        e.stopImmediatePropagation();
     },
 
 

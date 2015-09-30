@@ -152,7 +152,7 @@
                 <h4 class="ui dividing header">@lang("boukem.shipping_methods")</h4>
             </div>
 
-            <div class="ui basic segment loading">
+            <div class="ui basic segment loadable-segment loading">
 
                 <table class="ui padded table unstackable shippingMethod-table">
                     <thead>
@@ -178,7 +178,7 @@
             </div>
 
 
-            <div class="ui basic segment loading">
+            <div class="ui basic segment loadable-segment loading">
 
                 <table class="ui padded celled table priceInformation-table">
 

@@ -488,6 +488,98 @@ var UtilityContainer = {
 
 
 /**
+ * Entry point of script.
+ *
+ */
+; (function(window, document, $) {
+    $(document).ready(function () {
+
+        /**
+         * Sets up the ajax token for all ajax requests
+         *
+         */
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'locale': $('html').attr('lang')
+            }
+        });
+
+        /**
+         * Initialize semantic UI modules
+         *
+         */
+        semanticInitContainer.init();
+
+        /**
+         * Initialize checkout logic.
+         *
+         */
+        //checkoutInitContainer.init();
+        checkoutContainer.init();
+
+        /**
+         * Initialize cart drawer logic.
+         *
+         */
+        cartDrawerInitContainer.init();
+
+        /**
+         * Initialize category container
+         *
+         */
+        categoryContainer.init();
+
+        /**
+         * Initialize overlay plugin.
+         *
+         */
+        paymentOverlayContainer.init();
+
+        /**
+         * Initialize homepage sections.
+         *
+         */
+        homepageContainer.init();
+
+        /**
+         * Initialize favorite products feature.
+         *
+         */
+        productLayoutFavoriteContainer.init();
+
+        /**
+         * Initialize product formats feature.
+         *
+         */
+        productFormatContainer.init();
+
+        /**
+         * Initialize column responsiveness in product pages.
+         *
+         */
+        productResponsive.init();
+
+        /**
+         * Initialize wishlist page.
+         *
+         */
+        wishlistLogicContainer.init();
+
+        /**
+         * Global initialization of elements.
+         *
+         */
+            //fancy plugin for product page (quantity input)
+        $(".input-qty").TouchSpin({
+            initval: 1
+        });
+
+    });
+
+})(window, this.document, jQuery, undefined)
+
+/**
  * Object responsible for handling billing information.
  *
  * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
@@ -854,6 +946,27 @@ var checkoutContainer = {
                 ]
             },
 
+
+            shippingCountry: {
+                identifier: 'shippingCountry',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_address_shipping
+                    }
+                ]
+            },
+
+            shippingProvince: {
+                identifier: 'shippingProvince',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_address_shipping
+                    }
+                ]
+            },
+
             shippingCity: {
                 identifier: 'shippingCity',
                 rules: [
@@ -928,6 +1041,26 @@ var checkoutContainer = {
                 ]
             },
 
+            billingCountry: {
+                identifier: 'billingCountry',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_address_shipping
+                    }
+                ]
+            },
+
+            billingCountry: {
+                identifier: 'billingProvince',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : Localization.validation_address_shipping
+                    }
+                ]
+            },
+
             billingCity: {
                 identifier: 'billingCity',
                 rules: [
@@ -973,7 +1106,7 @@ var checkoutContainer = {
         $(".back-contact-info").on("click", function (e) {
             e.preventDefault();
 
-            self.displayContactInformation();
+            self.displayContactInformation(e);
         });
 
         $(".next-payment-process").on("click", function (e) {
@@ -1081,32 +1214,35 @@ var checkoutContainer = {
             $shippingMethod = $(".shippingMethod"),
             $priceInformation = $(".priceInformation");
 
-        $contactInformation.removeClass("animated fadeOutRight fadeInLeft").addClass("animated fadeOutRight");
+        $contactInformation.fadeOut(300, function() {
+            $(".shippingMethod .loadable-segment, .priceInformation .loadable-segment").addClass("loading");
 
-        $contactInformation.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-            $(this).hide();
+            //Fade the shipping methods and price info from the left.
+            $shippingMethod.show(0, function() {
+                $(this).removeClass("hidden animated fadeInLeft").addClass("animated fadeInLeft");
+            });
 
-            // Fade the shipping methods and price info from the left.
-            $shippingMethod.removeClass("hidden animated fadeOutLeft").addClass("animated fadeInLeft");
-            $priceInformation.removeClass("hidden animated fadeOutLeft").addClass("animated fadeInLeft");
 
+            $priceInformation.show(0, function() {
+                $(this).removeClass("hidden animated fadeInLeft").addClass("animated fadeInLeft");
+            });
         });
+
+
     },
 
-    displayContactInformation: function () {
+    displayContactInformation: function (e) {
         var $contactInformation = $(".contactInformation"),
             $shippingMethod = $(".shippingMethod"),
             $priceInformation = $(".priceInformation");
 
-        $priceInformation.addClass("animated fadeOutLeft");
-        $shippingMethod.addClass("animated fadeOutLeft");
-
-        $(".shippingMethod, .priceInformation").one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-            $(this).addClass("hidden");
-            $contactInformation.removeClass("animated fadeOutRight").fadeIn();
+        $priceInformation.fadeOut(300);
+        $shippingMethod.fadeOut(300, function() {
+            $contactInformation.fadeIn();
         });
 
-
+        e.stopPropagation();
+        e.stopImmediatePropagation();
     },
 
 
@@ -1749,6 +1885,80 @@ var paymentOverlayContainer = {
 }
 
 /**
+ * Object responsible for activating semantic ui features.
+ *
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
+ */
+var semanticInitContainer = {
+
+    /**
+     * Initialize modules
+     *
+     */
+    module: {
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule: function() {
+            //Enable selection on clicked items
+            $(".ui.dropdown-select").dropdown();
+
+            //Prevent selection on clicked items
+            $(".ui.dropdown-no-select").dropdown({
+                    action: "select"
+                }
+            );
+        },
+
+        /**
+         * Initialize rating module.
+         *
+         */
+        initRatingModule: function () {
+            $(".ui.rating").rating();
+        },
+
+        /**
+         * Initialize popup module.
+         *
+         */
+        initPopupModule: function () {
+            $(".popup").popup();
+        },
+
+        /**
+         * Initialize checkbox module.
+         *
+         */
+        initCheckboxModule: function () {
+            $('.ui.checkbox')
+                .checkbox()
+            ;
+        }
+    },
+
+    /**
+     * Specify semantic custom behavior.
+     *
+     */
+    behaviors: {
+
+    },
+
+
+
+    init: function () {
+        var self = semanticInitContainer,
+            module = self.module;
+
+        module.initDropdownModule();
+        module.initRatingModule();
+        module.initPopupModule();
+        module.initCheckboxModule();
+    }
+}
+/**
  * Object responsible for handling different formats of the same product.
  *
  * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
@@ -2011,80 +2221,6 @@ var productResponsive = {
         var self = productResponsive;
 
         self.invertPriceAndDescriptionColumn();
-    }
-}
-/**
- * Object responsible for activating semantic ui features.
- *
- * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
- */
-var semanticInitContainer = {
-
-    /**
-     * Initialize modules
-     *
-     */
-    module: {
-        /**
-         * Initialize dropdown module.
-         *
-         */
-        initDropdownModule: function() {
-            //Enable selection on clicked items
-            $(".ui.dropdown-select").dropdown();
-
-            //Prevent selection on clicked items
-            $(".ui.dropdown-no-select").dropdown({
-                    action: "select"
-                }
-            );
-        },
-
-        /**
-         * Initialize rating module.
-         *
-         */
-        initRatingModule: function () {
-            $(".ui.rating").rating();
-        },
-
-        /**
-         * Initialize popup module.
-         *
-         */
-        initPopupModule: function () {
-            $(".popup").popup();
-        },
-
-        /**
-         * Initialize checkbox module.
-         *
-         */
-        initCheckboxModule: function () {
-            $('.ui.checkbox')
-                .checkbox()
-            ;
-        }
-    },
-
-    /**
-     * Specify semantic custom behavior.
-     *
-     */
-    behaviors: {
-
-    },
-
-
-
-    init: function () {
-        var self = semanticInitContainer,
-            module = self.module;
-
-        module.initDropdownModule();
-        module.initRatingModule();
-        module.initPopupModule();
-        module.initCheckboxModule();
     }
 }
 /**
@@ -3120,94 +3256,3 @@ var wishlistContainer = {
         self.setNumberOfProductsInHeader();
     }
 }
-/**
- * Entry point of script.
- *
- */
-; (function(window, document, $) {
-    $(document).ready(function () {
-
-        /**
-         * Sets up the ajax token for all ajax requests
-         *
-         */
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'locale': $('html').attr('lang')
-            }
-        });
-
-        /**
-         * Initialize semantic UI modules
-         *
-         */
-        semanticInitContainer.init();
-
-        /**
-         * Initialize checkout logic.
-         *
-         */
-        //checkoutInitContainer.init();
-        checkoutContainer.init();
-
-        /**
-         * Initialize cart drawer logic.
-         *
-         */
-        cartDrawerInitContainer.init();
-
-        /**
-         * Initialize category container
-         *
-         */
-        categoryContainer.init();
-
-        /**
-         * Initialize overlay plugin.
-         *
-         */
-        paymentOverlayContainer.init();
-
-        /**
-         * Initialize homepage sections.
-         *
-         */
-        homepageContainer.init();
-
-        /**
-         * Initialize favorite products feature.
-         *
-         */
-        productLayoutFavoriteContainer.init();
-
-        /**
-         * Initialize product formats feature.
-         *
-         */
-        productFormatContainer.init();
-
-        /**
-         * Initialize column responsiveness in product pages.
-         *
-         */
-        productResponsive.init();
-
-        /**
-         * Initialize wishlist page.
-         *
-         */
-        wishlistLogicContainer.init();
-
-        /**
-         * Global initialization of elements.
-         *
-         */
-            //fancy plugin for product page (quantity input)
-        $(".input-qty").TouchSpin({
-            initval: 1
-        });
-
-    });
-
-})(window, this.document, jQuery, undefined)
