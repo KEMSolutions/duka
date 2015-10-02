@@ -21,6 +21,7 @@ return [
     'cart'          =>'Panier',
     'view_cart'     =>'Voir panier',
     'go'            =>'Go!',
+    'settings'      =>'Settings',
     'sign_up'       =>'S\'inscrire',
     "log_in"       =>"Se connecter",
     'log_out'      =>'Se déconnecter',

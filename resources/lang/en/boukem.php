@@ -21,6 +21,7 @@ return [
     'cart'          =>'Cart',
     'view_cart'     =>'View cart',
     'go'            =>'Go!',
+    'settings'      =>'Paramètres',
     'sign_up'       =>'Sign up',
     "log_in"       =>"Log in",
     'log_out'      =>'Log out',
