@@ -15,8 +15,8 @@ return [
 
     'home'          =>'Accueil',
     'search'        =>'Rechercher',
-    'search_in'     =>'Rechercher dans: ',
     "results_for"   => "Résultats pour :term",
+    'search_in'     =>'Rechercher dans: ',
     'toggle_nav'    =>'Afficher le menu',
     'cart'          =>'Panier',
     'view_cart'     =>'Voir panier',
@@ -67,6 +67,8 @@ return [
     "ship_billing"  =>"Utiliser cette adresse pour la facturation",
     "ship_different"=>"Livrer à une adresse différente.",
     "shipping_address"=>"Adresse de livraison",
+    "shipping_info" =>"Information de livraison",
+    "billing_info"  =>"Information de facturation",
     "error_polite"          =>"Votre formulaire est incomplet.",
     "mandatory_error"       =>"Certains champs obligatoires ne sont pas correctement remplis. Retournez dans le formulaire et renseignez ces champs avant de soumettre à nouveau le formulaire.",
     "proceed_checkout"      =>"Poursuivre vers le paiement sécurisé",
@@ -181,6 +183,7 @@ return [
     "shipping_time"     =>"Expédition prévue dans les 3 à 7 jours.",
     "back_to_main"      =>"Retour au site principal",
     "back_to_home"      =>"Retour sur la page d'accueil",
+    "back_contact_info" =>"Retourner à l'étape précédente",
     "please_wait"       =>"Veuillez patienter",
     "paypal_payment"    =>"Votre paiement est présentement en train d'être traitée par Paypal. Ne quittez et ne rechargez pas cette page au risque de voir votre commande annulée ou chargée plus d'une fois.",
     "contact_email"     => "En cas de problème, contactez nous au  <a href=mailto: :email>:email</a> or :phone.",
@@ -219,6 +222,7 @@ return [
     "wishlist_remove"   =>"Retirer de la liste",
     "wishlist_add"      =>"Liste d'envie!",
     "payment_successful" => "Merci pour votre paiement.",
+    "payment_redirect"  =>"Veuillez patienter pendant que nous vous redirigeons vers la page de paiement ...",
     "results_found"     =>":total résultats trouvés",
     "filter_by"         =>"Filtrer par",
     "reset"             =>"Tout effacer",
@@ -232,6 +236,7 @@ return [
     "relevance"         =>"Pertinence",
     "price_low_to_high" =>"Prix: ordre croissant",
     "price_high_to_high" =>"Prix: ordre décroissant",
+    "total_price"       =>"Prix total",
     "items_per_page"    =>"Articles par page: ",
     "switch_layout"     =>"Vue: ",
     "grid"              =>"Grille",
@@ -249,8 +254,18 @@ return [
     "408"               =>"Temps d’attente d’une réponse du serveur écoulé. Renvoyez la requête!.",
     "500"               =>"Erreur à l'interne. Contactez l'administrateur technique pour congédier les personnes reponsables. ",
     "501"               =>"Vous avez tenté d'accéder à une fonctionnalité non implémentée... pour l'instant.",
-    "503"               =>"Service temporairement indisponible indépendamment de notre volonté. Désolé :("
+    "503"               =>"Service temporairement indisponible indépendamment de notre volonté. Désolé :(",
 
+    "validation_name"   =>"Veuillez saisir votre nom",
+    "validation_address_shipping"=>"Veuillez saisir votre adresse de livraison",
+    "validation_city_shipping"   =>"Veuillez saisir votre ville de livraision",
+    "validation_post_shipping"   =>"Veuillez saisir votre code postal de livraison",
+    "validation_email"  =>"Veuillez saisir votre adresse courriel",
+    "validation_valid_email" => "Veuillez saisir une adresse courriel valide",
+    "validation_phone"  =>"Veuillez saisir votre numéro de téléphone.",
+    "validation_address_billing"=>"Veuillez saisir votre adresse de facturation",
+    "validation_city_billing"   =>"Veuillez saisir votre ville de facturation",
+    "validation_post_billing"   =>"Veuillez saisir votre code postal de facturation"
 
 
 ];

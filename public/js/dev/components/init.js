@@ -26,7 +26,8 @@
          * Initialize checkout logic.
          *
          */
-        checkoutInitContainer.init();
+        //checkoutInitContainer.init();
+        checkoutContainer.init();
 
         /**
          * Initialize cart drawer logic.
