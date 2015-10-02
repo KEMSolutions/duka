@@ -73,9 +73,9 @@
     }
 
     .btn-one:hover, .btn-one:focus, .btn-one:active, .btn-one.active, .open .dropdown-toggle.btn-one {
-        background-color: {{ $color_one_light }};
+        background-color: {{ $color_one_dark }};
         color: #fff;
-        border-color: {{ $color_one_light }};
+        border-color: {{ $color_one_dark }};
     }
 
     .btn-two {
@@ -85,9 +85,9 @@
     }
 
     .btn-two:hover, .btn-two:focus, .btn-two:active, .btn-two.active, .open .dropdown-toggle.btn-two {
-        background-color: {{ $color_two_light }};
+        background-color: {{ $color_two_dark }};
         color: #fff;
-        border-color: {{ $color_two_light }};
+        border-color: {{ $color_two_dark }};
     }
 
     .btn-three {
@@ -98,9 +98,9 @@
     }
 
     .btn-three:hover, .btn-three:focus, .btn-three:active, .open .dropdown-toggle.btn-three, .btn-three.active {
-        background-color: {{ $color_three_light }};
+        background-color: {{ $color_three_dark }};
         color: #fff;
-        border-color: {{ $color_three_light }};
+        border-color: {{ $color_three_dark }};
     }
 
     .btn-four {
@@ -110,9 +110,9 @@
     }
 
     .btn-four:hover, .btn-four:focus, .btn-four:active, .btn-four.active, .open .dropdown-toggle.btn-four{
-        background-color: {{ $color_four_light }};
+        background-color: {{ $color_four_dark }};
         color: #fff;
-        border-color: {{ $color_four_light }};
+        border-color: {{ $color_four_dark }};
     }
 
     .btn-five {
@@ -122,9 +122,9 @@
     }
 
     .btn-five:hover, .btn-five:focus, .btn-five:active, .btn-five.active, .open .dropdown-toggle.btn-five {
-        background-color: {{ $color_five_light }};
+        background-color: {{ $color_five_dark }};
         color: #fff;
-        border-color: {{ $color_five_light }};
+        border-color: {{ $color_five_dark }};
     }
 
     .indicator-down {
