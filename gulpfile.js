@@ -33,7 +33,7 @@ gulp.task('css', function () {
     /*******************************
      Semantic UI tasks.
      *******************************/
-// Task responsible for minifying semantic css and js.
+// Task responsible for minifying semantic css.
 gulp.task('semantic-css', function() {
     return gulp.src(['public/semantic/dev/css/*.css'])
         .pipe(concatCss('semantic.css'))
@@ -41,14 +41,7 @@ gulp.task('semantic-css', function() {
         .pipe(gulp.dest('public/semantic/prod'))
 });
 
-gulp.task('semantic-js', function () {
-    return gulp.src(['public/semantic/dev/js/*.js'])
-        .pipe(concat('semantic.js'))
-        //.pipe(uglify())
-        .pipe(gulp.dest('public/semantic/prod'))
-});
-
 
 // Default task.
-gulp.task('semantic', ['semantic-css', 'semantic-js']);
+gulp.task('semantic', ['semantic-css']);
 gulp.task('default', ['js', 'css', 'semantic']);

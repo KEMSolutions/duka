@@ -39,6 +39,16 @@ var semanticInitContainer = {
          */
         initPopupModule: function () {
             $(".popup").popup();
+        },
+
+        /**
+         * Initialize checkbox module.
+         *
+         */
+        initCheckboxModule: function () {
+            $('.ui.checkbox')
+                .checkbox()
+            ;
         }
     },
 
@@ -59,5 +69,6 @@ var semanticInitContainer = {
         module.initDropdownModule();
         module.initRatingModule();
         module.initPopupModule();
+        module.initCheckboxModule();
     }
 }
