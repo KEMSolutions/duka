@@ -199,7 +199,7 @@
                 {{-- Categories related to the product. --}}
 
                 {{-- TODO: we do not display any categories if there is no brand associated with a product.
-                           As of the launch of boukem2, the only thing that appears here is the brand.
+                           As of the launch of duka, the only thing that appears here is the brand.
                  --}}
                 @if(count($product->brand))
                     <div class="ui basic segment">
