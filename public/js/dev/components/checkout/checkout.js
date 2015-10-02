@@ -268,7 +268,6 @@ var checkoutContainer = {
                     $(this).removeClass("hidden animated fadeInLeft").addClass("animated fadeInLeft");
                 });
             });
-
         },
 
         /**
@@ -306,7 +305,6 @@ var checkoutContainer = {
                 billingCity     : shippingCity,
                 billingPostcode : shippingPostcode
             });
-
         },
 
         /**
