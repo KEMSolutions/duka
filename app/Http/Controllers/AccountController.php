@@ -246,6 +246,7 @@ class AccountController extends Controller
                 $result = Customers::update($check, $data, $data['password']);
 
                 if (Customers::isError($result)) {
+                    Log::error('Could not update existing user\'s details from sign up form.');
                     Session::push('messages', Lang::get('boukem.error_occurred'));
                 }
 
@@ -267,6 +268,7 @@ class AccountController extends Controller
         // Save details on main server.
         $result = Customers::create($customer);
         if (Customers::isError($result)) {
+            Log::error('Could not create new user account.');
             Session::push('messages', Lang::get('boukem.error_occurred'));
         }
 
