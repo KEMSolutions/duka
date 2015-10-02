@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="two fields">
-                    <div class="field">
+                    <div class="field popup" data-content="@lang("boukem.keep_email")" data-variation="inverted">
                         <label>@lang("boukem.email_address")</label>
                         <input type="email" placeholder="you@you.com" name="email" id="customer_email" value="{{ Customers::getDefault()->email }}"/>
                     </div>
