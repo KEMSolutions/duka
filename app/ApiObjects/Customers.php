@@ -11,9 +11,6 @@ use Localization;
 use Carbon\Carbon;
 use App\Models\Customer;
 
-// TODO: remove this from dependencies.
-use League\Flysystem\Adapter\Local;
-
 class Customers extends BaseObject
 {
     /**
