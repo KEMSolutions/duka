@@ -25,7 +25,7 @@
 
                             <li>
                                 <span>{{ Lang::get("boukem.CUP/EAN") }}</span>
-                                <span class="bold" itemprop="gtin13">{{ isset($product->formats[0]->barcode) }}</span>
+                                <span class="bold" itemprop="gtin13">{{ isset($product->formats[0]->barcode) ? $product->formats[0]->barcode : "—" }}</span>
                             </li>
 
                             {{-- Some products are without brands. --}}

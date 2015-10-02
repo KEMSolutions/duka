@@ -1,22 +1,26 @@
 @foreach($products as $product)
-      {{--TODO: TEMPORARY FIX AS TO WHY THE $products array contains empty fields?--}}
-      {{--{{ dd($products) }}--}}
     @if(is_object($product) && isset($product->brand->slug))
         <div class="item col-lg-3 col-md-4 col-sm-6">
             <div class="w-box">
                 <figure>
 
-                    <a href="/{{ $locale }}/prod/{{ $product->slug }}" class="strong">
+                    <a href="{{ route('product', ['slug' => $product->slug]) }}" class="strong">
                         <img src="//static.boutiquekem.com/productimg-300-280-{{ $product->images[0]->id . "." . $product->images[0]->extension }}" class="img-responsive center-block "/>
                     </a>
 
                     <span class="date-over">
                         <strong>
-                            <a class="color-two" href="{{ $locale }}/cat/{{ $product->brand->slug }}">{{ $product->brand->name }}</a>
+                            <a class="color-two" href="{{ route('product', ['slug' => $product->slug]) }}">
+                                {{ $product->brand->name }}
+                            </a>
                         </strong>
                     </span>
 
-                    <h2><a href="/{{ $locale }}/prod/{{ $product->slug }}" class="color-two">{{ $product->localization->name }}</a></h2>
+                    <h2>
+                        <a href="{{ route('product', ['slug' => $product->slug]) }}" class="color-two">
+                            {{ $product->localization->name }}
+                        </a>
+                    </h2>
 
                     <p>
                         {{ str_limit(strip_tags($product->localization->short_description), 100, "...") }}
@@ -24,10 +28,10 @@
 
 
                 <span class="w-footer">
-                    <div class="pull-left"><strong class="pricetag">$ {{ number_format((float)$product->price, 2, '.', '') }}</strong></div>
+                    <div class="pull-left"><strong class="pricetag">$ {{ number_format((float)$product->formats[0]->price, 2, '.', '') }}</strong></div>
 					<button class="btn btn-success pull-right buybutton"
                             data-product="{{ $product->id }}"
-                            data-price="{{ $product->price }}"
+                            data-price="{{ $product->formats[0]->price }}"
                             data-thumbnail="{{ Products::thumbnail($product->id) }}"
                             data-thumbnail_lg="{{ Products::thumbnailLg($product->id) }}"
                             data-name="{{ $product->localization->name }}"
@@ -42,5 +46,3 @@
 
     @endif
 @endforeach
-
-

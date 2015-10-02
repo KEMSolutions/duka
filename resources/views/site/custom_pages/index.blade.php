@@ -1,11 +1,10 @@
-@extends("...app")
+@extends("app")
 
     @section("content")
-        <div class="container">
+        <div class="ui container">
             <h1>{{ $title }}</h1>
             {!! $html !!}
         </div>
     @endsection
 
 @stop
-
