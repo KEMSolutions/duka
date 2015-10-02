@@ -15,6 +15,7 @@ return [
 
     'home'          =>'Accueil',
     'search'        =>'Rechercher',
+    "results_for"   => "Résultats pour :term",
     'search_in'     =>'Rechercher dans: ',
     'toggle_nav'    =>'Afficher le menu',
     'cart'          =>'Panier',
@@ -161,6 +162,8 @@ return [
     "keep_email"    =>"Nous gardons votre courriel pour associer dès maintenant votre commande avec vos précédentes, appliquer les rabais associés à votre compte et vous permettre de retrouver votre panier. Nous ne vous enverrons aucun spam, aucune infolettre et nous ne vendrons pas votre courriel à des tiers.",
     "calculate_shipping"=>"Entrez votre code postal pour calculer les taxes et frais de livraison.",
     "no_result"     =>"Désolé, aucun résultat trouvé.",
+    "no_result_suggestion"=>"Essayer de reformuler votre requête. Vous pouvez rechercher par nom de produit, catégorie ou marque (exemple: Glucosamine ou vitamines pour enfants.).",
+    "no_result_assistance"=>"Avez-vous besoin d'assistance pour commander? Appelez-nous au :number pour effectuer une commande par téléphone!",
     "expired_link"  =>"Le lien de paiement a expiré.",
     "cancel_payment"=>"Vous avez annulés le processus de commande. Nous ne préparons les commandes qu'une fois payées. N'hésitez pas à nous contacter si vous avez des questions sur le processus de paiement.",
     "cancellation"      =>"Annulation",
