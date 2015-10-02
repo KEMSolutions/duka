@@ -308,6 +308,30 @@ var checkoutContainer = {
         },
 
         /**
+         * Sets the province/state/region dropdown state according to the country entered.
+         *
+         * @param fields
+         */
+        setInternationalFields: function (fields) {
+            fields.map(function(field) {
+                field.on("change", function () {
+                    if($(this).val() != "CA") {
+
+                        // We assume the structure is not changing and stays like so:
+                        // Country list is a sibling of province state region, both of them wrapped
+                        // in a parent container.
+                        $(this).parent().next().addClass("disabled");
+                        $(this).parent().next().find("select").attr("disabled", true);
+                    }
+                    else {
+                        $(this).parent().next().removeClass("disabled");
+                        $(this).parent().next().find("select").attr("disabled", false);
+                    }
+                });
+            });
+        },
+
+        /**
          * Small utility function used to clear a field.
          *
          * @param node
@@ -580,6 +604,7 @@ var checkoutContainer = {
         var self = checkoutContainer;
         self.validation.validateFormFields();
         self.view.fadeInBillingInformation();
+        self.view.setInternationalFields([$("#shippingCountry"), $("#billingCountry")]);
 
         // This is where it all begins...
         // This automatically calls the form.onSuccess method upon validating all fields from the contact information

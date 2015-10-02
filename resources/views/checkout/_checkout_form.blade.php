@@ -34,14 +34,14 @@
                 <div class="two fields">
                     <div class="field">
                         <label>@lang("boukem.country")</label>
-                        <select name="shipping_address[country]" id="shippingCountry" class="ui fluid search selection dropdown dropdown-select country">
+                        <select name="shipping_address[country]" id="shippingCountry">
                             @include("checkout._country_list")
                         </select>
                     </div>
 
                     <div class="field">
                         <label>@lang("boukem.province_state_reg")</label>
-                        <select name="shipping_address[province]" id="shippingProvince" class="ui fluid search selection dropdown dropdown-select province">
+                        <select name="shipping_address[province]" id="shippingProvince">
                             @include("checkout._province_state_reg")
                         </select>
                     </div>
@@ -53,9 +53,9 @@
                         <input type="text" placeholder=@lang("boukem.city") name="shipping_address[city]" id="shippingCity" class="city" value="{{ Customers::getDefaultAddress()->city }}"/>
                     </div>
 
-                    <div class="field">
+                    <div class="field shippingPostcode">
                         <label>@lang("boukem.postal_code")</label>
-                        <input type="text" placeholder="A1A 1A1" name="shipping_address[postcode]" id="shippingPostcode" value="" class="postcode" value="{{ Customers::getDefaultAddress()->postcode }}"/>
+                        <input type="text" placeholder="A1A 1A1" name="shipping_address[postcode]" id="shippingPostcode" value="{{ Customers::getDefaultAddress()->postcode }}"/>
                     </div>
                 </div>
 
@@ -112,14 +112,14 @@
                 <div class="two fields">
                     <div class="field">
                         <label>@lang("boukem.country")</label>
-                        <select class="ui fluid search selection dropdown dropdown-select" name="billing_address[country]" id="billingCountry">
+                        <select name="billing_address[country]" id="billingCountry">
                             @include("checkout._country_list")
                         </select>
                     </div>
 
                     <div class="field">
                         <label>@lang("boukem.province_state_reg")</label>
-                        <select class="ui fluid search selection dropdown dropdown-select" name="billing_address[province]" id="billingProvince">
+                        <select name="billing_address[province]" id="billingProvince">
                             @include("checkout._province_state_reg")
                         </select>
                     </div>
