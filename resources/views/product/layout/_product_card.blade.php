@@ -29,7 +29,7 @@
 
                 <span class="w-footer">
                     <div class="pull-left"><strong class="pricetag">$ {{ number_format((float)$product->formats[0]->price, 2, '.', '') }}</strong></div>
-					<button class="btn btn-success pull-right buybutton"
+					<button class="ui button green right floated buybutton"
                             data-product="{{ $product->id }}"
                             data-price="{{ $product->formats[0]->price }}"
                             data-thumbnail="{{ Products::thumbnail($product->id) }}"
