@@ -580,108 +580,6 @@ var UtilityContainer = {
 })(window, this.document, jQuery, undefined)
 
 /**
- * Object responsible for handling the payment overlay behaviour.
- *
- * @type {{cancelOrder: Function, init: Function}}
- */
-var paymentOverlayContainer = {
-
-    /**
-     * Cancels an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_unpaid_orders");
-
-            $("#cancelledOrder .jumbotron").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-
-        });
-    },
-
-    /**
-     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_unpaid_orders')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(data) {
-                    if (data.status == 'pending')
-                        paymentOverlayContainer.showPaymentNotice();
-                    else
-                        Cookies.remove('_unpaid_orders');
-                }
-            });
-        }
-
-    },
-
-    /**
-     * Shows payment notice.
-     *
-     */
-    showPaymentNotice : function() {
-
-        // Retrieve order details.
-        var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-        // Display notice.
-        $('body').prepend(
-            '<div class="container fullScreen" id="cancelledOrder">'+
-            '<div class="jumbotron vertical-align color-one">'+
-            '<div class="text-center">'+
-            '<h2>'+
-            Localization.pending_order.replace(':command', order.id) +
-            '</h2>'+
-            '<h4>'+ Localization.what_to_do +'</h4>'+
-            '<br />'+
-            '<ul class="list-inline">' +
-            '<li>' +
-            '<a href="'+
-            ApiEndpoints.orders.pay.replace(':id', order.id)
-                .replace(':verification', order.verification) +'">'+
-            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
-            '</a>'+
-            '</li>' +
-            '<li>' +
-            '<button class="ui button red" id="cancelOrder">'+
-            Localization.cancel_order +
-            '</button>'+
-            '</li>'+
-            '</ul>'+
-            '</div>'+
-            '</div>'+
-            '</div>'
-        );
-    },
-
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-        self.checkPendingOrders();
-    }
-}
-
-/**
  * Object responsible for handling billing information.
  *
  * @type {{autoFillBillingAddress: Function, setDifferentBillingAddress: Function, clearBillingAddress: Function, init: Function}}
@@ -1163,7 +1061,7 @@ var checkoutContainer = {
                     ]
                 },
 
-                billingCountry: {
+                billingProvince: {
                     identifier: 'billingProvince',
                     rules: [
                         {
@@ -1192,7 +1090,7 @@ var checkoutContainer = {
                         }
                     ]
                 }
-            }
+            };
 
 
             $(".form-checkout").form({
@@ -1217,6 +1115,37 @@ var checkoutContainer = {
      *
      */
     view: {
+        /**
+         * Auto fill the billing information if the checkbox is ticked.
+         *
+         */
+        autofillBillingInformation: function () {
+            var shippingFirstname = $("#shippingFirstname").val(),
+                shippingLastname = $("#shippingLastname").val(),
+                shippingAddress1 = $("#shippingAddress1").val(),
+                shippingCity = $("#shippingCity").val(),
+                shippingPostcode = $("#shippingPostcode").val();
+
+            $(".form-checkout").form('set values', {
+                billingFirstname: shippingFirstname,
+                billingLastname : shippingLastname,
+                billingAddress1 : shippingAddress1,
+                billingCity     : shippingCity,
+                billingPostcode : shippingPostcode
+            });
+        },
+
+
+        /**
+         * Small utility function used to clear a field.
+         *
+         * @param node
+         * @param fields
+         */
+        clearFields: function (node, fields) {
+            node.find(fields).val("");
+        },
+
 
         /**
          *  Defines a specific behaviour depending on which button is clicked after a form validation passes.
@@ -1258,6 +1187,25 @@ var checkoutContainer = {
             });
         },
 
+
+        /**
+         * Displays the contact information.
+         *
+         * @param e
+         */
+        displayContactInformation: function (e) {
+            $(".priceInformation").fadeOut(300);
+            $(".shippingMethod").fadeOut(300, function() {
+                $(".contactInformation").fadeIn();
+            });
+
+            // We need to stop event bubbling from the back button.
+            // TBH, I didn't really look into it but one of these two should be enough...
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+        },
+
+
         /**
          * Fades out the contact information segments then fades in the shipping methods and price information segment.
          *
@@ -1283,69 +1231,6 @@ var checkoutContainer = {
             });
         },
 
-        /**
-         * Displays the contact information.
-         *
-         * @param e
-         */
-        displayContactInformation: function (e) {
-            $(".priceInformation").fadeOut(300);
-            $(".shippingMethod").fadeOut(300, function() {
-                $(".contactInformation").fadeIn();
-            });
-
-            // We need to stop event bubbling from the back button.
-            // TBH, I didn't really look into it but one of these two should be enough...
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-        },
-
-        /**
-         * Auto fill the billing information if the checkbox is ticked.
-         *
-         */
-        autofillBillingInformation: function () {
-            var shippingFirstname = $("#shippingFirstname").val(),
-                shippingLastname = $("#shippingLastname").val(),
-                shippingAddress1 = $("#shippingAddress1").val(),
-                shippingCity = $("#shippingCity").val(),
-                shippingPostcode = $("#shippingPostcode").val();
-
-            $(".form-checkout").form('set values', {
-                billingFirstname: shippingFirstname,
-                billingLastname : shippingLastname,
-                billingAddress1 : shippingAddress1,
-                billingCity     : shippingCity,
-                billingPostcode : shippingPostcode
-            });
-        },
-
-        setInternationalFields: function (fields) {
-            fields.map(function(field) {
-                field.on("change", function () {
-                    if($(this).val() != "CA") {
-
-                        $(this).parent().next().addClass("disabled");
-                        $(this).parent().next().find("select").attr("disabled", true);
-                    }
-                    else {
-                        $(this).parent().next().removeClass("disabled");
-                        $(this).parent().next().find("select").attr("disabled", false);
-                    }
-                });
-            });
-        },
-
-        /**
-         * Small utility function used to clear a field.
-         *
-         * @param node
-         * @param fields
-         */
-        clearFields: function (node, fields) {
-            node.find(fields).val("");
-        },
-
 
         /**
          * Fades in the billing information segment.
@@ -1367,6 +1252,7 @@ var checkoutContainer = {
                 }
             })
         },
+
 
         /**
          * Creates a table of available shipments populated with data from the api call.
@@ -1407,6 +1293,7 @@ var checkoutContainer = {
 
         },
 
+
         /**
          * Displays the various prices according to the chosen shipment method option.
          *
@@ -1425,6 +1312,32 @@ var checkoutContainer = {
 
             $(".priceInformation .segment").removeClass("loading");
         },
+
+
+        /**
+         * Sets the province/state/region dropdown state according to the country entered.
+         *
+         * @param fields
+         */
+        setInternationalFields: function (fields) {
+            fields.map(function(field) {
+                field.on("change", function () {
+                    if($(this).val() != "CA") {
+
+                        // We assume the structure is not changing and stays like so:
+                        // Country list is a sibling of province state region, both of them wrapped
+                        // in a parent container.
+                        $(this).parent().next().addClass("disabled");
+                        $(this).parent().next().find("select").attr("disabled", true);
+                    }
+                    else {
+                        $(this).parent().next().removeClass("disabled");
+                        $(this).parent().next().find("select").attr("disabled", false);
+                    }
+                });
+            });
+        },
+
 
         /**
          * Update the payment panel with right values (shipment method)
@@ -1468,6 +1381,56 @@ var checkoutContainer = {
             }));
         },
 
+
+        /**
+         * Get the relevant taxes according to the chosen shipping method.
+         *
+         * @param serviceCode
+         * @param data
+         * @returns {string}
+         */
+        getShipmentTaxes : function(serviceCode, data) {
+            var taxes = 0;
+
+            for(var i=0; i<data.shipping.services.length; i++)
+            {
+                if(data.shipping.services[i].method == serviceCode)
+                {
+                    if (data.shipping.services[i].taxes.length != 0)
+                    {
+                        for(var j=0; j<data.shipping.services[i].taxes.length; j++)
+                        {
+                            taxes += data.shipping.services[i].taxes[j].amount;
+                        }
+                    }
+                }
+            }
+
+            return taxes.toFixed(2);
+        },
+
+
+        /**
+         * Get the total taxes (TPS/TVQ or TVH or TPS or null) + shipping method taxes.
+         *
+         * @param data
+         * @returns {number}
+         */
+        getTaxes : function(data) {
+            var taxes = 0,
+                dataTaxesLength = data.taxes.length;
+
+            if (dataTaxesLength != 0)
+            {
+                for(var i=0; i<dataTaxesLength; i++)
+                {
+                    taxes += data.taxes[i].amount;
+                }
+            }
+            return parseFloat(taxes);
+        },
+
+
         /**
          * Makes an ajax call to api/orders with the values from the form
          *
@@ -1496,6 +1459,7 @@ var checkoutContainer = {
                 }
             });
         },
+
 
         /**
          * Makes an ajax call to api/estimate with the contact information.
@@ -1528,53 +1492,6 @@ var checkoutContainer = {
                     $('#estimate').html('<div class="alert alert-danger">Une erreur est survenue. Veuillez vérifier les informations fournies.</div>');
                 }
             });
-        },
-
-        /**
-         * Get the relevant taxes according to the chosen shipping method.
-         *
-         * @param serviceCode
-         * @param data
-         * @returns {string}
-         */
-        getShipmentTaxes : function(serviceCode, data) {
-            var taxes = 0;
-
-            for(var i=0; i<data.shipping.services.length; i++)
-            {
-                if(data.shipping.services[i].method == serviceCode)
-                {
-                    if (data.shipping.services[i].taxes.length != 0)
-                    {
-                        for(var j=0; j<data.shipping.services[i].taxes.length; j++)
-                        {
-                            taxes += data.shipping.services[i].taxes[j].amount;
-                        }
-                    }
-                }
-            }
-
-            return taxes.toFixed(2);
-        },
-
-        /**
-         * Get the total taxes (TPS/TVQ or TVH or TPS or null) + shipping method taxes.
-         *
-         * @param data
-         * @returns {number}
-         */
-        getTaxes : function(data) {
-            var taxes = 0,
-                dataTaxesLength = data.taxes.length;
-
-            if (dataTaxesLength != 0)
-            {
-                for(var i=0; i<dataTaxesLength; i++)
-                {
-                    taxes += data.taxes[i].amount;
-                }
-            }
-            return parseFloat(taxes);
         }
     },
 
@@ -2247,6 +2164,108 @@ var productResponsive = {
         self.invertPriceAndDescriptionColumn();
     }
 }
+/**
+ * Object responsible for handling the payment overlay behaviour.
+ *
+ * @type {{cancelOrder: Function, init: Function}}
+ */
+var paymentOverlayContainer = {
+
+    /**
+     * Cancels an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     *
+     */
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            Cookies.remove("_unpaid_orders");
+
+            $("#cancelledOrder .jumbotron").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+
+        });
+    },
+
+    /**
+     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_unpaid_orders')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(data) {
+                    if (data.status == 'pending')
+                        paymentOverlayContainer.showPaymentNotice();
+                    else
+                        Cookies.remove('_unpaid_orders');
+                }
+            });
+        }
+
+    },
+
+    /**
+     * Shows payment notice.
+     *
+     */
+    showPaymentNotice : function() {
+
+        // Retrieve order details.
+        var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+        // Display notice.
+        $('body').prepend(
+            '<div class="container fullScreen" id="cancelledOrder">'+
+            '<div class="jumbotron vertical-align color-one">'+
+            '<div class="text-center">'+
+            '<h2>'+
+            Localization.pending_order.replace(':command', order.id) +
+            '</h2>'+
+            '<h4>'+ Localization.what_to_do +'</h4>'+
+            '<br />'+
+            '<ul class="list-inline">' +
+            '<li>' +
+            '<a href="'+
+            ApiEndpoints.orders.pay.replace(':id', order.id)
+                .replace(':verification', order.verification) +'">'+
+            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
+            '</a>'+
+            '</li>' +
+            '<li>' +
+            '<button class="ui button red" id="cancelOrder">'+
+            Localization.cancel_order +
+            '</button>'+
+            '</li>'+
+            '</ul>'+
+            '</div>'+
+            '</div>'+
+            '</div>'
+        );
+    },
+
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+        self.checkPendingOrders();
+    }
+}
+
 /**
  * Object responsible for activating semantic ui features.
  *
