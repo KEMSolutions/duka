@@ -253,9 +253,8 @@ class AccountController extends Controller
                 return $check;
             }
 
-            else {
-                Session::push('messages', Lang::get('boukem.account_exists'));
-            }
+            // Let user know that their account already existed.
+            Session::push('messages', Lang::get('boukem.account_exists'));
 
             // While we're at it, log them in.
             return $check;
