@@ -168,7 +168,6 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
 
 
@@ -177,11 +176,9 @@
                 <h4 class="ui dividing header">@lang("boukem.total_price")</h4>
             </div>
 
-
             <div class="ui basic segment loadable-segment loading">
 
                 <table class="ui padded celled table priceInformation-table">
-
 
                     <tbody id="priceInformation-table-tbody">
                         <tr>
@@ -230,11 +227,7 @@
                     <i class="discover icon"><span class="sr-only">Discover</span></i>
                 </small>
             </div>
-
-
-
         </div>
-
     </div>
 
     <div class="six wide column">

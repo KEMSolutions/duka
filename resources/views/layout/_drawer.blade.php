@@ -28,7 +28,7 @@
                         <select name="country" class="form-control one-half pull-left" id="country">
                         </select>
                         <span>
-                            <input type="text" name="postalcode" value="" placeholder="A1A 1A1" id="postcode" class="form-control one-half">
+                            <input type="text" name="postalcode" value="{{ Customers::getDefaultAddress()->postcode }}" placeholder="A1A 1A1" id="postcode" class="form-control one-half">
                         </span>
 
                         <button type="button" class=" one-half center-block ui button blue getEstimate" style="margin-top: 0.5rem;">{{ Lang::get("boukem.estimate") }}</button>

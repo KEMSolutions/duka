@@ -103,15 +103,14 @@
                                 </div>
                             </div>
                         @else
-                            <div class="item">
-                                <a href="{{ route('auth.account') }}">Settings</a>
-                            </div>
-
-                            <div class="divider"></div>
+                            <a class="item" href="{{ route('auth.account') }}">
+                                <i class="user icon"></i>
+                                @lang("boukem.settings")
+                            </a>
 
                             <div class="item">
                                 <a href="{{ route("auth.logout") }}">
-                                    <button class="btn btn-default color-one text-center center-block full-width">
+                                    <button class="ui button red color-one text-center center-block full-width">
                                         {{ Lang::get("boukem.log_out") }}
                                     </button>
                                 </a>

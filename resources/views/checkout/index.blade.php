@@ -16,10 +16,5 @@
         @endif
     @endsection
 
-    @section("scripts")
-        {{--<script src="/js_assets/chosen.jquery.min.js"></script>--}}
-
-    @endsection
-
 @stop
 
