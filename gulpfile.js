@@ -16,7 +16,7 @@ var gulp = require('gulp'),
 // Takes all scripts in public/js/dev and creates a minified, uglified production script.
 gulp.task('js', function () {
     return gulp.src(['public/js/dev/utils/*.js', 'public/js/dev/components/**/*.js' ])
-        .pipe(concat('boukem2.js'))
+        .pipe(concat('duka.js'))
         //.pipe(uglify())
         .pipe(gulp.dest('public/js/prod'))
 });

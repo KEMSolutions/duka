@@ -60,7 +60,7 @@
 
 	@include("_dynamic_resources")
 
-	<script src="/js/prod/boukem2.js"></script>
+	<script src="/js/prod/duka.js"></script>
 
 	@yield("scripts")
 

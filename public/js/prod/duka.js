@@ -2,7 +2,7 @@
  * Utility object containing various utility functions...
  * Self Explanatory duh.
  *
- * @type {{getProductsFromLocalStorage: Function, getNumberOfProductsInWishlist: Function, getNumberOfProducts: Function, getProductsPriceFromLocalStorage: Function, removeAllProductsFromLocalStorage: Function, getShippingFromForm: Function, buyButton_to_Json: Function, populateCountry: Function, validateEmptyFields: Function, validateEmail: Function, validatePostCode: Function, validateEmptyCart: Function, addErrorClassToFields: Function, addErrorClassToFieldsWithRules: Function, addFadeOutUpClass: Function, removeErrorClassFromFields: Function, getCheapestShippingMethod: Function, getTaxes: Function, getShipmentTaxes: Function, getCartTaxes: Function, getCartTotal: Function}}
+ * @type {{getProductsFromLocalStorage: Function, getNumberOfProductsInWishlist: Function, getNumberOfProducts: Function, getProductsPriceFromLocalStorage: Function, removeAllProductsFromLocalStorage: Function, getShippingFromForm: Function, buyButton_to_Json: Function, populateCountry: Function, validateEmptyFields: Function, validateEmail: Function, validatePostCode: Function, validateEmptyCart: Function, addErrorClassToFields: Function, addErrorClassToFieldsWithRules: Function, addFadeOutUpClass: Function, removeErrorClassFromFields: Function, getCheapestShippingMethod: Function, getTaxes: Function, getShipmentTaxes: Function, getCartTaxes: Function, getCartTotal: Function, urlGetParameters: Function, urlAddParameters: Function, urlRemoveParameters: Function, urlBuildQuery: Function}}
  */
 var UtilityContainer = {
     /**
@@ -108,7 +108,7 @@ var UtilityContainer = {
      * @returns {{country: (*|jQuery), postcode: (*|jQuery), province: (*|jQuery)}}
      */
     getShippingFromForm : function() {
-        return res = {
+        return {
             "country" : $("#shippingCountry").val(),
             "postcode" : $("#shippingPostcode").val(),
             "province" : $("#shippingProvince").val(),
@@ -557,7 +557,7 @@ var UtilityContainer = {
          * Initialize column responsiveness in product pages.
          *
          */
-        productResponsive.init();
+        productResponsiveContainer.init();
 
         /**
          * Initialize wishlist page.
@@ -579,7 +579,109 @@ var UtilityContainer = {
 })(window, this.document, jQuery, undefined)
 
 /**
- * Object responsible for handling the checkout process.
+ * Component responsible for handling the payment overlay behaviour.
+ *
+ * @type {{cancelOrder: Function, checkPendingOrders: Function, showPaymentNotice: Function, init: Function}}
+ */
+var paymentOverlayContainer = {
+
+    /**
+     * Cancels an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     *
+     */
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            Cookies.remove("_unpaid_orders");
+
+            $("#cancelledOrder .jumbotron").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+
+        });
+    },
+
+    /**
+     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_unpaid_orders')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(data) {
+                    if (data.status == 'pending')
+                        paymentOverlayContainer.showPaymentNotice();
+                    else
+                        Cookies.remove('_unpaid_orders');
+                }
+            });
+        }
+
+    },
+
+    /**
+     * Shows payment notice.
+     *
+     */
+    showPaymentNotice : function() {
+
+        // Retrieve order details.
+        var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+        // Display notice.
+        $('body').prepend(
+            '<div class="container fullScreen" id="cancelledOrder">'+
+            '<div class="jumbotron vertical-align color-one">'+
+            '<div class="text-center">'+
+            '<h2>'+
+            Localization.pending_order.replace(':command', order.id) +
+            '</h2>'+
+            '<h4>'+ Localization.what_to_do +'</h4>'+
+            '<br />'+
+            '<ul class="list-inline">' +
+            '<li>' +
+            '<a href="'+
+            ApiEndpoints.orders.pay.replace(':id', order.id)
+                .replace(':verification', order.verification) +'">'+
+            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
+            '</a>'+
+            '</li>' +
+            '<li>' +
+            '<button class="ui button red" id="cancelOrder">'+
+            Localization.cancel_order +
+            '</button>'+
+            '</li>'+
+            '</ul>'+
+            '</div>'+
+            '</div>'+
+            '</div>'
+        );
+    },
+
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+        self.checkPendingOrders();
+    }
+}
+
+/**
+ * Component responsible for handling the checkout process.
  *
  * @type {{validation: {validateFormFields: Function}, view: {dispatchButtonsActions: Function, displayShipmentMethodsAndPriceInformation: Function, displayContactInformation: Function, autofillBillingInformation: Function, clearFields: Function, fadeInBillingInformation: Function, fetchEstimate: Function, fetchPayment: Function, updatePayment: Function}, actions: {createOrdersCookie: Function, placeOrderAjaxCall: Function, shipmentMethodsAjaxCall: Function, getShipmentTaxes: Function, getTaxes: Function}, bootstrap: {selectDefaultShipmentMethod: Function}, init: Function}}
  */
@@ -736,7 +838,7 @@ var checkoutContainer = {
                     ]
                 },
 
-                billingCountry: {
+                billingProvince: {
                     identifier: 'billingProvince',
                     rules: [
                         {
@@ -765,7 +867,7 @@ var checkoutContainer = {
                         }
                     ]
                 }
-            }
+            };
 
 
             $(".form-checkout").form({
@@ -790,6 +892,37 @@ var checkoutContainer = {
      *
      */
     view: {
+        /**
+         * Auto fill the billing information if the checkbox is ticked.
+         *
+         */
+        autofillBillingInformation: function () {
+            var shippingFirstname = $("#shippingFirstname").val(),
+                shippingLastname = $("#shippingLastname").val(),
+                shippingAddress1 = $("#shippingAddress1").val(),
+                shippingCity = $("#shippingCity").val(),
+                shippingPostcode = $("#shippingPostcode").val();
+
+            $(".form-checkout").form('set values', {
+                billingFirstname: shippingFirstname,
+                billingLastname : shippingLastname,
+                billingAddress1 : shippingAddress1,
+                billingCity     : shippingCity,
+                billingPostcode : shippingPostcode
+            });
+        },
+
+
+        /**
+         * Small utility function used to clear a field.
+         *
+         * @param node
+         * @param fields
+         */
+        clearFields: function (node, fields) {
+            node.find(fields).val("");
+        },
+
 
         /**
          *  Defines a specific behaviour depending on which button is clicked after a form validation passes.
@@ -831,6 +964,25 @@ var checkoutContainer = {
             });
         },
 
+
+        /**
+         * Displays the contact information.
+         *
+         * @param e
+         */
+        displayContactInformation: function (e) {
+            $(".priceInformation").fadeOut(300);
+            $(".shippingMethod").fadeOut(300, function() {
+                $(".contactInformation").fadeIn();
+            });
+
+            // We need to stop event bubbling from the back button.
+            // TBH, I didn't really look into it but one of these two should be enough...
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+        },
+
+
         /**
          * Fades out the contact information segments then fades in the shipping methods and price information segment.
          *
@@ -854,55 +1006,6 @@ var checkoutContainer = {
                     $(this).removeClass("hidden animated fadeInLeft").addClass("animated fadeInLeft");
                 });
             });
-
-        },
-
-        /**
-         * Displays the contact information.
-         *
-         * @param e
-         */
-        displayContactInformation: function (e) {
-            $(".priceInformation").fadeOut(300);
-            $(".shippingMethod").fadeOut(300, function() {
-                $(".contactInformation").fadeIn();
-            });
-
-            // We need to stop event bubbling from the back button.
-            // TBH, I didn't really look into it but one of these two should be enough...
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-        },
-
-        /**
-         * Auto fill the billing information if the checkbox is ticked.
-         *
-         */
-        autofillBillingInformation: function () {
-            var shippingFirstname = $("#shippingFirstname").val(),
-                shippingLastname = $("#shippingLastname").val(),
-                shippingAddress1 = $("#shippingAddress1").val(),
-                shippingCity = $("#shippingCity").val(),
-                shippingPostcode = $("#shippingPostcode").val();
-
-            $(".form-checkout").form('set values', {
-                billingFirstname: shippingFirstname,
-                billingLastname : shippingLastname,
-                billingAddress1 : shippingAddress1,
-                billingCity     : shippingCity,
-                billingPostcode : shippingPostcode
-            });
-
-        },
-
-        /**
-         * Small utility function used to clear a field.
-         *
-         * @param node
-         * @param fields
-         */
-        clearFields: function (node, fields) {
-            node.find(fields).val("");
         },
 
 
@@ -926,6 +1029,7 @@ var checkoutContainer = {
                 }
             })
         },
+
 
         /**
          * Creates a table of available shipments populated with data from the api call.
@@ -966,6 +1070,7 @@ var checkoutContainer = {
 
         },
 
+
         /**
          * Displays the various prices according to the chosen shipment method option.
          *
@@ -984,6 +1089,32 @@ var checkoutContainer = {
 
             $(".priceInformation .segment").removeClass("loading");
         },
+
+
+        /**
+         * Sets the province/state/region dropdown state according to the country entered.
+         *
+         * @param fields
+         */
+        setInternationalFields: function (fields) {
+            fields.map(function(field) {
+                field.on("change", function () {
+                    if($(this).val() != "CA") {
+
+                        // We assume the structure is not changing and stays like so:
+                        // Country list is a sibling of province state region, both of them wrapped
+                        // in a parent container.
+                        $(this).parent().next().addClass("disabled");
+                        $(this).parent().next().find("select").attr("disabled", true);
+                    }
+                    else {
+                        $(this).parent().next().removeClass("disabled");
+                        $(this).parent().next().find("select").attr("disabled", false);
+                    }
+                });
+            });
+        },
+
 
         /**
          * Update the payment panel with right values (shipment method)
@@ -1027,6 +1158,56 @@ var checkoutContainer = {
             }));
         },
 
+
+        /**
+         * Get the relevant taxes according to the chosen shipping method.
+         *
+         * @param serviceCode
+         * @param data
+         * @returns {string}
+         */
+        getShipmentTaxes : function(serviceCode, data) {
+            var taxes = 0;
+
+            for(var i=0; i<data.shipping.services.length; i++)
+            {
+                if(data.shipping.services[i].method == serviceCode)
+                {
+                    if (data.shipping.services[i].taxes.length != 0)
+                    {
+                        for(var j=0; j<data.shipping.services[i].taxes.length; j++)
+                        {
+                            taxes += data.shipping.services[i].taxes[j].amount;
+                        }
+                    }
+                }
+            }
+
+            return taxes.toFixed(2);
+        },
+
+
+        /**
+         * Get the total taxes (TPS/TVQ or TVH or TPS or null) + shipping method taxes.
+         *
+         * @param data
+         * @returns {number}
+         */
+        getTaxes : function(data) {
+            var taxes = 0,
+                dataTaxesLength = data.taxes.length;
+
+            if (dataTaxesLength != 0)
+            {
+                for(var i=0; i<dataTaxesLength; i++)
+                {
+                    taxes += data.taxes[i].amount;
+                }
+            }
+            return parseFloat(taxes);
+        },
+
+
         /**
          * Makes an ajax call to api/orders with the values from the form
          *
@@ -1055,6 +1236,7 @@ var checkoutContainer = {
                 }
             });
         },
+
 
         /**
          * Makes an ajax call to api/estimate with the contact information.
@@ -1087,53 +1269,6 @@ var checkoutContainer = {
                     $('#estimate').html('<div class="alert alert-danger">Une erreur est survenue. Veuillez vérifier les informations fournies.</div>');
                 }
             });
-        },
-
-        /**
-         * Get the relevant taxes according to the chosen shipping method.
-         *
-         * @param serviceCode
-         * @param data
-         * @returns {string}
-         */
-        getShipmentTaxes : function(serviceCode, data) {
-            var taxes = 0;
-
-            for(var i=0; i<data.shipping.services.length; i++)
-            {
-                if(data.shipping.services[i].method == serviceCode)
-                {
-                    if (data.shipping.services[i].taxes.length != 0)
-                    {
-                        for(var j=0; j<data.shipping.services[i].taxes.length; j++)
-                        {
-                            taxes += data.shipping.services[i].taxes[j].amount;
-                        }
-                    }
-                }
-            }
-
-            return taxes.toFixed(2);
-        },
-
-        /**
-         * Get the total taxes (TPS/TVQ or TVH or TPS or null) + shipping method taxes.
-         *
-         * @param data
-         * @returns {number}
-         */
-        getTaxes : function(data) {
-            var taxes = 0,
-                dataTaxesLength = data.taxes.length;
-
-            if (dataTaxesLength != 0)
-            {
-                for(var i=0; i<dataTaxesLength; i++)
-                {
-                    taxes += data.taxes[i].amount;
-                }
-            }
-            return parseFloat(taxes);
         }
     },
 
@@ -1168,6 +1303,7 @@ var checkoutContainer = {
         var self = checkoutContainer;
         self.validation.validateFormFields();
         self.view.fadeInBillingInformation();
+        self.view.setInternationalFields([$("#shippingCountry"), $("#billingCountry")]);
 
         // This is where it all begins...
         // This automatically calls the form.onSuccess method upon validating all fields from the contact information
@@ -1184,185 +1320,9 @@ var checkoutContainer = {
 
 }
 /**
- * Object responsible for handling the payment overlay behaviour.
+ * Component responsible for handling different formats of the same product.
  *
- * @type {{cancelOrder: Function, init: Function}}
- */
-var paymentOverlayContainer = {
-
-    /**
-     * Cancels an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_unpaid_orders");
-
-            $("#cancelledOrder .jumbotron").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-
-        });
-    },
-
-    /**
-     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_unpaid_orders')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(data) {
-                    if (data.status == 'pending')
-                        paymentOverlayContainer.showPaymentNotice();
-                    else
-                        Cookies.remove('_unpaid_orders');
-                }
-            });
-        }
-
-    },
-
-    /**
-     * Shows payment notice.
-     *
-     */
-    showPaymentNotice : function() {
-
-        // Retrieve order details.
-        var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-        // Display notice.
-        $('body').prepend(
-            '<div class="container fullScreen" id="cancelledOrder">'+
-            '<div class="jumbotron vertical-align color-one">'+
-            '<div class="text-center">'+
-            '<h2>'+
-            Localization.pending_order.replace(':command', order.id) +
-            '</h2>'+
-            '<h4>'+ Localization.what_to_do +'</h4>'+
-            '<br />'+
-            '<ul class="list-inline">' +
-            '<li>' +
-            '<a href="'+
-            ApiEndpoints.orders.pay.replace(':id', order.id)
-                .replace(':verification', order.verification) +'">'+
-            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
-            '</a>'+
-            '</li>' +
-            '<li>' +
-            '<button class="ui button red" id="cancelOrder">'+
-            Localization.cancel_order +
-            '</button>'+
-            '</li>'+
-            '</ul>'+
-            '</div>'+
-            '</div>'+
-            '</div>'
-        );
-    },
-
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-        self.checkPendingOrders();
-    }
-}
-
-/**
- * Object responsible for activating semantic ui features.
- *
- * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
- */
-var semanticInitContainer = {
-
-    /**
-     * Initialize modules
-     *
-     */
-    module: {
-        /**
-         * Initialize dropdown module.
-         *
-         */
-        initDropdownModule: function() {
-            //Enable selection on clicked items
-            $(".ui.dropdown-select").dropdown();
-
-            //Prevent selection on clicked items
-            $(".ui.dropdown-no-select").dropdown({
-                    action: "select"
-                }
-            );
-        },
-
-        /**
-         * Initialize rating module.
-         *
-         */
-        initRatingModule: function () {
-            $(".ui.rating").rating();
-        },
-
-        /**
-         * Initialize popup module.
-         *
-         */
-        initPopupModule: function () {
-            $(".popup").popup();
-        },
-
-        /**
-         * Initialize checkbox module.
-         *
-         */
-        initCheckboxModule: function () {
-            $('.ui.checkbox')
-                .checkbox()
-            ;
-        }
-    },
-
-    /**
-     * Specify semantic custom behavior.
-     *
-     */
-    behaviors: {
-
-    },
-
-
-
-    init: function () {
-        var self = semanticInitContainer,
-            module = self.module;
-
-        module.initDropdownModule();
-        module.initRatingModule();
-        module.initPopupModule();
-        module.initCheckboxModule();
-    }
-}
-/**
- * Object responsible for handling different formats of the same product.
- *
- * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
+ * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, setBuybuttonInformation: Function, toggleActiveClass: Function, init: Function}}
  */
 var productFormatContainer = {
 
@@ -1489,9 +1449,9 @@ var productFormatContainer = {
     }
 }
 /**
- * Object responsible for adding products to a user's wishlist.
+ * Component responsible for adding products to a user's wishlist.
  *
- * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
+ * @type {{fadeInFavoriteIcon: Function, setPopupText: Function, setWishlistBadgeQuantity: Function, addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
  */
 var productLayoutFavoriteContainer = {
     /**
@@ -1604,7 +1564,12 @@ var productLayoutFavoriteContainer = {
         self.setWishlistBadgeQuantity();
     }
 }
-var productResponsive = {
+/**
+ * Component responsible for handling the responsiveness in product pages.
+ *
+ * @type {{invertPriceAndDescriptionColumn: Function, init: Function}}
+ */
+var productResponsiveContainer = {
     invertPriceAndDescriptionColumn: function () {
         $(window).on("load resize", function () {
             if($(this).width() < 768)
@@ -1619,15 +1584,89 @@ var productResponsive = {
     },
 
     init: function () {
-        var self = productResponsive;
+        var self = productResponsiveContainer;
 
         self.invertPriceAndDescriptionColumn();
     }
 }
 /**
- * Object responsible for the view component of each category page.
+ * Component responsible for activating semantic ui features.
  *
- * @type {{blurBackground: Function, init: Function}}
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {}, init: Function}}
+ */
+var semanticInitContainer = {
+
+    /**
+     * Initialize modules
+     *
+     */
+    module: {
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule: function() {
+            //Enable selection on clicked items
+            $(".ui.dropdown-select").dropdown();
+
+            //Prevent selection on clicked items
+            $(".ui.dropdown-no-select").dropdown({
+                    action: "select"
+                }
+            );
+        },
+
+        /**
+         * Initialize rating module.
+         *
+         */
+        initRatingModule: function () {
+            $(".ui.rating").rating();
+        },
+
+        /**
+         * Initialize popup module.
+         *
+         */
+        initPopupModule: function () {
+            $(".popup").popup();
+        },
+
+        /**
+         * Initialize checkbox module.
+         *
+         */
+        initCheckboxModule: function () {
+            $('.ui.checkbox')
+                .checkbox()
+            ;
+        }
+    },
+
+    /**
+     * Specify semantic custom behavior.
+     *
+     */
+    behaviors: {
+
+    },
+
+
+
+    init: function () {
+        var self = semanticInitContainer,
+            module = self.module;
+
+        module.initDropdownModule();
+        module.initRatingModule();
+        module.initPopupModule();
+        module.initCheckboxModule();
+    }
+}
+/**
+ * Component responsible for the view component of each category page.
+ *
+ * @type {{searchParameters: {page: number, per_page: number, order: string, min_price: null, max_price: null, brands: Array, categories: Array}, blurBackground: Function, itemsPerPage: Function, sortBy: Function, price: Function, categories: Function, brands: Function, updateFilterList: Function, addTag: Function, tags: Function, addFilter: Function, removeFilter: Function, updateFilters: Function, toggleLayout: Function, localizeSwitcher: Function, retrieveSearchParameters: Function, toggleTagsList: Function, localizeDimmer: Function, addDimmer: Function, init: Function}}
  */
 var categoryContainer = {
 
@@ -1993,7 +2032,7 @@ var categoryContainer = {
 };
 
 /**
- * Object responsible for specific behaviours of homepage sections.
+ * Component responsible for specific behaviours of homepage sections.
  *
  * @type {{mixed: {toggleSixteenWideColumn: Function}, init: Function}}
  */
@@ -2028,7 +2067,7 @@ var homepageContainer = {
     }
 }
 /**
- * Container responsible for initializing the cart drawer feature.
+ * Component responsible for initializing the cart drawer feature.
  *
  * @type {{buyButtonClick: Function, getEstimateClick: Function, init: Function}}
  */
@@ -2092,7 +2131,7 @@ var cartDrawerInitContainer = {
 }
 
 /**
- * Object responsible for the overall logic (CRUD) of the cart drawer.
+ * Component responsible for the overall logic (CRUD) of the cart drawer.
  * Layout handled in dev/components/layout/cart-drawer.js
  *
  * @type {{$el: {$list: (*|jQuery|HTMLElement)}, addItem: Function, storeItem: Function, loadItem: Function, deleteItem: Function, modifyQuantity: Function, modifyQuantityBeforeBuying: Function, setBadgeQuantity: Function, setQuantityCookie: Function, setCartSubtotal: Function, setCartShipping: Function, setCartTaxes: Function, setCartTotal: Function, ajaxCall: Function, updateAjaxCall: Function, init: Function}}
@@ -2402,10 +2441,10 @@ var cartLogicContainer = {
 };
 
 /**
- * Object responsible for displaying the cart drawer.
+ * Component responsible for displaying the cart drawer.
  * Logic handled in dev/actions/layout/cart-drawer-logic.js
  *
- * @type {{$el: {$back: (*|jQuery|HTMLElement), $proceed: (*|jQuery|HTMLElement), $trigger: (*|jQuery|HTMLElement), $container: (*|jQuery|HTMLElement), $checkout: (*|jQuery|HTMLElement), $body: (*|jQuery|HTMLElement)}, displayOn: Function, displayOff: Function, animateIn: Function, animateOut: Function, setCartItemsHeight: Function, computeCartItemsHeight: Function, init: Function}}
+ * @type {{$el: {$back: (*|jQuery|HTMLElement), $proceed: (*|jQuery|HTMLElement), $trigger: (*|jQuery|HTMLElement), $container: (*|jQuery|HTMLElement), $checkout: (*|jQuery|HTMLElement), $body: (*|jQuery|HTMLElement)}, displayOn: Function, displayOff: Function, animateIn: Function, animateOut: Function, setCartItemsHeight: Function, computeCartItemsHeight: Function, fadeInDimmer: Function, init: Function}}
  */
 var cartDisplayContainer = {
     $el : {
@@ -2521,10 +2560,10 @@ var cartDisplayContainer = {
     }
 };
 /**
- * Container responsible for handling the logic of the wish list page.
+ * Component responsible for handling the logic of the wish list page.
  * Layout handled in dev/components/site/wishlist.js
  *
- * @type {{createWishlistElement: Function, renderWishlist: Function, removeWishlistElement: Function, init: Function}}
+ * @type {{createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
  */
 var wishlistLogicContainer = {
 
@@ -2633,7 +2672,7 @@ var wishlistLogicContainer = {
 
 }
 /**
- * Object responsible for the view component of the wish list page.
+ * Component responsible for the view component of the wish list page.
  * Logic handled in dev/actions/site/wishlist-logic.js
  *
  * @type {{setNumberOfProductsInHeader: Function, init: Function}}
