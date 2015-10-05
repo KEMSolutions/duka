@@ -1,7 +1,7 @@
 /**
- * Object responsible for activating semantic ui features.
+ * Component responsible for activating semantic ui features.
  *
- * @type {{module: {initDropdownModule: Function, initRatingModule: Function}, behaviors: {}, init: Function}}
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {}, init: Function}}
  */
 var semanticInitContainer = {
 

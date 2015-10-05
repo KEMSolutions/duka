@@ -1,7 +1,7 @@
 /**
- * Object responsible for the view component of each category page.
+ * Component responsible for the view component of each category page.
  *
- * @type {{blurBackground: Function, init: Function}}
+ * @type {{searchParameters: {page: number, per_page: number, order: string, min_price: null, max_price: null, brands: Array, categories: Array}, blurBackground: Function, itemsPerPage: Function, sortBy: Function, price: Function, categories: Function, brands: Function, updateFilterList: Function, addTag: Function, tags: Function, addFilter: Function, removeFilter: Function, updateFilters: Function, toggleLayout: Function, localizeSwitcher: Function, retrieveSearchParameters: Function, toggleTagsList: Function, localizeDimmer: Function, addDimmer: Function, init: Function}}
  */
 var categoryContainer = {
 

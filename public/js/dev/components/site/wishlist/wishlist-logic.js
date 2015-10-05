@@ -1,8 +1,8 @@
 /**
- * Container responsible for handling the logic of the wish list page.
+ * Component responsible for handling the logic of the wish list page.
  * Layout handled in dev/components/site/wishlist.js
  *
- * @type {{createWishlistElement: Function, renderWishlist: Function, removeWishlistElement: Function, init: Function}}
+ * @type {{createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
  */
 var wishlistLogicContainer = {
 

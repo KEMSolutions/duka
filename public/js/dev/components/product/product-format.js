@@ -1,7 +1,7 @@
 /**
- * Object responsible for handling different formats of the same product.
+ * Component responsible for handling different formats of the same product.
  *
- * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, init: Function}}
+ * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, setBuybuttonInformation: Function, toggleActiveClass: Function, init: Function}}
  */
 var productFormatContainer = {
 

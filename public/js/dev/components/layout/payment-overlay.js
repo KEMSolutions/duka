@@ -1,7 +1,7 @@
 /**
- * Object responsible for handling the payment overlay behaviour.
+ * Component responsible for handling the payment overlay behaviour.
  *
- * @type {{cancelOrder: Function, init: Function}}
+ * @type {{cancelOrder: Function, checkPendingOrders: Function, showPaymentNotice: Function, init: Function}}
  */
 var paymentOverlayContainer = {
 

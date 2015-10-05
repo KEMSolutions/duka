@@ -1,5 +1,5 @@
 /**
- * Container responsible for initializing the cart drawer feature.
+ * Component responsible for initializing the cart drawer feature.
  *
  * @type {{buyButtonClick: Function, getEstimateClick: Function, init: Function}}
  */
