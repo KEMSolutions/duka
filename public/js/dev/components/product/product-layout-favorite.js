@@ -1,7 +1,7 @@
 /**
- * Object responsible for adding products to a user's wishlist.
+ * Component responsible for adding products to a user's wishlist.
  *
- * @type {{fadeInFavoriteIcon: Function, setWishlistBadgeQuantity: Function, createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
+ * @type {{fadeInFavoriteIcon: Function, setPopupText: Function, setWishlistBadgeQuantity: Function, addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
  */
 var productLayoutFavoriteContainer = {
     /**

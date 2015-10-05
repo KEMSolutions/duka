@@ -1,5 +1,5 @@
 /**
- * Object responsible for specific behaviours of homepage sections.
+ * Component responsible for specific behaviours of homepage sections.
  *
  * @type {{mixed: {toggleSixteenWideColumn: Function}, init: Function}}
  */

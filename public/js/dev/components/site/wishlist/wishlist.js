@@ -1,5 +1,5 @@
 /**
- * Object responsible for the view component of the wish list page.
+ * Component responsible for the view component of the wish list page.
  * Logic handled in dev/actions/site/wishlist-logic.js
  *
  * @type {{setNumberOfProductsInHeader: Function, init: Function}}

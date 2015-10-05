@@ -40,11 +40,11 @@ Some components require more than one file to enable their full feature (eg. car
 -`utils`  
 This folder regroups all helper, miscellaneous, utilities functions. In our case, the `UtilityContainer` plays that role. 
 
---`prod`  
+-`prod`
 This folder should only contain production scripts. Ideally, only one minified script combining all components located in `dev/components` should be here. 
 
 ###### Components. 
-Every component are created in independant files and are suffixed by the keyword `Container`.  
+Every component are created in independent files and are suffixed by the keyword `Container`.
 If a component can stand on its own (eg. with no component dependencies), its last method should be an `init` method that is registered in `public/js/dev/components/init.js`. 
 
 

@@ -26,7 +26,6 @@
          * Initialize checkout logic.
          *
          */
-        //checkoutInitContainer.init();
         checkoutContainer.init();
 
         /**
@@ -69,7 +68,7 @@
          * Initialize column responsiveness in product pages.
          *
          */
-        productResponsive.init();
+        productResponsiveContainer.init();
 
         /**
          * Initialize wishlist page.
