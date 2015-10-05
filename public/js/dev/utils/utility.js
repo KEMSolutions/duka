@@ -108,7 +108,7 @@ var UtilityContainer = {
      * @returns {{country: (*|jQuery), postcode: (*|jQuery), province: (*|jQuery)}}
      */
     getShippingFromForm : function() {
-        return res = {
+        return {
             "country" : $("#shippingCountry").val(),
             "postcode" : $("#shippingPostcode").val(),
             "province" : $("#shippingProvince").val(),

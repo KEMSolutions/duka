@@ -91,7 +91,7 @@
                         @if(Auth::guest())
                             <div class="item no-hover">
                                 <a href="{{ route("auth.login") }}">
-                                    <button class="btn btn-success color-one text-center center-block full-width">
+                                    <button class="ui button green fluid">
                                         {{ Lang::get("boukem.log_in") }}
                                     </button>
                                 </a>
@@ -226,10 +226,12 @@
                     </span>
 
                     <div class="menu fluid">
+@if (Store::info()->support->phone)
                         <div class="item">
                             <i class="fa fa-phone icon"></i>
                             {{ Store::info()->support->phone->number }}
                         </div>
+@endif
                         <div class="divider"></div>
                         <div class="item">
                             <i class="fa fa-envelope-o icon"></i>

@@ -29,7 +29,7 @@ class Store extends BaseObject
      */
     public function locales()
     {
-        $locales = Cache::remember('store.locales', Carbon::now()->addWeek(), function()
+        $locales = Cache::remember($this->getCacheKey('store.locales'), Carbon::now()->addWeek(), function()
         {
             $locales = [];
             $results = KemAPI::get('store', ['embed' => 'locales']);

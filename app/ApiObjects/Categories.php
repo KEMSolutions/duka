@@ -10,6 +10,10 @@ class Categories extends BaseObject
      * @return array    List of categories.
      */
     public function getAllCategories() {
+
+        if (!isset(parent::all()[0])) {
+            return [];
+        }
         return parent::all()[0]->children;
     }
 
@@ -19,6 +23,9 @@ class Categories extends BaseObject
      * @return array    List of conditions.
      */
     public function getAllConditions() {
+         if (!isset(parent::all()[1])) {
+            return [];
+        }
         return parent::all()[1]->children;
     }
 }

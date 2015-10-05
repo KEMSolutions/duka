@@ -66,6 +66,8 @@ class ProductController extends Controller
             'perPage' => $perPage,
             'results' => $results,
             'paginator' => $paginator,
+            'displayed' => count($results->organic_results),
+            'total' => $results->paginationTotal,
             'border' => false
         ]);
     }

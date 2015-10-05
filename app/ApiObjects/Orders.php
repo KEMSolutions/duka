@@ -59,12 +59,12 @@ class Orders extends BaseObject
         $address['country'] = preg_replace('/[^A-Z]/', '', strtoupper($address['country']));
         $address['province'] = preg_replace('/[^A-Z]/', '', strtoupper(@$address['province']));
         $address['postcode'] = preg_replace('/[^A-Z0-9- ]/', '', strtoupper($address['postcode']));
-        if (strlen($address['country']) != 2 || strlen($address['postcode']) < 5) {
+        if (strlen($address['country']) != 2) {
             Log::error('Invalid address for order estimate.');
             return $this->badRequest('Invalid parameters.');
-        } elseif ($address['country'] == 'CA' && strlen($address['province']) != 2) {
+        } elseif ($address['country'] == 'CA' && (strlen($address['province']) != 2 || strlen($address['postcode']) < 6)) {
             Log::error('Invalid province code for order estimate.');
-            return $this->badRequest('Shipements to Canada must include a province code.');
+            return $this->badRequest('Shipments to Canada must include a province code.');
         }
 
         // Prepare API request body.
@@ -87,7 +87,7 @@ class Orders extends BaseObject
         }
 
         // Retrieve estimate from cache.
-        $key = json_encode($body);
+        $key = $this->getCacheKey(json_encode($body));
         if (Cache::has($key)) {
             return Cache::get($key);
         }
