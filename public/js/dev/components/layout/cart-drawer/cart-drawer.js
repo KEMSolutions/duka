@@ -105,7 +105,7 @@ var cartDisplayContainer = {
     },
 
     fadeOutDimmer: function () {
-        $(".close-cart-dimmer").on("click touchstart", function () {
+        $(".close-cart-dimmer").on("click touchend", function () {
             $(".ui.dimmer")
                 .dimmer('hide')
             ;

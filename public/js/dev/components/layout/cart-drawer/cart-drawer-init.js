@@ -10,7 +10,7 @@ var cartDrawerInitContainer = {
      *
      */
     buyButtonClick : function () {
-        $("body").on("click touchstart", ".buybutton", function() {
+        $("body").on("click", ".buybutton", function() {
 
             // Call animateIn only if .view-cart anchor button is visible. If it is, it means we have a viewport width
             // high enough to slide in the drawer.
@@ -30,7 +30,7 @@ var cartDrawerInitContainer = {
      *
      */
     getEstimateClick: function () {
-        $(".getEstimate").on("click touchstart", function() {
+        $(".getEstimate").on("click", function() {
             //Fields validation + Empty cart validation.
             if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate #country").val())
                 && UtilityContainer.validateEmptyFields([$("#postcode")])
