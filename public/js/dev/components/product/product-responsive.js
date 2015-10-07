@@ -6,7 +6,7 @@
 var productResponsiveContainer = {
     invertPriceAndDescriptionColumn: function () {
         $(window).on("load resize", function () {
-            if($(this).width() < 768)
+            if($(this).width() < 769)
             {
                 $("#product-description").before($("#product-info-box"));
             }

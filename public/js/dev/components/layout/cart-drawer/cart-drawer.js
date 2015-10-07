@@ -104,10 +104,19 @@ var cartDisplayContainer = {
         ;
     },
 
+    fadeOutDimmer: function () {
+        $(".close-cart-dimmer").on("click touchstart", function () {
+            $(".ui.dimmer")
+                .dimmer('hide')
+            ;
+        })
+    },
+
     init : function() {
         cartDisplayContainer.displayOn();
         cartDisplayContainer.displayOff();
         UtilityContainer.populateCountry($("html").attr("lang"));
+        cartDisplayContainer.fadeOutDimmer();
 
         if (sessionStorage.isDisplayed == "true")
         {

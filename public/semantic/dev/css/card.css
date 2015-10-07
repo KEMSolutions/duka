@@ -918,7 +918,7 @@ a.ui.card:hover,
       Stackable
 --------------------*/
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 768px) {
   .ui.stackable.cards {
     display: block !important;
   }

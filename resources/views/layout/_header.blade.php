@@ -25,7 +25,7 @@
                 <div class="ui fluid action input">
                     <input type="search" name="q" id="searchBar" value="" autocomplete="off" spellcheck="false" placeholder="@lang('boukem.search')">
 
-                    <select class="ui selection dropdown dropdown-select compact">
+                    <select class="ui selection dropdown dropdown-select compact hidden">
                         <option value="@lang("boukem.all_categories")">@lang("boukem.all_categories")</option>
                         <option value="@lang("boukem.brands")">@lang("boukem.brands")</option>
                         <option value="@lang("boukem.health_issues")">@lang("boukem.health_issues")</option>
@@ -134,14 +134,14 @@
             </div>
 
             {{-- Show alternatvie checkout button on mobile devices. --}}
-            <button class="ui btn btn-one visible-xs-inline-block">
-                <a href="{{ route("cart") }}" style="color: inherit">
+            <a href="{{ route("cart") }}" style="color: inherit">
+                <button class="ui btn btn-one visible-xs-inline-block">
                     <i class="fa fa-shopping-cart icon-cart color-one-text"></i>
                     @lang("boukem.cart")
                     <span class="badge cart_badge">0</span>
                     <span class="sr-only">items</span>
-                </a>
-            </button>
+                </button>
+            </a>
 
             <a class="view-cart hidden-xs">
                 <button class="ui btn btn-one" id="view-cart-wrapper">
