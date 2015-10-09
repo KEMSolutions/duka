@@ -54,7 +54,31 @@ var cartLogicContainer = {
      * @param item JSON format converted from attributes on the .buybutton
      */
     storeItem : function(item) {
-        localStorage.setItem("_product " + item.product, JSON.stringify(item));
+        if(localStorage.getItem("_product " + item.product) != null)
+        {
+            // Update the value on localStorage of an already existing product.
+            var quantity_updated = JSON.parse(localStorage.getItem("_product " + item.product)).quantity + 1;
+
+            // Update the input value already displayed in the cart drawer.
+            $("input[name='products[" + item.product + "][quantity]']").attr("value", quantity_updated);
+
+            // Set the item.
+            localStorage.setItem("_product " + item.product, JSON.stringify(
+                {
+                    "product" : item.product,
+                    "name" : item.name,
+                    "price" : item.price,
+                    "thumbnail" : item.thumbnail,
+                    "thumbnail_lg" : item.thumbnail_lg,
+                    "quantity" : quantity_updated,
+                    "link" : item.link,
+                    "description" : item.description
+                }
+            ));
+        }
+        else {
+            localStorage.setItem("_product " + item.product, JSON.stringify(item));
+        }
         cartLogicContainer.setBadgeQuantity();
         cartLogicContainer.setQuantityCookie();
         cartLogicContainer.setCartSubtotal();

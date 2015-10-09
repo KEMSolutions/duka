@@ -488,6 +488,97 @@ var UtilityContainer = {
 
 
 /**
+ * Entry point of script.
+ *
+ */
+; (function(window, document, $) {
+    $(document).ready(function () {
+
+        /**
+         * Sets up the ajax token for all ajax requests
+         *
+         */
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'locale': $('html').attr('lang')
+            }
+        });
+
+        /**
+         * Initialize semantic UI modules
+         *
+         */
+        semanticInitContainer.init();
+
+        /**
+         * Initialize checkout logic.
+         *
+         */
+        checkoutContainer.init();
+
+        /**
+         * Initialize cart drawer logic.
+         *
+         */
+        cartDrawerInitContainer.init();
+
+        /**
+         * Initialize category container
+         *
+         */
+        categoryContainer.init();
+
+        /**
+         * Initialize overlay plugin.
+         *
+         */
+        paymentOverlayContainer.init();
+
+        /**
+         * Initialize homepage sections.
+         *
+         */
+        homepageContainer.init();
+
+        /**
+         * Initialize favorite products feature.
+         *
+         */
+        productLayoutFavoriteContainer.init();
+
+        /**
+         * Initialize product formats feature.
+         *
+         */
+        productFormatContainer.init();
+
+        /**
+         * Initialize column responsiveness in product pages.
+         *
+         */
+        productResponsiveContainer.init();
+
+        /**
+         * Initialize wishlist page.
+         *
+         */
+        wishlistLogicContainer.init();
+
+        /**
+         * Global initialization of elements.
+         *
+         */
+            //fancy plugin for product page (quantity input)
+        $(".input-qty").TouchSpin({
+            initval: 1
+        });
+
+    });
+
+})(window, this.document, jQuery, undefined)
+
+/**
  * Component responsible for handling the checkout process.
  *
  * @type {{validation: {validateFormFields: Function}, view: {dispatchButtonsActions: Function, displayShipmentMethodsAndPriceInformation: Function, displayContactInformation: Function, autofillBillingInformation: Function, clearFields: Function, fadeInBillingInformation: Function, fetchEstimate: Function, fetchPayment: Function, updatePayment: Function}, actions: {createOrdersCookie: Function, placeOrderAjaxCall: Function, shipmentMethodsAjaxCall: Function, getShipmentTaxes: Function, getTaxes: Function}, bootstrap: {selectDefaultShipmentMethod: Function}, init: Function}}
@@ -1127,6 +1218,108 @@ var checkoutContainer = {
 
 }
 /**
+ * Component responsible for handling the payment overlay behaviour.
+ *
+ * @type {{cancelOrder: Function, checkPendingOrders: Function, showPaymentNotice: Function, init: Function}}
+ */
+var paymentOverlayContainer = {
+
+    /**
+     * Cancels an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     *
+     */
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            Cookies.remove("_unpaid_orders");
+
+            $("#cancelledOrder .jumbotron").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+
+        });
+    },
+
+    /**
+     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_unpaid_orders')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(data) {
+                    if (data.status == 'pending')
+                        paymentOverlayContainer.showPaymentNotice();
+                    else
+                        Cookies.remove('_unpaid_orders');
+                }
+            });
+        }
+
+    },
+
+    /**
+     * Shows payment notice.
+     *
+     */
+    showPaymentNotice : function() {
+
+        // Retrieve order details.
+        var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+        // Display notice.
+        $('body').prepend(
+            '<div class="container fullScreen" id="cancelledOrder">'+
+            '<div class="jumbotron vertical-align color-one">'+
+            '<div class="text-center">'+
+            '<h2>'+
+            Localization.pending_order.replace(':command', order.id) +
+            '</h2>'+
+            '<h4>'+ Localization.what_to_do +'</h4>'+
+            '<br />'+
+            '<ul class="list-inline">' +
+            '<li>' +
+            '<a href="'+
+            ApiEndpoints.orders.pay.replace(':id', order.id)
+                .replace(':verification', order.verification) +'">'+
+            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
+            '</a>'+
+            '</li>' +
+            '<li>' +
+            '<button class="ui button red" id="cancelOrder">'+
+            Localization.cancel_order +
+            '</button>'+
+            '</li>'+
+            '</ul>'+
+            '</div>'+
+            '</div>'+
+            '</div>'
+        );
+    },
+
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+        self.checkPendingOrders();
+    }
+}
+
+/**
  * Component responsible for handling different formats of the same product.
  *
  * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, setBuybuttonInformation: Function, toggleActiveClass: Function, init: Function}}
@@ -1397,107 +1590,79 @@ var productResponsiveContainer = {
     }
 }
 /**
- * Component responsible for handling the payment overlay behaviour.
+ * Component responsible for activating semantic ui features.
  *
- * @type {{cancelOrder: Function, checkPendingOrders: Function, showPaymentNotice: Function, init: Function}}
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {}, init: Function}}
  */
-var paymentOverlayContainer = {
+var semanticInitContainer = {
 
     /**
-     * Cancels an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     * Initialize modules
      *
      */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_unpaid_orders");
+    module: {
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule: function() {
+            //Enable selection on clicked items
+            $(".ui.dropdown-select").dropdown();
 
-            $("#cancelledOrder .jumbotron").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-
-        });
-    },
-
-    /**
-     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_unpaid_orders')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(data) {
-                    if (data.status == 'pending')
-                        paymentOverlayContainer.showPaymentNotice();
-                    else
-                        Cookies.remove('_unpaid_orders');
+            //Prevent selection on clicked items
+            $(".ui.dropdown-no-select").dropdown({
+                    action: "select"
                 }
-            });
+            );
+        },
+
+        /**
+         * Initialize rating module.
+         *
+         */
+        initRatingModule: function () {
+            $(".ui.rating").rating();
+        },
+
+        /**
+         * Initialize popup module.
+         *
+         */
+        initPopupModule: function () {
+            $(".popup").popup();
+        },
+
+        /**
+         * Initialize checkbox module.
+         *
+         */
+        initCheckboxModule: function () {
+            $('.ui.checkbox')
+                .checkbox()
+            ;
         }
-
     },
 
     /**
-     * Shows payment notice.
+     * Specify semantic custom behavior.
      *
      */
-    showPaymentNotice : function() {
+    behaviors: {
 
-        // Retrieve order details.
-        var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-        // Display notice.
-        $('body').prepend(
-            '<div class="container fullScreen" id="cancelledOrder">'+
-            '<div class="jumbotron vertical-align color-one">'+
-            '<div class="text-center">'+
-            '<h2>'+
-            Localization.pending_order.replace(':command', order.id) +
-            '</h2>'+
-            '<h4>'+ Localization.what_to_do +'</h4>'+
-            '<br />'+
-            '<ul class="list-inline">' +
-            '<li>' +
-            '<a href="'+
-            ApiEndpoints.orders.pay.replace(':id', order.id)
-                .replace(':verification', order.verification) +'">'+
-            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
-            '</a>'+
-            '</li>' +
-            '<li>' +
-            '<button class="ui button red" id="cancelOrder">'+
-            Localization.cancel_order +
-            '</button>'+
-            '</li>'+
-            '</ul>'+
-            '</div>'+
-            '</div>'+
-            '</div>'
-        );
     },
 
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
 
-        self.cancelOrder();
-        self.checkPendingOrders();
+
+    init: function () {
+        var self = semanticInitContainer,
+            module = self.module;
+
+        module.initDropdownModule();
+        module.initRatingModule();
+        module.initPopupModule();
+        module.initCheckboxModule();
     }
 }
-
 /**
  * Component responsible for the view component of each category page.
  *
@@ -1902,80 +2067,6 @@ var homepageContainer = {
     }
 }
 /**
- * Component responsible for activating semantic ui features.
- *
- * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {}, init: Function}}
- */
-var semanticInitContainer = {
-
-    /**
-     * Initialize modules
-     *
-     */
-    module: {
-        /**
-         * Initialize dropdown module.
-         *
-         */
-        initDropdownModule: function() {
-            //Enable selection on clicked items
-            $(".ui.dropdown-select").dropdown();
-
-            //Prevent selection on clicked items
-            $(".ui.dropdown-no-select").dropdown({
-                    action: "select"
-                }
-            );
-        },
-
-        /**
-         * Initialize rating module.
-         *
-         */
-        initRatingModule: function () {
-            $(".ui.rating").rating();
-        },
-
-        /**
-         * Initialize popup module.
-         *
-         */
-        initPopupModule: function () {
-            $(".popup").popup();
-        },
-
-        /**
-         * Initialize checkbox module.
-         *
-         */
-        initCheckboxModule: function () {
-            $('.ui.checkbox')
-                .checkbox()
-            ;
-        }
-    },
-
-    /**
-     * Specify semantic custom behavior.
-     *
-     */
-    behaviors: {
-
-    },
-
-
-
-    init: function () {
-        var self = semanticInitContainer,
-            module = self.module;
-
-        module.initDropdownModule();
-        module.initRatingModule();
-        module.initPopupModule();
-        module.initCheckboxModule();
-    }
-}
-/**
  * Component responsible for initializing the cart drawer feature.
  *
  * @type {{buyButtonClick: Function, getEstimateClick: Function, init: Function}}
@@ -2095,7 +2186,31 @@ var cartLogicContainer = {
      * @param item JSON format converted from attributes on the .buybutton
      */
     storeItem : function(item) {
-        localStorage.setItem("_product " + item.product, JSON.stringify(item));
+        if(localStorage.getItem("_product " + item.product) != null)
+        {
+            // Update the value on localStorage of an already existing product.
+            var quantity_updated = JSON.parse(localStorage.getItem("_product " + item.product)).quantity + 1;
+
+            // Update the input value already displayed in the cart drawer.
+            $("input[name='products[" + item.product + "][quantity]']").attr("value", quantity_updated);
+
+            // Set the item.
+            localStorage.setItem("_product " + item.product, JSON.stringify(
+                {
+                    "product" : item.product,
+                    "name" : item.name,
+                    "price" : item.price,
+                    "thumbnail" : item.thumbnail,
+                    "thumbnail_lg" : item.thumbnail_lg,
+                    "quantity" : quantity_updated,
+                    "link" : item.link,
+                    "description" : item.description
+                }
+            ));
+        }
+        else {
+            localStorage.setItem("_product " + item.product, JSON.stringify(item));
+        }
         cartLogicContainer.setBadgeQuantity();
         cartLogicContainer.setQuantityCookie();
         cartLogicContainer.setCartSubtotal();
@@ -2614,93 +2729,3 @@ var wishlistContainer = {
         self.setNumberOfProductsInHeader();
     }
 }
-/**
- * Entry point of script.
- *
- */
-; (function(window, document, $) {
-    $(document).ready(function () {
-
-        /**
-         * Sets up the ajax token for all ajax requests
-         *
-         */
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'locale': $('html').attr('lang')
-            }
-        });
-
-        /**
-         * Initialize semantic UI modules
-         *
-         */
-        semanticInitContainer.init();
-
-        /**
-         * Initialize checkout logic.
-         *
-         */
-        checkoutContainer.init();
-
-        /**
-         * Initialize cart drawer logic.
-         *
-         */
-        cartDrawerInitContainer.init();
-
-        /**
-         * Initialize category container
-         *
-         */
-        categoryContainer.init();
-
-        /**
-         * Initialize overlay plugin.
-         *
-         */
-        paymentOverlayContainer.init();
-
-        /**
-         * Initialize homepage sections.
-         *
-         */
-        homepageContainer.init();
-
-        /**
-         * Initialize favorite products feature.
-         *
-         */
-        productLayoutFavoriteContainer.init();
-
-        /**
-         * Initialize product formats feature.
-         *
-         */
-        productFormatContainer.init();
-
-        /**
-         * Initialize column responsiveness in product pages.
-         *
-         */
-        productResponsiveContainer.init();
-
-        /**
-         * Initialize wishlist page.
-         *
-         */
-        wishlistLogicContainer.init();
-
-        /**
-         * Global initialization of elements.
-         *
-         */
-            //fancy plugin for product page (quantity input)
-        $(".input-qty").TouchSpin({
-            initval: 1
-        });
-
-    });
-
-})(window, this.document, jQuery, undefined)
