@@ -113,6 +113,11 @@
     border-top: 1px solid #D2D2D2;
 }
 
+.calculation .total dd, #subtotal {
+    font-size: 1.1rem;
+    color: #111;
+}
+
 .cart-subtotal dt, .cart-total dt {
     float: left;
     font-weight: 400;
