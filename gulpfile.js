@@ -23,7 +23,7 @@ gulp.task('js', function () {
 
 // Minify app.css
 gulp.task('css', function () {
-    return gulp.src(['public/css/app.css', 'public/css/product_card.css', 'public/css/cartdrawer.css', 'public/css/animate.css'])
+    return gulp.src('public/css/dev/*.css')
         .pipe(concat('app.css'))
         .pipe(minifyCss())
         .pipe(gulp.dest('public/css/prod'))
