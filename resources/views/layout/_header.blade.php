@@ -81,7 +81,7 @@
 
 
             <div class="ui icon btn btn-five">
-                <div class="ui top left pointing dropdown dropdown-no-select">
+                <div class="ui top right pointing dropdown dropdown-no-select">
                     <div class="text">
                         <i class="icon fa fa-user"></i> {{ Lang::get("boukem.my") }} {{ Lang::get("boukem.account") }}
                     </div>

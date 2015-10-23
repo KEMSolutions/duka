@@ -6,7 +6,7 @@
     $(document).ready(function () {
 
         /**
-         * Sets up the ajax token for all ajax requests
+         * Sets up the ajax token for all ajax requests.
          *
          */
         $.ajaxSetup({
@@ -17,10 +17,16 @@
         });
 
         /**
-         * Initialize semantic UI modules
+         * Initialize semantic UI modules.
          *
          */
         semanticInitContainer.init();
+
+        /**
+         * Initialize responsiveness feature.
+         *
+         */
+        responsiveContainer.init();
 
         /**
          * Initialize checkout logic.
@@ -35,7 +41,7 @@
         cartDrawerInitContainer.init();
 
         /**
-         * Initialize category container
+         * Initialize category container.
          *
          */
         categoryContainer.init();
