@@ -29,10 +29,11 @@ var cartLogicContainer = {
         '<h4 class="ui header">' + item.name + '</h4>' +
         '<div class="meta">' +
         '<span class="price" data-price="' + item.price + '">$' + price  + '</span>' +
-        '<i class="trash icon pull-right close-button"></i>' +
+        '<i class="remove icon large pull-right close-button"></i>' +
         '</div>' +
         '<div class="content cart-content">' +
-        '<div class="ui input">' +
+        '<span style="padding: 0 1.7531% 0 0">'+ Localization.quantity + '</span>' +
+        '<div class="ui input one-quarter">' +
         '<input type="number" class="quantity" min="1" step="1" value="' + item.quantity + '" name="products[' + item.product + '][quantity]">' +
         '<input type="hidden" name="products[' + item.product + '][id]" value="' + item.product + '"/> ' +
         '</div>' +
