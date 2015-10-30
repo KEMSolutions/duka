@@ -149,5 +149,11 @@
         border-color: #398439;
     }
 
+    #checkout:hover,
+    #checkout:focus,
+    #checkout:active {
+        background-color: {{ $color_one_dark  }};
+    }
+
 </style>
 
