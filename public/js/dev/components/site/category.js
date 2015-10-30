@@ -326,7 +326,7 @@ var categoryContainer = {
      *
      */
     localizeDimmer: function () {
-        $(".loading-text").text(Localization.loading + "...");
+        $(".loading-text").text(Localization.loading);
     },
 
     /**
@@ -337,7 +337,9 @@ var categoryContainer = {
         var dimmer =
         '<div class="ui page dimmer loading-dimmer">' +
         '<div class="content">' +
-        '<div class="center"><h1 class="ui header loading-text"></h1></div>' +
+        '<div class="center">' +
+        '<div class="ui text loader">' +
+        '<h1 class="ui header loading-text"></h1></div>' +
         '</div>' +
         '</div>';
 

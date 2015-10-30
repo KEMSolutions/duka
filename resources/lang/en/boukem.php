@@ -223,7 +223,7 @@ return [
     "wishlist_remove"   =>"Remove from wishlist",
     "wishlist_add"      =>"Add to wishlist!",
     "payment_successful" => "Thank you for your payment.",
-    "payment_redirect"  =>"Please wait while we redirect you to our payment page ...",
+    "payment_redirect"  =>"Please wait while we redirect you to our payment page",
     "results_found"     =>":total results found",
     "filter_by"         =>"Filter by",
     "reset"             =>"Reset",

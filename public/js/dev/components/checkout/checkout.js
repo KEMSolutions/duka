@@ -270,7 +270,7 @@ var checkoutContainer = {
                 // Creates a redirecting dimmer.
                 var dimmer = '<div class="ui page dimmer redirect-dimmer">' +
                     '<div class="content">' +
-                    '<div class="center"><h3 class="ui header">' + Localization.payment_redirect +'</h3></div>' +
+                    '<div class="center"><div class="ui text loader"><h3 class="ui header">' + Localization.payment_redirect +'</h3></div></div>' +
                     '</div>' +
                     '</div>';
 
