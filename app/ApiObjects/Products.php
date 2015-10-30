@@ -153,10 +153,11 @@ class Products extends BaseObject
     /**
      * Gets the image source for a product.
      *
-     * @param object|int $id    Product object, or ID of a product.
-     * @return string
+     * @param $id
+     * @param string $mode
+     * @return mixed
      */
-    public function mainImage($id) {
-        return Utilities::setImageSizeAndMode(300, 550, '',  $this->get($id)->images[0]->url);
+    public function mainImage($id, $mode = '') {
+        return Utilities::setImageSizeAndMode(150, 280, $mode,  $this->get($id)->images[0]->url);
     }
 }

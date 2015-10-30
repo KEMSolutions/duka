@@ -1,3 +1,4 @@
+<div class="ui stackable grid grid-layout grid-layout-dense">
 
 @foreach($products as $product)
     @if (is_object($product) && isset($product->id))
@@ -84,3 +85,4 @@
 
 @endforeach
 
+</div>

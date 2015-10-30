@@ -1,24 +1,96 @@
-.blog-grid .date-over {
-    background: #fff;
-    color: #999;
-    padding: 10px;
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    text-align: center;
-    border-radius: 3px;
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+/* Style for product tiles (dense layout) */
+/* Grid and list layout                   */
+/*----------------------------------------*/
+/*----------------------------------------*/
+.grid-layout-dense .dense-product .name,
+.grid-layout-dense .dense-product .brand,
+.grid-layout-dense .dense-product .price {
+    padding: 3px;
+}
+
+.grid-layout-dense .dense-product .btn {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+}
+
+.grid-layout-dense .dense-product {
+    height: 320px;
+    border: 1px solid #CCC;
+    border-left: 0;
+    border-top: 0;
+    padding: 25px;
+}
+
+.grid-layout-dense .dense-product img {
+    margin-bottom: 1.3rem;
+    max-width: 20em;
+    height: 160px;
+}
+
+.short-description {
+    margin-top: 2rem;
+}
+/*-----------------------------------*/
+
+/* FAVORITE ICON */
+
+/*-----------------------------------*/
+.favorite-heart {
+    color: #F45D5D;
+}
+
+.favorite-wrapper {
+    cursor: pointer;
+    display: none;
+    padding: 3px 3px 2px 7px;
+    border-radius: 2px;
+
+    transition: all 0.1s ease-in;
+}
+
+
+.favorite-heart:hover, .favorite-heart:active {
+    color: #E8634D;
+}
+
+.favorited {
+    display: block !important;
+}
+
+
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+/* Style for product tiles (not dense layout) */
+/* Grid and list layout                   */
+/*----------------------------------------*/
+/*----------------------------------------*/
+.grid-layout-regular {
+    padding: 2rem 0 !important;
+}
+
+.grid-layout-regular figure {
+    margin: 1rem;
+}
+
+.w-box h5, .w-box h2 {
+    margin: 0;
+    padding: 10px 15px;
 }
 
 .w-box h2 {
-    font-size: 16px;
-    margin: 0;
-    padding: 10px 15px;
     border-bottom: 1px solid #F1F1F1;
-    color: #9AB2CC;
-    font-weight: 500;
+    font-weight: 700;
+    font-size: 1.28571429em;
+    line-height: 1.2857em;
+    color: rgba(0,0,0,0.85);
 }
 
 .w-box p {
+    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif ;
     margin: 0;
     font-size: 14px;
     padding: 15px;
@@ -27,7 +99,7 @@
 
 .w-footer .pricetag {
     color: #4C4C4C;
-    font-size: 1.5em;
+    font-size: 1.5rem;
 }
 
 .w-box .w-footer {
@@ -41,9 +113,13 @@
     margin-bottom: 1%;
 }
 
-/*
-Product page
-*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
+/* Style for product in product page      */
+/*----------------------------------------*/
+/*----------------------------------------*/
+/*----------------------------------------*/
 .pricing-plans .plan-title {
     text-align: center;
     margin: 0;

@@ -16,12 +16,12 @@
 	<link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,300|Lato' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
+	<!-- Semantic UI css dependencies -->
+	<link rel="stylesheet" href="{{ asset('/semantic/prod/semantic.css') }}"/>
+
 	<!-- Required -->
 	<link href="//cdn.kem.guru/css/outdatedBrowser.min.css" rel="stylesheet">
 	<link href="{{ asset('/css/prod/app.css') }}" rel="stylesheet">
-
-	<!-- Semantic UI css dependencies -->
-	<link rel="stylesheet" href="{{ asset('/semantic/prod/semantic.css') }}"/>
 
 	<!-- Custom css -->
 	@yield("custom_css")

@@ -1235,6 +1235,10 @@ a.text-danger:hover {
   border-bottom: 1px solid #E0E0E0;
 }
 
+.border-clear {
+  border: 1px solid #E0E0E0;
+}
+
 .no-decoration {
   text-decoration: none;
 }
@@ -1324,66 +1328,6 @@ section.slice {
   border-bottom: 1px solid #c6c6c6;
   margin-bottom: 20px;
   padding: 20px 0px;
-}
-
-/*----------------------------------------*/
-/*----------------------------------------*/
-/*----------------------------------------*/
-/* Style for product tiles (dense layout) */
-/* Grid and list layout                   */
-/*----------------------------------------*/
-/*----------------------------------------*/
-.grid-layout .dense-product .name, .grid-layout .dense-product .brand, .grid-layout .dense-product .price {
-  padding: 3px;
-}
-
-.grid-layout .dense-product .btn {
-  border: 1px solid lightgray;
-  border-radius: 5px;
-}
-
-.grid-layout .dense-product {
-  height: 320px;
-  border: 1px solid #CCC;
-  border-left: 0;
-  border-top: 0;
-  padding: 25px;
-}
-
-.grid-layout .dense-product img {
-  margin-bottom: 1.3rem;
-  max-width: 20em;
-  height: 160px;
-}
-
-.short-description {
-  margin-top: 2rem;
-}
-/*-----------------------------------*/
-
-/* FAVORITE ICON */
-
-/*-----------------------------------*/
-.favorite-heart {
-  color: #F45D5D;
-}
-
-.favorite-wrapper {
-  cursor: pointer;
-  display: none;
-  padding: 3px 3px 2px 7px;
-  border-radius: 2px;
-
-  transition: all 0.1s ease-in;
-}
-
-
-.favorite-heart:hover, .favorite-heart:active {
-  color: #E8634D;
-}
-
-.favorited {
-  display: block !important;
 }
 
 /*-----------------------------------*/
