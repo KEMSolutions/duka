@@ -17,7 +17,8 @@
                     </div>
                 </div>
 
-                <div class="field disabled">
+                {{-- Hidden name field... --}}
+                <div class="field disabled hidden">
                     <label>@lang("boukem.name")</label>
                     <input type="text" name="shipping_address[name]" id="shippingName" class="name" value="{{ Customers::getDefaultAddress()->name }}" disabled/>
                 </div>
