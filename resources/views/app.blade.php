@@ -6,7 +6,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}"/>
-	<link rel="icon" href="{{ url('/') . "/img/favicon.png"}}"/>
+	<link rel="icon" type="image/png" href="{{ url('/') . "/favicon.png"}}"/>
+	<link rel='apple-touch-icon' type='image/png' href='/apple-touch-icon.png'>
 
 	<title>{{ Store::info()->name }}</title>
 

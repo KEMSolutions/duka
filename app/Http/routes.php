@@ -111,3 +111,11 @@ Route::group(['prefix' => 'api', 'middleware' => 'api.csrf'], function()
         return Illuminate\Http\JsonResponse::create(['status' => 400, 'error' => 'Bad request.'], 400);
     });
 });
+
+// Simili static files routes
+
+Route::get('favicon.png', 'StaticController@getFavicon');
+Route::get('apple-touch-icon.png', 'StaticController@getTouchIcon');
+Route::get('favicon.ico', function(){
+    return Redirect::to('/favicon.png', 301);
+});
