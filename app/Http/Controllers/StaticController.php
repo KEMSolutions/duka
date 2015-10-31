@@ -17,8 +17,10 @@ class StaticController extends Controller
      */
     public function getFavicon($size=64)
     {
-        $imagePath = \Store::logo($width = $size, $height = $size, $mode = 'fit');
-        $image = file_get_contents($imagePath,"r");
+        $image = \Cache::remember('app_http_controllers_staticcontroller_favicon_' . $size, 60, function() use ($size) {
+            $imagePath = \Store::logo($width = $size, $height = $size, $mode = 'fit');
+            return file_get_contents($imagePath,"r");
+        });
         return response($image)->header('Content-Type', "image/png");
     }
 
