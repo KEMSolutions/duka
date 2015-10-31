@@ -243,7 +243,7 @@
                 @include("product._product_video", ["videos" => $product->videos ])
             @endif
 
-            {{-- Reviews. --}}
+            <?php /* {{-- Reviews. --}}
             <div class="ui comments full-width hidden">
                 <h3 class="ui dividing header">Comments</h3>
                 <div class="comment">
@@ -324,7 +324,7 @@
                 </form>
             </div>
             {{-- End of reviews. --}}
-
+            */ ?>
         </div>
         {{-- End of second row. --}}
 

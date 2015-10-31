@@ -1,6 +1,6 @@
 <!-- SEARCH -->
 <div class="search-wr" id="divSearch">
-    <span class="close" id="cmdCloseSearch" title="Fermez la recherche en cliquant sur ce bouton ou en appuyant sur la touche ESC"><i class="fa fa-times-circle"></i></span>
+    <span class="close" id="cmdCloseSearch" title=""><i class="fa fa-times-circle"></i></span>
     <div class="container">
         <div class="row">
             <div class="col-md-1 col-xs-2 search-sign">

@@ -30,7 +30,7 @@
                 {{--Price filter --}}
                 <li>
                     <div class="refine-search-component">
-                        <h5 class="ui header">Gamme de prix</h5>
+                        <h5 class="ui header">@lang("boukem.price_range")</h5>
                         <div class="center-block">
                             <div class="ui labeled input refine-search-input">
                                 <div class="ui label">
@@ -47,7 +47,7 @@
                             </div>
 
                             <button class="ui button center-block" id="price-update">
-                                Update
+                                @lang("boukem.update")
                             </button>
                         </div>
                     </div>
