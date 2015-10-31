@@ -114,6 +114,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'api.csrf'], function()
 
 // Simili static files routes
 
+Route::get("css/main.css", 'StaticController@getMainStylesheet');
 Route::get('favicon.png', 'StaticController@getFavicon');
 Route::get('apple-touch-icon.png', 'StaticController@getTouchIcon');
 Route::get('favicon.ico', function(){

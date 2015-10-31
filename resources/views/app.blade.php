@@ -22,7 +22,7 @@
 
 	<!-- Required -->
 	<link href="//cdn.kem.guru/css/outdatedBrowser.min.css" rel="stylesheet">
-	<link href="{{ asset('/css/prod/app.css') }}" rel="stylesheet">
+	<link href="{{ url('css/main.css') }}" rel="stylesheet">
 
 	<!-- Custom css -->
 	@yield("custom_css")
