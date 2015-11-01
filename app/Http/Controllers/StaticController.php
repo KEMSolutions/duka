@@ -63,17 +63,17 @@ class StaticController extends Controller
             $color_four = \Store::info()->colors->color_four;
             $color_five = \Store::info()->colors->color_five;
 
-            $color_one_dark = Utilities::adjustBrightness($color_one, -50);
-            $color_two_dark = Utilities::adjustBrightness($color_two, -50);
-            $color_three_dark = Utilities::adjustBrightness($color_three, -50);
-            $color_four_dark = Utilities::adjustBrightness($color_four, -50);
-            $color_five_dark = Utilities::adjustBrightness($color_five, -50);
+            $color_one_dark = \Utilities::adjustBrightness($color_one, -50);
+            $color_two_dark = \Utilities::adjustBrightness($color_two, -50);
+            $color_three_dark = \Utilities::adjustBrightness($color_three, -50);
+            $color_four_dark = \Utilities::adjustBrightness($color_four, -50);
+            $color_five_dark = \Utilities::adjustBrightness($color_five, -50);
 
-            $color_one_light = Utilities::adjustBrightness($color_one, +50);
-            $color_two_light = Utilities::adjustBrightness($color_two, +50);
-            $color_three_light = Utilities::adjustBrightness($color_three, +50);
-            $color_four_light = Utilities::adjustBrightness($color_four, +50);
-            $color_five_light = Utilities::adjustBrightness($color_five, +50);
+            $color_one_light = \Utilities::adjustBrightness($color_one, +50);
+            $color_two_light = \Utilities::adjustBrightness($color_two, +50);
+            $color_three_light = \Utilities::adjustBrightness($color_three, +50);
+            $color_four_light = \Utilities::adjustBrightness($color_four, +50);
+            $color_five_light = \Utilities::adjustBrightness($color_five, +50);
 
             // Color one
             $sheet = str_replace('#C9423C', '#' . $color_one, $sheet);
