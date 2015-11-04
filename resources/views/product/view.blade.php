@@ -154,7 +154,7 @@
                             {{-- buybutton takes by default the value of the first format --}}
                             <div class="buybutton-format-selection-wrapper">
                                 <button
-                                        class="btn btn-three buybutton horizontal-align"
+                                        class="btn btn-one buybutton horizontal-align"
                                         data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
                                         data-price="{{ $product->formats[0]->price }}"
                                         data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
