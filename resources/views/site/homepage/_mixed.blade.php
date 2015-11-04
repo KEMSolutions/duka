@@ -15,7 +15,7 @@
 
                     <div class="card">
                         <a href="{{ route('product', ['slug' => $product->slug]) }}">
-                            <img class="ui tiny image center-block" src="{{ Products::imgFeatured($product->id) }}" alt="{{ Products::imgFeatured($product->id) }}"/>
+                            <img class="ui tiny image center-block" src="{{ Products::getImage($product, 160, 160) }}" alt="{{ Products::getImage($product, 160, 160) }}"/>
                         </a>
 
                         <div class="content">
@@ -35,8 +35,8 @@
                                     <button class="ui icon btn btn-two buybutton"
                                             data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
                                             data-price="{{ $product->formats[0]->price }}"
-                                            data-thumbnail="{{ Products::thumbnail($product) }}"
-                                            data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
+                                            data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
+                                            data-thumbnail_lg="{{ Products::getImage($product, 70, 110, "fit") }}"
                                             data-name="{{ $product->localization->name }}"
                                             data-quantity="1"
                                             data-description="{{ $product->localization->short_description }}"
