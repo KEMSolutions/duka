@@ -85,7 +85,7 @@ class StaticController extends Controller
             $sheet = str_replace('#1FFF11', '#' . $color_two_dark, $sheet);
 
             $sheet = str_replace('#F000FF', '#' . $color_three, $sheet);
-            $sheet = str_replace('#EE00FF', '#' . $color_three_light, $sheet);
+            $sheet = str_replace('#E000EE', '#' . $color_three_light, $sheet);
             $sheet = str_replace('#F111FF', '#' . $color_three_dark, $sheet);
 
             $sheet = str_replace('#000FFF', '#' . $color_four, $sheet);

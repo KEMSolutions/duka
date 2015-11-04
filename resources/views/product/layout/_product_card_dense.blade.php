@@ -35,7 +35,7 @@
             @if (isset($product->brand->slug))
                 <div class="text-uppercase brand">
                     <strong>
-                        <a href="{{ route('brand', ['slug' => $product->brand->slug]) }}">
+                        <a href="{{ route('brand', ['slug' => $product->brand->slug]) }}" class="darker">
                             {{ $product->brand->name }}
                         </a>
                     </strong>

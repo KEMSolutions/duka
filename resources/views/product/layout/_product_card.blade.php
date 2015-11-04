@@ -11,13 +11,13 @@
                         </a>
 
                         <h2>
-                            <a href="{{ route('product', ['slug' => $product->slug]) }}" class="dark">
+                            <a href="{{ route('product', ['slug' => $product->slug]) }}" class="darker">
                                 {{ $product->localization->name }}
                             </a>
                         </h2>
 
                         <h5>
-                            <a href="{{ route('product', ['slug' => $product->slug]) }}">
+                            <a href="{{ route('product', ['slug' => $product->slug]) }}" class="dark">
                                 {{ $product->brand->name }}
                             </a>
                         </h5>

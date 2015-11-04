@@ -11,6 +11,7 @@ html {
 }
 body {
   font-family: "Roboto Condensed", sans-serif !important;
+  color: rgba(0,0,0,0.8);
 }
 
 hr {
@@ -224,39 +225,6 @@ fieldset[disabled] .btn-default.active {
   color: #ffffff;
   background-color: #C9423C;
 }
-.btn-link {
-  color: #337ab7;
-  font-weight: normal;
-  border-radius: 0;
-  padding: 2px 12px;
-}
-.btn-link,
-.btn-link:active,
-.btn-link.active,
-.btn-link[disabled],
-fieldset[disabled] .btn-link {
-  background-color: transparent;
-  box-shadow: none;
-}
-.btn-link,
-.btn-link:hover,
-.btn-link:focus,
-.btn-link:active {
-  border-color: transparent;
-}
-.btn-link:hover,
-.btn-link:focus {
-  color: #23527c;
-  text-decoration: underline;
-  background-color: transparent;
-}
-.btn-link[disabled]:hover,
-fieldset[disabled] .btn-link:hover,
-.btn-link[disabled]:focus,
-fieldset[disabled] .btn-link:focus {
-  color: #777777;
-  text-decoration: none;
-}
 
 
 
@@ -416,9 +384,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   padding: 6px 12px;
   line-height: 1.42857143;
   text-decoration: none;
-  color: #337ab7;
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
+  color: #F000FF;
+  background-color: #000EEE;
+  border: 1px solid #000FFF;
   margin-left: -1px;
 }
 .pagination > li:first-child > a,
@@ -436,9 +404,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .pagination > li > span:hover,
 .pagination > li > a:focus,
 .pagination > li > span:focus {
-  color: #23527c;
-  background-color: #eeeeee;
-  border-color: #dddddd;
+  color: #E000EE;
+  background-color: #111FFF;
+  border-color: #000FFF;
 }
 .pagination > .active > a,
 .pagination > .active > span,
@@ -447,9 +415,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .pagination > .active > a:focus,
 .pagination > .active > span:focus {
   z-index: 2;
-  color: #ffffff;
-  background-color: #337ab7;
-  border-color: #337ab7;
+  color: #E000EE;
+  background-color: #000FFF;
+  border-color: #111FFF;
   cursor: default;
 }
 .pagination > .disabled > span,
@@ -542,7 +510,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   vertical-align: baseline;
   white-space: nowrap;
   text-align: center;
-  background-color: #C9423C;
+  background-color: #FF0000;
   border-radius: 10px;
 }
 .badge:empty {
@@ -1342,6 +1310,9 @@ section.slice {
   border-radius: 0;
 }
 
+.ui.breadcrumb a {
+  color: #FFFF00 !important;
+}
 
 /*-----------------------------------*/
 /*-----------------------------------*/
@@ -1374,6 +1345,9 @@ section.slice {
   }
 }
 
+.description a {
+  color: #0FFF00;
+}
 /*-----------------------------------*/
 /*-----------------------------------*/
 /*-----------------------------------*/
@@ -1525,6 +1499,10 @@ color:#FFF;
 }
 
 .dark {
+  color: #808080 !important;
+}
+
+.darker {
   color: #333 !important;
 }
 
@@ -1587,8 +1565,8 @@ border-color: #111FFF;
 
 .btn-five {
   background-color: #fff;
-color: #FFFF00;
-border-color: #FFFF11;
+  color: #FFFF00;
+  border-color: #FFFF11;
 }
 
 .btn-five:hover, .btn-five:focus, .btn-five:active, .btn-five.active, .open .dropdown-toggle.btn-five {
@@ -1602,7 +1580,13 @@ border-top: 12px solid #FFFF00;
 }
 
 footer a {
-color: #EEEE00;
+color: #FFFF00;
+}
+
+footer a:hover,
+footer a:focus,
+footer a:active {
+  color: #FFFF11;
 }
 
 .btn-black {
@@ -1618,6 +1602,41 @@ color: #EEEE00;
   background-color: #616161;
   border-color: #398439;
 }
+
+.btn-link {
+  color: #0FFF00;
+  font-weight: normal;
+  border-radius: 0;
+  padding: 2px 12px;
+}
+.btn-link,
+.btn-link:active,
+.btn-link.active,
+.btn-link[disabled],
+fieldset[disabled] .btn-link {
+  background-color: transparent;
+  box-shadow: none;
+}
+.btn-link,
+.btn-link:hover,
+.btn-link:focus,
+.btn-link:active {
+  border-color: transparent;
+}
+.btn-link:hover,
+.btn-link:focus {
+  color: #1FFF11;
+  text-decoration: underline;
+  background-color: transparent;
+}
+.btn-link[disabled]:hover,
+fieldset[disabled] .btn-link:hover,
+.btn-link[disabled]:focus,
+fieldset[disabled] .btn-link:focus {
+  color: #777777;
+  text-decoration: none;
+}
+
 
 #checkout:hover,
 #checkout:focus,
