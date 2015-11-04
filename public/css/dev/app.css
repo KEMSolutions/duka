@@ -510,7 +510,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   vertical-align: baseline;
   white-space: nowrap;
   text-align: center;
-  background-color: #FF0000;
+  background-color: #00F0F0;
   border-radius: 10px;
 }
 .badge:empty {
@@ -1311,7 +1311,7 @@ section.slice {
 }
 
 .ui.breadcrumb a {
-  color: #FFFF00 !important;
+  color: #E0FEE0 !important;
 }
 
 /*-----------------------------------*/
@@ -1442,9 +1442,9 @@ Conventions:
  Color dark takes the 0 and shifts it to a 1.
 
 
-  color-one: #FF0000
-  color-one-light: #EE0000
-  color-one-dark: #FF1111
+  color-one: #00F0F0
+  color-one-light: #00E0E0
+  color-one-dark: #11F1F1
 
   color-two: #0FFF00
   color-two-light: #0EEE00
@@ -1458,22 +1458,22 @@ Conventions:
   color-four-light: #000EEE
   color-four-dark: #111FFF
 
-  color-five:#FFFF00
-  color-five-light: #EEEE00
-  color-five-dark: #FFFF11
+  color-five:#F0FFF0
+  color-five-light: #E0FEE0
+  color-five-dark: #F1FFF1
 */
 
 .color-one {
-  background: #FF0000;
+  background: #00F0F0;
   color: #fff;
 }
 
 .border-color-one {
-  border-color: #FF0000;
+  border-color: #00F0F0;
 }
 
 .color-one-text {
-color: #FF0000;
+color: #00F0F0;
 }
 
 .color-two {
@@ -1490,7 +1490,7 @@ background: #000FFF;
 }
 
 .section-title.color-five {
-background: #FFFF00;
+background: #F0FFF0;
 color:#FFF;
 }
 
@@ -1516,14 +1516,14 @@ color:#FFF;
 
 .btn-one {
   background-color: #fff;
-color: #FF0000;
-border-color: #FF1111;
+color: #00F0F0;
+border-color: #11F1F1;
 }
 
 .btn-one:hover, .btn-one:focus, .btn-one:active, .btn-one.active, .open .dropdown-toggle.btn-one {
-background-color: #FF1111;
+background-color: #11F1F1;
 color: #fff;
-border-color: #FF1111;
+border-color: #11F1F1;
 }
 
 .btn-two {
@@ -1565,28 +1565,28 @@ border-color: #111FFF;
 
 .btn-five {
   background-color: #fff;
-  color: #FFFF00;
-  border-color: #FFFF11;
+  color: #F0FFF0;
+  border-color: #F1FFF1;
 }
 
 .btn-five:hover, .btn-five:focus, .btn-five:active, .btn-five.active, .open .dropdown-toggle.btn-five {
-background-color: #FFFF11;
+background-color: #F1FFF1;
 color: #fff;
-border-color: #FFFF11;
+border-color: #F1FFF1;
 }
 
 .indicator-down {
-border-top: 12px solid #FFFF00;
+border-top: 12px solid #F0FFF0;
 }
 
 footer a {
-color: #FFFF00;
+color: #F0FFF0;
 }
 
 footer a:hover,
 footer a:focus,
 footer a:active {
-  color: #FFFF11;
+  color: #F1FFF1;
 }
 
 .btn-black {
@@ -1641,5 +1641,5 @@ fieldset[disabled] .btn-link:focus {
 #checkout:hover,
 #checkout:focus,
 #checkout:active {
-background-color: #FF1111;
+background-color: #11F1F1;
 }

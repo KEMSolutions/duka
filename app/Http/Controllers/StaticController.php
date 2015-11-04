@@ -76,9 +76,9 @@ class StaticController extends Controller
             $color_five_light = \Utilities::adjustBrightness($color_five, +50);
 
 //          Replace the placeholder colors with the actual ones from the API
-            $sheet = str_replace('#FF0000', '#' . $color_one, $sheet);
-            $sheet = str_replace('#EE0000', '#' . $color_one_light, $sheet);
-            $sheet = str_replace('#FF1111', '#' . $color_one_dark, $sheet);
+            $sheet = str_replace('#00F0F0', '#' . $color_one, $sheet);
+            $sheet = str_replace('#00E0E0', '#' . $color_one_light, $sheet);
+            $sheet = str_replace('#11F1F1', '#' . $color_one_dark, $sheet);
 
             $sheet = str_replace('#0FFF00', '#' . $color_two, $sheet);
             $sheet = str_replace('#0EEE00', '#' . $color_two_light, $sheet);
@@ -92,9 +92,9 @@ class StaticController extends Controller
             $sheet = str_replace('#000EEE', '#' . $color_four_light, $sheet);
             $sheet = str_replace('#111FFF', '#' . $color_four_dark, $sheet);
 
-            $sheet = str_replace('#FFFF00', '#' . $color_five, $sheet);
-            $sheet = str_replace('#EEEE00', '#' . $color_five_light, $sheet);
-            $sheet = str_replace('#FFFF11', '#' . $color_five_dark, $sheet);
+            $sheet = str_replace('#F0FFF0', '#' . $color_five, $sheet);
+            $sheet = str_replace('#E0EEE0', '#' . $color_five_light, $sheet);
+            $sheet = str_replace('#F1FFF1', '#' . $color_five_dark, $sheet);
 
             return $sheet;
         });

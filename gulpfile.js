@@ -25,7 +25,7 @@ gulp.task('js', function () {
 gulp.task('css', function () {
     return gulp.src('public/css/dev/*.css')
         .pipe(concat('app.css'))
-        //.pipe(minifyCss())
+        .pipe(minifyCss())
         .pipe(gulp.dest('public/css/prod'))
 });
 
