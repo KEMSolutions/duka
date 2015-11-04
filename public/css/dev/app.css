@@ -1311,9 +1311,14 @@ section.slice {
 }
 
 .ui.breadcrumb a {
-  color: #E0FEE0 !important;
+  color: #F1FFF1;
 }
 
+.ui.breadcrumb a:hover,
+.ui.breadcrumb a:focus,
+.ui.breadcrumb a:active {
+  color: #F0FFF0;
+}
 /*-----------------------------------*/
 /*-----------------------------------*/
 /*-----------------------------------*/
@@ -1459,7 +1464,7 @@ Conventions:
   color-four-dark: #111FFF
 
   color-five:#F0FFF0
-  color-five-light: #E0FEE0
+  color-five-light: #E0EEE0
   color-five-dark: #F1FFF1
 */
 
