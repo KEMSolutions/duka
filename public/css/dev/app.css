@@ -1507,8 +1507,20 @@ color:#FFF;
   color: #808080 !important;
 }
 
+.dark:hover,
+.dark:focus,
+.dark:active {
+  color: #5F5F5F !important;
+}
+
 .darker {
   color: #333 !important;
+}
+
+.darker:hover,
+.darker:focus,
+.darker:active {
+  color: #4D4D4D !important;
 }
 
 .white {
