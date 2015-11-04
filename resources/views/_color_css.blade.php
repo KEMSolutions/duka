@@ -19,6 +19,14 @@
 ?>
 
 <style>
+    /*
+        color-one: #FF0000
+        color-two: #0FFF00
+        color-three: #F000FF
+        color-four: #000FFF
+        color-five:#FFCF00
+    /*
+
     .color-one {
         background: {{ $color_one }};
         color: #fff;
