@@ -19,24 +19,10 @@ return [
         'secret' => getenv('KEM_API_KEY'),
     ],
 
-	'mailgun' => [
-		'domain' => '',
-		'secret' => '',
-	],
-
-	'mandrill' => [
-		'secret' => '',
-	],
-
-	'ses' => [
-		'key' => '',
-		'secret' => '',
-		'region' => 'us-east-1',
-	],
-
-	'stripe' => [
-		'model'  => 'User',
-		'secret' => '',
-	],
-
+    'mixpanel' => getenv('TRACKING_ID_MIXPANEL'),
+    'ganalytics'=> getenv('TRACKING_ID_GOOGLEANALYTICS'),
+    'piwik'=> [
+    	"id"=>getenv('TRACKING_ID_PIWIK'),
+    	"domain"=>getenv('TRACKING_DOMAIN_PIWIK'),
+    	],
 ];
