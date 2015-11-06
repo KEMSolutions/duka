@@ -18,8 +18,14 @@ var mixpanelAnalytics = {
 
         orderCancelled: function (id) {
             mixpanel.track("Order cancelled", {
-                "Order ID" : id
-            })
+                "Order ID": id
+            });
+        },
+
+        orderSuccess: function (id) {
+            mixpanel.track("Order success", {
+                "Order ID": id
+            });
         }
 
     }
