@@ -26,7 +26,7 @@
 
             {{-- Product Image --}}
             <a href="{{ route('product', ['slug' => $product->slug]) }}" class="strong">
-                <img src="{{ Products::imgFeaturedLg($product) }}"
+                <img src="{{ Products::getImage($product, 160, 160) }}"
                      class="product-image center-block"
                      alt="{{ $product->localization->name }}" />
             </a>
@@ -35,7 +35,7 @@
             @if (isset($product->brand->slug))
                 <div class="text-uppercase brand">
                     <strong>
-                        <a href="{{ route('brand', ['slug' => $product->brand->slug]) }}">
+                        <a href="{{ route('brand', ['slug' => $product->brand->slug]) }}" class="darker">
                             {{ $product->brand->name }}
                         </a>
                     </strong>
@@ -63,8 +63,8 @@
                         <button class="ui icon btn btn-two buybutton"
                                 data-product="{{ $product->id . '-' . $format->id }}"
                                 data-price="{{ $format->price }}"
-                                data-thumbnail="{{ Products::thumbnail($product) }}"
-                                data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
+                                data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
+                                data-thumbnail_lg="{{ Products::getImage($product, 70, 110, "fit") }}"
                                 data-name="{{ $product->localization->name . " - " . $format->name }}"
                                 data-quantity="1"
                                 data-description="{{ $product->localization->short_description }}"

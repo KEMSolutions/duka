@@ -11,13 +11,13 @@
                         </a>
 
                         <h2>
-                            <a href="{{ route('product', ['slug' => $product->slug]) }}" class="dark">
+                            <a href="{{ route('product', ['slug' => $product->slug]) }}" class="darker">
                                 {{ $product->localization->name }}
                             </a>
                         </h2>
 
                         <h5>
-                            <a href="{{ route('product', ['slug' => $product->slug]) }}">
+                            <a href="{{ route('product', ['slug' => $product->slug]) }}" class="dark">
                                 {{ $product->brand->name }}
                             </a>
                         </h5>
@@ -36,11 +36,11 @@
 
                             @if(count($product->formats) > 0)
                                 @foreach($product->formats as $format)
-                                    <button class="ui button green right floated buybutton"
+                                    <button class="btn btn-one btn-one-inverted pull-right buybutton"
                                             data-product="{{ $product->id . '-' . $format->id }}"
                                             data-price="{{ $format->price }}"
-                                            data-thumbnail="{{ Products::thumbnail($product) }}"
-                                            data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
+                                            data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
+                                            data-thumbnail_lg="{{ Products::getImage($product, 70, 110, "fit") }}"
                                             data-name="{{ $product->localization->name . " - " . $format->name }}"
                                             data-quantity="1"
                                             data-description="{{ $product->localization->short_description }}"

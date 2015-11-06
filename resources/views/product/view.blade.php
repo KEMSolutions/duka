@@ -14,7 +14,7 @@
                 <div class="ui raised very padded segment">
 
                     {{-- Product image. --}}
-                    <img src="{{ Products::mainImage($product->id) }}" alt="{{ $product->localization->name }}" class="center-block" itemprop="image"/>
+                    <img src="{{ Products::getImage($product->id, 300, 550) }}" alt="{{ $product->localization->name }}" class="center-block" itemprop="image"/>
 
                     <br/>
 
@@ -126,8 +126,8 @@
                                                 "
                                                 data-product="{{ $product->id . '-' . $format->id }}"
                                                 data-price="{{ $format->price }}"
-                                                data-thumbnail="{{ Products::thumbnail($product) }}"
-                                                data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
+                                                data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
+                                                data-thumbnail_lg="{{ Products::getImage($product, 70, 110, "fit") }}"
                                                 data-name="{{ $product->localization->name . " - " . $format->name }}"
                                                 data-format="{{ $format->name }}"
                                                 data-inventory-count="{{ $format->inventory->count }}"
@@ -154,11 +154,11 @@
                             {{-- buybutton takes by default the value of the first format --}}
                             <div class="buybutton-format-selection-wrapper">
                                 <button
-                                        class="btn btn-three buybutton horizontal-align"
+                                        class="btn btn-one buybutton horizontal-align"
                                         data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
                                         data-price="{{ $product->formats[0]->price }}"
-                                        data-thumbnail="{{ Products::thumbnail($product) }}"
-                                        data-thumbnail_lg="{{ Products::thumbnailLg($product) }}"
+                                        data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
+                                        data-thumbnail_lg="{{ Products::getImage($product, 70, 110, "fit") }}"
                                         data-name="{{ $product->localization->name . " - " . $product->formats[0]->name }}"
                                         data-format="{{ $product->formats[0]->name }}"
                                         data-inventory-count="{{ $product->formats[0]->inventory->count }}"

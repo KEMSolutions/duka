@@ -65,7 +65,7 @@ class Utilities
 
         // Split into three parts: R, G and B
         $colorParts = str_split($hex, 2);
-        $return = '#';
+        $return = '' ;
 
         foreach ($colorParts as $color)
         {

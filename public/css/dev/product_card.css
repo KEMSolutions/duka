@@ -17,7 +17,7 @@
 }
 
 .grid-layout-dense .dense-product {
-    height: 320px;
+    /*height: 320px;*/
     border: 1px solid #CCC;
     border-left: 0;
     border-top: 0;
@@ -32,6 +32,18 @@
 
 .short-description {
     margin-top: 2rem;
+}
+
+.dense-product .dark:hover,
+.dense-product .dark:focus,
+.dense-product .dark:active {
+    color: #5F5F5F !important;
+}
+
+.dense-product .darker:hover,
+.dense-product .darker:focus,
+.dense-product .darker:active {
+    color: #4D4D4D !important;
 }
 /*-----------------------------------*/
 

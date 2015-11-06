@@ -75,8 +75,26 @@ class StaticController extends Controller
             $color_four_light = \Utilities::adjustBrightness($color_four, +50);
             $color_five_light = \Utilities::adjustBrightness($color_five, +50);
 
-            // Color one
-            $sheet = str_replace('#C9423C', '#' . $color_one, $sheet);
+//          Replace the placeholder colors with the actual ones from the API
+            $sheet = str_replace('#00F0F0', '#' . $color_one, $sheet);
+            $sheet = str_replace('#00E0E0', '#' . $color_one_light, $sheet);
+            $sheet = str_replace('#11F1F1', '#' . $color_one_dark, $sheet);
+
+            $sheet = str_replace('#0FFF00', '#' . $color_two, $sheet);
+            $sheet = str_replace('#0EEE00', '#' . $color_two_light, $sheet);
+            $sheet = str_replace('#1FFF11', '#' . $color_two_dark, $sheet);
+
+            $sheet = str_replace('#F000FF', '#' . $color_three, $sheet);
+            $sheet = str_replace('#E000EE', '#' . $color_three_light, $sheet);
+            $sheet = str_replace('#F111FF', '#' . $color_three_dark, $sheet);
+
+            $sheet = str_replace('#000FFF', '#' . $color_four, $sheet);
+            $sheet = str_replace('#000EEE', '#' . $color_four_light, $sheet);
+            $sheet = str_replace('#111FFF', '#' . $color_four_dark, $sheet);
+
+            $sheet = str_replace('#F0FFF0', '#' . $color_five, $sheet);
+            $sheet = str_replace('#E0EEE0', '#' . $color_five_light, $sheet);
+            $sheet = str_replace('#F1FFF1', '#' . $color_five_dark, $sheet);
 
             return $sheet;
         });

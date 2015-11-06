@@ -111,53 +111,17 @@ class Products extends BaseObject
     }
 
     /**
-     * Gets the thumbnail source for a product.
-     *
-     * @param object|int $id    Product object, or ID of a product.
-     * @return string
-     */
-    public function thumbnail($id) {
-        return Utilities::setImageSizeAndMode(60, 60, 'fit', $this->get($id)->images[0]->url);
-    }
-
-    /**
-     * Gets the large thumbnail source for a product.
-     *
-     * @param object|int $id    Product object, or ID of a product.
-     * @return string
-     */
-    public function thumbnailLg($id) {
-        return Utilities::setImageSizeAndMode(70, 110, 'fit',  $this->get($id)->images[0]->url);
-    }
-
-    /**
-     * Gets the featured image source for a product.
-     *
-     * @param object|int $id    Product object, or ID of a product.
-     * @return string
-     */
-    public function imgFeatured($id) {
-        return Utilities::setImageSizeAndMode(80, 120, 'fit',  $this->get($id)->images[0]->url);
-    }
-
-    /**
-     * Gets the large featured image source for a product.
-     *
-     * @param object|int $id    Product object, or ID of a product.
-     * @return string
-     */
-    public function imgFeaturedLg($id) {
-        return Utilities::setImageSizeAndMode(160, 160, '',  $this->get($id)->images[0]->url);
-    }
-
-    /**
-     * Gets the image source for a product.
+     * Gets the product image according to dimensions and mode.
      *
      * @param $id
+     * @param $width
+     * @param $height
      * @param string $mode
      * @return mixed
      */
-    public function mainImage($id, $mode = '') {
-        return Utilities::setImageSizeAndMode(150, 280, $mode,  $this->get($id)->images[0]->url);
+    public function getImage($id, $width, $height, $mode = "")
+    {
+        return Utilities::setImageSizeAndMode($width, $height, $mode, $this->get($id)->images[0]->url);
     }
+
 }
