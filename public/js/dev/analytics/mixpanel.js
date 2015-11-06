@@ -22,10 +22,11 @@ var mixpanelAnalytics = {
             });
         },
 
-        orderSuccess: function (id) {
-            mixpanel.track("Order success", {
-                "Order ID": id
-            });
+        orderSuccess: function () {
+            if ($(".payment_successful").length > 0)
+            {
+                mixpanel.track("Order success");
+            }
         }
 
     }

@@ -21,7 +21,7 @@
         {{-- General messages are pushed to the $messages variable in the session by the application. --}}
         @if ($messages = Session::pull('messages'))
 
-        <div class="ui info message">
+        <div class="ui info message payment_successful">
             <i class="close icon"></i>
             <div class="header">
                 @lang("boukem.message")
