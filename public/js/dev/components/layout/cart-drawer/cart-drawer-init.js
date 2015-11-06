@@ -19,9 +19,12 @@ var cartDrawerInitContainer = {
             cartLogicContainer.addItem(UtilityContainer.buyButton_to_Json($(this)));
             cartLogicContainer.storeItem(UtilityContainer.buyButton_to_Json($(this)));
 
-            //We remove the "Your cart is empty" message at the top every time we add an item.
-            //TODO : Maybe improve it?
+            // We remove the "Your cart is empty" message at the top every time we add an item.
+            // TODO : Maybe improve it?
             $("#cart-items .empty-cart").addClass("hidden");
+
+            // Register mixpanel event: addToCart
+            mixpanelAnalytics.events.addToCart();
         });
     },
 

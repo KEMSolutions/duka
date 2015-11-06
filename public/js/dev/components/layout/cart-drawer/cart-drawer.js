@@ -39,6 +39,9 @@ var cartDisplayContainer = {
         });
         cartDisplayContainer.$el.$checkout.click(function() {
             sessionStorage.isDisplayed = false;
+
+            // Register a mixpanel event: checkoutPage
+            mixpanelAnalytics.events.checkoutPage();
         });
     },
 
@@ -104,6 +107,10 @@ var cartDisplayContainer = {
         ;
     },
 
+    /**
+     * Fade out the cart dimmer.
+     *
+     */
     fadeOutDimmer: function () {
         $(".close-cart-dimmer").on("click touchend", function () {
             $(".ui.dimmer")

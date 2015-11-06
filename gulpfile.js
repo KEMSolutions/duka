@@ -8,14 +8,18 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     minifyCss = require('gulp-minify-css');
 
-
 /*******************************
  Tasks
  *******************************/
 
 // Takes all scripts in public/js/dev and creates a minified, uglified production script.
 gulp.task('js', function () {
-    return gulp.src(['public/js/dev/utils/*.js', 'public/js/dev/components/**/*.js' ])
+    return gulp.src(
+        [
+        'public/js/dev/utils/*.js',
+        'public/js/dev/analytics/*.js',
+        'public/js/dev/components/**/*.js'
+        ])
         .pipe(concat('duka.js'))
         //.pipe(uglify())
         .pipe(gulp.dest('public/js/prod'))
@@ -41,6 +45,12 @@ gulp.task('semantic-css', function() {
         .pipe(gulp.dest('public/semantic/prod'))
 });
 
+
+//Gulp watchers
+gulp.task("watch", function () {
+    gulp.watch('public/js/dev/*.js', ['js']);
+    gulp.watch('public/css/dev/*.css', ['css']);
+});
 
 // Default task.
 gulp.task('semantic', ['semantic-css']);

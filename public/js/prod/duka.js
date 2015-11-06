@@ -487,6 +487,33 @@ var UtilityContainer = {
 };
 
 
+var mixpanelAnalytics = {
+    events: {
+        addToCart: function () {
+            mixpanel.track("Added 1 item to cart.");
+        },
+
+        checkoutPage: function () {
+            mixpanel.track("Checkout main page.");
+        },
+
+        checkoutShipping: function () {
+            mixpanel.track("Successfully loaded shipping methods");
+        },
+
+        checkoutPayment: function () {
+            mixpanel.track("Redirected to payment page.");
+        },
+
+        orderCancelled: function (id) {
+            mixpanel.track("Order cancelled", {
+                "Order ID" : id
+            })
+        }
+
+    }
+}
+
 /**
  * Entry point of script.
  *
@@ -865,6 +892,9 @@ var checkoutContainer = {
 
                 // Makes the ajax call.
                 self.actions.placeOrderAjaxCall();
+
+                // Register mixpanel event: checkoutPayment
+                mixpanelAnalytics.events.checkoutPayment();
             });
         },
 
@@ -972,6 +1002,8 @@ var checkoutContainer = {
             // Select the default shipment method.
             self.bootstrap.selectDefaultShipmentMethod();
 
+            // Register a mixpanel event: checkoutShipping
+            mixpanelAnalytics.events.checkoutShipping();
         },
 
 
@@ -1222,6 +1254,239 @@ var checkoutContainer = {
         });
     }
 
+}
+/**
+ * Component responsible for handling the payment overlay behaviour.
+ *
+ * @type {{cancelOrder: Function, checkPendingOrders: Function, showPaymentNotice: Function, init: Function}}
+ */
+var paymentOverlayContainer = {
+
+    /**
+     * Cancels an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     *
+     */
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            var cookie_id = JSON.parse(Cookies.get("_unpaid_orders")).id;
+            Cookies.remove("_unpaid_orders");
+
+            $("#cancelledOrder .jumbotron").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+
+            // Register mixpanel event: orderCancelled
+            mixpanelAnalytics.events.orderCancelled(cookie_id);
+
+        });
+    },
+
+    /**
+     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_unpaid_orders')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(data) {
+                    if (data.status == 'pending')
+                        paymentOverlayContainer.showPaymentNotice();
+                    else
+                        Cookies.remove('_unpaid_orders');
+                }
+            });
+        }
+
+    },
+
+    /**
+     * Shows payment notice.
+     *
+     */
+    showPaymentNotice : function() {
+
+        // Retrieve order details.
+        var order = JSON.parse(Cookies.get('_unpaid_orders'));
+
+        // Display notice.
+        $('body').prepend(
+            '<div class="container fullScreen" id="cancelledOrder">'+
+            '<div class="jumbotron vertical-align color-one">'+
+            '<div class="text-center">'+
+            '<h2>'+
+            Localization.pending_order.replace(':command', order.id) +
+            '</h2>'+
+            '<h4>'+ Localization.what_to_do +'</h4>'+
+            '<br />'+
+            '<ul class="list-inline">' +
+            '<li>' +
+            '<a href="'+
+            ApiEndpoints.orders.pay.replace(':id', order.id)
+                .replace(':verification', order.verification) +'">'+
+            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
+            '</a>'+
+            '</li>' +
+            '<li>' +
+            '<button class="ui button red" id="cancelOrder">'+
+            Localization.cancel_order +
+            '</button>'+
+            '</li>'+
+            '</ul>'+
+            '</div>'+
+            '</div>'+
+            '</div>'
+        );
+
+        // Added mixpanel event: checkoutPayment
+        $("#payOrder").click(function () {
+            mixpanelAnalytics.events.checkoutPayment();
+        });
+    },
+
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+        self.checkPendingOrders();
+    }
+}
+
+/**
+ * Responsible for handling the switch between one, two and four columns per row depending on screen width.
+ *
+ * @type {{tablet: {setClasses: Function}, mobile: {setClasses: Function}, desktop: {setClasses: Function}, init: Function}}
+ */
+var responsiveContainer = {
+    // Everything between 400px and 768px is considered tablet size.
+    tablet : {
+        setClasses: function () {
+            // Take the stackable off the grid-layout.
+            $(".grid-layout").removeClass("stackable");
+            // Set two products per row.
+            $(".dense-product").removeClass("four wide column").addClass("eight wide column");
+        }
+    },
+
+    // Everything less than 400px is considered mobile size.
+    mobile : {
+        setClasses: function () {
+            $(".grid-layout").addClass("stackable");
+        }
+    },
+
+    // Everything more than 768px is considered desktop size.
+    desktop: {
+        setClasses: function () {
+            $(".grid-layout").removeClass("stackable");
+            // Set four products per row.
+            $(".dense-product").removeClass("eight four wide column").addClass("four wide column");
+        }
+    },
+
+    init: function () {
+        var self = responsiveContainer;
+
+        $(window).on("load resize", function () {
+            if ($(this).width() < 768 && $(this).width() > 400) {
+                self.tablet.setClasses();
+            }
+            else if ($(this).width() <= 400) {
+                self.mobile.setClasses();
+            }
+            else if ($(this).width() >= 768) {
+                self.desktop.setClasses();
+            }
+        });
+    }
+}
+/**
+ * Component responsible for activating semantic ui features.
+ *
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {}, init: Function}}
+ */
+var semanticInitContainer = {
+
+    /**
+     * Initialize modules
+     *
+     */
+    module: {
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule: function() {
+            //Enable selection on clicked items
+            $(".ui.dropdown-select").dropdown();
+
+            //Prevent selection on clicked items
+            $(".ui.dropdown-no-select").dropdown({
+                    action: "select"
+                }
+            );
+        },
+
+        /**
+         * Initialize rating module.
+         *
+         */
+        initRatingModule: function () {
+            $(".ui.rating").rating();
+        },
+
+        /**
+         * Initialize popup module.
+         *
+         */
+        initPopupModule: function () {
+            $(".popup").popup();
+        },
+
+        /**
+         * Initialize checkbox module.
+         *
+         */
+        initCheckboxModule: function () {
+            $('.ui.checkbox')
+                .checkbox()
+            ;
+        }
+    },
+
+    /**
+     * Specify semantic custom behavior.
+     *
+     */
+    behaviors: {
+
+    },
+
+
+
+    init: function () {
+        var self = semanticInitContainer,
+            module = self.module;
+
+        module.initDropdownModule();
+        module.initRatingModule();
+        module.initPopupModule();
+        module.initCheckboxModule();
+    }
 }
 /**
  * Component responsible for handling different formats of the same product.
@@ -1491,230 +1756,6 @@ var productResponsiveContainer = {
         var self = productResponsiveContainer;
 
         self.invertPriceAndDescriptionColumn();
-    }
-}
-/**
- * Component responsible for handling the payment overlay behaviour.
- *
- * @type {{cancelOrder: Function, checkPendingOrders: Function, showPaymentNotice: Function, init: Function}}
- */
-var paymentOverlayContainer = {
-
-    /**
-     * Cancels an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_unpaid_orders");
-
-            $("#cancelledOrder .jumbotron").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-
-        });
-    },
-
-    /**
-     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_unpaid_orders')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(data) {
-                    if (data.status == 'pending')
-                        paymentOverlayContainer.showPaymentNotice();
-                    else
-                        Cookies.remove('_unpaid_orders');
-                }
-            });
-        }
-
-    },
-
-    /**
-     * Shows payment notice.
-     *
-     */
-    showPaymentNotice : function() {
-
-        // Retrieve order details.
-        var order = JSON.parse(Cookies.get('_unpaid_orders'));
-
-        // Display notice.
-        $('body').prepend(
-            '<div class="container fullScreen" id="cancelledOrder">'+
-            '<div class="jumbotron vertical-align color-one">'+
-            '<div class="text-center">'+
-            '<h2>'+
-            Localization.pending_order.replace(':command', order.id) +
-            '</h2>'+
-            '<h4>'+ Localization.what_to_do +'</h4>'+
-            '<br />'+
-            '<ul class="list-inline">' +
-            '<li>' +
-            '<a href="'+
-            ApiEndpoints.orders.pay.replace(':id', order.id)
-                .replace(':verification', order.verification) +'">'+
-            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
-            '</a>'+
-            '</li>' +
-            '<li>' +
-            '<button class="ui button red" id="cancelOrder">'+
-            Localization.cancel_order +
-            '</button>'+
-            '</li>'+
-            '</ul>'+
-            '</div>'+
-            '</div>'+
-            '</div>'
-        );
-    },
-
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-        self.checkPendingOrders();
-    }
-}
-
-/**
- * Responsible for handling the switch between one, two and four columns per row depending on screen width.
- *
- * @type {{tablet: {setClasses: Function}, mobile: {setClasses: Function}, desktop: {setClasses: Function}, init: Function}}
- */
-var responsiveContainer = {
-    // Everything between 400px and 768px is considered tablet size.
-    tablet : {
-        setClasses: function () {
-            // Take the stackable off the grid-layout.
-            $(".grid-layout").removeClass("stackable");
-            // Set two products per row.
-            $(".dense-product").removeClass("four wide column").addClass("eight wide column");
-        }
-    },
-
-    // Everything less than 400px is considered mobile size.
-    mobile : {
-        setClasses: function () {
-            $(".grid-layout").addClass("stackable");
-        }
-    },
-
-    // Everything more than 768px is considered desktop size.
-    desktop: {
-        setClasses: function () {
-            $(".grid-layout").removeClass("stackable");
-            // Set four products per row.
-            $(".dense-product").removeClass("eight four wide column").addClass("four wide column");
-        }
-    },
-
-    init: function () {
-        var self = responsiveContainer;
-
-        $(window).on("load resize", function () {
-            if ($(this).width() < 768 && $(this).width() > 400) {
-                self.tablet.setClasses();
-            }
-            else if ($(this).width() <= 400) {
-                self.mobile.setClasses();
-            }
-            else if ($(this).width() >= 768) {
-                self.desktop.setClasses();
-            }
-        });
-    }
-}
-/**
- * Component responsible for activating semantic ui features.
- *
- * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {}, init: Function}}
- */
-var semanticInitContainer = {
-
-    /**
-     * Initialize modules
-     *
-     */
-    module: {
-        /**
-         * Initialize dropdown module.
-         *
-         */
-        initDropdownModule: function() {
-            //Enable selection on clicked items
-            $(".ui.dropdown-select").dropdown();
-
-            //Prevent selection on clicked items
-            $(".ui.dropdown-no-select").dropdown({
-                    action: "select"
-                }
-            );
-        },
-
-        /**
-         * Initialize rating module.
-         *
-         */
-        initRatingModule: function () {
-            $(".ui.rating").rating();
-        },
-
-        /**
-         * Initialize popup module.
-         *
-         */
-        initPopupModule: function () {
-            $(".popup").popup();
-        },
-
-        /**
-         * Initialize checkbox module.
-         *
-         */
-        initCheckboxModule: function () {
-            $('.ui.checkbox')
-                .checkbox()
-            ;
-        }
-    },
-
-    /**
-     * Specify semantic custom behavior.
-     *
-     */
-    behaviors: {
-
-    },
-
-
-
-    init: function () {
-        var self = semanticInitContainer,
-            module = self.module;
-
-        module.initDropdownModule();
-        module.initRatingModule();
-        module.initPopupModule();
-        module.initCheckboxModule();
     }
 }
 /**
@@ -2143,9 +2184,12 @@ var cartDrawerInitContainer = {
             cartLogicContainer.addItem(UtilityContainer.buyButton_to_Json($(this)));
             cartLogicContainer.storeItem(UtilityContainer.buyButton_to_Json($(this)));
 
-            //We remove the "Your cart is empty" message at the top every time we add an item.
-            //TODO : Maybe improve it?
+            // We remove the "Your cart is empty" message at the top every time we add an item.
+            // TODO : Maybe improve it?
             $("#cart-items .empty-cart").addClass("hidden");
+
+            // Register mixpanel event: addToCart
+            mixpanelAnalytics.events.addToCart();
         });
     },
 
@@ -2562,6 +2606,9 @@ var cartDisplayContainer = {
         });
         cartDisplayContainer.$el.$checkout.click(function() {
             sessionStorage.isDisplayed = false;
+
+            // Register a mixpanel event: checkoutPage
+            mixpanelAnalytics.events.checkoutPage();
         });
     },
 
@@ -2627,6 +2674,10 @@ var cartDisplayContainer = {
         ;
     },
 
+    /**
+     * Fade out the cart dimmer.
+     *
+     */
     fadeOutDimmer: function () {
         $(".close-cart-dimmer").on("click touchend", function () {
             $(".ui.dimmer")

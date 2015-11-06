@@ -12,6 +12,7 @@ var paymentOverlayContainer = {
      */
     cancelOrder : function() {
         $("body").on("click", "#cancelOrder", function() {
+            var cookie_id = JSON.parse(Cookies.get("_unpaid_orders")).id;
             Cookies.remove("_unpaid_orders");
 
             $("#cancelledOrder .jumbotron").fadeOut();
@@ -19,6 +20,9 @@ var paymentOverlayContainer = {
             window.location.replace("/");
 
             UtilityContainer.removeAllProductsFromLocalStorage();
+
+            // Register mixpanel event: orderCancelled
+            mixpanelAnalytics.events.orderCancelled(cookie_id);
 
         });
     },
@@ -86,6 +90,11 @@ var paymentOverlayContainer = {
             '</div>'+
             '</div>'
         );
+
+        // Added mixpanel event: checkoutPayment
+        $("#payOrder").click(function () {
+            mixpanelAnalytics.events.checkoutPayment();
+        });
     },
 
     /**

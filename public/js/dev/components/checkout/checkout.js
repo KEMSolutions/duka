@@ -279,6 +279,9 @@ var checkoutContainer = {
 
                 // Makes the ajax call.
                 self.actions.placeOrderAjaxCall();
+
+                // Register mixpanel event: checkoutPayment
+                mixpanelAnalytics.events.checkoutPayment();
             });
         },
 
@@ -386,6 +389,8 @@ var checkoutContainer = {
             // Select the default shipment method.
             self.bootstrap.selectDefaultShipmentMethod();
 
+            // Register a mixpanel event: checkoutShipping
+            mixpanelAnalytics.events.checkoutShipping();
         },
 
 
