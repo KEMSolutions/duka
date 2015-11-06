@@ -31,12 +31,12 @@
                             <input type="text" name="postalcode" value="{{ Customers::getDefaultAddress()->postcode }}" placeholder="A1A 1A1" id="postcode" class="form-control one-half">
                         </span>
 
-                        <button type="button" class=" one-half center-block ui button btn-two getEstimate" style="margin-top: 0.5rem;">{{ Lang::get("boukem.estimate") }}</button>
+                        <button type="button" class=" one-half center-block btn btn-two-inverted getEstimate" style="margin-top: 0.5rem;">{{ Lang::get("boukem.estimate") }}</button>
 
                     </div>
 
                     <div class="price-estimate-update">
-                        <button type="button" class=" one-half center-block ui button btn-two getEstimate">{{ Lang::get("boukem.update") }}</button>
+                        <button type="button" class=" one-half center-block btn btn-two-inverted getEstimate">{{ Lang::get("boukem.update") }}</button>
                         <p class="text-center text-uppercase">
                             {{ Lang::get("boukem.or") . " " }}
                             <button class="btn-link text-uppercase changeLocation">{{ Lang::get("boukem.change_location") }}</button>

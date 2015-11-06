@@ -33,6 +33,18 @@
 .short-description {
     margin-top: 2rem;
 }
+
+.dense-product .dark:hover,
+.dense-product .dark:focus,
+.dense-product .dark:active {
+    color: #5F5F5F !important;
+}
+
+.dense-product .darker:hover,
+.dense-product .darker:focus,
+.dense-product .darker:active {
+    color: #4D4D4D !important;
+}
 /*-----------------------------------*/
 
 /* FAVORITE ICON */

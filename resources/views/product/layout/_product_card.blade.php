@@ -36,7 +36,7 @@
 
                             @if(count($product->formats) > 0)
                                 @foreach($product->formats as $format)
-                                    <button class="ui button btn-one right floated buybutton"
+                                    <button class="btn btn-one btn-one-inverted pull-right buybutton"
                                             data-product="{{ $product->id . '-' . $format->id }}"
                                             data-price="{{ $format->price }}"
                                             data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
