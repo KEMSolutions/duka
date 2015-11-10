@@ -133,17 +133,7 @@
                 </div>
             </div>
 
-            {{-- Show alternatvie checkout button on mobile devices. --}}
-            <a href="{{ route("cart") }}" style="color: inherit">
-                <button class="ui btn btn-one visible-xs-inline-block">
-                    <i class="fa fa-shopping-cart icon-cart color-one-text"></i>
-                    @lang("boukem.cart")
-                    <span class="badge cart_badge">0</span>
-                    <span class="sr-only">items</span>
-                </button>
-            </a>
-
-            <a class="view-cart hidden-xs">
+            <a class="view-cart">
                 <button class="ui btn btn-one" id="view-cart-wrapper">
                     <i class="fa fa-shopping-cart icon-cart color-one-text"></i>
                     <span id="cart-description">{{ " " . Lang::get("boukem.cart") . " " }}</span>

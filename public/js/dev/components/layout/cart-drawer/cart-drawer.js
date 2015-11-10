@@ -25,7 +25,7 @@ var cartDisplayContainer = {
         });
 
         cartDisplayContainer.$el.$trigger.click(function() {
-            cartDisplayContainer.animateIn();
+            $(window).width() > 768 ? cartDisplayContainer.animateIn() : cartDisplayContainer.fadeInDimmer();
         });
     },
 

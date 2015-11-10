@@ -12,9 +12,8 @@ var cartDrawerInitContainer = {
     buyButtonClick : function () {
         $("body").on("click", ".buybutton", function() {
 
-            // Call animateIn only if .view-cart anchor button is visible. If it is, it means we have a viewport width
-            // high enough to slide in the drawer.
-            $(".view-cart").is(":visible") ? cartDisplayContainer.animateIn() : cartDisplayContainer.fadeInDimmer();
+            // Call animateIn only if window width is greater than 768px.
+            $(window).width() > 768 ? cartDisplayContainer.animateIn() : cartDisplayContainer.fadeInDimmer();
 
             cartLogicContainer.addItem(UtilityContainer.buyButton_to_Json($(this)));
             cartLogicContainer.storeItem(UtilityContainer.buyButton_to_Json($(this)));
