@@ -1,9 +1,7 @@
-<?php namespace App\Providers;
+<?php
+namespace App\Providers;
 
-use Cache;
-use Store;
 use KemAPI;
-
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 
@@ -41,9 +39,12 @@ class LocalizationServiceProvider extends ServiceProvider
     public function getSupportedLocales()
     {
         // Format the store's supported locales for use with Mcamara\LaravelLocalization.
-        // These are already cached by the Store facade.
+        // We do this silently (without caching the results) in case we're in a substore
+        // (that would be determined later in the bootstrapping process).
+        $supportedLocales = KemAPI::get('locales');
+
         $locales = [];
-        foreach (Store::locales() as $locale)
+        foreach ($supportedLocales as $locale)
         {
             $locales[$locale->language] = [
                 'name' => $locale->language_name,
