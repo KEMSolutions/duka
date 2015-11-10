@@ -25,9 +25,9 @@ class KemApiHttpClient
     private $user = '';
 
     /**
-     * @var string  API user secret.
+     * @var string  API user key.
      */
-    private $secret = '';
+    private $key = '';
 
     /**
      * @constant    API version.
@@ -44,20 +44,33 @@ class KemApiHttpClient
      * options as an array.
      *
      * @param $apiUser      API user ID.
-     * @param $apiSecret    API user secret.
+     * @param $apiKey       API user key.
      * @param array $config Configuration options for Guzzle.
      */
-    public function __construct($apiUser, $apiSecret, $config = [])
+    public function __construct($apiUser, $apiKey, $config = [])
     {
         // Create our Guzzle HTTP client instance.
         $this->client = new Client($config);
 
-        // Save API details.
+        // Save API credentials.
         $this->user = $apiUser;
-        $this->secret = $apiSecret;
+        $this->key = $apiKey;
 
         // Set current locale.
         $this->locale = Localization::getCurrentLocale();
+    }
+
+    /**
+     * Updates the user/key pair used to authenticate requests to the API. Especially useful
+     * for stores with substores.
+     *
+     * @param string $apiUser   API user ID.
+     * @param string $apiKey    API user key.
+     */
+    public function setCredentials($apiUser, $apiKey)
+    {
+        $this->user = $apiUser;
+        $this->key = $apiKey;
     }
 
     /**
@@ -125,7 +138,7 @@ class KemApiHttpClient
         }
 
         // Build signature string.
-        $sig = $body . $this->secret;
+        $sig = $body . $this->key;
         $sig = base64_encode(hash('sha512', $sig, true));
 
         // Prepare headers.
@@ -200,13 +213,21 @@ class KemApiHttpClient
     }
 
     /**
+     * Returns the current API user ID.
+     *
+     * @return string
+     */
+    public function getUser() {
+        return $this->user;
+    }
+
+    /**
      * Shortcut to send a bad request status through JSON.
      *
      * @param string $msg   Optional message to pass on.
      * @return mixed        JSON object to be returned to response.
      */
     private function badRequest($msg = 'Bad Request.', $status = 400) {
-//        return JsonResponse::create(['status' => 400, 'error' => $msg], 400)->getData();
         return ['status' => $status, 'error' => $msg];
     }
 }

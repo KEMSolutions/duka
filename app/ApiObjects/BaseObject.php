@@ -46,7 +46,7 @@ abstract class BaseObject
         $this->locale = Localization::getCurrentLocale();
 
         // Build the cache namespace.
-        $this->cacheNamespace = config('services.kemapi.user') .'.'. $this->locale .'.api.'. $this->baseRequest .'.';
+        $this->cacheNamespace = KemAPI::getUser() .'.'. $this->locale .'.api.'. $this->baseRequest .'.';
     }
 
     /**
