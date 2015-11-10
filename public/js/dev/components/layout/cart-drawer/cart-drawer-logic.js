@@ -1,6 +1,6 @@
 /**
  * Component responsible for the overall logic (CRUD) of the cart drawer.
- * Layout handled in dev/components/layout/cart-drawer.js
+ * Layout handled in dev/components/layout/cart-drawer-display.js
  *
  * @type {{$el: {$list: (*|jQuery|HTMLElement)}, addItem: Function, storeItem: Function, loadItem: Function, deleteItem: Function, modifyQuantity: Function, modifyQuantityBeforeBuying: Function, setBadgeQuantity: Function, setQuantityCookie: Function, setCartSubtotal: Function, setCartShipping: Function, setCartTaxes: Function, setCartTotal: Function, ajaxCall: Function, updateAjaxCall: Function, init: Function}}
  */

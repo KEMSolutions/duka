@@ -50,7 +50,7 @@ var cartDisplayContainer = {
      *
      */
     animateIn : function() {
-        cartDisplayContainer.$el.$container.show();
+        cartDisplayContainer.$el.$container.css('visibility', 'visible');
         cartDisplayContainer.$el.$container.animate( {
             "margin-right" : 0
         }, 400);
@@ -66,7 +66,7 @@ var cartDisplayContainer = {
         cartDisplayContainer.$el.$container.animate( {
             "margin-right" : -_width
         }, 400, function() {
-            $(this).hide();
+            $(this).css("visibility", "hidden");
         });
         sessionStorage.isDisplayed = false;
     },
@@ -76,15 +76,9 @@ var cartDisplayContainer = {
      *
      */
     setCartItemsHeight : function() {
-        cartDisplayContainer.computeCartItemsHeight();
-
         $(window).on("load resize", function() {
-            cartDisplayContainer.computeCartItemsHeight();
+            $("#cart-items").css("height", cartDisplayContainer.computeCartItemsHeight());
         });
-
-        cartDisplayContainer.$el.$trigger.on("click", function() {
-            cartDisplayContainer.computeCartItemsHeight();
-        })
     },
 
     /**
@@ -92,9 +86,7 @@ var cartDisplayContainer = {
      *
      */
     computeCartItemsHeight : function() {
-        var cartItemsHeight = $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
-
-        $("#cart-items").css("height", cartItemsHeight);
+        return $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
     },
 
     /**
@@ -127,8 +119,10 @@ var cartDisplayContainer = {
 
         if (sessionStorage.isDisplayed == "true")
         {
-            cartDisplayContainer.$el.$container.css("margin-right", 0);
-            cartDisplayContainer.$el.$container.show();
+            cartDisplayContainer.$el.$container.css({
+                "margin-right": 0,
+                "visibility": "visible"
+            });
         }
 
     }
