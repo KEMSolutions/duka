@@ -7,7 +7,9 @@
                     <figure>
 
                         <a href="{{ route('product', ['slug' => $product->slug]) }}" class="strong">
-                            <img src="//static.boutiquekem.com/productimg-300-280-{{ $product->images[0]->id . "." . $product->images[0]->extension }}" class="img-responsive center-block "/>
+                            <img src="{{ Products::getImage($product, 280, 280) }}"
+                                 class="product-image center-block"
+                                 alt="{{ $product->localization->name }}" />
                         </a>
 
                         <h2>
