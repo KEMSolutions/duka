@@ -20,6 +20,7 @@ return [
     'toggle_nav'    =>'Afficher le menu',
     'cart'          =>'Panier',
     'view_cart'     =>'Voir panier',
+    'close_cart'    =>'Fermer panier',
     'go'            =>'Go!',
     'settings'      =>'Settings',
     'sign_up'       =>'S\'inscrire',

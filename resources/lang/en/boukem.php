@@ -20,6 +20,7 @@ return [
     'toggle_nav'    =>'Toggle navigation',
     'cart'          =>'Cart',
     'view_cart'     =>'View cart',
+    'close_cart'    =>'Close cart',
     'go'            =>'Go!',
     'settings'      =>'Paramètres',
     'sign_up'       =>'Sign up',
