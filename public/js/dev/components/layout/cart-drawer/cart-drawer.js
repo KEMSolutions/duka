@@ -78,7 +78,7 @@ var cartDisplayContainer = {
     setCartItemsHeight : function() {
         cartDisplayContainer.computeCartItemsHeight();
 
-        $(window).on("resize", function() {
+        $(window).on("load resize", function() {
             cartDisplayContainer.computeCartItemsHeight();
         });
 
