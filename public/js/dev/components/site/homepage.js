@@ -31,8 +31,5 @@ var homepageContainer = {
             mixed = self.mixed;
 
         mixed.toggleSixteenWideColumn();
-
-        // Register mixpanel event: orderSuccess
-        mixpanelAnalytics.events.orderSuccess();
     }
 }

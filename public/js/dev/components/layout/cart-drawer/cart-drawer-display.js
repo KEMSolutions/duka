@@ -39,9 +39,6 @@ var cartDisplayContainer = {
         });
         cartDisplayContainer.$el.$checkout.click(function() {
             sessionStorage.isDisplayed = false;
-
-            // Register a mixpanel event: checkoutPage
-            mixpanelAnalytics.events.checkoutPage();
         });
     },
 

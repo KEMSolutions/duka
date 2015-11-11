@@ -36,7 +36,7 @@
 
 	{{-- Tracking scripts --}}
 	@if (Config::get('services.mixpanel'))
-		@include("analytics._mixpanel")
+		@include("analytics.mixpanel._tracking")
 	@endif
 
 	@if (Config::get('services.ganalytics'))
@@ -75,6 +75,11 @@
 	@include("_dynamic_resources")
 
 	<script src="/js/prod/duka.js"></script>
+
+	{{-- Tracking scripts initialization --}}
+	@if (Config::get('services.mixpanel'))
+		@include("analytics.mixpanel._init")
+	@endif
 
 	@yield("scripts")
 

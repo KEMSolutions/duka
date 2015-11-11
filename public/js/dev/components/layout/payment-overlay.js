@@ -20,10 +20,6 @@ var paymentOverlayContainer = {
             window.location.replace("/");
 
             UtilityContainer.removeAllProductsFromLocalStorage();
-
-            // Register mixpanel event: orderCancelled
-            mixpanelAnalytics.events.orderCancelled(cookie_id);
-
         });
     },
 
@@ -91,10 +87,6 @@ var paymentOverlayContainer = {
             '</div>'
         );
 
-        // Added mixpanel event: checkoutPayment
-        $("#payOrder").click(function () {
-            mixpanelAnalytics.events.checkoutPayment();
-        });
     },
 
     /**

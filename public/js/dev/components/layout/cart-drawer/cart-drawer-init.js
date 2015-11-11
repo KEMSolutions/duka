@@ -21,9 +21,6 @@ var cartDrawerInitContainer = {
             // We remove the "Your cart is empty" message at the top every time we add an item.
             // TODO : Maybe improve it?
             $("#cart-items .empty-cart").addClass("hidden");
-
-            // Register mixpanel event: addToCart
-            mixpanelAnalytics.events.addToCart();
         });
     },
 
