@@ -277,6 +277,11 @@ var cartLogicContainer = {
                 cartLogicContainer.setCartShipping(data);
                 cartLogicContainer.setCartTaxes(UtilityContainer.getCartTaxes(UtilityContainer.getCheapestShippingMethod(data).method, data));
                 cartLogicContainer.setCartTotal(UtilityContainer.getCartTotal(UtilityContainer.getCheapestShippingMethod(data), data));
+
+                // Check if GAE is defined, and if does, register the event: Estimate
+                if (window.ga && ga.create) {
+                    GAEAnalytics.events.estimate(UtilityContainer.getCartTotal(UtilityContainer.getCheapestShippingMethod(data), data));
+                }
             },
             error: function(e) {
                 console.log(e);

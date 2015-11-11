@@ -6,6 +6,12 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}"/>
+
+	@if(Auth::check())
+		<meta name="user-login" content="{{ Auth::user()->id}}"/>
+	@endif
+
+	<meta name="user-login"/>
 	<link rel="icon" type="image/png" href="{{ url('/') . "/favicon.png"}}"/>
 	<link rel='apple-touch-icon' type='image/png' href='/apple-touch-icon.png'>
 
@@ -40,7 +46,7 @@
 	@endif
 
 	@if (Config::get('services.ganalytics'))
-		@include("analytics.GAE._GAE")
+		@include("analytics.GAE._tracking")
 	@endif
 
 	@if (Config::get('services.piwik.id') && Config::get('services.piwik.domain'))
@@ -79,6 +85,10 @@
 	{{-- Tracking scripts initialization --}}
 	@if (Config::get('services.mixpanel'))
 		@include("analytics.mixpanel._init")
+	@endif
+
+	@if (Config::get('services.ganalytics'))
+		@include("analytics.GAE._init")
 	@endif
 
 	@yield("scripts")

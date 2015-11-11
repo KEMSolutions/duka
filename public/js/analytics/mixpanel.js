@@ -33,6 +33,18 @@ var mixpanelAnalytics = {
             {
                 mixpanel.track("Order success");
             }
+        },
+
+        /**
+         * If a user is logged in, the meta tag 'user-login' has a content attribute
+         * that refers to the user id that we then pass that to mixpanel.
+         *
+         */
+        identifyUser: function () {
+            if($("meta[name=user-login]").attr("content") != undefined)
+            {
+                mixpanel.identify($("meta[name=user-login]").attr("content"));
+            }
         }
 
     },
@@ -45,5 +57,7 @@ var mixpanelAnalytics = {
         self.events.checkoutPayment();
         self.events.orderCancelled();
         self.events.orderSuccess();
+
+        self.events.identifyUser();
     }
 }
