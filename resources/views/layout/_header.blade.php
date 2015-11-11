@@ -208,19 +208,21 @@
 
         {{-- Store contact info. --}}
             <div class="btn btn-link">
-                <div class="ui pointing dropdown dropdown-select top left white">
+                <div class="ui pointing dropdown dropdown-no-select top left white">
                     <span class="text">
                         {{ Lang::get("boukem.contact") }}
                         <i class="caret down icon"></i>
                     </span>
 
                     <div class="menu fluid">
-@if (Store::info()->support->phone)
-                        <div class="item">
-                            <i class="fa fa-phone icon"></i>
-                            {{ Store::info()->support->phone->number }}
-                        </div>
-@endif
+                        @if (Store::info()->support->phone)
+                            <div class="item">
+                                <a href="tel:{{ Store::info()->support->phone->number }}" class="dark">
+                                    <i class="fa fa-phone icon"></i>
+                                    {{ Store::info()->support->phone->number }}
+                                </a>
+                            </div>
+                        @endif
                         <div class="divider"></div>
                         <div class="item">
                             <i class="fa fa-envelope-o icon"></i>
