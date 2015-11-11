@@ -40,7 +40,7 @@
 	@endif
 
 	@if (Config::get('services.ganalytics'))
-		@include("analytics._GAE")
+		@include("analytics.GAE._GAE")
 	@endif
 
 	@if (Config::get('services.piwik.id') && Config::get('services.piwik.domain'))
