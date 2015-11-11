@@ -37,7 +37,7 @@ var mixpanelAnalytics = {
 
         /**
          * If a user is logged in, the meta tag 'user-login' has a content attribute
-         * that refers to the user id that we then pass that to mixpanel.
+         * that refers to the user id that we then pass to mixpanel.
          *
          */
         identifyUser: function () {
