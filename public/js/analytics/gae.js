@@ -8,9 +8,9 @@ var GAEAnalytics = {
      *
      * Checkout
      *      estimate (price)
-     *      checkout_page (total_price)
-     *      checkout_success (id, price)
-     *      checkout_failure (id, price)
+     *      checkout_page ()
+     *      checkout_success ()
+     *      checkout_failure ()
      *
      */
     events: {
