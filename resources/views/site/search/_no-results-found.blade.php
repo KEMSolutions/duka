@@ -17,7 +17,7 @@
 
     @if (Store::info()->support->phone)
         <h5 class="ui center aligned header">
-            {!! Lang::get('boukem.no_result_assistance', ["number"=>'<a href="tel:' . Store::info()->support->phone->number . '">' . Store::info()->support->phone->number . '</a>']) !!}
+            {!! Lang::get('boukem.no_result_assistance', ["number"=>'<a href="tel:' . Store::info()->support->phone->number . '">' . Store::info()->support->phone->vanity . '</a>']) !!}
         </h5>
     @endif
 </div>
