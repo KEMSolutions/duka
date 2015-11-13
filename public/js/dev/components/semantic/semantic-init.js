@@ -57,18 +57,23 @@ var semanticInitContainer = {
      *
      */
     behaviors: {
-
+        initCongratulateDimmer: function () {
+            $(".congratulate-dimmer").dimmer("show");
+        }
     },
 
 
 
     init: function () {
         var self = semanticInitContainer,
-            module = self.module;
+            module = self.module,
+            behaviors = self.behaviors;
 
         module.initDropdownModule();
         module.initRatingModule();
         module.initPopupModule();
         module.initCheckboxModule();
+
+        behaviors.initCongratulateDimmer();
     }
 }
