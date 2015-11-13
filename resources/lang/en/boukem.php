@@ -217,8 +217,9 @@ return [
     "health_issues"     =>"Health Issues",
     "featured_products" =>"Featured Products",
     "your"              =>"Your",
-    "my"                =>"My",
-    "shop_by"           =>"Shop by ",
+    "my_account"        =>"My Account",
+    "shop_by_categories" => '<span class="light">Shop by</span> <strong class="bold">Categories</strong>',
+    "items"             => "items",
     "wishlist"          =>"Your Wish List",
     "wishlist_has"      =>"Your Wish List has",
     "wishlist_number"   =>"You have <span id='quantity-wishlist'>0 item</span> in your wishlist.",
@@ -273,5 +274,5 @@ return [
     "validation_address_billing"=>"Please enter your billing address",
     "validation_city_billing"   =>"Please enter your billing address city",
     "validation_post_billing"   =>"Please enter your billing address postcode"
-    
+
 ];

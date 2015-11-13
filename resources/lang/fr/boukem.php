@@ -217,8 +217,9 @@ return [
     "health_issues"     =>"Sujets de santé",
     "featured_products" =>"Produits recommandés",
     "your"              =>"Votre",
-    "my"                =>"Mon",
-    "shop_by"           =>"Magasiner par ",
+    "my_account"        =>"Mon Compte",
+    "shop_by_categories" => '<span class="light">Magasiner par</span> <strong class="bold">Catégories</strong>',
+    "items"             =>"items",
     "wishlist"          =>"Votre liste d'envies",
     "wishlist_has"      =>"Votre liste d'envies a",
     "wishlist_number"   =>"Vous avez <span id='quantity-wishlist'>0 item</span> dans votre liste d'envies.",
@@ -273,6 +274,5 @@ return [
     "validation_address_billing"=>"Veuillez saisir votre adresse de facturation",
     "validation_city_billing"   =>"Veuillez saisir votre ville de facturation",
     "validation_post_billing"   =>"Veuillez saisir votre code postal de facturation"
-
 
 ];

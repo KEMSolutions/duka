@@ -13,13 +13,13 @@
             {{-- Name --}}
             <div class="field">
                 <label>@lang('boukem.name')</label>
-                <input type="text" name="name" value="{{ old('name') }}" required />
+                <input type="text" name="name" value="{{ Request::input('name', old('name')) }}" required />
             </div>
 
             {{-- Email --}}
             <div class="field">
                 <label>@lang('boukem.email')</label>
-                <input type="email" name="email" value="{{ old('email') }}" required />
+                <input type="email" name="email" value="{{ Request::input('email', old('email')) }}" required />
             </div>
 
             {{-- Password --}}
