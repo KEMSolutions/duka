@@ -21,7 +21,7 @@
     border: 1px solid #CCC;
     border-left: 0;
     border-top: 0;
-    padding: 25px;
+    padding: 25px !important;
 }
 
 .grid-layout-dense .dense-product img {

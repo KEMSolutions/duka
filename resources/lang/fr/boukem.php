@@ -17,6 +17,7 @@ return [
     'search'        =>'Rechercher',
     "results_for"   => ":displayed résultats sur :total pour: ':term'",
     'search_in'     =>'Rechercher dans: ',
+    'handpick'      =>'Notre recommandation pour vous.',
     'toggle_nav'    =>'Afficher le menu',
     'cart'          =>'Panier',
     'view_cart'     =>'Voir panier',
