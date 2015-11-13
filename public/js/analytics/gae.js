@@ -45,7 +45,7 @@ var GAEAnalytics = {
             });
         },
 
-        checkout_success: function (id, price) {
+        checkout_success: function () {
             if ($(".payment_successful").length > 0)
             {
                 ga('send', {
@@ -74,5 +74,6 @@ var GAEAnalytics = {
         GAEAnalytics.events.addToCart();
         GAEAnalytics.events.checkout_page();
         GAEAnalytics.events.checkout_failure();
+        GAEAnalytics.events.checkout_success();
     }
 }
