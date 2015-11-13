@@ -51,7 +51,8 @@ var GAEAnalytics = {
                 ga('send', {
                     hitType: 'event',
                     eventCategory: 'Checkout',
-                    eventAction: 'Checkout success'
+                    eventAction: 'Checkout success',
+                    eventValue: UtilityContainer.getProductsPriceFromLocalStorage()
                 });
             }
         },
@@ -64,7 +65,8 @@ var GAEAnalytics = {
                     hitType: 'event',
                     eventCategory: 'Checkout',
                     eventAction: 'Checkout failure',
-                    eventLabel: 'Order #' + cookie_id
+                    eventLabel: 'Order #' + cookie_id,
+                    eventValue: UtilityContainer.getProductsPriceFromLocalStorage()
                 });
             });
         }
@@ -76,4 +78,4 @@ var GAEAnalytics = {
         GAEAnalytics.events.checkout_failure();
         GAEAnalytics.events.checkout_success();
     }
-}
+};
