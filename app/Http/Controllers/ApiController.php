@@ -270,6 +270,10 @@ class ApiController extends Controller
         {
             $redirect = $response->payment_details->payment_url;
 
+            // Save the order details so we can give the customer a summary when
+            // they come back from the payment page.
+            Session::put('latest_order_details', $response);
+
             // If the customer hasn't created their password yet, we'll have to ask them
             // to create one later.
             $check = new Customer((array) $response->customer);
