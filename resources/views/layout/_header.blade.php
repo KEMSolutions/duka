@@ -219,7 +219,7 @@
                             <div class="item">
                                 <a href="tel:{{ Store::info()->support->phone->number }}" class="dark">
                                     <i class="fa fa-phone icon"></i>
-                                    {{ Store::info()->support->phone->number }}
+                                    {{ Store::info()->support->phone->vanity }}
                                 </a>
                             </div>
                         @endif
