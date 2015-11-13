@@ -1,5 +1,5 @@
 
-@if ($errors->any() || $messages = Session::get('messages'))
+@if ($errors->any() || $latest_order_details = Session::get('latest_order_details'))
         <div class="ui page dimmer congratulate-dimmer">
             <div class="content">
                 <div class="center">
@@ -14,7 +14,7 @@
                     <h4 class="ui header">
                         Below is a summary of your order.
                         <br/>
-                        Please note that a similar email will be sent to your email address
+                        Please note that this summary will be sent to the email address
                         that you entered during the checkout process.
                     </h4>
 
