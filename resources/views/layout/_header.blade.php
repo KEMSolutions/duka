@@ -43,7 +43,7 @@
                 <div class="ui icon btn btn-one visible-xs-inline-block">
                     <div class="ui dropdown dropdown-select pointing top left">
                         <div class="text">
-                            {{ Lang::get("boukem.shop_by") }}{{ Lang::get("boukem.categories") }}
+                            @lang('boukem.shop_by_categories')
                         </div>
                         <i class="dropdown icon"></i>
 
@@ -83,7 +83,7 @@
             <div class="ui icon btn btn-five">
                 <div class="ui top right pointing dropdown dropdown-no-select">
                     <div class="text">
-                        <i class="icon fa fa-user"></i> {{ Lang::get("boukem.my") }} {{ Lang::get("boukem.account") }}
+                        <i class="icon fa fa-user"></i> @lang('boukem.my_account')
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
@@ -125,7 +125,7 @@
                                     {{ Lang::get("boukem.wishlist_has") }}
                                 </div>
                             <span class="text-center center-block no-decoration" style="padding:0.5em 0 ">
-                                <span class="badge wishlist_badge">0</span> items.
+                                <span class="badge wishlist_badge">0</span> @lang('boukem.items').
                             </span>
                             </a>
                         </div>
@@ -138,7 +138,7 @@
                     <i class="fa fa-shopping-cart icon-cart color-one-text"></i>
                     <span id="cart-description">{{ " " . Lang::get("boukem.cart") . " " }}</span>
                     <span class="badge cart_badge">0</span>
-                    <span class="sr-only">items</span>
+                    <span class="sr-only">@lang('boukem.items')</span>
                 </button>
             </a>
 
@@ -153,7 +153,7 @@
             <div class="btn btn-link">
                 <div class="ui pointing dropdown dropdown-no-select top left white">
                     <span class="text">
-                        <span class="light">{{ Lang::get("boukem.shop_by") }}</span><strong class="bold"> {{ Lang::get("boukem.categories") }}</strong>
+                        @lang('boukem.shop_by_categories')
                         <i class="caret down icon"></i>
                     </span>
 
@@ -193,7 +193,7 @@
             {{-- Back to store link. --}}
             @if(strlen(Store::info()->url))
                 <div class="btn btn-link">
-                    <a href="{{ Store::info()->url }}">Back to site</a>
+                    <a href="{{ Store::info()->url }}">@lang('boukem.back_to_main')</a>
                 </div>
             @endif
 

@@ -15,7 +15,7 @@
             @endforeach
         </ul>
         </div>
-            
+
         @endif
 
         {{-- General messages are pushed to the $messages variable in the session by the application. --}}
@@ -32,9 +32,6 @@
         @endforeach
         </ul>
         </div>
-
-
-            
         @endif
 
     </section>
