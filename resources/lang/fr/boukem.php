@@ -122,6 +122,7 @@ return [
     "empty_cart"    =>"Votre panier est vide.",
     "order_history" =>"Historique de commandes",
     "order_id"      =>"Numéro de commande",
+    "order"         =>"Commande",
     "created_at"    =>"Date de création",
     "status"        =>"Statut",
     "unpaid"        =>"Non payée",

@@ -122,6 +122,7 @@ return [
     "empty_cart"    =>"Your cart is empty.",
     "order_history" =>"Order history",
     "order_id"      =>"Order ID",
+    "order"         =>"Order",
     "created_at"    =>"Creation date",
     "status"        =>"Status",
     "unpaid"        =>"Unpaid",
