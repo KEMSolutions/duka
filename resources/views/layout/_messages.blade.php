@@ -1,5 +1,5 @@
 {{-- Display a dimmer with the latest order details. --}}
-@if ($latest_order_details = Session::pull('latest_order_details'))
+@if ($latest_order_details = Session::pull('latest_order_details') && Session::pull('latest_order_details')->status == 'paid')
     <div class="ui page dimmer congratulate-dimmer">
         <div class="content">
             <div class="center">
