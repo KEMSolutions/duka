@@ -462,17 +462,20 @@ var checkoutContainer = {
      */
     actions: {
         /**
-         * Create a localStorage object containing the id and the verification code.
+         * Create a localStorage object containing the id, verification code and
+         * redirection link of the order.
          *
          * @param data
          */
         createOrdersCookie: function(data) {
             var paymentId = data.id,
-                paymentVerification = data.verification;
+                paymentVerification = data.verification,
+                payment_url = data.payment_details.payment_url;
 
             Cookies.set("_unpaid_orders", JSON.stringify( {
                 id : paymentId,
-                verification : paymentVerification
+                verification : paymentVerification,
+                payment_url : payment_url
             }));
         },
 

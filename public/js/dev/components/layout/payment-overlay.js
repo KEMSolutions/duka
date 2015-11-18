@@ -12,10 +12,9 @@ var paymentOverlayContainer = {
      */
     cancelOrder : function() {
         $("body").on("click", "#cancelOrder", function() {
-            var cookie_id = JSON.parse(Cookies.get("_unpaid_orders")).id;
             Cookies.remove("_unpaid_orders");
 
-            $("#cancelledOrder .jumbotron").fadeOut();
+            $("#cancelledOrder").fadeOut();
 
             window.location.replace("/");
 
@@ -39,7 +38,7 @@ var paymentOverlayContainer = {
                 type: 'GET',
                 url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
                 success: function(data) {
-                    if (data.status == 'pending')
+                    if (data.status === 'pending')
                         paymentOverlayContainer.showPaymentNotice();
                     else
                         Cookies.remove('_unpaid_orders');
@@ -65,7 +64,7 @@ var paymentOverlayContainer = {
                     '<h2 class="ui header">' + Localization.pending_order.replace(':command', order.id) + '</h2>' +
                     '<h4 class="ui header">'+ Localization.what_to_do +'</h4>'+
                     '<br/>' +
-                    '<a href="'+ ApiEndpoints.orders.pay.replace(':id', order.id).replace(':verification', order.verification) +'">'+
+                    '<a href="'+ order.payment_url +'">'+
                         '<button class="ui button green" id="payOrder">'+
                             Localization.pay_now +
                         '</button>'+
@@ -92,4 +91,4 @@ var paymentOverlayContainer = {
         self.cancelOrder();
         self.checkPendingOrders();
     }
-}
+};
