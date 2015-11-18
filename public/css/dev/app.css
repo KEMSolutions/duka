@@ -52,16 +52,6 @@ p {
   padding-left: 0;
   list-style: none;
 }
-.list-inline {
-  padding-left: 0;
-  list-style: none;
-  margin-left: -5px;
-}
-.list-inline > li {
-  display: inline-block;
-  padding-left: 5px;
-  padding-right: 5px;
-}
 
 .form-control {
   display: block;
@@ -543,45 +533,6 @@ a.badge:focus {
 }
 .nav-pills > li > a > .badge {
   margin-left: 3px;
-}
-.jumbotron {
-  padding: 30px 15px;
-  margin-bottom: 30px;
-  color: inherit;
-  background-color: #eeeeee;
-}
-.jumbotron h1,
-.jumbotron .h1 {
-  color: inherit;
-}
-.jumbotron p {
-  margin-bottom: 15px;
-  font-size: 21px;
-  font-weight: 200;
-}
-.jumbotron > hr {
-  border-top-color: #d5d5d5;
-}
-.container .jumbotron,
-.container-fluid .jumbotron {
-  border-radius: 6px;
-}
-.jumbotron .container {
-  max-width: 100%;
-}
-@media screen and (min-width: 768px) {
-  .jumbotron {
-    padding: 48px 0;
-  }
-  .container .jumbotron,
-  .container-fluid .jumbotron {
-    padding-left: 60px;
-    padding-right: 60px;
-  }
-  .jumbotron h1,
-  .jumbotron .h1 {
-    font-size: 63px;
-  }
 }
 .alert {
   padding: 15px;
@@ -1407,6 +1358,17 @@ section.slice {
   backdrop-filter: blur(5px);
 }
 
+/*-----------------------------------*/
+/*-----------------------------------*/
+/*-----------------------------------*/
+/* Style for cancelled Order dimmer */
+/*-----------------------------------*/
+/*-----------------------------------*/
+/*-----------------------------------*/
+#cancelledOrder {
+  padding: 30px 15px;
+  margin-bottom: 30px;
+}
 /*-----------------------------------*/
 /*-----------------------------------*/
 /*-----------------------------------*/

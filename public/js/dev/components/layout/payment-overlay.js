@@ -58,34 +58,27 @@ var paymentOverlayContainer = {
         // Retrieve order details.
         var order = JSON.parse(Cookies.get('_unpaid_orders'));
 
+        // Create dimmer notice.
+        var cancelledOrder =
+            '<div class="ui page active dimmer">' +
+                '<div class="ui container color-one vertical-align" id="cancelledOrder">' +
+                    '<h2 class="ui header">' + Localization.pending_order.replace(':command', order.id) + '</h2>' +
+                    '<h4 class="ui header">'+ Localization.what_to_do +'</h4>'+
+                    '<br/>' +
+                    '<a href="'+ ApiEndpoints.orders.pay.replace(':id', order.id).replace(':verification', order.verification) +'">'+
+                        '<button class="ui button green" id="payOrder">'+
+                            Localization.pay_now +
+                        '</button>'+
+                    '</a>'+
+                    '<button class="ui button red" id="cancelOrder">'+
+                        Localization.cancel_order +
+                    '</button>'+
+                '</div>' +
+            '</div>';
+
         // Display notice.
-        $('body').prepend(
-            '<div class="container fullScreen" id="cancelledOrder">'+
-            '<div class="jumbotron vertical-align color-one">'+
-            '<div class="text-center">'+
-            '<h2>'+
-            Localization.pending_order.replace(':command', order.id) +
-            '</h2>'+
-            '<h4>'+ Localization.what_to_do +'</h4>'+
-            '<br />'+
-            '<ul class="list-inline">' +
-            '<li>' +
-            '<a href="'+
-            ApiEndpoints.orders.pay.replace(':id', order.id)
-                .replace(':verification', order.verification) +'">'+
-            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
-            '</a>'+
-            '</li>' +
-            '<li>' +
-            '<button class="ui button red" id="cancelOrder">'+
-            Localization.cancel_order +
-            '</button>'+
-            '</li>'+
-            '</ul>'+
-            '</div>'+
-            '</div>'+
-            '</div>'
-        );
+        $('body').prepend(cancelledOrder);
+        $('#cancelledOrder').dimmer('closable', 'false');
 
     },
 
