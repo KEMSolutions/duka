@@ -3,6 +3,12 @@
     <div class="ui page dimmer congratulate-dimmer">
         <div class="content">
             <div class="center">
+
+                <button class="ui right floated inverted icon button close-dimmer"
+                        style="margin: 0.5rem">
+                    <i class="remove icon"></i>
+                </button>
+
                 <h1 class="ui centered aligned header">
                     <img class="ui tiny image" src="{{ Store::logo() }}" alt="{{ Store::logo() }}"/>
                     <br/>
