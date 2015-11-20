@@ -54,6 +54,27 @@ class HomeController extends Controller
 		]);
 	}
 
+
+	/**
+	 *Renders a json object with localized strings and api endpoints to be used by client side scripts.
+	 *
+	 * @return mixed
+	 */
+	public function localizationsAndEndpoints()
+	{
+		$Localization = include base_path('resources/lang/'. Localization::getCurrentLocale() .'/boukem.php');
+		$ApiEndpoints = [
+            'estimate'  => route('api.estimate'),
+            'placeOrder'=> route('api.orders'),
+            'orders'    => [
+                'pay'   => route('api.orders.pay', ['id' => ':id', 'verification' => ':verification']),
+                'view'  => route('api.orders.view', ['id' => ':id', 'verification' => ':verification'])
+            ]
+       ];
+
+		return response()->json(compact("Localization", "ApiEndpoints"));
+	} 
+
 	/**
 	 * Private method to create an array containing generic information.
 	 * Used for those sections :

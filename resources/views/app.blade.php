@@ -78,9 +78,6 @@
 	<!-- Semantic ui dependencies -->
 	<script src="/semantic/prod/semantic-2.1.4.min.js"></script>
 
-	{{-- Localization array. --}}
-	@include("_dynamic_resources")
-
 	<script src="/js/prod/duka.js"></script>
 
 	{{-- Tracking scripts initialization --}}
