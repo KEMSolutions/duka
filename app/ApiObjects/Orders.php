@@ -23,7 +23,7 @@ class Orders extends BaseObject
     public function details($id, $verification = null)
     {
         // Retrieve order details.
-        $original = parent::get($id);
+        $original = parent::get($id, [], 0);
 
         // Check that user can view the order details.
         if (!Auth::check() && $verification != $original->verification) {
