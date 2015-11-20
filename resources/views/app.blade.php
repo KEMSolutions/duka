@@ -79,18 +79,6 @@
 
 	<!-- Semantic ui dependencies -->
 	<script src="/semantic/prod/semantic-2.1.4.min.js"></script>
-	<script>
-		$.ajax({
-			url: $("meta[name=duka-localizations-and-endpoints-url]").attr("content"),
-			cache: true,
-			success: function (data) {
-				console.log(data);
-			},
-			error: function (jqXHR, status, error) {
-				console.log(status);
-			}
-		});
-	</script>
 
 	<script src="/js/prod/duka.js"></script>
 
