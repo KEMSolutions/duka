@@ -11,7 +11,16 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		//
+		// Allow the insertion of product cards in blade templates, simply using the @product(id) directive
+		\Blade::directive('product', function($product_id) {
+			// Strangely enough, we'll receive everything that followes product, including parentheses... let's strip them out. 
+			$product = \Products::get(preg_replace('/[^0-9]/', '', $product_id));
+
+			if ($product) {
+				return view('product._card', ["product"=>$product])->render();
+			}
+            return "";
+        });
 	}
 
 	/**
