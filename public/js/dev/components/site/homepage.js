@@ -26,10 +26,16 @@ var homepageContainer = {
         }
     },
 
+    bootstrap: function () {
+        $(".indicator-down:first").hide();
+        $(".section-title:first").hide();
+    },
+
     init: function () {
         var self = homepageContainer,
             mixed = self.mixed;
 
         mixed.toggleSixteenWideColumn();
+        self.bootstrap();
     }
 }

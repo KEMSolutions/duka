@@ -92,9 +92,6 @@
 		@include("analytics.GAE._init")
 	@endif
 
-	{{-- Additional scripts --}}
-	@yield("scripts")
-
 	{{-- Include cart dimmer for mobile --}}
 	@include("layout._dimmer")
 </body>
