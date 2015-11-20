@@ -42,6 +42,9 @@ Route::group([
     // Wish list.
     Route::get('wishlist',          ['as' => 'wishlist', 'uses' => 'WishlistController@index']);
 
+    // Dynamic variables
+    Route::get('dynamicjs/localizationsAndEndpoints.json', ['as' => 'localizationsAndEndpoints', 'uses' => 'HomeController@localizationsAndEndpoints']);
+
 
     //
     // Here, we try to catch some invalid URLs and redirect the user to the right page.

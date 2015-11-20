@@ -7,6 +7,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}"/>
 
+	<meta name="duka-localizations-and-endpoints-url" content="{{ route('localizationsAndEndpoints') }}"/>
+
 	@if(Auth::check())
 		<meta name="user-login" content="{{ Auth::user()->id}}"/>
 	@endif
@@ -77,9 +79,6 @@
 
 	<!-- Semantic ui dependencies -->
 	<script src="/semantic/prod/semantic-2.1.4.min.js"></script>
-
-	{{-- Localization array. --}}
-	@include("_dynamic_resources")
 
 	<script src="/js/prod/duka.js"></script>
 
