@@ -20,8 +20,9 @@
          * Sets up Localization and ApiEndpoints variables.
          *
          */
-        Localization = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON.Localization;
-        ApiEndpoints = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON.ApiEndpoints;
+        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
+        Localization = env.Localization;
+        ApiEndpoints = env.ApiEndpoints;
 
         /**
          * Initialize semantic UI modules.
