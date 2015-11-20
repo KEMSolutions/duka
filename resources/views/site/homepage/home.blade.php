@@ -12,10 +12,3 @@
         @endif
     @endforeach
 @stop
-
-@section("scripts")
-    <script>
-        $(".indicator-down:first").hide();
-        $(".section-title:first").hide();
-    </script>
-@endsection

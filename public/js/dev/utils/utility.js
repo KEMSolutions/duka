@@ -5,6 +5,20 @@
  * @type {{getProductsFromLocalStorage: Function, getNumberOfProductsInWishlist: Function, getNumberOfProducts: Function, getProductsPriceFromLocalStorage: Function, removeAllProductsFromLocalStorage: Function, getShippingFromForm: Function, buyButton_to_Json: Function, populateCountry: Function, validateEmptyFields: Function, validateEmail: Function, validatePostCode: Function, validateEmptyCart: Function, addErrorClassToFields: Function, addErrorClassToFieldsWithRules: Function, addFadeOutUpClass: Function, removeErrorClassFromFields: Function, getCheapestShippingMethod: Function, getTaxes: Function, getShipmentTaxes: Function, getCartTaxes: Function, getCartTotal: Function, urlGetParameters: Function, urlAddParameters: Function, urlRemoveParameters: Function, urlBuildQuery: Function}}
  */
 var UtilityContainer = {
+
+    /**
+     * Utility function to get all Localization and Enpoint URLs.
+     *
+     */
+    getLocalizationAndEndpointUrl: function () {
+        return $.ajax({
+            url: $("meta[name=duka-localizations-and-endpoints-url]").attr("content"),
+            cache: true,
+            async: false
+        });
+    },
+
+
     /**
      * Utility function for getting all the products in localStorage.
      * Returns an array containing their id, their quantity and their price.

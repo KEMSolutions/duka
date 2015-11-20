@@ -19,9 +19,10 @@
 
 <br />
 <div class="ui grid container">
-    <div class="two wide column"></div>
+    <div class="five wide column"></div>
 
-    <div class="twelve wide column">
+    <div class="six wide column">
+        <h1 class="ui header">@lang("boukem.log_in")</h1>
         <form class="ui form" role="form" method="post" action="{{ route('auth.login.action') }}">
             {!! csrf_field() !!}
 
@@ -45,13 +46,13 @@
                 </div>
             </div>
 
-            <button class="ui button" type="submit">@lang('boukem.log_in')</button>
+            <button class="ui btn btn-one btn-one-inverted" type="submit">@lang('boukem.log_in')</button>
 
             <a class="btn btn-link" href="{{ route('auth.reset') }}">@lang('passwords.password_forgotten')</a>
         </form>
     </div>
 
-    <div class="two wide column"></div>
+    <div class="five wide column"></div>
 </div>
 <br />
 <br />

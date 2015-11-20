@@ -1,0 +1,87 @@
+/*-----------------------------------*/
+
+/* HEADLINE */
+
+/*-----------------------------------*/
+.headline-section {
+    height: 260px;
+    margin-top: 1rem; /* Since semantic's .ui margin-top: -1rem; */
+}
+
+.headline-section .dark {
+    color: #fff !important;
+}
+
+.headline-section .white {
+    color: #333 !important;
+}
+
+.headline-section .headline-section-background {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0% 0%;
+    height: 260px;
+}
+
+.headline-section .headline-section-text {
+    margin-top: 2%;
+}
+
+/*-----------------------------------*/
+
+/* TAB */
+
+/*-----------------------------------*/
+.section-title{position:absolute; top:-56px; left:50%; margin-left:-130px; width:260px; padding:18px 0; text-align:center; border-top-left-radius:3px; border-top-right-radius:3px; }
+.section-title h3{margin:0; padding:0; font-size:16px; font-weight:600; text-transform:uppercase;}
+
+/*-----------------------------------*/
+
+/* TAB INDICATOR */
+
+/*-----------------------------------*/
+.indicator-down {
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    margin-left: -12px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid rgba(0, 0, 0, 0);
+    border-right: 12px solid rgba(0, 0, 0, 0);
+    z-index: 900;
+}
+
+/*-----------------------------------*/
+
+/* MIXED */
+
+/*-----------------------------------*/
+.mixed-section {
+    padding: 50px 0 70px 0;
+    position: relative;
+}
+
+.mixed-section .row .col-xs-12:last-child {
+    margin-bottom: 30px;
+}
+
+.mixed-section .row .col-xs-12 {
+    margin-top: 15px;
+}
+
+.mixed-section .row .col-xs-12 .row {
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 5px;
+    padding: 1%;
+}
+
+/*-----------------------------------*/
+
+/* FEATURED */
+
+/*-----------------------------------*/
+.featured-section {
+    padding-top: 1rem;
+    position: relative;
+}

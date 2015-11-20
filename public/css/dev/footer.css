@@ -1,0 +1,23 @@
+/*-----------------------------------*/
+
+/* FOOTER */
+
+/*-----------------------------------*/
+footer{padding:30px; margin-top: 1rem; min-height:30px; font-size:12px;}
+footer:before, footer:after {display:table; content:" ";}
+footer:after{clear:both;}
+footer .col.reset{margin:0;}
+footer h4{margin-top:20px; color:#EEE; margin-bottom:20px; text-transform:capitalize;}
+footer .col p{color:#999; font-size:13px; margin-bottom:10px;}
+footer a{text-decoration:none;}
+footer a:hover{text-decoration:none;}
+footer ul{margin:0; padding:0; list-style:none;}
+footer ul li{color:#999;}
+footer ul li span{color:#EEE;}
+footer address{color:#999; padding:8px 0;}
+footer .company-info{font-size: 10px; text-align:justify;}
+footer .company-info h2{font-size:14px; font-weight:600; background:#f00;}
+footer .col.col-social-icons i{width:40px; height:40px; display:inline-block; padding:10px; margin-right:10px; margin-bottom:10px; text-align:center; font-size:18px; background:#ddd; color:#4c4c4c; border-radius:2px;}
+footer form{margin-top:20px;}
+footer hr{border-top:1px solid #444;}
+footer .copyright{color:#EEE;}

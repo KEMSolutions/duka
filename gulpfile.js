@@ -25,9 +25,11 @@ gulp.task('js', function () {
         .pipe(gulp.dest('public/js/prod'))
 });
 
-// Minify app.css
+// Minify stylesheets
 gulp.task('css', function () {
-    return gulp.src('public/css/dev/*.css')
+    return gulp.src([
+        'public/css/dev/base/*.css',
+        'public/css/dev/*.css'])
         .pipe(concat('app.css'))
         .pipe(minifyCss())
         .pipe(gulp.dest('public/css/prod'))
