@@ -4,9 +4,11 @@
 
 <br />
 <div class="ui grid container">
-    <div class="two wide column"></div>
+    <div class="five wide column"></div>
 
-    <div class="twelve wide column">
+    <div class="six wide column">
+        <h1 class="ui header">@lang("boukem.sign_up")</h1>
+
         <form class="ui form" role="form" method="post" action="{{ route('auth.register.action') }}">
             {!! csrf_field() !!}
 
@@ -30,15 +32,15 @@
 
             {{-- Confirm password --}}
             <div class="field">
-                <label>@lang('boukem.confirmation')</label>
+                <label>@lang("boukem.password") @lang('boukem.confirmation')</label>
                 <input type="password" name="password_confirmation" required />
             </div>
 
-            <button class="ui button" type="submit">@lang('boukem.sign_up')</button>
+            <button class="ui btn btn-one btn-one-inverted" type="submit">@lang('boukem.sign_up')</button>
         </form>
     </div>
 
-    <div class="two wide column"></div>
+    <div class="five wide column"></div>
 </div>
 <br />
 <br />
