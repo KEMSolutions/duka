@@ -19,7 +19,7 @@
                         </h2>
 
                         <h5>
-                            <a href="{{ route('product', ['slug' => $product->slug]) }}" class="dark">
+                            <a href="{{ route('brand', ['slug' => $product->brand->slug]) }}" class="dark">
                                 {{ $product->brand->name }}
                             </a>
                         </h5>
