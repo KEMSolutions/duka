@@ -1,4 +1,4 @@
-<div class="scard">
+<div class="card">
     <div class="image">
       <img src="{{ Products::getImage($product->id, 350, 350, 'fit') }}">
     </div>
