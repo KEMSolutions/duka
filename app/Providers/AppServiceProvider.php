@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider {
 			// Strangely enough, we'll receive everything that followes product, including parentheses... let's strip them out. 
 			$product = \Products::get(preg_replace('/[^0-9]/', '', $product_id));
 
-			if ($product) {
+			if ($product && isset($product->localization)) {
 				return view('product._card', ["product"=>$product])->render();
 			}
             return "";
