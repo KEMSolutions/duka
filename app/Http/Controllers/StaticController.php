@@ -103,5 +103,19 @@ class StaticController extends Controller
 
     }
 
+    /**
+     * Return a dynamic robots.txt. We put robots.txt as a dynamic ressource so your fork can mere easily customize it.
+     *
+     * @return Response
+     */
+    public function getRobots()
+    {
+        
+        $robots_path = base_path() . "/resources/robots.txt";
+        $robots = file_get_contents($robots_path);
+
+        return response($robots)->header('Content-Type', "text/plain");
+    }
+
 
 }

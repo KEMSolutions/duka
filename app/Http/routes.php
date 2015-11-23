@@ -120,6 +120,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'api.csrf'], function()
 Route::get("css/main.css", 'StaticController@getMainStylesheet');
 Route::get('favicon.png', 'StaticController@getFavicon');
 Route::get('apple-touch-icon.png', 'StaticController@getTouchIcon');
+Route::get("robots.txt", 'StaticController@getRobots');
 Route::get('favicon.ico', function(){
     return Redirect::to('/favicon.png', 301);
 });
