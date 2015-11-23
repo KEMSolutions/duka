@@ -165,20 +165,6 @@ class ApiController extends Controller
     // Layouts related methods.
     //
 
-
-    /**
-     * @param string $id
-     * @return \Symfony\Component\HttpFoundation\Response|static
-     */
-    public function getLayout($id = '') {
-        return $this->send(Layouts::get($id));
-    }
-
-
-    //
-    // Layouts related methods.
-    //
-
     /**
      * Gets supported locales.
      *
