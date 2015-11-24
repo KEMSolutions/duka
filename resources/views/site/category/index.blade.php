@@ -1,4 +1,7 @@
 @extends("app")
+@section('title')
+{{ $name }}
+@stop
 
     @section("content")
         {{-- Include header --}}

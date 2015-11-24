@@ -1,5 +1,9 @@
 @extends("app")
 
+@section('title')
+{{ $product->localization->name }}
+@stop
+
 @section("content")
     @include("product._breadcrumb", ["product" => $product])
 
