@@ -9,6 +9,11 @@ Route::group([
     // Homepage.
     Route::get('/',                 ['as' => 'home', 'uses' => 'HomeController@index']);
 
+    // Contact page and ticket form
+    Route::get('contact',      ['as' => 'contact', 'uses' => 'TicketController@index']);
+    Route::post('contact',      ['as' => 'contact.store', 'uses' => 'TicketController@store']);
+
+
     // Other pages.
     Route::get('pages/{slug}',      ['as' => 'page', 'uses' => 'PageController@getPage']);
     Route::get('contracts/{slug}',  ['as' => 'contract', 'uses' => 'PageController@getContract']);

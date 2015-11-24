@@ -17,7 +17,11 @@
 	<link rel="icon" type="image/png" href="{{ url('/') . "/favicon.png"}}"/>
 	<link rel='apple-touch-icon' type='image/png' href='/apple-touch-icon.png'>
 
-	<title>{{ Store::info()->name }}</title>
+	<title>
+@section('title')
+{{ Store::info()->name }}
+@show
+	</title>
 
 	{{-- TODO: include page description if any--}}
 
