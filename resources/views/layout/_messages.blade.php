@@ -2,8 +2,6 @@
 if ($latest_order_details = Session::get('latest_order_details')) {
     $status = Orders::details($latest_order_details->id, $latest_order_details->verification);
 }
-
-dd(Cookie::get('unregistered_user'));
 ?>
 
 {{-- Display a dimmer with the latest order details. --}}
@@ -130,7 +128,7 @@ dd(Cookie::get('unregistered_user'));
                 </button>
             </a>
 
-            <button class="ui button red" id="cancelOrder" onclick="{{ Session::forget('latest_order_details') }}">
+            <button class="ui button red" id="cancelOrder" >
                 @lang("boukem.cancel_order")
             </button>
         </div>
