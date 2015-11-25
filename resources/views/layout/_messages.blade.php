@@ -2,6 +2,8 @@
 if ($latest_order_details = Session::get('latest_order_details')) {
     $status = Orders::details($latest_order_details->id, $latest_order_details->verification);
 }
+
+dd(Cookie::get('unregistered_user'));
 ?>
 
 {{-- Display a dimmer with the latest order details. --}}

@@ -39,11 +39,15 @@ var paymentOverlayContainer = {
                 url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
                 success: function(data) {
                     if (data.status === 'pending') {
-                        $('#cancelledOrder').dimmer('closable', 'false');
+                        $('#cancelledOrder').dimmer({
+                            closable: false
+                        });
                     }
                     else if (data.status === 'paid') {
                         // Display congratulation dimmer.
-                        $('.congratulate-dimmer').dimmer('set opacity', 1);
+                        $('.congratulate-dimmer').dimmer({
+                            opacity: 1
+                        });
 
                         // Remove products from cart
                         UtilityContainer.removeAllProductsFromLocalStorage();
