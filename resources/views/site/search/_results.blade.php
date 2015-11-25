@@ -19,22 +19,22 @@
     @endif
 
 
-    <div class="ui container grid vertically padded">
+    <div class="ui container equal width grid vertically padded">
         <div class="row">
             <div class="column" style="padding-top: 2rem">
                 <h3 class="ui header">@lang('boukem.results_for', ["displayed" => $displayed, "total" => $total, "term" => $query])</h3>
             </div>
         </div>
+
+        <div class="full-width">
+            <div class="ui four stackable doubling link cards">
+                @foreach($results->organic_results as $product)
+                    {!! view("product._card", ["product"=>$product])->render() !!}
+                @endforeach
+            </div>
+        </div>
     </div>
 
-
-    @include(
-    'product.layout._product_card_dense', [
-        'showTag' => false,
-        'locale' => Localization::getCurrentLocale(),
-        'border' => false,
-        'products' => $results->organic_results
-])
     <div class="row" style="text-align: center; display: block">
         {!! $paginator->render() !!}
     </div>
