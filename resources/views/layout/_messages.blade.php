@@ -1,6 +1,5 @@
 <?php
-$latest_order_details = Session::pull('latest_order_details');
-if ($latest_order_details) {
+if ($latest_order_details = Session::get('latest_order_details')) {
     $status = Orders::details($latest_order_details->id, $latest_order_details->verification);
 }
 ?>
@@ -109,6 +108,31 @@ if ($latest_order_details) {
                 </div>
             </div>
         </div>
+
+    {{-- Delete the Session object after showing the success payment notice. --}}
+    {{ Session::forget('latest_order_details') }}
+@endif
+
+{{-- Display the unpaid order dimmer. --}}
+@if (isset($status) && $status->status == "pending")
+    <div class="ui page active dimmer">
+        <div class="ui container color-one vertical-align" id="cancelledOrder">
+            <h2 class="ui header">@lang("boukem.pending_order", ["command" => $latest_order_details->id])</h2>
+            <h4 class="ui header">@lang("boukem.what_to_do")</h4>
+
+            <br/>
+
+            <a href="{{ $latest_order_details->payment_details->payment_url }}">
+                <button class="ui button green" id="payOrder">
+                    @lang("boukem.pay_now")
+                </button>
+            </a>
+
+            <button class="ui button red" id="cancelOrder" onclick="{{ Session::forget('latest_order_details') }}">
+                @lang("boukem.cancel_order")
+            </button>
+        </div>
+    </div>
 @endif
 
 {{-- Error messages are stored in $error automatically by Laravel. --}}
