@@ -175,9 +175,7 @@ var paymentOverlayContainer = {
                     }
                     else if (data.status === 'paid') {
                         // Display congratulation dimmer.
-                        $('.congratulate-dimmer').dimmer({
-                            opacity: 1
-                        });
+                        this.displayCongratulateOverlay();
 
                         // Remove products from cart
                         UtilityContainer.removeAllProductsFromLocalStorage();
@@ -204,8 +202,5 @@ var paymentOverlayContainer = {
         self.cancelOrder();
         self.checkPendingOrders();
 
-        // This is temporary.
-        //self.renderCongratulateOverlay({});
-        //self.displayUnpaidOverlay();
     }
 };
