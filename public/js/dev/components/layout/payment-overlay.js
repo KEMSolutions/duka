@@ -12,7 +12,7 @@ var paymentOverlayContainer = {
      */
     cancelOrder : function() {
         $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_current_orders");
+            Cookies.remove("_current_order");
 
             $("#cancelledOrder").fadeOut();
 
@@ -23,31 +23,38 @@ var paymentOverlayContainer = {
     },
 
     displayUnpaidOverlay: function () {
-        var order = JSON.parse(Cookies.get('_current_orders'));
+        var order = JSON.parse(Cookies.get('_current_order'));
 
         var unpaidOverlay =
-            '<div class="ui page active dimmer">' +
-                '<div class="ui container color-one vertical-align" id="cancelledOrder">' +
-                    '<h2 class="ui header">' + Localization.pending_order.replace(':command', order.id) + '</h2>' +
-                    '<h4 class="ui header">' + Localization.what_to_do + '</h4>' +
-                    '<br/>' +
-                    '<a href="'+
-                        ApiEndpoints.orders.pay.replace(':id', order.id)
-                            .replace(':verification', order.verification) +'">'+
-                        '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
-                    '</a>' +
-                    '<button class="ui button red" id="cancelOrder">'+
-                    Localization.cancel_order +
-                    '</button>'+
+            '<div class="ui small modal text-center unpaid-modal">' +
+                '<i class="close icon"></i>' +
+                '<div class="header">' +
+                    Localization.pending_order.replace(':command', order.id) +
+                '</div>' +
+                '<div class="content">' +
+                    '<div class="description">' +
+                        '<div class="ui header">'  +
+                            Localization.what_to_do +
+                        '</div>' +
+                        '<a href="'+
+                            ApiEndpoints.orders.pay.replace(':id', order.id)
+                                .replace(':verification', order.verification) +'">'+
+                            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
+                        '</a>' +
+                        '<button class="ui button red" id="cancelOrder">'+
+                            Localization.cancel_order +
+                        '</button>'+
+                    '</div>' +
                 '</div>' +
             '</div>';
 
         $("body").prepend(unpaidOverlay);
+        $(".small.unpaid-modal").modal("show");
 
     },
 
     displayCongratulateOverlay: function () {
-        var order = JSON.parse(Cookies.get('_current_orders'));
+        var order = JSON.parse(Cookies.get('_current_order'));
 
         $.ajax({
             type: 'GET',
@@ -153,10 +160,10 @@ var paymentOverlayContainer = {
      */
     checkPendingOrders : function() {
 
-        if (Cookies.get('_current_orders')) {
+        if (Cookies.get('_current_order')) {
 
             // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_current_orders'));
+            var order = JSON.parse(Cookies.get('_current_order'));
 
             // Check whether current order has been paid.
             $.ajax({
@@ -164,9 +171,7 @@ var paymentOverlayContainer = {
                 url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
                 success: function(data) {
                     if (data.status === 'pending') {
-                        $('#cancelledOrder').dimmer({
-                            closable: false
-                        });
+                        this.displayUnpaidOverlay();
                     }
                     else if (data.status === 'paid') {
                         // Display congratulation dimmer.
@@ -178,12 +183,12 @@ var paymentOverlayContainer = {
                         UtilityContainer.removeAllProductsFromLocalStorage();
 
                         // Delete the unpaid orders cookie (if any).
-                        Cookies.remove('_current_orders');
+                        Cookies.remove('_current_order');
                     }
                     else {
-                        Cookies.remove('_current_orders');
+                        Cookies.remove('_current_order');
                     }
-                }
+                }.bind(this)
             });
         }
 
@@ -201,6 +206,6 @@ var paymentOverlayContainer = {
 
         // This is temporary.
         //self.renderCongratulateOverlay({});
-
+        //self.displayUnpaidOverlay();
     }
 };

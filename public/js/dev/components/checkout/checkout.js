@@ -472,7 +472,7 @@ var checkoutContainer = {
                 paymentVerification = data.verification,
                 payment_url = data.payment_details.payment_url;
 
-            Cookies.set("_current_orders", JSON.stringify( {
+            Cookies.set("_current_order", JSON.stringify( {
                 id : paymentId,
                 verification : paymentVerification,
                 payment_url : payment_url

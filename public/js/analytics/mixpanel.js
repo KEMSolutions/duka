@@ -20,7 +20,7 @@ var mixpanelAnalytics = {
 
         orderCancelled: function () {
             $("body").on("click", "#cancelOrder", function() {
-                var cookie_id = JSON.parse(Cookies.get("_current_orders")).id;
+                var cookie_id = JSON.parse(Cookies.get("_current_order")).id;
 
                 mixpanel.track("Order cancelled", {
                     "Order ID": cookie_id
