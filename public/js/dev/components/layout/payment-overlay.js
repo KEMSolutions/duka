@@ -22,6 +22,10 @@ var paymentOverlayContainer = {
         });
     },
 
+    /**
+     * Display the unpaid overlay using semantic-ui modal module.
+     *
+     */
     displayUnpaidOverlay: function () {
         var order = JSON.parse(Cookies.get('_current_order'));
 
@@ -53,19 +57,13 @@ var paymentOverlayContainer = {
 
     },
 
-    displayCongratulateOverlay: function () {
-        var order = JSON.parse(Cookies.get('_current_order'));
 
-        $.ajax({
-            type: 'GET',
-            url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-            success: function (data) {
-                this.renderCongratulateOverlay(data);
-            }.bind(this)
-        });
-    },
-
-    renderCongratulateOverlay: function (order) {
+    /**
+     * Display the congratulate overlay using semantic-ui modal module.
+     *
+     * @param order
+     */
+    displayCongratulateOverlay: function (order) {
         var overlay =
             '<div class="ui modal congratulate-modal">' +
                 '<div class="header">' +
@@ -150,12 +148,36 @@ var paymentOverlayContainer = {
         $(".congratulate-modal").modal("show");
     },
 
+    /**
+     * Checks if the user that made the order already has a password.
+     * If not, we prompt him with an incentive message.
+     *
+     * @param request
+     * @returns {string}
+     */
     userAuthenticated: function (request) {
         return '<p> User auth not yet implemented </p>';
     },
 
     /**
-     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
+     * Second Ajax call after the order has been paid.
+     * We make a call to the API to get more details about it.
+     * Laravel takes care of the security issue that this implementation can raise.
+     *
+     * @param order
+     */
+    getOrderInformation: function (order) {
+        $.ajax({
+            type: 'GET',
+            url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+            success: function (data) {
+                return {}
+            }.bind(this)
+        });
+    },
+
+    /**
+     * Checks the status of the current order stored in _current_order cookie.
      *
      */
     checkPendingOrders : function() {
