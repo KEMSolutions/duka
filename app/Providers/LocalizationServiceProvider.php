@@ -1,8 +1,8 @@
 <?php
 namespace App\Providers;
 
-use KemAPI;
 use Carbon\Carbon;
+use App\Http\KemApiHttpClient as ApiClient;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -39,9 +39,9 @@ class LocalizationServiceProvider extends ServiceProvider
     public function getSupportedLocales()
     {
         // Format the store's supported locales for use with Mcamara\LaravelLocalization.
-        // We do this silently (without caching the results) in case we're in a substore
-        // (that would be determined later in the bootstrapping process).
-        $supportedLocales = KemAPI::get('locales');
+        // We do this silently without caching the results or initializing the KemAPI facade.
+        $client = new ApiClient(config('services.kemapi.user'), config('services.kemapi.secret'));
+        $supportedLocales = $client->get('locales');
 
         $locales = [];
         foreach ($supportedLocales as $locale)
