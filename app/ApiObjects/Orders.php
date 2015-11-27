@@ -18,24 +18,35 @@ class Orders extends BaseObject
      *
      * @param int $id           Order ID.
      * @param int $verification Order verification code.
+     * @param int $userId       ID of user requesting details.
      * @return object
      */
-    public function details($id, $verification = null)
+    public function details($id, $verification = null, $userId = null)
     {
         // Retrieve order details.
-        $original = parent::get($id, [], 0);
+        $params = $userId ? ['embed' => 'customer'] : [];
+        $original = parent::get($id, $params, 0);
 
         // Check that user can view the order details.
         if (!Auth::check() && $verification != $original->verification) {
             abort(404, Lang::get('boukem.no_exist'));
         }
 
-        // Remove sensitive information.
-        $order = new \stdClass;
-        $order->id = $original->id;
-        $order->status = $original->status;
-        $order->payment_details = new \stdClass;
-        $order->payment_details->payment_url = $original->payment_details->payment_url;
+        // Check if the order belongs to the requesting user and decide if we should remove
+        // sensitive information before returning the object.
+        if ($userId > 0 && $userId == $original->customer->id) {
+            $order = $original;
+        }
+
+        else
+        {
+            // Remove sensitive information.
+            $order = new \stdClass;
+            $order->id = $original->id;
+            $order->status = $original->status;
+            $order->payment_details = new \stdClass;
+            $order->payment_details->payment_url = $original->payment_details->payment_url;
+        }
 
         return $order;
     }

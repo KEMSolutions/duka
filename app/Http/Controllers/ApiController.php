@@ -256,16 +256,16 @@ class ApiController extends Controller
         {
             $redirect = $response->payment_details->payment_url;
 
-            // Save the order details so we can give the customer a summary when
-            // they come back from the payment page.
-            Session::put('latest_order_details', $response);
-
             // If the customer hasn't created their password yet, we'll have to ask them
             // to create one later.
-            $check = new Customer((array) $response->customer);
-            if (!isset($check->metadata['password'])) {
-                Cookie::queue('unregistered_user', $check->id, 2628000);
+            $user = new Customer((array) $response->customer);
+            if (!isset($user->metadata['password'])) {
+                Cookie::queue('unregistered_user', $user->id, 2628000);
             }
+
+            // Save the user ID in the session so we can retrieve their order details
+            // when they come back from the payment page.
+            Session::put('latest_order_user_id', $user->id);
         }
 
         return Request::ajax() ? $this->send($response) : Redirect::to($redirect);
@@ -274,9 +274,9 @@ class ApiController extends Controller
     public function getOrderDetails($id, $verification)
     {
         // Retrieve order details.
-        $order = Orders::details($id, $verification);
+        $order = Orders::details($id, $verification, Session::pull('latest_order_user_id', null));
 
-        return Request::ajax() ? $this->send($order) : $order;
+        return Request::ajax() ? $this->send($order) : (array) $order;
     }
 
     /**
