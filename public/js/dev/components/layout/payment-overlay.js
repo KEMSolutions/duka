@@ -12,7 +12,7 @@ var paymentOverlayContainer = {
      */
     cancelOrder : function() {
         $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_unpaid_orders");
+            Cookies.remove("_current_orders");
 
             $("#cancelledOrder").fadeOut();
 
@@ -23,7 +23,7 @@ var paymentOverlayContainer = {
     },
 
     displayUnpaidOverlay: function () {
-        var order = JSON.parse(Cookies.get('_unpaid_orders'));
+        var order = JSON.parse(Cookies.get('_current_orders'));
 
         var unpaidOverlay =
             '<div class="ui page active dimmer">' +
@@ -47,7 +47,7 @@ var paymentOverlayContainer = {
     },
 
     displayCongratulateOverlay: function () {
-        var order = JSON.parse(Cookies.get('_unpaid_orders'));
+        var order = JSON.parse(Cookies.get('_current_orders'));
 
         $.ajax({
             type: 'GET',
@@ -153,10 +153,10 @@ var paymentOverlayContainer = {
      */
     checkPendingOrders : function() {
 
-        if (Cookies.get('_unpaid_orders')) {
+        if (Cookies.get('_current_orders')) {
 
             // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_unpaid_orders'));
+            var order = JSON.parse(Cookies.get('_current_orders'));
 
             // Check whether current order has been paid.
             $.ajax({
@@ -178,10 +178,10 @@ var paymentOverlayContainer = {
                         UtilityContainer.removeAllProductsFromLocalStorage();
 
                         // Delete the unpaid orders cookie (if any).
-                        Cookies.remove('_unpaid_orders');
+                        Cookies.remove('_current_orders');
                     }
                     else {
-                        Cookies.remove('_unpaid_orders');
+                        Cookies.remove('_current_orders');
                     }
                 }
             });
