@@ -17,7 +17,7 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 body {
-  font-family: "Roboto Condensed", sans-serif !important;
+  font-family: "Lato", "Roboto Condensed", sans-serif;
   color: rgba(0,0,0,0.8);
 }
 

@@ -57,10 +57,6 @@ var semanticInitContainer = {
      *
      */
     behaviors: {
-        initCongratulateDimmer: function () {
-            $(".congratulate-dimmer").dimmer("show");
-        },
-
         closeDimmer: function () {
             $(".close-dimmer").on("click", function() {
                 $(".dimmer").dimmer("hide");
@@ -80,7 +76,6 @@ var semanticInitContainer = {
         module.initPopupModule();
         module.initCheckboxModule();
 
-        behaviors.initCongratulateDimmer();
         behaviors.closeDimmer();
     }
 }
