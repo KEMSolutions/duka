@@ -4,6 +4,12 @@
 {{ $product->localization->name }}
 @stop
 
+@section('custom_metas')
+@foreach ($product->localizations as $localization)
+<link rel="alternate" hreflang="{{ $localization->locale->language }}" href="/{{ $localization->locale->language }}/prod/{{ $localization->slug }}.html" />
+@endforeach
+@stop
+
 @section("content")
     @include("product._breadcrumb", ["product" => $product])
 
