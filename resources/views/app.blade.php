@@ -97,7 +97,7 @@
 
 	{{-- Include cart dimmer for mobile --}}
 	@include("layout._dimmer")
-
+	@yield("custom_scripts")
 
 </body>
 
