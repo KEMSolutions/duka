@@ -22,6 +22,10 @@ class ProductController extends Controller
         $product = Products::get($id);
         $locale = Localization::getCurrentLocale();
         
+        if (!isset($product->localization) || $product->localization->locale->language != $locale){
+            abort(404);
+        }
+
         return View::make("product.view")->with([
             "product" => $product,
             "locale" => $locale,
