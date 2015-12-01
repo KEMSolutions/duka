@@ -19,6 +19,7 @@ class Products extends BaseObject
         $this->markdown = $parser;
     }
 
+
     /**
      * Retrieves a product by ID or slug.
      *

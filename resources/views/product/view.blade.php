@@ -5,7 +5,7 @@
 @stop
 
 @section('custom_metas')
-@foreach ($product->localizations as $localization)
+@foreach ($product->localization->alt as $localization)
 <link rel="alternate" hreflang="{{ $localization->locale->language }}" href="/{{ $localization->locale->language }}/prod/{{ $localization->slug }}.html" />
 @endforeach
 @stop
