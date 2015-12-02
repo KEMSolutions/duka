@@ -1,12 +1,13 @@
 /**
  * Component responsible for handling the payment overlay behaviour.
+ * Entry point is in checkPendingOrders.
  *
- * @type {{cancelOrder: Function, checkPendingOrders: Function, showPaymentNotice: Function, init: Function}}
+ * @type {{cancelOrder: Function, displayUnpaidOverlay: Function, displayCongratulateOverlay: Function, renderAddress: Function, renderAdditionalDetails: Function, getOrderInformation: Function, checkPendingOrders: Function, init: Function}}
  */
 var paymentOverlayContainer = {
 
     /**
-     * Cancels an order.
+     * Cancel an order.
      * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
      *
      */
@@ -157,6 +158,9 @@ var paymentOverlayContainer = {
                         '<td>' + Localization.total + '</td>' +
                         '<td>' + "$" + parseFloat(order.payment_details.total).toFixed(2) + '</td>' +
                     '</tr>';
+        }
+        else {
+            return '';
         }
     },
 
