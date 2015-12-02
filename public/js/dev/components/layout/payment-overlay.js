@@ -22,6 +22,7 @@ var paymentOverlayContainer = {
         });
     },
 
+
     /**
      * Display the unpaid overlay using semantic-ui modal module.
      *
@@ -82,24 +83,8 @@ var paymentOverlayContainer = {
                                 '<td>' + "#" + order.id + '</td>' +
                             '</tr>' +
 
-                            this.renderAddress(order.shipping_address, Localization.shipping_address) +
+                            this.renderAdditionalDetails(order) +
 
-                            this.renderAddress(order.billing_address, Localization.billing_address) +
-
-                            '<tr>' +
-                                '<td>' + Localization.subtotal + '</td>' +
-                                '<td>' + "$" + parseFloat(order.payment_details.subtotal).toFixed(2) + '</td>' +
-                            '</tr>' +
-
-                            '<tr>' +
-                                '<td>' + Localization.taxes + '</td>' +
-                                '<td>' + "$" + parseFloat(order.payment_details.taxes).toFixed(2) + '</td>' +
-                            '</tr>' +
-
-                            '<tr>' +
-                                '<td>' + Localization.total + '</td>' +
-                                '<td>' + "$" + parseFloat(order.payment_details.total).toFixed(2) + '</td>' +
-                            '</tr>' +
                         '</tbody>' +
                     '</table>' +
                 '</div>' +
@@ -146,6 +131,36 @@ var paymentOverlayContainer = {
                 '</tr>';
     },
 
+
+    /**
+     * Check if there are any additional details.
+     * If there are, insert them in the summary table.
+     *
+     * @param order
+     * @returns {string}
+     */
+    renderAdditionalDetails: function (order) {
+        if (order.shipping_details != null) {
+            return this.renderAddress(order.shipping_address, Localization.shipping_address) +
+                    this.renderAddress(order.billing_address, Localization.billing_address) +
+                '<tr>' +
+                        '<td>' + Localization.subtotal + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.subtotal).toFixed(2) + '</td>' +
+                    '</tr>' +
+
+                    '<tr>' +
+                        '<td>' + Localization.taxes + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.taxes).toFixed(2) + '</td>' +
+                    '</tr>' +
+
+                    '<tr>' +
+                        '<td>' + Localization.total + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.total).toFixed(2) + '</td>' +
+                    '</tr>';
+        }
+    },
+
+
     /**
      * Second Ajax call after the order has been paid.
      * We make a call to the API to get more details about it.
@@ -159,13 +174,14 @@ var paymentOverlayContainer = {
             url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
             success: function (order_details) {
                 this.displayCongratulateOverlay(order_details);
-                console.log(order_details);
+                //console.log(order_details);
             }.bind(this),
             error: function (xhr, error, code) {
                 console.log(error);
             }
         });
     },
+
 
     /**
      * Checks the status of the current order stored in _current_order cookie.
@@ -204,6 +220,7 @@ var paymentOverlayContainer = {
         }
 
     },
+
 
     /**
      * Register functions to be called outside paymentOverlayContainer.

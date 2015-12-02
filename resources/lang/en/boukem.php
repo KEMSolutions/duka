@@ -231,7 +231,7 @@ return [
     "payment_successful" => "Thank you for your order!",
     "payment_redirect"  =>"Please wait while we redirect you to our payment page",
     "summary_below"     =>"Below is a summary of your order.",
-    "summary_copy"      =>"Please note that this summary will also be sent to the email address that you entered during the checkout process.",
+    "summary_copy"      =>"Please note that a complete summary will be sent to the email address entered during the checkout process.",
     "click_here"        =>"Click here",
     "results_found"     =>":total results found",
     "filter_by"         =>"Filter by",

@@ -231,7 +231,7 @@ return [
     "payment_successful" => "Merci pour votre commande!",
     "payment_redirect"  =>"Veuillez patienter pendant que nous vous redirigeons vers la page de paiement",
     "summary_below"     =>"Retrouver ci-dessous le récapitulatif.",
-    "summary_copy"      =>"Ce récapitulatif vous sera aussi envoyé à l'addresse courriel que vous avez entrée lors de la commande.",
+    "summary_copy"      =>"Ce récapitulatif vous sera aussi envoyé à l'addresse courriel saisie lors de la commande.",
     "click_here"        =>"Cliquer ici",
     "results_found"     =>":total résultats trouvés",
     "filter_by"         =>"Filtrer par",
