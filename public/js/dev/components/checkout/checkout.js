@@ -1,9 +1,7 @@
 /**
  * Component responsible for handling the checkout process.
- *
- * @type {{validation: {validateFormFields: Function}, view: {dispatchButtonsActions: Function, displayShipmentMethodsAndPriceInformation: Function, displayContactInformation: Function, autofillBillingInformation: Function, clearFields: Function, fadeInBillingInformation: Function, fetchEstimate: Function, fetchPayment: Function, updatePayment: Function}, actions: {createOrdersCookie: Function, placeOrderAjaxCall: Function, shipmentMethodsAjaxCall: Function, getShipmentTaxes: Function, getTaxes: Function}, bootstrap: {selectDefaultShipmentMethod: Function}, init: Function}}
+ * @type {{validation: {validateFormFields: Function}, view: {autofillBillingInformation: Function, clearFields: Function, dispatchButtonsActions: Function, displayContactInformation: Function, displayShipmentMethodsAndPriceInformation: Function, fadeInBillingInformation: Function, fetchEstimate: Function, fetchPayment: Function, setInternationalFields: Function, updatePayment: Function}, actions: {createOrdersCookie: Function, getShipmentTaxes: Function, getTaxes: Function, placeOrderAjaxCall: Function, shipmentMethodsAjaxCall: Function}, bootstrap: {selectDefaultShipmentMethod: Function}, init: Function}}
  */
-
 var checkoutContainer = {
 
     /**

@@ -26,26 +26,48 @@ The script entry point is located in `public/js/dev/components/init.js`, where a
 
 
 
-###### File structure (as of 18/09/2015)
+##### File structure (as of 02/12/2015)
 
-The `/public/js` folder contains 3 subfolders: *data*, *dev*, *prod*.
+The `/public/js` folder contains 4 subfolders: *analytics*, *data*, *dev*, *prod*.
+
+-`analytics`  
+Should contain all scripts related to analytical tools.  
+Google Analytics and Mixpanel are implemented by default.
 
 -`data`  
-This folder contains json resources to be taken advantage of. (country list, world states, ...).
+Should store all json resources to be taken advantage of. (country list, world states, ...).
 
 -`dev/components`  
 Every component should be stored here. We tried to roughly follow the same folder hierarchy that is in the `/resources/views` since each component should be responsible for a specific view feature.  
 Some components require more than one file to enable their full feature (eg. cart-drawer), the `*InitContainer*` should be the one called in `init.js`.
 
--`utils`  
-This folder regroups all helper, miscellaneous, utilities functions. In our case, the `UtilityContainer` plays that role. 
+-`dev/utils`  
+`UtilityContainer` regroups various functions used throughout the application. 
 
--`prod`
-This folder should only contain production scripts. Ideally, only one minified script combining all components located in `dev/components` should be here. 
 
-###### Components. 
+-`prod`  
+Should only contain production scripts. Ideally, only one minified script combining all components located in `dev/components` should be here. 
+
+##### Components: Generality 
 Every component are created in independent files and are suffixed by the keyword `Container`.
 If a component can stand on its own (eg. with no component dependencies), its last method should be an `init` method that is registered in `public/js/dev/components/init.js`. 
+
+##### Components: Specific Behaviours
+ Certain Semantic UI modules have custom attributes allowing more behaviour versatility. Those modules are:
+ * [Dropdown](http://semantic-ui.com/modules/dropdown.html)
+ * [Dimmer](http://semantic-ui.com/modules/dimmer.html)
+ 
+###### Dropdown  
+
+    // Active menu and update input fields, but without changing current text. 
+    <div class='ui dropdown dropdown-no-select>
+
+    // Activate menu, update input fields and change current text.
+    <div class='ui dropdown dropdown-select>
+
+###### Dimmer
+    // To have an explicit close button for a dimmer.
+    <trigger class="close-dimmer">...</trigger>
 
 
 ## Routing

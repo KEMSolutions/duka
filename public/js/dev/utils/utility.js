@@ -2,7 +2,33 @@
  * Utility object containing various utility functions...
  * Self Explanatory duh.
  *
- * @type {{getProductsFromLocalStorage: Function, getNumberOfProductsInWishlist: Function, getNumberOfProducts: Function, getProductsPriceFromLocalStorage: Function, removeAllProductsFromLocalStorage: Function, getShippingFromForm: Function, buyButton_to_Json: Function, populateCountry: Function, validateEmptyFields: Function, validateEmail: Function, validatePostCode: Function, validateEmptyCart: Function, addErrorClassToFields: Function, addErrorClassToFieldsWithRules: Function, addFadeOutUpClass: Function, removeErrorClassFromFields: Function, getCheapestShippingMethod: Function, getTaxes: Function, getShipmentTaxes: Function, getCartTaxes: Function, getCartTotal: Function, urlGetParameters: Function, urlAddParameters: Function, urlRemoveParameters: Function, urlBuildQuery: Function}}
+ * @type {{ getLocalizationAndEndpointUrl: Function,
+ *          getProductsFromLocalStorage: Function,
+ *          getNumberOfProductsInWishlist: Function,
+ *          getNumberOfProducts: Function,
+ *          getProductsPriceFromLocalStorage: Function,
+ *          removeAllProductsFromLocalStorage: Function,
+ *          getShippingFromForm: Function,
+ *          buyButton_to_Json: Function,
+ *          populateCountry: Function,
+ *          validateEmptyFields: Function,
+ *          validateEmail: Function,
+ *          validatePostCode: Function,
+ *          validateEmptyCart: Function,
+ *          addErrorClassToFields: Function,
+ *          addErrorClassToFieldsWithRules: Function,
+ *          addFadeOutUpClass: Function,
+ *          removeErrorClassFromFields: Function,
+ *          getCheapestShippingMethod: Function,
+ *          getTaxes: Function,
+ *          getShipmentTaxes: Function,
+ *          getCartTaxes: Function,
+ *          getCartTotal: Function,
+ *          urlGetParameters: Function,
+ *          urlAddParameters: Function,
+ *          urlRemoveParameters: Function,
+ *          urlBuildQuery: Function
+ *  }}
  */
 var UtilityContainer = {
 

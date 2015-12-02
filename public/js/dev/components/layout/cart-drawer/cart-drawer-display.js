@@ -1,8 +1,8 @@
 /**
  * Component responsible for displaying the cart drawer.
- * Logic handled in dev/actions/layout/cart-drawer-logic.js
+ * Logic handled in dev/layout/cart-drawer/cart-drawer-logic.js
  *
- * @type {{$el: {$back: (*|jQuery|HTMLElement), $proceed: (*|jQuery|HTMLElement), $trigger: (*|jQuery|HTMLElement), $container: (*|jQuery|HTMLElement), $checkout: (*|jQuery|HTMLElement), $body: (*|jQuery|HTMLElement)}, displayOn: Function, displayOff: Function, animateIn: Function, animateOut: Function, setCartItemsHeight: Function, computeCartItemsHeight: Function, fadeInDimmer: Function, init: Function}}
+ * @type {{$el: {$back: (*|jQuery|HTMLElement), $proceed: (*|jQuery|HTMLElement), $trigger: (*|jQuery|HTMLElement), $container: (*|jQuery|HTMLElement), $checkout: (*|jQuery|HTMLElement), $body: (*|jQuery|HTMLElement)}, displayOn: Function, displayOff: Function, animateIn: Function, animateOut: Function, setCartItemsHeight: Function, computeCartItemsHeight: Function, fadeInDimmer: Function, fadeOutDimmer: Function, init: Function}}
  */
 var cartDisplayContainer = {
     $el : {
