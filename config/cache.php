@@ -74,6 +74,6 @@ return [
 	|
 	*/
 
-	'prefix' => 'laravel',
+	'prefix' => "duka" . env('KEM_API_USER', ""),
 
 ];
