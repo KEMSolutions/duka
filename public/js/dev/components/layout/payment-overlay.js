@@ -82,41 +82,9 @@ var paymentOverlayContainer = {
                                 '<td>' + "#" + order.id + '</td>' +
                             '</tr>' +
 
-                            '<tr>' +
-                                '<td>' + Localization.shipping_address + '</td>' +
-                                '<td>' +
-                                    order.shipping_address.line1 +
-                                    '<br/>' +
-                                    '<br/>' +
-                                    order.shipping_address.postcode +
-                                    '<br/>' +
-                                    order.shipping_address.city +
-                                    ', ' +
-                                    order.shipping_address.province +
-                                    ', ' +
-                                    order.shipping_address.country +
-                                    '<br/>' +
-                                    order.shipping_address.name +
-                                '</td>' +
-                            '</tr>'+
+                            this.renderAddress(order.shipping_address, Localization.shipping_address) +
 
-                            '<tr>' +
-                                '<td>' + Localization.billing_address + '</td>' +
-                                '<td>' +
-                                    order.billing_address.line1 +
-                                    '<br/>' +
-                                    '<br/>' +
-                                    order.billing_address.postcode +
-                                    '<br/>' +
-                                    order.billing_address.city +
-                                    ', ' +
-                                    order.billing_address.province +
-                                    ', ' +
-                                    order.billing_address.country +
-                                    '<br/>' +
-                                    order.billing_address.name +
-                            '   </td>' +
-                            '</tr>'+
+                            this.renderAddress(order.billing_address, Localization.billing_address) +
 
                             '<tr>' +
                                 '<td>' + Localization.subtotal + '</td>' +
@@ -145,6 +113,36 @@ var paymentOverlayContainer = {
         $("body").prepend(overlay);
 
         $(".congratulate-modal").modal("show");
+    },
+
+    /**
+     * Render the appropriate address' <td> tags according to the type of address.
+     *
+     * @param [object] address_details
+     * @param [string] address_type_name
+     * @returns {string}
+     */
+    renderAddress: function (address_details, address_type_name) {
+        var line2 = address_details.line2 == null ? '' : address_details.line2;
+
+        return '<tr>' +
+                    '<td>' + address_type_name + '</td>' +
+                    '<td>' +
+                        address_details.line1 +
+                        '<br/>' +
+                        line2 +
+                        '<br/>' +
+                        address_details.postcode +
+                        '<br/>' +
+                        address_details.city +
+                        ', ' +
+                        address_details.province +
+                        ', ' +
+                        address_details.country +
+                        '<br/>' +
+                        address_details.name +
+                    '</td>' +
+                '</tr>';
     },
 
     /**
