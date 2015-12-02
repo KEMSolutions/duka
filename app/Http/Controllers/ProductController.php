@@ -19,9 +19,16 @@ class ProductController extends Controller
      */
     public function display($id)
     {
+        $product = Products::get($id);
+        $locale = Localization::getCurrentLocale();
+        
+        if (!isset($product->localization) || $product->localization->locale->language != $locale){
+            abort(404);
+        }
+
         return View::make("product.view")->with([
-            "product" => Products::get($id),
-            "locale" => Localization::getCurrentLocale(),
+            "product" => $product,
+            "locale" => $locale,
             "supported_countries" => array("US", "FR", "BE", "IT", "CH", "GB", "IE", "ES", "DE"),
             "country_code" => Utilities::getUserCountryCode()
         ]);
