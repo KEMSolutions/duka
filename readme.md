@@ -53,9 +53,9 @@ Every component are created in independent files and are suffixed by the keyword
 If a component can stand on its own (eg. with no component dependencies), its last method should be an `init` method that is registered in `public/js/dev/components/init.js`. 
 
 ##### Components: Specific Behaviours
- Certain Semantic UI modules have custom attributes allowing more behaviour versatility. Those modules are:
- * [Dropdown](http://semantic-ui.com/modules/dropdown.html)
- * [Dimmer](http://semantic-ui.com/modules/dimmer.html)
+ Certain Semantic UI modules have custom attributes allowing more behaviour versatility. Those modules are:  
+  - [Dropdown](http://semantic-ui.com/modules/dropdown.html)  
+  - [Dimmer](http://semantic-ui.com/modules/dimmer.html)
  
 ###### Dropdown  
 
