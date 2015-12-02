@@ -128,19 +128,20 @@ var paymentOverlayContainer = {
         return '<tr>' +
                     '<td>' + address_type_name + '</td>' +
                     '<td>' +
+                        address_details.name +
+                        '<br/>' +
                         address_details.line1 +
                         '<br/>' +
                         line2 +
-                        '<br/>' +
-                        address_details.postcode +
                         '<br/>' +
                         address_details.city +
                         ', ' +
                         address_details.province +
                         ', ' +
-                        address_details.country +
+                        address_details.postcode +
                         '<br/>' +
-                        address_details.name +
+                        address_details.country +
+
                     '</td>' +
                 '</tr>';
     },
