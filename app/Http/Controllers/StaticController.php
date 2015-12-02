@@ -18,7 +18,8 @@ class StaticController extends Controller
      */
     public function getFavicon($size=64)
     {
-        $image = \Cache::remember('app_http_controllers_staticcontroller_favicon_' . $size, 120, function() use ($size) {
+        
+        $image = \Cache::remember(\KemAPI::getUser() . 'app_http_controllers_staticcontroller_favicon_' . $size, 120, function() use ($size) {
             $imagePath = \Store::logo($width = $size, $height = $size, $mode = 'fit');
             return file_get_contents($imagePath,"r");
         });
@@ -52,7 +53,7 @@ class StaticController extends Controller
         You have a better idea? Feel free to improve this code :)
         */
         
-        $style = \Cache::remember('app_http_controllers_staticcontroller_stylesheet', 0, function() {
+        $style = \Cache::remember(\KemAPI::getUser() . 'app_http_controllers_staticcontroller_stylesheet', 0, function() {
             
             $sheetPath = public_path() . '/css/prod/app.css';
             $sheet = file_get_contents($sheetPath,"r");
