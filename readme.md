@@ -60,14 +60,14 @@ If a component can stand on its own (eg. with no component dependencies), its la
 ###### Dropdown  
 
     // Active menu and update input fields, but without changing current text. 
-    <div class='ui dropdown dropdown-no-select>
+    <div class='ui dropdown dropdown-no-select'>
 
     // Activate menu, update input fields and change current text.
-    <div class='ui dropdown dropdown-select>
+    <div class='ui dropdown dropdown-select'>
 
 ###### Dimmer
     // To have an explicit close button for a dimmer.
-    <trigger class="close-dimmer">...</trigger>
+    <trigger class='close-dimmer'>...</trigger>
 
 
 ## Routing
