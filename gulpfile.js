@@ -50,8 +50,8 @@ gulp.task('semantic-css', function() {
 
 //Gulp watchers
 gulp.task("watch", function () {
-    gulp.watch('public/js/dev/*.js', ['js']);
-    gulp.watch('public/css/dev/*.css', ['css']);
+    gulp.watch('public/js/**/*.js', ['js']);
+    gulp.watch('public/css/**/*.css', ['css']);
 });
 
 // Default task.

@@ -502,111 +502,6 @@ var UtilityContainer = {
 
 
 /**
- * Entry point of script.
- *
- */
-; (function(window, document, $) {
-    $(document).ready(function () {
-
-        /**
-         * Sets up the ajax token for all ajax requests.
-         *
-         */
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'locale': $('html').attr('lang')
-            }
-        });
-
-        /**
-         * Sets up Localization and ApiEndpoints variables.
-         *
-         */
-        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
-        Localization = env.Localization;
-        ApiEndpoints = env.ApiEndpoints;
-
-        /**
-         * Initialize semantic UI modules.
-         *
-         */
-        semanticInitContainer.init();
-
-        /**
-         * Initialize responsiveness feature.
-         *
-         */
-        responsiveContainer.init();
-
-        /**
-         * Initialize checkout logic.
-         *
-         */
-        checkoutContainer.init();
-
-        /**
-         * Initialize cart drawer logic.
-         *
-         */
-        cartDrawerInitContainer.init();
-
-        /**
-         * Initialize category container.
-         *
-         */
-        categoryContainer.init();
-
-        /**
-         * Initialize overlay plugin.
-         *
-         */
-        paymentOverlayContainer.init();
-
-        /**
-         * Initialize homepage sections.
-         *
-         */
-        homepageContainer.init();
-
-        /**
-         * Initialize favorite products feature.
-         *
-         */
-        productLayoutFavoriteContainer.init();
-
-        /**
-         * Initialize product formats feature.
-         *
-         */
-        productFormatContainer.init();
-
-        /**
-         * Initialize column responsiveness in product pages.
-         *
-         */
-        productResponsiveContainer.init();
-
-        /**
-         * Initialize wishlist page.
-         *
-         */
-        wishlistLogicContainer.init();
-
-        /**
-         * Global initialization of elements.
-         *
-         */
-            //fancy plugin for product page (quantity input)
-        $(".input-qty").TouchSpin({
-            initval: 1
-        });
-
-    });
-
-})(window, this.document, jQuery, undefined)
-
-/**
  * Component responsible for handling the checkout process.
  *
  * @type {{validation: {validateFormFields: Function}, view: {dispatchButtonsActions: Function, displayShipmentMethodsAndPriceInformation: Function, displayContactInformation: Function, autofillBillingInformation: Function, clearFields: Function, fadeInBillingInformation: Function, fetchEstimate: Function, fetchPayment: Function, updatePayment: Function}, actions: {createOrdersCookie: Function, placeOrderAjaxCall: Function, shipmentMethodsAjaxCall: Function, getShipmentTaxes: Function, getTaxes: Function}, bootstrap: {selectDefaultShipmentMethod: Function}, init: Function}}
@@ -1249,6 +1144,275 @@ var checkoutContainer = {
 
 }
 /**
+ * Component responsible for handling the payment overlay behaviour.
+ *
+ * @type {{cancelOrder: Function, checkPendingOrders: Function, showPaymentNotice: Function, init: Function}}
+ */
+var paymentOverlayContainer = {
+
+    /**
+     * Cancels an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     *
+     */
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            Cookies.remove("_current_order");
+
+            $("#cancelledOrder").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+        });
+    },
+
+    /**
+     * Display the unpaid overlay using semantic-ui modal module.
+     *
+     */
+    displayUnpaidOverlay: function () {
+        var order = JSON.parse(Cookies.get('_current_order'));
+
+        var unpaidOverlay =
+            '<div class="ui small modal text-center unpaid-modal">' +
+                '<i class="close icon"></i>' +
+                '<div class="header">' +
+                    Localization.pending_order.replace(':command', order.id) +
+                '</div>' +
+                '<div class="content">' +
+                    '<div class="description">' +
+                        '<div class="ui header">'  +
+                            Localization.what_to_do +
+                        '</div>' +
+                        '<a href="' + order.payment_url + '">' +
+                            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
+                        '</a>' +
+                        '<button class="ui button red" id="cancelOrder">'+
+                            Localization.cancel_order +
+                        '</button>'+
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+        $("body").prepend(unpaidOverlay);
+        $(".small.unpaid-modal").modal("show");
+
+    },
+
+
+    /**
+     * Display the congratulate overlay using semantic-ui modal module.
+     *
+     * @param order
+     */
+    displayCongratulateOverlay: function (order) {
+        var overlay =
+            '<div class="ui modal congratulate-modal payment_successful">' +
+                '<div class="header">' +
+                    Localization.payment_successful +
+                '</div>' +
+                '<div class="content">' +
+                    '<div class="description">' +
+                        '<div class="ui header">' +
+                            Localization.summary_below +
+                        '</div>' +
+                        '<p>' + Localization.summary_copy + '</p>' +
+                    '</div>' +
+                    '<br/>' +
+                    '<table class="ui striped table" style="margin: 0 auto">' +
+                        '<tbody class="center aligned">' +
+                            '<tr>' +
+                                '<td>' + Localization.order + '</td>' +
+                                '<td>' + "#" + order.id + '</td>' +
+                            '</tr>' +
+
+                            '<tr>' +
+                                '<td>' + Localization.shipping_address + '</td>' +
+                                '<td>' +
+                                    order.shipping_address.line1 +
+                                    '<br/>' +
+                                    '<br/>' +
+                                    order.shipping_address.postcode +
+                                    '<br/>' +
+                                    order.shipping_address.city +
+                                    ', ' +
+                                    order.shipping_address.province +
+                                    ', ' +
+                                    order.shipping_address.country +
+                                    '<br/>' +
+                                    order.shipping_address.name +
+                                '</td>' +
+                            '</tr>'+
+
+                            '<tr>' +
+                                '<td>' + Localization.billing_address + '</td>' +
+                                '<td>' +
+                                    order.billing_address.line1 +
+                                    '<br/>' +
+                                    '<br/>' +
+                                    order.billing_address.postcode +
+                                    '<br/>' +
+                                    order.billing_address.city +
+                                    ', ' +
+                                    order.billing_address.province +
+                                    ', ' +
+                                    order.billing_address.country +
+                                    '<br/>' +
+                                    order.billing_address.name +
+                            '   </td>' +
+                            '</tr>'+
+
+                            '<tr>' +
+                                '<td>' + Localization.subtotal + '</td>' +
+                                '<td>' + "$" + parseFloat(order.payment_details.subtotal).toFixed(2) + '</td>' +
+                            '</tr>' +
+
+                            '<tr>' +
+                                '<td>' + Localization.taxes + '</td>' +
+                                '<td>' + "$" + parseFloat(order.payment_details.taxes).toFixed(2) + '</td>' +
+                            '</tr>' +
+
+                            '<tr>' +
+                                '<td>' + Localization.total + '</td>' +
+                                '<td>' + "$" + parseFloat(order.payment_details.total).toFixed(2) + '</td>' +
+                            '</tr>' +
+                        '</tbody>' +
+                    '</table>' +
+                '</div>' +
+                '<div class="actions">' +
+                    '<div class="ui black deny button">' +
+                        Localization.close +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+        $("body").prepend(overlay);
+
+        $(".congratulate-modal").modal("show");
+    },
+
+    /**
+     * Second Ajax call after the order has been paid.
+     * We make a call to the API to get more details about it.
+     * Laravel takes care of the security issue that this implementation can raise.
+     *
+     * @param order
+     */
+    getOrderInformation: function (order) {
+        $.ajax({
+            type: 'GET',
+            url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+            success: function (order_details) {
+                this.displayCongratulateOverlay(order_details);
+                console.log(order_details);
+            }.bind(this),
+            error: function (xhr, error, code) {
+                console.log(error);
+            }
+        });
+    },
+
+    /**
+     * Checks the status of the current order stored in _current_order cookie.
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_current_order')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_current_order'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(data) {
+                    if (data.status === 'pending') {
+                        this.displayUnpaidOverlay();
+                    }
+                    else if (data.status === 'paid') {
+                        // Display congratulation dimmer.
+                        this.getOrderInformation(order);
+
+                        // Remove products from cart
+                        UtilityContainer.removeAllProductsFromLocalStorage();
+
+                        // Delete the unpaid orders cookie (if any).
+                        Cookies.remove('_current_order');
+                    }
+                    else {
+                        Cookies.remove('_current_order');
+                    }
+                }.bind(this)
+            });
+        }
+
+    },
+
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+        self.checkPendingOrders();
+
+    }
+};
+
+/**
+ * Responsible for handling the switch between one, two and four columns per row depending on screen width.
+ *
+ * @type {{tablet: {setClasses: Function}, mobile: {setClasses: Function}, desktop: {setClasses: Function}, init: Function}}
+ */
+var responsiveContainer = {
+    // Everything between 400px and 768px is considered tablet size.
+    tablet : {
+        setClasses: function () {
+            // Take the stackable off the grid-layout.
+            $(".grid-layout").removeClass("stackable");
+            // Set two products per row.
+            $(".dense-product").removeClass("four wide column").addClass("eight wide column");
+        }
+    },
+
+    // Everything less than 400px is considered mobile size.
+    mobile : {
+        setClasses: function () {
+            $(".grid-layout").addClass("stackable");
+        }
+    },
+
+    // Everything more than 768px is considered desktop size.
+    desktop: {
+        setClasses: function () {
+            $(".grid-layout").removeClass("stackable");
+            // Set four products per row.
+            $(".dense-product").removeClass("eight four wide column").addClass("four wide column");
+        }
+    },
+
+    init: function () {
+        var self = responsiveContainer;
+
+        $(window).on("load resize", function () {
+            if ($(this).width() < 768 && $(this).width() > 400) {
+                self.tablet.setClasses();
+            }
+            else if ($(this).width() <= 400) {
+                self.mobile.setClasses();
+            }
+            else if ($(this).width() >= 768) {
+                self.desktop.setClasses();
+            }
+        });
+    }
+}
+/**
  * Component responsible for handling different formats of the same product.
  *
  * @type {{displaySyncedProductInformation: Function, setInventoryCount: Function, setPriceTag: Function, setBuybuttonInformation: Function, toggleActiveClass: Function, init: Function}}
@@ -1516,261 +1680,6 @@ var productResponsiveContainer = {
         var self = productResponsiveContainer;
 
         self.invertPriceAndDescriptionColumn();
-    }
-}
-/**
- * Component responsible for handling the payment overlay behaviour.
- *
- * @type {{cancelOrder: Function, checkPendingOrders: Function, showPaymentNotice: Function, init: Function}}
- */
-var paymentOverlayContainer = {
-
-    /**
-     * Cancels an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_current_order");
-
-            $("#cancelledOrder").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-        });
-    },
-
-    displayUnpaidOverlay: function () {
-        var order = JSON.parse(Cookies.get('_current_order'));
-
-        var unpaidOverlay =
-            '<div class="ui small modal text-center unpaid-modal">' +
-                '<i class="close icon"></i>' +
-                '<div class="header">' +
-                    Localization.pending_order.replace(':command', order.id) +
-                '</div>' +
-                '<div class="content">' +
-                    '<div class="description">' +
-                        '<div class="ui header">'  +
-                            Localization.what_to_do +
-                        '</div>' +
-                        '<a href="'+
-                            ApiEndpoints.orders.pay.replace(':id', order.id)
-                                .replace(':verification', order.verification) +'">'+
-                            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
-                        '</a>' +
-                        '<button class="ui button red" id="cancelOrder">'+
-                            Localization.cancel_order +
-                        '</button>'+
-                    '</div>' +
-                '</div>' +
-            '</div>';
-
-        $("body").prepend(unpaidOverlay);
-        $(".small.unpaid-modal").modal("show");
-
-    },
-
-    displayCongratulateOverlay: function () {
-        var order = JSON.parse(Cookies.get('_current_order'));
-
-        $.ajax({
-            type: 'GET',
-            url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-            success: function (data) {
-                this.renderCongratulateOverlay(data);
-            }.bind(this)
-        });
-    },
-
-    renderCongratulateOverlay: function (order) {
-        var overlay =
-            '<div class="ui modal congratulate-modal">' +
-                '<div class="header">' +
-                    Localization.payment_successful +
-                '</div>' +
-                '<div class="content">' +
-                    '<div class="description">' +
-                        '<div class="ui header">' +
-                            Localization.summary_below +
-                        '</div>' +
-                        '<p>' + Localization.summary_copy + '</p>' +
-                    '</div>' +
-                    '<br/>' +
-                    '<table class="ui striped table" style="margin: 0 auto">' +
-                        '<tbody class="center aligned">' +
-                            '<tr>' +
-                                '<td>' + Localization.order + '</td>' +
-                                '<td>' + "#{{ $latest_order_details->id }}" + '</td>' +
-                            '</tr>' +
-
-                            '<tr>' +
-                                '<td>' + Localization.shipping_address + '</td>' +
-                                '<td>' +
-                                    "{{ $latest_order_details->shipping_address->line1 }}" +
-                                    " Shipping address 2 if not null." +
-                                    '<br/>' +
-                                    "{{ $latest_order_details->shipping_address->postcode }}"+
-                                    '<br/>' +
-                                    "{{ $latest_order_details->shipping_address->city }}," +
-                                    "{{ $latest_order_details->shipping_address->province }}, " +
-                                    "{{ $latest_order_details->shipping_address->country }}" +
-                                    '<br/>' +
-                                    "{{ $latest_order_details->shipping_address->name }}" +
-                                '</td>' +
-                            '</tr>'+
-
-                            '<tr>' +
-                                '<td>' + Localization.billing_address + '</td>' +
-                                '<td>' +
-                                "{{ $latest_order_details->billing_address->line1 }}" +
-                                " Billing address 2 if not null." +
-                                '<br/>' +
-                                "{{ $latest_order_details->billing_address->postcode }}"+
-                                '<br/>' +
-                                "{{ $latest_order_details->billing_address->city }}," +
-                                "{{ $latest_order_details->billing_address->province }}, " +
-                                "{{ $latest_order_details->billing_address->country }}" +
-                                '<br/>' +
-                                "{{ $latest_order_details->billing_address->name }}" +
-                            '   </td>' +
-                            '</tr>'+
-
-                            '<tr>' +
-                                '<td>' + Localization.subtotal + '</td>' +
-                                '<td>' + "$20.00" + '</td>' +
-                            '</tr>' +
-
-                            '<tr>' +
-                                '<td>' + Localization.taxes + '</td>' +
-                                '<td>' + "$1.75" + '</td>' +
-                            '</tr>' +
-
-                            '<tr>' +
-                                '<td>' + Localization.total + '</td>' +
-                                '<td>' + "$21.75" + '</td>' +
-                            '</tr>' +
-                        '</tbody>' +
-                    '</table>' +
-
-                    paymentOverlayContainer.userAuthenticated(order) +
-
-                '</div>' +
-                '<div class="actions">' +
-                    '<div class="ui black deny button">' +
-                        Localization.close +
-                    '</div>' +
-                '</div>' +
-            '</div>';
-
-        $("body").prepend(overlay);
-
-        $(".congratulate-modal").modal("show");
-    },
-
-    userAuthenticated: function (request) {
-        return '<p> User auth not yet implemented </p>';
-    },
-
-    /**
-     * Checks whether the user has any unpaid orders, and displays a message if that's the case.
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_current_order')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_current_order'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(data) {
-                    if (data.status === 'pending') {
-                        this.displayUnpaidOverlay();
-                    }
-                    else if (data.status === 'paid') {
-                        // Display congratulation dimmer.
-                        this.displayCongratulateOverlay();
-
-                        // Remove products from cart
-                        UtilityContainer.removeAllProductsFromLocalStorage();
-
-                        // Delete the unpaid orders cookie (if any).
-                        Cookies.remove('_current_order');
-                    }
-                    else {
-                        Cookies.remove('_current_order');
-                    }
-                }.bind(this)
-            });
-        }
-
-    },
-
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-        self.checkPendingOrders();
-
-    }
-};
-
-/**
- * Responsible for handling the switch between one, two and four columns per row depending on screen width.
- *
- * @type {{tablet: {setClasses: Function}, mobile: {setClasses: Function}, desktop: {setClasses: Function}, init: Function}}
- */
-var responsiveContainer = {
-    // Everything between 400px and 768px is considered tablet size.
-    tablet : {
-        setClasses: function () {
-            // Take the stackable off the grid-layout.
-            $(".grid-layout").removeClass("stackable");
-            // Set two products per row.
-            $(".dense-product").removeClass("four wide column").addClass("eight wide column");
-        }
-    },
-
-    // Everything less than 400px is considered mobile size.
-    mobile : {
-        setClasses: function () {
-            $(".grid-layout").addClass("stackable");
-        }
-    },
-
-    // Everything more than 768px is considered desktop size.
-    desktop: {
-        setClasses: function () {
-            $(".grid-layout").removeClass("stackable");
-            // Set four products per row.
-            $(".dense-product").removeClass("eight four wide column").addClass("four wide column");
-        }
-    },
-
-    init: function () {
-        var self = responsiveContainer;
-
-        $(window).on("load resize", function () {
-            if ($(this).width() < 768 && $(this).width() > 400) {
-                self.tablet.setClasses();
-            }
-            else if ($(this).width() <= 400) {
-                self.mobile.setClasses();
-            }
-            else if ($(this).width() >= 768) {
-                self.desktop.setClasses();
-            }
-        });
     }
 }
 /**
@@ -2931,3 +2840,107 @@ var wishlistContainer = {
         self.setNumberOfProductsInHeader();
     }
 }
+/**
+ * Entry point of script.
+ *
+ */
+; (function(window, document, $) {
+    $(document).ready(function () {
+
+        /**
+         * Sets up the ajax token for all ajax requests.
+         *
+         */
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'locale': $('html').attr('lang')
+            }
+        });
+
+        /**
+         * Sets up Localization and ApiEndpoints variables.
+         *
+         */
+        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
+        Localization = env.Localization;
+        ApiEndpoints = env.ApiEndpoints;
+
+        /**
+         * Initialize semantic UI modules.
+         *
+         */
+        semanticInitContainer.init();
+
+        /**
+         * Initialize responsiveness feature.
+         *
+         */
+        responsiveContainer.init();
+
+        /**
+         * Initialize checkout logic.
+         *
+         */
+        checkoutContainer.init();
+
+        /**
+         * Initialize cart drawer logic.
+         *
+         */
+        cartDrawerInitContainer.init();
+
+        /**
+         * Initialize category container.
+         *
+         */
+        categoryContainer.init();
+
+        /**
+         * Initialize overlay plugin.
+         *
+         */
+        paymentOverlayContainer.init();
+
+        /**
+         * Initialize homepage sections.
+         *
+         */
+        homepageContainer.init();
+
+        /**
+         * Initialize favorite products feature.
+         *
+         */
+        productLayoutFavoriteContainer.init();
+
+        /**
+         * Initialize product formats feature.
+         *
+         */
+        productFormatContainer.init();
+
+        /**
+         * Initialize column responsiveness in product pages.
+         *
+         */
+        productResponsiveContainer.init();
+
+        /**
+         * Initialize wishlist page.
+         *
+         */
+        wishlistLogicContainer.init();
+
+        /**
+         * Global initialization of elements.
+         *
+         */
+            //fancy plugin for product page (quantity input)
+        $(".input-qty").TouchSpin({
+            initval: 1
+        });
+
+    });
+
+})(window, this.document, jQuery, undefined)

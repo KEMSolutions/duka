@@ -40,9 +40,7 @@ var paymentOverlayContainer = {
                         '<div class="ui header">'  +
                             Localization.what_to_do +
                         '</div>' +
-                        '<a href="'+
-                            ApiEndpoints.orders.pay.replace(':id', order.id)
-                                .replace(':verification', order.verification) +'">'+
+                        '<a href="' + order.payment_url + '">' +
                             '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
                         '</a>' +
                         '<button class="ui button red" id="cancelOrder">'+
@@ -65,7 +63,7 @@ var paymentOverlayContainer = {
      */
     displayCongratulateOverlay: function (order) {
         var overlay =
-            '<div class="ui modal congratulate-modal">' +
+            '<div class="ui modal congratulate-modal payment_successful">' +
                 '<div class="header">' +
                     Localization.payment_successful +
                 '</div>' +
@@ -81,60 +79,61 @@ var paymentOverlayContainer = {
                         '<tbody class="center aligned">' +
                             '<tr>' +
                                 '<td>' + Localization.order + '</td>' +
-                                '<td>' + "#{{ $latest_order_details->id }}" + '</td>' +
+                                '<td>' + "#" + order.id + '</td>' +
                             '</tr>' +
 
                             '<tr>' +
                                 '<td>' + Localization.shipping_address + '</td>' +
                                 '<td>' +
-                                    "{{ $latest_order_details->shipping_address->line1 }}" +
-                                    " Shipping address 2 if not null." +
+                                    order.shipping_address.line1 +
                                     '<br/>' +
-                                    "{{ $latest_order_details->shipping_address->postcode }}"+
                                     '<br/>' +
-                                    "{{ $latest_order_details->shipping_address->city }}," +
-                                    "{{ $latest_order_details->shipping_address->province }}, " +
-                                    "{{ $latest_order_details->shipping_address->country }}" +
+                                    order.shipping_address.postcode +
                                     '<br/>' +
-                                    "{{ $latest_order_details->shipping_address->name }}" +
+                                    order.shipping_address.city +
+                                    ', ' +
+                                    order.shipping_address.province +
+                                    ', ' +
+                                    order.shipping_address.country +
+                                    '<br/>' +
+                                    order.shipping_address.name +
                                 '</td>' +
                             '</tr>'+
 
                             '<tr>' +
                                 '<td>' + Localization.billing_address + '</td>' +
                                 '<td>' +
-                                "{{ $latest_order_details->billing_address->line1 }}" +
-                                " Billing address 2 if not null." +
-                                '<br/>' +
-                                "{{ $latest_order_details->billing_address->postcode }}"+
-                                '<br/>' +
-                                "{{ $latest_order_details->billing_address->city }}," +
-                                "{{ $latest_order_details->billing_address->province }}, " +
-                                "{{ $latest_order_details->billing_address->country }}" +
-                                '<br/>' +
-                                "{{ $latest_order_details->billing_address->name }}" +
+                                    order.billing_address.line1 +
+                                    '<br/>' +
+                                    '<br/>' +
+                                    order.billing_address.postcode +
+                                    '<br/>' +
+                                    order.billing_address.city +
+                                    ', ' +
+                                    order.billing_address.province +
+                                    ', ' +
+                                    order.billing_address.country +
+                                    '<br/>' +
+                                    order.billing_address.name +
                             '   </td>' +
                             '</tr>'+
 
                             '<tr>' +
                                 '<td>' + Localization.subtotal + '</td>' +
-                                '<td>' + "$20.00" + '</td>' +
+                                '<td>' + "$" + parseFloat(order.payment_details.subtotal).toFixed(2) + '</td>' +
                             '</tr>' +
 
                             '<tr>' +
                                 '<td>' + Localization.taxes + '</td>' +
-                                '<td>' + "$1.75" + '</td>' +
+                                '<td>' + "$" + parseFloat(order.payment_details.taxes).toFixed(2) + '</td>' +
                             '</tr>' +
 
                             '<tr>' +
                                 '<td>' + Localization.total + '</td>' +
-                                '<td>' + "$21.75" + '</td>' +
+                                '<td>' + "$" + parseFloat(order.payment_details.total).toFixed(2) + '</td>' +
                             '</tr>' +
                         '</tbody>' +
                     '</table>' +
-
-                    paymentOverlayContainer.userAuthenticated(order) +
-
                 '</div>' +
                 '<div class="actions">' +
                     '<div class="ui black deny button">' +
@@ -149,17 +148,6 @@ var paymentOverlayContainer = {
     },
 
     /**
-     * Checks if the user that made the order already has a password.
-     * If not, we prompt him with an incentive message.
-     *
-     * @param request
-     * @returns {string}
-     */
-    userAuthenticated: function (request) {
-        return '<p> User auth not yet implemented </p>';
-    },
-
-    /**
      * Second Ajax call after the order has been paid.
      * We make a call to the API to get more details about it.
      * Laravel takes care of the security issue that this implementation can raise.
@@ -170,9 +158,13 @@ var paymentOverlayContainer = {
         $.ajax({
             type: 'GET',
             url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-            success: function (data) {
-                return {}
-            }.bind(this)
+            success: function (order_details) {
+                this.displayCongratulateOverlay(order_details);
+                console.log(order_details);
+            }.bind(this),
+            error: function (xhr, error, code) {
+                console.log(error);
+            }
         });
     },
 
@@ -197,7 +189,7 @@ var paymentOverlayContainer = {
                     }
                     else if (data.status === 'paid') {
                         // Display congratulation dimmer.
-                        this.displayCongratulateOverlay();
+                        this.getOrderInformation(order);
 
                         // Remove products from cart
                         UtilityContainer.removeAllProductsFromLocalStorage();
