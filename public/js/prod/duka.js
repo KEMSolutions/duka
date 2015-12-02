@@ -1390,7 +1390,7 @@ var paymentOverlayContainer = {
      * @returns {string}
      */
     renderAdditionalDetails: function (order) {
-        if (order.shipping_details != null) {
+        if (order.shipping_address != null) {
             return this.renderAddress(order.shipping_address, Localization.shipping_address) +
                     this.renderAddress(order.billing_address, Localization.billing_address) +
                 '<tr>' +
