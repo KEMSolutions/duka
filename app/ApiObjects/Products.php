@@ -21,6 +21,38 @@ class Products extends BaseObject
 
 
     /**
+     * Retrieves a random number of products
+     *
+     * @param mixed $id             ID or slug of product to fetch.
+     * @param array $requestParams  Parameters to include in API request.
+     * @param int $expires          Hours to keep object in cache.
+     * @return object               Product details.
+     */
+    public function random()
+    {
+        // Retrieve product details.
+        $products = parent::all();
+        foreach ($products as $product){
+            // Parse description.
+            $product->localization->long_description = $this->markdown->parse($product->localization->long_description);
+
+            // Set images size.
+            if (count($product->images) > 0) {
+            $product->images[0]->thumbnail_lg = Utilities::setImageSizeAndMode(70, 110, 'fit', $product->images[0]->url);
+            $product->images[0]->thumbnail = Utilities::setImageSizeAndMode(60, 60, 'fit', $product->images[0]->url);
+            }
+            else {
+            $product->images[0]->thumbnail_lg = "https://static.boutiquekem.com/productimg-70-110-0000.png";
+            $product->images[0]->thumbnail = "https://static.boutiquekem.com/productimg-60-60-0000.png";
+            }
+        }
+
+        
+
+        return $products;
+    }
+
+    /**
      * Retrieves a product by ID or slug.
      *
      * @param mixed $id             ID or slug of product to fetch.
