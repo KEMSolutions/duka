@@ -21,12 +21,9 @@ class Products extends BaseObject
 
 
     /**
-     * Retrieves a random number of products
+     * Retrieves a list of random products
      *
-     * @param mixed $id             ID or slug of product to fetch.
-     * @param array $requestParams  Parameters to include in API request.
-     * @param int $expires          Hours to keep object in cache.
-     * @return object               Product details.
+     * @return mixed               Random products.
      */
     public function random()
     {
