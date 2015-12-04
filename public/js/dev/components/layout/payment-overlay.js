@@ -2,7 +2,7 @@
  * Component responsible for handling the payment overlay behaviour.
  * Entry point is in checkPendingOrders.
  *
- * @type {{cancelOrder: Function, displayUnpaidOverlay: Function, displayCongratulateOverlay: Function, renderAddress: Function, renderAdditionalDetails: Function, getOrderInformation: Function, checkPendingOrders: Function, init: Function}}
+ * @type {{cancelOrder: Function, displayUnpaidOverlay: Function, displayCongratulateOverlay: Function, renderAddress: Function, renderAdditionalDetails: Function, checkPendingOrders: Function, init: Function}}
  */
 var paymentOverlayContainer = {
 
@@ -109,7 +109,7 @@ var paymentOverlayContainer = {
      * @returns {string}
      */
     renderAddress: function (address_details, address_type_name) {
-        var line2 = address_details.line2 == null ? '' : address_details.line2;
+        var line2 = address_details.line2 == null ? '' : address_details.line2 + '<br/>';
 
         return '<tr>' +
                     '<td>' + address_type_name + '</td>' +
@@ -119,7 +119,6 @@ var paymentOverlayContainer = {
                         address_details.line1 +
                         '<br/>' +
                         line2 +
-                        '<br/>' +
                         address_details.city +
                         ', ' +
                         address_details.province +
@@ -166,29 +165,11 @@ var paymentOverlayContainer = {
 
 
     /**
-     * Second Ajax call after the order has been paid.
-     * We make a call to the API to get more details about it.
-     * Laravel takes care of the security issue that this implementation can raise.
-     *
-     * @param order
-     */
-    getOrderInformation: function (order) {
-        $.ajax({
-            type: 'GET',
-            url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-            success: function (order_details) {
-                this.displayCongratulateOverlay(order_details);
-                //console.log(order_details);
-            }.bind(this),
-            error: function (xhr, error, code) {
-                console.log(error);
-            }
-        });
-    },
-
-
-    /**
      * Checks the status of the current order stored in _current_order cookie.
+     *
+     * If the order is paid and the call is made by the same user who passed the order,
+     * we display a summary. Laravel takes care of the check, as this can raise security
+     * concerns...
      *
      */
     checkPendingOrders : function() {
@@ -202,13 +183,13 @@ var paymentOverlayContainer = {
             $.ajax({
                 type: 'GET',
                 url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(data) {
-                    if (data.status === 'pending') {
+                success: function(order_details) {
+                    if (order_details.status === 'pending') {
                         this.displayUnpaidOverlay();
                     }
-                    else if (data.status === 'paid') {
+                    else if (order_details.status === 'paid') {
                         // Display congratulation dimmer.
-                        this.getOrderInformation(order);
+                        this.displayCongratulateOverlay(order_details);
 
                         // Remove products from cart
                         UtilityContainer.removeAllProductsFromLocalStorage();
