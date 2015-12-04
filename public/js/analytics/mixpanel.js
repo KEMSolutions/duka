@@ -2,7 +2,11 @@ var mixpanelAnalytics = {
     events: {
         addToCart: function () {
             $("body").on("click", ".buybutton", function() {
-                mixpanel.track("Added 1 item to cart.");
+                mixpanel.track("Added item to cart.", {
+                    "Item ID": $(this).data("product"),
+                    "Item Name": $(this).data("name"),
+                    "Item Price": $(this).data("price")
+                });
             });
         },
 
