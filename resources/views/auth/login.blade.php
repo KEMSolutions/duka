@@ -7,7 +7,7 @@
 <div class="ui error message">
   <i class="close icon"></i>
   <div class="header">
-    @lang("boukem.error_occured")
+    @lang("boukem.error_occurred")
   </div>
   <ul class="list">
         @foreach ($errors->all() as $error)

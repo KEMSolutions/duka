@@ -528,6 +528,111 @@ var UtilityContainer = {
 
 
 /**
+ * Entry point of script.
+ *
+ */
+; (function(window, document, $) {
+    $(document).ready(function () {
+
+        /**
+         * Sets up the ajax token for all ajax requests.
+         *
+         */
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'locale': $('html').attr('lang')
+            }
+        });
+
+        /**
+         * Sets up Localization and ApiEndpoints variables.
+         *
+         */
+        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
+        Localization = env.Localization;
+        ApiEndpoints = env.ApiEndpoints;
+
+        /**
+         * Initialize semantic UI modules.
+         *
+         */
+        semanticInitContainer.init();
+
+        /**
+         * Initialize responsiveness feature.
+         *
+         */
+        responsiveContainer.init();
+
+        /**
+         * Initialize checkout logic.
+         *
+         */
+        checkoutContainer.init();
+
+        /**
+         * Initialize cart drawer logic.
+         *
+         */
+        cartDrawerInitContainer.init();
+
+        /**
+         * Initialize category container.
+         *
+         */
+        categoryContainer.init();
+
+        /**
+         * Initialize overlay plugin.
+         *
+         */
+        paymentOverlayContainer.init();
+
+        /**
+         * Initialize homepage sections.
+         *
+         */
+        homepageContainer.init();
+
+        /**
+         * Initialize favorite products feature.
+         *
+         */
+        productLayoutFavoriteContainer.init();
+
+        /**
+         * Initialize product formats feature.
+         *
+         */
+        productFormatContainer.init();
+
+        /**
+         * Initialize column responsiveness in product pages.
+         *
+         */
+        productResponsiveContainer.init();
+
+        /**
+         * Initialize wishlist page.
+         *
+         */
+        wishlistLogicContainer.init();
+
+        /**
+         * Global initialization of elements.
+         *
+         */
+            //fancy plugin for product page (quantity input)
+        $(".input-qty").TouchSpin({
+            initval: 1
+        });
+
+    });
+
+})(window, this.document, jQuery, undefined)
+
+/**
  * Component responsible for handling the checkout process.
  * @type {{validation: {validateFormFields: Function}, view: {autofillBillingInformation: Function, clearFields: Function, dispatchButtonsActions: Function, displayContactInformation: Function, displayShipmentMethodsAndPriceInformation: Function, fadeInBillingInformation: Function, fetchEstimate: Function, fetchPayment: Function, setInternationalFields: Function, updatePayment: Function}, actions: {createOrdersCookie: Function, getShipmentTaxes: Function, getTaxes: Function, placeOrderAjaxCall: Function, shipmentMethodsAjaxCall: Function}, bootstrap: {selectDefaultShipmentMethod: Function}, init: Function}}
  */
@@ -1166,6 +1271,277 @@ var checkoutContainer = {
         });
     }
 
+}
+/**
+ * Component responsible for handling the payment overlay behaviour.
+ * Entry point is in checkPendingOrders.
+ *
+ * @type {{cancelOrder: Function, displayUnpaidOverlay: Function, displayCongratulateOverlay: Function, renderAddress: Function, renderAdditionalDetails: Function, checkPendingOrders: Function, init: Function}}
+ */
+var paymentOverlayContainer = {
+
+    /**
+     * Cancel an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     *
+     */
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            Cookies.remove("_current_order");
+
+            $("#cancelledOrder").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+        });
+    },
+
+
+    /**
+     * Display the unpaid overlay using semantic-ui modal module.
+     *
+     */
+    displayUnpaidOverlay: function () {
+        var order = JSON.parse(Cookies.get('_current_order'));
+
+        var unpaidOverlay =
+            '<div class="ui small modal text-center unpaid-modal">' +
+                '<i class="close icon"></i>' +
+                '<div class="header">' +
+                    Localization.pending_order.replace(':command', order.id) +
+                '</div>' +
+                '<div class="content">' +
+                    '<div class="description">' +
+                        '<div class="ui header">'  +
+                            Localization.what_to_do +
+                        '</div>' +
+                        '<a href="' + order.payment_url + '">' +
+                            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
+                        '</a>' +
+                        '<button class="ui button red" id="cancelOrder">'+
+                            Localization.cancel_order +
+                        '</button>'+
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+        $("body").prepend(unpaidOverlay);
+        $(".small.unpaid-modal").modal("show");
+
+    },
+
+
+    /**
+     * Display the congratulate overlay using semantic-ui modal module.
+     *
+     * @param order
+     */
+    displayCongratulateOverlay: function (order) {
+        var overlay =
+            '<div class="ui modal congratulate-modal payment_successful">' +
+                '<div class="header">' +
+                    Localization.payment_successful +
+                '</div>' +
+                '<div class="content">' +
+                    '<div class="description">' +
+                        '<div class="ui header">' +
+                            Localization.summary_below +
+                        '</div>' +
+                        '<p>' + Localization.summary_copy + '</p>' +
+                    '</div>' +
+                    '<br/>' +
+                    '<table class="ui striped table" style="margin: 0 auto">' +
+                        '<tbody class="center aligned">' +
+                            '<tr>' +
+                                '<td>' + Localization.order + '</td>' +
+                                '<td>' + "#" + order.id + '</td>' +
+                            '</tr>' +
+
+                            this.renderAdditionalDetails(order) +
+
+                        '</tbody>' +
+                    '</table>' +
+                '</div>' +
+                '<div class="actions">' +
+                    '<div class="ui black deny button">' +
+                        Localization.close +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+        $("body").prepend(overlay);
+
+        $(".congratulate-modal").modal("show");
+    },
+
+    /**
+     * Render the appropriate address' <td> tags according to the type of address.
+     *
+     * @param [object] address_details
+     * @param [string] address_type_name
+     * @returns {string}
+     */
+    renderAddress: function (address_details, address_type_name) {
+        var line2 = address_details.line2 == null ? '' : address_details.line2 + '<br/>';
+
+        return '<tr>' +
+                    '<td>' + address_type_name + '</td>' +
+                    '<td>' +
+                        address_details.name +
+                        '<br/>' +
+                        address_details.line1 +
+                        '<br/>' +
+                        line2 +
+                        address_details.city +
+                        ', ' +
+                        address_details.province +
+                        ', ' +
+                        address_details.postcode +
+                        '<br/>' +
+                        address_details.country +
+
+                    '</td>' +
+                '</tr>';
+    },
+
+
+    /**
+     * Check if there are any additional details.
+     * If there are, insert them in the summary table.
+     *
+     * @param order
+     * @returns {string}
+     */
+    renderAdditionalDetails: function (order) {
+        if (order.shipping_address != null) {
+            return this.renderAddress(order.shipping_address, Localization.shipping_address) +
+                    this.renderAddress(order.billing_address, Localization.billing_address) +
+                '<tr>' +
+                        '<td>' + Localization.subtotal + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.subtotal).toFixed(2) + '</td>' +
+                    '</tr>' +
+
+                    '<tr>' +
+                        '<td>' + Localization.taxes + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.taxes).toFixed(2) + '</td>' +
+                    '</tr>' +
+
+                    '<tr>' +
+                        '<td>' + Localization.total + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.total).toFixed(2) + '</td>' +
+                    '</tr>';
+        }
+        else {
+            return '';
+        }
+    },
+
+
+    /**
+     * Checks the status of the current order stored in _current_order cookie.
+     *
+     * If the order is paid and the call is made by the same user who passed the order,
+     * we display a summary. Laravel takes care of the check, as this can raise security
+     * concerns...
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_current_order')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_current_order'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(order_details) {
+                    if (order_details.status === 'pending') {
+                        this.displayUnpaidOverlay();
+                    }
+                    else if (order_details.status === 'paid') {
+                        // Display congratulation dimmer.
+                        this.displayCongratulateOverlay(order_details);
+                        console.log(order_details);
+
+                        // Remove products from cart
+                        UtilityContainer.removeAllProductsFromLocalStorage();
+
+                        // Delete the unpaid orders cookie (if any).
+                        Cookies.remove('_current_order');
+                    }
+                    else {
+                        Cookies.remove('_current_order');
+                    }
+                }.bind(this)
+            });
+        }
+
+    },
+
+
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+        self.checkPendingOrders();
+
+    }
+};
+
+/**
+ * Responsible for handling the switch between one, two and four columns per row depending on screen width.
+ *
+ * @type {{tablet: {setClasses: Function}, mobile: {setClasses: Function}, desktop: {setClasses: Function}, init: Function}}
+ */
+var responsiveContainer = {
+    // Everything between 400px and 768px is considered tablet size.
+    tablet : {
+        setClasses: function () {
+            // Take the stackable off the grid-layout.
+            $(".grid-layout").removeClass("stackable");
+            // Set two products per row.
+            $(".dense-product").removeClass("four wide column").addClass("eight wide column");
+        }
+    },
+
+    // Everything less than 400px is considered mobile size.
+    mobile : {
+        setClasses: function () {
+            $(".grid-layout").addClass("stackable");
+        }
+    },
+
+    // Everything more than 768px is considered desktop size.
+    desktop: {
+        setClasses: function () {
+            $(".grid-layout").removeClass("stackable");
+            // Set four products per row.
+            $(".dense-product").removeClass("eight four wide column").addClass("four wide column");
+        }
+    },
+
+    init: function () {
+        var self = responsiveContainer;
+
+        $(window).on("load resize", function () {
+            if ($(this).width() < 768 && $(this).width() > 400) {
+                self.tablet.setClasses();
+            }
+            else if ($(this).width() <= 400) {
+                self.mobile.setClasses();
+            }
+            else if ($(this).width() >= 768) {
+                self.desktop.setClasses();
+            }
+        });
+    }
 }
 /**
  * Component responsible for handling different formats of the same product.
@@ -1930,414 +2306,6 @@ var homepageContainer = {
     }
 }
 /**
- * Component responsible for handling the payment overlay behaviour.
- * Entry point is in checkPendingOrders.
- *
- * @type {{cancelOrder: Function, displayUnpaidOverlay: Function, displayCongratulateOverlay: Function, renderAddress: Function, renderAdditionalDetails: Function, checkPendingOrders: Function, init: Function}}
- */
-var paymentOverlayContainer = {
-
-    /**
-     * Cancel an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_current_order");
-
-            $("#cancelledOrder").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-        });
-    },
-
-
-    /**
-     * Display the unpaid overlay using semantic-ui modal module.
-     *
-     */
-    displayUnpaidOverlay: function () {
-        var order = JSON.parse(Cookies.get('_current_order'));
-
-        var unpaidOverlay =
-            '<div class="ui small modal text-center unpaid-modal">' +
-                '<i class="close icon"></i>' +
-                '<div class="header">' +
-                    Localization.pending_order.replace(':command', order.id) +
-                '</div>' +
-                '<div class="content">' +
-                    '<div class="description">' +
-                        '<div class="ui header">'  +
-                            Localization.what_to_do +
-                        '</div>' +
-                        '<a href="' + order.payment_url + '">' +
-                            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
-                        '</a>' +
-                        '<button class="ui button red" id="cancelOrder">'+
-                            Localization.cancel_order +
-                        '</button>'+
-                    '</div>' +
-                '</div>' +
-            '</div>';
-
-        $("body").prepend(unpaidOverlay);
-        $(".small.unpaid-modal").modal("show");
-
-    },
-
-
-    /**
-     * Display the congratulate overlay using semantic-ui modal module.
-     *
-     * @param order
-     */
-    displayCongratulateOverlay: function (order) {
-        var overlay =
-            '<div class="ui modal congratulate-modal payment_successful">' +
-                '<div class="header">' +
-                    Localization.payment_successful +
-                '</div>' +
-                '<div class="content">' +
-                    '<div class="description">' +
-                        '<div class="ui header">' +
-                            Localization.summary_below +
-                        '</div>' +
-                        '<p>' + Localization.summary_copy + '</p>' +
-                    '</div>' +
-                    '<br/>' +
-                    '<table class="ui striped table" style="margin: 0 auto">' +
-                        '<tbody class="center aligned">' +
-                            '<tr>' +
-                                '<td>' + Localization.order + '</td>' +
-                                '<td>' + "#" + order.id + '</td>' +
-                            '</tr>' +
-
-                            this.renderAdditionalDetails(order) +
-
-                        '</tbody>' +
-                    '</table>' +
-                '</div>' +
-                '<div class="actions">' +
-                    '<div class="ui black deny button">' +
-                        Localization.close +
-                    '</div>' +
-                '</div>' +
-            '</div>';
-
-        $("body").prepend(overlay);
-
-        $(".congratulate-modal").modal("show");
-    },
-
-    /**
-     * Render the appropriate address' <td> tags according to the type of address.
-     *
-     * @param [object] address_details
-     * @param [string] address_type_name
-     * @returns {string}
-     */
-    renderAddress: function (address_details, address_type_name) {
-        var line2 = address_details.line2 == null ? '' : address_details.line2;
-
-        return '<tr>' +
-                    '<td>' + address_type_name + '</td>' +
-                    '<td>' +
-                        address_details.name +
-                        '<br/>' +
-                        address_details.line1 +
-                        '<br/>' +
-                        line2 +
-                        '<br/>' +
-                        address_details.city +
-                        ', ' +
-                        address_details.province +
-                        ', ' +
-                        address_details.postcode +
-                        '<br/>' +
-                        address_details.country +
-
-                    '</td>' +
-                '</tr>';
-    },
-
-
-    /**
-     * Check if there are any additional details.
-     * If there are, insert them in the summary table.
-     *
-     * @param order
-     * @returns {string}
-     */
-    renderAdditionalDetails: function (order) {
-        if (order.shipping_address != null) {
-            return this.renderAddress(order.shipping_address, Localization.shipping_address) +
-                    this.renderAddress(order.billing_address, Localization.billing_address) +
-                '<tr>' +
-                        '<td>' + Localization.subtotal + '</td>' +
-                        '<td>' + "$" + parseFloat(order.payment_details.subtotal).toFixed(2) + '</td>' +
-                    '</tr>' +
-
-                    '<tr>' +
-                        '<td>' + Localization.taxes + '</td>' +
-                        '<td>' + "$" + parseFloat(order.payment_details.taxes).toFixed(2) + '</td>' +
-                    '</tr>' +
-
-                    '<tr>' +
-                        '<td>' + Localization.total + '</td>' +
-                        '<td>' + "$" + parseFloat(order.payment_details.total).toFixed(2) + '</td>' +
-                    '</tr>';
-        }
-        else {
-            return '';
-        }
-    },
-
-
-    /**
-     * Checks the status of the current order stored in _current_order cookie.
-     *
-     * If the order is paid and the call is made by the same user who passed the order,
-     * we display a summary. Laravel takes care of the check, as this can raise security
-     * concerns...
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_current_order')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_current_order'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(order_details) {
-                    if (order_details.status === 'pending') {
-                        this.displayUnpaidOverlay();
-                    }
-                    else if (order_details.status === 'paid') {
-                        // Display congratulation dimmer.
-                        this.displayCongratulateOverlay(order_details);
-
-                        // Remove products from cart
-                        UtilityContainer.removeAllProductsFromLocalStorage();
-
-                        // Delete the unpaid orders cookie (if any).
-                        Cookies.remove('_current_order');
-                    }
-                    else {
-                        Cookies.remove('_current_order');
-                    }
-                }.bind(this)
-            });
-        }
-
-    },
-
-
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-        self.checkPendingOrders();
-
-    }
-};
-
-/**
- * Responsible for handling the switch between one, two and four columns per row depending on screen width.
- *
- * @type {{tablet: {setClasses: Function}, mobile: {setClasses: Function}, desktop: {setClasses: Function}, init: Function}}
- */
-var responsiveContainer = {
-    // Everything between 400px and 768px is considered tablet size.
-    tablet : {
-        setClasses: function () {
-            // Take the stackable off the grid-layout.
-            $(".grid-layout").removeClass("stackable");
-            // Set two products per row.
-            $(".dense-product").removeClass("four wide column").addClass("eight wide column");
-        }
-    },
-
-    // Everything less than 400px is considered mobile size.
-    mobile : {
-        setClasses: function () {
-            $(".grid-layout").addClass("stackable");
-        }
-    },
-
-    // Everything more than 768px is considered desktop size.
-    desktop: {
-        setClasses: function () {
-            $(".grid-layout").removeClass("stackable");
-            // Set four products per row.
-            $(".dense-product").removeClass("eight four wide column").addClass("four wide column");
-        }
-    },
-
-    init: function () {
-        var self = responsiveContainer;
-
-        $(window).on("load resize", function () {
-            if ($(this).width() < 768 && $(this).width() > 400) {
-                self.tablet.setClasses();
-            }
-            else if ($(this).width() <= 400) {
-                self.mobile.setClasses();
-            }
-            else if ($(this).width() >= 768) {
-                self.desktop.setClasses();
-            }
-        });
-    }
-}
-/**
- * Component responsible for handling the logic of the wish list page.
- * Layout handled in dev/components/site/wishlist.js
- *
- * @type {{createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
- */
-var wishlistLogicContainer = {
-
-    /**
-     * Create a list layout element from the information passed as an argument.
-     *
-     * Rounding to 2 decimals, courtesy of http://stackoverflow.com/a/6134070.
-     *
-     * @param item
-     */
-    createWishlistElement: function(item) {
-        var self = wishlistLogicContainer,
-            element =
-        '<div class="item list-layout-element">' +
-        '<div class="ui tiny image">' +
-        '<img src=' + item.thumbnail_lg + '>' +
-        '</div>' +
-        '<div class="middle aligned content">' +
-        '<div class="header">' +
-        '<a href=' + item.link + '>' + item.name + '</a>' +
-        '</div>' +
-        '<div class="description">' +
-        '<p>' + item.description + '</p>' +
-            '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
-        '</div>' +
-        '<div class="extra">' +
-        '<button class="ui right floated button green buybutton"' +
-        'data-product="' + item.product + '"' +
-        'data-price="' + item.price + '"' +
-        'data-thumbnail="' + item.thumbnail + '"' +
-        'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
-        'data-name="' + item.name + '"' +
-        'data-description="' + item.description + '"' +
-        'data-quantity="' + item.quantity  + '"' + ">" +
-        'Add to cart </button>' +
-        '</button>' +
-        '<button class="ui right floated button inverted red removeFavoriteButton" data-product="' + item.product + '">' +
-        'Remove from wishlist' +
-        '</button>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '<hr/>';
-
-
-        //Localize button (default in english)
-        self.localizeWishlistButton();
-
-        //Append elements
-        $(".list-layout-element-container").append(element);
-    },
-
-    /**
-     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
-     * The creation is handled in createWishlistElement function.
-     *
-     */
-    renderWishlist: function() {
-        var self = wishlistLogicContainer;
-
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
-            {
-                self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
-            }
-        }
-    },
-
-    localizeWishlistButton: function() {
-        $(".list-layout-element .buybutton").text(Localization.add_cart);
-        $(".list-layout-element .removeFavoriteButton").text(Localization.wishlist_remove);
-    },
-
-    /**
-     * Remove the element from the wishlist after a subtle animation.
-     *
-     */
-    removeWishlistElement: function () {
-        $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
-            //Animate the element.
-            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
-            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element").next());
-
-            //Delete the element from localStorage.
-            localStorage.removeItem("_wish_product " + $(this).data("product"));
-
-            //Set wishlist header quantity.
-            wishlistContainer.setNumberOfProductsInHeader();
-
-            //Set wishlist badge
-            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
-        });
-    },
-
-    init: function () {
-        var self = wishlistLogicContainer;
-
-        //Calls the layout container (wishlistContainer).
-        wishlistContainer.init();
-
-        //Initialize the logic.
-        self.renderWishlist();
-        self.removeWishlistElement();
-    }
-
-}
-/**
- * Component responsible for the view component of the wish list page.
- * Logic handled in dev/actions/site/wishlist-logic.js
- *
- * @type {{setNumberOfProductsInHeader: Function, init: Function}}
- */
-var wishlistContainer = {
-
-    /**
-     * Sets the number of products in the header (singular / plural).
-     *
-     */
-    setNumberOfProductsInHeader: function() {
-        var quantity = "";
-        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
-        $("#quantity-wishlist").text(quantity);
-    },
-
-
-    init: function() {
-        var self = wishlistContainer;
-
-        self.setNumberOfProductsInHeader();
-    }
-}
-/**
  * Component responsible for displaying the cart drawer.
  * Logic handled in dev/layout/cart-drawer/cart-drawer-logic.js
  *
@@ -2867,106 +2835,139 @@ var cartLogicContainer = {
 };
 
 /**
- * Entry point of script.
+ * Component responsible for handling the logic of the wish list page.
+ * Layout handled in dev/components/site/wishlist.js
  *
+ * @type {{createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
  */
-; (function(window, document, $) {
-    $(document).ready(function () {
+var wishlistLogicContainer = {
 
-        /**
-         * Sets up the ajax token for all ajax requests.
-         *
-         */
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'locale': $('html').attr('lang')
+    /**
+     * Create a list layout element from the information passed as an argument.
+     *
+     * Rounding to 2 decimals, courtesy of http://stackoverflow.com/a/6134070.
+     *
+     * @param item
+     */
+    createWishlistElement: function(item) {
+        var self = wishlistLogicContainer,
+            element =
+        '<div class="item list-layout-element">' +
+        '<div class="ui tiny image">' +
+        '<img src=' + item.thumbnail_lg + '>' +
+        '</div>' +
+        '<div class="middle aligned content">' +
+        '<div class="header">' +
+        '<a href=' + item.link + '>' + item.name + '</a>' +
+        '</div>' +
+        '<div class="description">' +
+        '<p>' + item.description + '</p>' +
+            '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
+        '</div>' +
+        '<div class="extra">' +
+        '<button class="ui right floated button green buybutton"' +
+        'data-product="' + item.product + '"' +
+        'data-price="' + item.price + '"' +
+        'data-thumbnail="' + item.thumbnail + '"' +
+        'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
+        'data-name="' + item.name + '"' +
+        'data-description="' + item.description + '"' +
+        'data-quantity="' + item.quantity  + '"' + ">" +
+        'Add to cart </button>' +
+        '</button>' +
+        '<button class="ui right floated button inverted red removeFavoriteButton" data-product="' + item.product + '">' +
+        'Remove from wishlist' +
+        '</button>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<hr/>';
+
+
+        //Localize button (default in english)
+        self.localizeWishlistButton();
+
+        //Append elements
+        $(".list-layout-element-container").append(element);
+    },
+
+    /**
+     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
+     * The creation is handled in createWishlistElement function.
+     *
+     */
+    renderWishlist: function() {
+        var self = wishlistLogicContainer;
+
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
+            {
+                self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
             }
+        }
+    },
+
+    localizeWishlistButton: function() {
+        $(".list-layout-element .buybutton").text(Localization.add_cart);
+        $(".list-layout-element .removeFavoriteButton").text(Localization.wishlist_remove);
+    },
+
+    /**
+     * Remove the element from the wishlist after a subtle animation.
+     *
+     */
+    removeWishlistElement: function () {
+        $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
+            //Animate the element.
+            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
+            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element").next());
+
+            //Delete the element from localStorage.
+            localStorage.removeItem("_wish_product " + $(this).data("product"));
+
+            //Set wishlist header quantity.
+            wishlistContainer.setNumberOfProductsInHeader();
+
+            //Set wishlist badge
+            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
         });
+    },
 
-        /**
-         * Sets up Localization and ApiEndpoints variables.
-         *
-         */
-        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
-        Localization = env.Localization;
-        ApiEndpoints = env.ApiEndpoints;
+    init: function () {
+        var self = wishlistLogicContainer;
 
-        /**
-         * Initialize semantic UI modules.
-         *
-         */
-        semanticInitContainer.init();
+        //Calls the layout container (wishlistContainer).
+        wishlistContainer.init();
 
-        /**
-         * Initialize responsiveness feature.
-         *
-         */
-        responsiveContainer.init();
+        //Initialize the logic.
+        self.renderWishlist();
+        self.removeWishlistElement();
+    }
 
-        /**
-         * Initialize checkout logic.
-         *
-         */
-        checkoutContainer.init();
+}
+/**
+ * Component responsible for the view component of the wish list page.
+ * Logic handled in dev/actions/site/wishlist-logic.js
+ *
+ * @type {{setNumberOfProductsInHeader: Function, init: Function}}
+ */
+var wishlistContainer = {
 
-        /**
-         * Initialize cart drawer logic.
-         *
-         */
-        cartDrawerInitContainer.init();
+    /**
+     * Sets the number of products in the header (singular / plural).
+     *
+     */
+    setNumberOfProductsInHeader: function() {
+        var quantity = "";
+        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
+        $("#quantity-wishlist").text(quantity);
+    },
 
-        /**
-         * Initialize category container.
-         *
-         */
-        categoryContainer.init();
 
-        /**
-         * Initialize overlay plugin.
-         *
-         */
-        paymentOverlayContainer.init();
+    init: function() {
+        var self = wishlistContainer;
 
-        /**
-         * Initialize homepage sections.
-         *
-         */
-        homepageContainer.init();
-
-        /**
-         * Initialize favorite products feature.
-         *
-         */
-        productLayoutFavoriteContainer.init();
-
-        /**
-         * Initialize product formats feature.
-         *
-         */
-        productFormatContainer.init();
-
-        /**
-         * Initialize column responsiveness in product pages.
-         *
-         */
-        productResponsiveContainer.init();
-
-        /**
-         * Initialize wishlist page.
-         *
-         */
-        wishlistLogicContainer.init();
-
-        /**
-         * Global initialization of elements.
-         *
-         */
-            //fancy plugin for product page (quantity input)
-        $(".input-qty").TouchSpin({
-            initval: 1
-        });
-
-    });
-
-})(window, this.document, jQuery, undefined)
+        self.setNumberOfProductsInHeader();
+    }
+}
