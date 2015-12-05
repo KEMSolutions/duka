@@ -23,8 +23,6 @@ class Store extends BaseObject
     /**
      * Retrieves the supported locales for the current store.
      *
-     * TODO: use /locales endpoint instead of retrieving locales through store embeds.
-     *
      * @return array
      */
     public function locales()
