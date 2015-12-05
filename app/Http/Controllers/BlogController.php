@@ -29,7 +29,15 @@ class BlogController extends Controller
     public function index()
     {
         //
-        return "Hello";
+        $blogs = Blogs::all();
+        if (count($blogs) == 0){
+            abort(404, Lang::get('boukem.error_occurred'));
+        }
+
+        return view('site.blog.index', [
+            'blogs' => $blogs,
+        ]);
+
     }
 
    
