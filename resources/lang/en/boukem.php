@@ -268,6 +268,7 @@ return [
     "501"               =>"Back to the future? This feature is not yet implemented :(",
     "503"               =>"We are taking a nap right now. Be right back :)",
     "refine_by"         =>"Refine By",
+    "blog"              =>"Blog",
 
     "validation_name"   =>"Please enter your name",
     "validation_address_shipping"=>"Please enter your shipping address",

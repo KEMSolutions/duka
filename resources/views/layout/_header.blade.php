@@ -197,6 +197,12 @@
                 </div>
             @endif
 
+            @if(count(Store::info()->blogs) > 0)
+                <div class="btn btn-link">
+                    <a href="{{ action('BlogController@index') }}">@lang('boukem.blog')</a>
+                </div>
+            @endif
+
             {{-- Links to custom pages. --}}
             @if (count(Pages::all()))
                 @foreach (Pages::all() as $page)

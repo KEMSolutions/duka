@@ -268,6 +268,7 @@ return [
     "501"               =>"Vous avez tenté d'accéder à une fonctionnalité non implémentée... pour l'instant.",
     "503"               =>"Service temporairement indisponible indépendamment de notre volonté. Désolé :(",
     "refine_by"         =>"Raffiner par",
+    "blog"              =>"Blogue",
 
     "validation_name"   =>"Veuillez saisir votre nom",
     "validation_address_shipping"=>"Veuillez saisir votre adresse de livraison",
