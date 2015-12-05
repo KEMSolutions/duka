@@ -208,6 +208,7 @@ return [
         'Products'  => 'App\Facades\Products',
         'Store'     => 'App\Facades\Store',
         'Utilities' => 'App\Facades\Utilities',
+        'Blogs'     => 'App\Facades\Blogs',
 
 	],
 
