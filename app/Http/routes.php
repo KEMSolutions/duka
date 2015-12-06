@@ -19,8 +19,8 @@ Route::group([
     Route::get('contracts/{slug}',  ['as' => 'contract', 'uses' => 'PageController@getContract']);
 
     // Blog
+    Route::get('blog/rss', ["uses"=>'BlogController@getFeed', 'as'=>'blog.feed']);
     Route::resource('blog', 'BlogController');
-    Route::get('rss', ["uses"=>'BlogController@getFeed', 'as'=>'blog.feed']);
 
     // Categories.
     Route::get('cat/{slug}.html',   ['as' => 'category', 'uses' => 'CategoryController@display']);
