@@ -148,7 +148,7 @@ return [
         'App\Providers\LocalizationServiceProvider',
 		'Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider',
         'App\Providers\RouteServiceProvider',
-
+        'Roumen\Feed\FeedServiceProvider',
 	],
 
 	/*
@@ -209,6 +209,7 @@ return [
         'Store'     => 'App\Facades\Store',
         'Utilities' => 'App\Facades\Utilities',
         'Blogs'     => 'App\Facades\Blogs',
+        'Feed' => 'Roumen\Feed\Facades\Feed',
 
 	],
 

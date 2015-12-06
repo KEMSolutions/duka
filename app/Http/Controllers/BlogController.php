@@ -26,6 +26,25 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function getFeed()
+    {
+        //
+        $blogs = Blogs::all();
+        if (count($blogs) == 0){
+            abort(404, Lang::get('boukem.error_occurred'));
+        }
+
+        return view('site.blog.index', [
+            'blogs' => $blogs,
+        ]);
+
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         //

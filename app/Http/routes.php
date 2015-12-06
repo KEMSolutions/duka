@@ -20,6 +20,7 @@ Route::group([
 
     // Blog
     Route::resource('blog', 'BlogController');
+    Route::get('rss', ["uses"=>'BlogController@getFeed', 'as'=>'blog.feed']);
 
     // Categories.
     Route::get('cat/{slug}.html',   ['as' => 'category', 'uses' => 'CategoryController@display']);
