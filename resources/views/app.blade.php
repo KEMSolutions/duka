@@ -17,6 +17,10 @@
 	<link rel="icon" type="image/png" href="{{ url('/') . "/favicon.png"}}"/>
 	<link rel='apple-touch-icon' type='image/png' href='/apple-touch-icon.png'>
 
+	@if(count(Store::info()->blogs) > 0)
+	<link rel="alternate" type="application/atom+xml" title="{{ Store::info()->name }} - @lang('boukem.blog')" href="{{ action('BlogController@getFeed') }}" />
+	@endif
+
 	<title>
 @section('title')
 {{ Store::info()->name }}
