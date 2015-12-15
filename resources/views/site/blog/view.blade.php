@@ -1,7 +1,7 @@
 @extends("app")
 @section('title')
 {{ $blog->title }}
-@stop
+@endsection
 
 
 @section("content")
@@ -39,5 +39,3 @@
         </article>
     </section>
 @endsection
-
-@stop

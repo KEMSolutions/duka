@@ -1,7 +1,7 @@
 @extends("app")
 @section('title')
 @lang("boukem.blog")
-@stop
+@endsection
 
 
 @section("content")
@@ -42,5 +42,3 @@
 
 
 @endsection
-
-@stop

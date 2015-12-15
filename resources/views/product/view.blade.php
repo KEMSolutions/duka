@@ -2,13 +2,13 @@
 
 @section('title')
 {{ $product->localization->name }}
-@stop
+@endsection
 
 @section('custom_metas')
 @foreach ($product->localization->alt as $localization)
 <link rel="alternate" hreflang="{{ $localization->locale->language }}" href="/{{ $localization->locale->language }}/prod/{{ $localization->slug }}.html" />
 @endforeach
-@stop
+@endsection
 
 @section("content")
     @include("product._breadcrumb", ["product" => $product])

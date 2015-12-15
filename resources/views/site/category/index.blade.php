@@ -1,7 +1,7 @@
 @extends("app")
 @section('title')
 {{ $name }}
-@stop
+@endsection
 
     @section("content")
         {{-- Include header --}}
@@ -28,5 +28,3 @@
             </div>
 
     @endsection
-
-@stop

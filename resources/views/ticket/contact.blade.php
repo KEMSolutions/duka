@@ -2,7 +2,7 @@
 
 @section('title')
 @lang("boukem.contact") - @parent
-@stop
+@endsection
 
 @section('content')
 
