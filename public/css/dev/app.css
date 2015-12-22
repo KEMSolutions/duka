@@ -42,6 +42,10 @@ p {
   list-style: none;
 }
 
+.btn {
+  outline: none;
+}
+
 /*----------------------------------------*/
 
 /* Layout */
