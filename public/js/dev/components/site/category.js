@@ -339,7 +339,7 @@ var categoryContainer = {
         '<div class="content">' +
         '<div class="center">' +
         '<div class="ui text loader">' +
-        '<h1 class="ui header loading-text"></h1></div>' +
+        '<h1 class="ui header loading-text white"></h1></div>' +
         '</div>' +
         '</div>';
 

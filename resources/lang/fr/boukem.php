@@ -242,7 +242,7 @@ return [
     "account_saved"     => "Vos coordonées ont été mises à jour. Merci!",
     "account_not_saved" => "Nous n'avons pas pu mettre vos coordonées à jour.",
     "select_language" => "Langue",
-    "sort_by"           =>"Classer par",
+    "sort_by"           =>"Classer par: ",
     "relevance"         =>"Pertinence",
     "price_range"       =>"Gamme de prix",
     "price_low_to_high" =>"Prix: ordre croissant",

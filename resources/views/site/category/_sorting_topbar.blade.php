@@ -1,12 +1,14 @@
-<div class="row sorting-topbar horizontally-padded">
+<div class="row sorting-topbar vertically-padded">
     <div class="ui horizontal list full-width">
         <div class="item">
             <span>
-              <div class="ui inline dropdown dropdown-select top left pointing button labeled tiny" id="sort-by-box">
+              <div class="ui inline dropdown dropdown-select top right pointing button labeled" id="sort-by-box">
                   @lang("boukem.sort_by")
                   <div class="text">
-                      <i class="linkify icon"></i>
-                      @lang("boukem.relevance")
+                      <span style="padding-left: 1rem">
+                          <i class="linkify icon"></i>
+                          @lang("boukem.relevance")
+                      </span>
                   </div>
                   <i class="dropdown icon"></i>
                   <div class="menu sort-by">
@@ -27,12 +29,12 @@
             </span>
         </div>
 
-        <div class="item">
+        <div class="item buttons">
             <span>
-                <div class="ui inline dropdown dropdown-select top right pointing button labeled tiny" id="items-per-page-box">
+                <div class="ui inline dropdown dropdown-select top right pointing button labeled" id="items-per-page-box">
                     @lang("boukem.items_per_page")
                     <div class="text">
-                        8
+                        <span style="padding-left: 1rem">8</span>
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu items-per-page">

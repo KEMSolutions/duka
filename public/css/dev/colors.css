@@ -100,13 +100,13 @@ Conventions:
 .btn-one-inverted {
     background-color: #00F0F0;
     color: #fff;
-    border-color: #11F1F1;
+    border: 1px solid #11F1F1;
 }
 
 .btn-one-inverted:hover, .btn-one-inverted:focus, .btn-one-inverted:active, .btn-one-inverted.active, .open .dropdown-toggle.btn-one-inverted {
     background-color: #fff;
     color: #11F1F1;
-    border-color: #11F1F1;
+    border: 1px solid #11F1F1;
 }
 
 .btn-two {

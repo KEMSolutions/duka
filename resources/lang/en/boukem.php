@@ -242,7 +242,7 @@ return [
     "account_saved"    => "Your details have been updated. Thank you!",
     "account_not_saved"    => "We were not able to update your account information.",
     "select_language" => "Language",
-    "sort_by"           =>"Sort by",
+    "sort_by"           =>"Sort by: ",
     "relevance"         =>"Relevance",
     "price_range"       =>"Price Range",
     "price_low_to_high" =>"Price: low to high",

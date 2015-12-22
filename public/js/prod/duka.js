@@ -1464,7 +1464,6 @@ var paymentOverlayContainer = {
                     else if (order_details.status === 'paid') {
                         // Display congratulation dimmer.
                         this.displayCongratulateOverlay(order_details);
-                        console.log(order_details);
 
                         // Remove products from cart
                         UtilityContainer.removeAllProductsFromLocalStorage();
@@ -2235,7 +2234,7 @@ var categoryContainer = {
         '<div class="content">' +
         '<div class="center">' +
         '<div class="ui text loader">' +
-        '<h1 class="ui header loading-text"></h1></div>' +
+        '<h1 class="ui header loading-text white"></h1></div>' +
         '</div>' +
         '</div>';
 

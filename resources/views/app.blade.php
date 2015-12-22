@@ -34,7 +34,7 @@
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
 	<!-- Semantic UI css dependencies -->
-	<link rel="stylesheet" href="{{ asset('/semantic/prod/semantic.css') }}"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.7/semantic.min.css"/>
 
 	<!-- Required -->
 	<link href="//cdn.kem.guru/css/outdatedBrowser.min.css" rel="stylesheet">
@@ -86,7 +86,7 @@
 	<script src="/js_assets/blur/blur.min.js"></script>
 
 	<!-- Semantic ui dependencies -->
-	<script src="/semantic/prod/semantic-2.1.4.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.7/semantic.min.js"></script>
 
 	<script src="/js/prod/duka.js"></script>
 
