@@ -2,7 +2,7 @@
     <div class="ui horizontal list full-width">
         <div class="item">
             <span>
-              <div class="ui inline dropdown dropdown-select top right pointing button labeled" id="sort-by-box">
+              <div class="ui inline dropdown top right pointing button labeled" id="sort-by-box">
                   @lang("boukem.sort_by")
                   <div class="text">
                       <span style="padding-left: 1rem">
@@ -31,7 +31,7 @@
 
         <div class="item buttons">
             <span>
-                <div class="ui inline dropdown dropdown-select top right pointing button labeled" id="items-per-page-box">
+                <div class="ui inline dropdown top right pointing button labeled" id="items-per-page-box">
                     @lang("boukem.items_per_page")
                     <div class="text">
                         <span style="padding-left: 1rem">8</span>

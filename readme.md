@@ -58,12 +58,10 @@ If a component can stand on its own (eg. with no component dependencies), its la
   - [Dimmer](http://semantic-ui.com/modules/dimmer.html)
  
 ###### Dropdown  
+To specify a specific action to occur at click, use the tag `data-action`. The default action is set to 'activate' (to get the full list of actions, refer to [this](http://semantic-ui.com/modules/dropdown.html#/settings) page. 
 
     // Active menu and update input fields, but without changing current text. 
-    <div class='ui dropdown dropdown-no-select'>
-
-    // Activate menu, update input fields and change current text.
-    <div class='ui dropdown dropdown-select'>
+    <div class='ui dropdown' data-action='select'>
 
 ###### Dimmer
     // To have an explicit close button for a dimmer.

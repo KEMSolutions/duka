@@ -7,7 +7,7 @@ var semanticInitContainer = {
 
     /**
      * Initialize modules
-     *
+
      */
     module: {
         /**
@@ -15,14 +15,15 @@ var semanticInitContainer = {
          *
          */
         initDropdownModule: function() {
-            //Enable selection on clicked items
-            $(".ui.dropdown-select").dropdown();
+            $(".ui.dropdown").dropdown();
 
-            //Prevent selection on clicked items
-            $(".ui.dropdown-no-select").dropdown({
-                    action: "select"
-                }
-            );
+            $(".ui.dropdown").on("click", function () {
+                var action = $(this).data("action") || "activate";
+
+                $(this).dropdown({
+                    action: action
+                });
+            });
         },
 
         /**

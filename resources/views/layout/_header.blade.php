@@ -25,7 +25,7 @@
                 <div class="ui fluid action input">
                     <input type="search" name="q" id="searchBar" value="" autocomplete="off" spellcheck="false" placeholder="@lang('boukem.search')">
 
-                    <select class="ui selection dropdown dropdown-select compact hidden">
+                    <select class="ui selection dropdown compact hidden" data-action="select">
                         <option value="@lang("boukem.all_categories")">@lang("boukem.all_categories")</option>
                         <option value="@lang("boukem.brands")">@lang("boukem.brands")</option>
                         <option value="@lang("boukem.health_issues")">@lang("boukem.health_issues")</option>
@@ -41,7 +41,7 @@
 
             {{-- Mobile only categories menu. --}}
                 <div class="ui icon btn btn-one visible-xs-inline-block">
-                    <div class="ui dropdown dropdown-select pointing top left">
+                    <div class="ui dropdown pointing top left" data-action="select">
                         <div class="text">
                             @lang('boukem.shop_by_categories')
                         </div>
@@ -81,7 +81,7 @@
 
 
             <div class="ui icon btn btn-five">
-                <div class="ui top right pointing dropdown dropdown-no-select">
+                <div class="ui top right pointing dropdown" data-action="select">
                     <div class="text">
                         <i class="icon fa fa-user"></i> @lang('boukem.my_account')
                     </div>
@@ -151,7 +151,7 @@
 
         <div class="three wide column text-center border-right">
             <div class="btn btn-link">
-                <div class="ui pointing dropdown dropdown-no-select top left white">
+                <div class="ui pointing dropdown top left white" data-action="select">
                     <span class="text">
                         @lang('boukem.shop_by_categories')
                         <i class="caret down icon"></i>
@@ -214,7 +214,7 @@
 
         {{-- Store contact info. --}}
             <div class="btn btn-link">
-                <div class="ui pointing dropdown dropdown-no-select top left white">
+                <div class="ui pointing dropdown top left white" data-action="select">
                     <span class="text">
                         {{ Lang::get("boukem.contact") }}
                         <i class="caret down icon"></i>
