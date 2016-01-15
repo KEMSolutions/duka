@@ -18,13 +18,13 @@
 </div>
 
 <section class="ui padded container">
-
+<div class="ui items">
 @foreach ($blogs as $blog)
-    <div class="ui items">
+    
       <div class="item">
-        {{--<div class="ui small image">
-          <img src="/images/wireframe/image.png">
-        </div>--}}
+        <div class="ui small image">
+          <img src="{{ Utilities::setImageSizeAndMode(400, 400, 'fit', $blog->image->url) }}">
+        </div>
         <div class="content">
           <div class="header"><a href="{{ action('BlogController@show', ["slug"=>$blog->slug]) }}">{{ $blog->title }}</a></div>
           <div class="meta">
@@ -37,7 +37,7 @@
         </div>
       </div>
 @endforeach
-
+</div>
 </section>
 
 
