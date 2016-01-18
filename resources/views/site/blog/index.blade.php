@@ -9,16 +9,17 @@
     <div class="one column row">
         <div class="right floated column">
             <div class="ui breadcrumb pull-right">
-            	<a class="section" href="{{ route('home') }}">@lang('boukem.home')</a>
-            	<i class="right chevron icon divider"></i>
-            	<a class="active section">@lang('boukem.blog')</a>
+              <a class="section" href="{{ route('home') }}">@lang('boukem.home')</a>
+              <i class="right chevron icon divider"></i>
+              <a class="active section">@lang('boukem.blog')</a>
             </div>
         </div>
     </div>
 </div>
 
-<section class="ui padded container">
-<div class="ui items">
+<section class="ui container">
+<div class="ui padded grid">
+<div class="ui row items">
 @foreach ($blogs as $blog)
     
       <div class="item">
@@ -37,6 +38,7 @@
         </div>
       </div>
 @endforeach
+</div>
 </div>
 </section>
 
