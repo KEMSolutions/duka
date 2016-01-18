@@ -630,6 +630,282 @@ var UtilityContainer = {
 })(window, window.document, jQuery, undefined)
 
 /**
+ * Component responsible for displaying a product description (with a nice fade  out effect)
+ *
+ * @type {{toggleDescription: Function, init: Function}}
+ */
+var productDescriptionPreviewContainer = {
+
+    /**
+     * Toggle the description between its open state and its close state.
+     *
+     */
+    toggleDescription: function () {
+        var open = false;
+
+        $(".preview-trigger").on("click", function () {
+            open = !open;
+
+            if (open) {
+                $(this).text(Localization.show_less);
+                $(".preview-text").fadeOut();
+            }
+            else {
+                $(this).text(Localization.show_more);
+                setTimeout(function() {
+                    $(".preview-text").fadeIn()
+                }, 200);
+            }
+        });
+    },
+
+    init: function () {
+        var self = productDescriptionPreviewContainer;
+
+        self.toggleDescription();
+    }
+};
+/**
+ * Component responsible for handling different formats of the same product.
+ *
+ * @type {{productWithFormat: Function, productWithoutFormat: Function, updateBuybuttonAttributes: Function, updateProductInformation: Function, init: Function}}
+ */
+var productFormatContainer = {
+
+    /**
+     * Update price value for a product with format.
+     *
+     * @param option
+     */
+    productWithFormat: function(option) {
+        var price = '<span class="text-strikethrough">' +
+            'CAD $ ' + option.find(":selected").data("price") +
+            '</span>' +
+            '<span id="product-price" class="strong text-danger">' +
+            'CAD $ ' + option.find(":selected").data("reduced") +
+            '</span>';
+
+        $(".sub.header").text(price);
+    },
+
+
+    /**
+     * Update price value for a format-less product.
+     *
+     * @param option
+     */
+    productWithoutFormat: function(option) {
+        // Change description.
+        $("#product-format-name").text(option.find(":selected").data("format"));
+        $("#product-price").text("CAD $ " + option.find(":selected").data("price"));
+    },
+
+
+    /**
+     * Update buybutton data attributes according to format: id/price/name/format.
+     *
+     * @param option
+     */
+    updateBuybuttonAttributes: function (option) {
+        $(".buybutton").attr({
+            'data-product': option.val(),
+            'data-price': option.find(":selected").data("price"),
+            'data-name': option.find(":selected").data("name"),
+            'data-format': option.find(":selected").data("format")
+        });
+    },
+
+    /**
+     * Main function of this module.
+     * Once the format selector is clicked, trigger the appropriate helpers then update buybutton.
+     *
+     */
+    updateProductInformation: function() {
+        var self = productFormatContainer;
+
+        $("#product-format").on("change", function () {
+
+            if ($(this).find(":selected").data("reduced")) {
+                // Add discounted price for a product with different formats.
+                self.productWithFormat($(this));
+            }
+            else {
+                // Add discounted price for a single format product.
+                self.productWithoutFormat($(this));
+            }
+
+
+            // Update buybutton with right attributes.
+            self.updateBuybuttonAttributes($(this));
+        });
+
+    },
+
+    /**
+     * Entry point of this module.
+     *
+     */
+    init: function () {
+        const self = productFormatContainer;
+
+        self.updateProductInformation();
+
+    }
+}
+/**
+ * Component responsible for adding products to a user's wishlist.
+ *
+ * @type {{fadeInFavoriteIcon: Function, setPopupText: Function, setWishlistBadgeQuantity: Function, addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
+ */
+var productLayoutFavoriteContainer = {
+    /**
+     * Fade in the favorite icon (heart icon) when hovering on a product tile.
+     *
+     */
+    fadeInFavoriteIcon: function() {
+        self = productLayoutFavoriteContainer;
+
+        $(".dense-product").hover(function() {
+
+            $(this).children(".favorite-wrapper").fadeIn();
+            self.setPopupText($(this).children(".favorite-wrapper"));
+
+        }, function () {
+            $(this).children(".favorite-wrapper").hide();
+        });
+    },
+
+    /**
+     * Set popup text according to current state of the wrapper.
+     *
+     * @param wrapper
+     */
+    setPopupText: function (wrapper) {
+        if($(wrapper).hasClass("favorited")){
+            $(wrapper).attr("title", Localization.wishlist_remove);
+        }
+        else {
+            $(wrapper).attr("title", Localization.wishlist_add);
+        }
+    },
+
+    /**
+     * Update the value of .wishlist_badge when adding or deleting elements.
+     *
+     */
+    setWishlistBadgeQuantity : function() {
+        var total = UtilityContainer.getNumberOfProductsInWishlist();
+
+        $(".wishlist_badge").text(total);
+    },
+
+    /**
+     * Add the clicked product to the wish list.
+     *
+     */
+    addToFavorite: function() {
+        var self = productLayoutFavoriteContainer,
+            item;
+
+        $(".favorite-wrapper").on("click", function() {
+            //No favorited class.
+            if (!$(this).hasClass("favorited")) {
+                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
+                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+
+                //Set the favorite icon to be displayed
+                $(this).addClass("favorited");
+
+                //Set wishlist badge quantity
+                self.setWishlistBadgeQuantity();
+            }
+            else
+            //Has a favorited class. We remove it, then delete the element from local Storage.
+            {
+                self.removeFromFavorite($(this), self);
+            }
+        });
+    },
+
+    /**
+     * Persist the heart icon next to products already marked as wished.
+     *
+     */
+    persistFavorite: function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
+                for(var j = 0; j<$(".favorite-wrapper").length; j++)
+                {
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
+                    {
+                        $(".favorite-wrapper")[j].className += " favorited";
+                    }
+                }
+            }
+        }
+    },
+
+    /**
+     * Delete the clicked element from the wish list.
+     *
+     * @param element
+     * @param context
+     */
+    removeFromFavorite: function (element, context) {
+        element.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + element.data("product"));
+        context.setWishlistBadgeQuantity();
+    },
+
+    init: function () {
+        var self = productLayoutFavoriteContainer;
+
+        self.setPopupText();
+        self.addToFavorite();
+        self.persistFavorite();
+        self.fadeInFavoriteIcon();
+        self.setWishlistBadgeQuantity();
+    }
+}
+/**
+ * Component responsible for changing quantity on the product page view.
+ *
+ * @type {{addQuantity: Function, removeQuantity: Function, updateBuyButton: Function, init: Function}}
+ */
+var productQuantityContainer = {
+    addQuantity : function(input, callback) {
+        $(".qty-selector[data-action='add']").on("click", function() {
+            input.val(parseInt(input.val()) + 1);
+
+            callback();
+        });
+    },
+
+    removeQuantity: function(input, callback) {
+        $(".qty-selector[data-action='remove']").on("click", function() {
+            var actual = parseInt(input.val());
+
+            if (actual > 1) {
+                input.val(parseInt(input.val()) - 1);
+            }
+
+            callback();
+        });
+    },
+
+    updateBuyButton: function() {
+        $(".buybutton").attr("data-quantity", $(".qty-selector-input").val());
+    },
+
+    init: function () {
+        var self = productQuantityContainer;
+        self.addQuantity($(".qty-selector-input"), self.updateBuyButton);
+        self.removeQuantity($(".qty-selector-input"), self.updateBuyButton);
+
+    }
+};
+/**
  * Component responsible for handling the checkout process.
  * @type {{validation: {validateFormFields: Function}, view: {autofillBillingInformation: Function, clearFields: Function, dispatchButtonsActions: Function, displayContactInformation: Function, displayShipmentMethodsAndPriceInformation: Function, fadeInBillingInformation: Function, fetchEstimate: Function, fetchPayment: Function, setInternationalFields: Function, updatePayment: Function}, actions: {createOrdersCookie: Function, getShipmentTaxes: Function, getTaxes: Function, placeOrderAjaxCall: Function, shipmentMethodsAjaxCall: Function}, bootstrap: {selectDefaultShipmentMethod: Function}, init: Function}}
  */
@@ -991,17 +1267,19 @@ var checkoutContainer = {
 
             for(var i = 0, shippingLength = data.shipping.services.length; i<shippingLength; i++)
             {
+                var delivery = data.shipping.services[i].delivery != null ? data.shipping.services[i].delivery : " - ";
+
                 var serviceDOM = "<tr data-service='" + data.shipping.services[i].method + "'>" +
                     "<td>" + data.shipping.services[i].name + "</td>" +
-                    "<td>" + data.shipping.services[i].delivery + "</td>" +
-                    "<td>" + "$" + data.shipping.services[i].price + "</td>" +
+                    "<td>" + delivery  + "</td>" +
+                    "<td>" + "$" + data.shipping.services[i].price.toFixed(2) + "</td>" +
                     "<td>" +
                     "<input " +
                     "type='radio' " +
                     "name='shipping' " +
                     "class='shipping_method' " +
                     "data-taxes='" + self.actions.getShipmentTaxes(data.shipping.services[i].method, data) + "' " +
-                    "data-cost='" + data.shipping.services[i].price + "' " +
+                    "data-cost='" + data.shipping.services[i].price.toFixed(2) + "' " +
                     "data-value='" + data.shipping.services[i].method + "' " +
                     "value='" + btoa(JSON.stringify(data.shipping.services[i])) + "' >" +
                     "</td>";
@@ -1268,6 +1546,371 @@ var checkoutContainer = {
         });
     }
 
+}
+/**
+ * Component responsible for handling the payment overlay behaviour.
+ * Entry point is in checkPendingOrders.
+ *
+ * @type {{cancelOrder: Function, displayUnpaidOverlay: Function, displayCongratulateOverlay: Function, renderAddress: Function, renderAdditionalDetails: Function, checkPendingOrders: Function, init: Function}}
+ */
+var paymentOverlayContainer = {
+
+    /**
+     * Cancel an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     *
+     */
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            Cookies.remove("_current_order");
+
+            $("#cancelledOrder").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+        });
+    },
+
+
+    /**
+     * Display the unpaid overlay using semantic-ui modal module.
+     *
+     */
+    displayUnpaidOverlay: function () {
+        var order = JSON.parse(Cookies.get('_current_order'));
+
+        var unpaidOverlay =
+            '<div class="ui small modal text-center unpaid-modal">' +
+                '<i class="close icon"></i>' +
+                '<div class="header">' +
+                    Localization.pending_order.replace(':command', order.id) +
+                '</div>' +
+                '<div class="content">' +
+                    '<div class="description">' +
+                        '<div class="ui header">'  +
+                            Localization.what_to_do +
+                        '</div>' +
+                        '<a href="' + order.payment_url + '">' +
+                            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
+                        '</a>' +
+                        '<button class="ui button red" id="cancelOrder">'+
+                            Localization.cancel_order +
+                        '</button>'+
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+        $("body").prepend(unpaidOverlay);
+        $(".small.unpaid-modal").modal("show");
+
+    },
+
+
+    /**
+     * Display the congratulate overlay using semantic-ui modal module.
+     *
+     * @param order
+     */
+    displayCongratulateOverlay: function (order) {
+        var overlay =
+            '<div class="ui modal congratulate-modal payment_successful">' +
+                '<div class="header">' +
+                    Localization.payment_successful +
+                '</div>' +
+                '<div class="content">' +
+                    '<div class="description">' +
+                        '<div class="ui header">' +
+                            Localization.summary_below +
+                        '</div>' +
+                        '<p>' + Localization.summary_copy + '</p>' +
+                    '</div>' +
+                    '<br/>' +
+                    '<table class="ui striped table" style="margin: 0 auto">' +
+                        '<tbody class="center aligned">' +
+                            '<tr>' +
+                                '<td>' + Localization.order + '</td>' +
+                                '<td>' + "#" + order.id + '</td>' +
+                            '</tr>' +
+
+                            this.renderAdditionalDetails(order) +
+
+                        '</tbody>' +
+                    '</table>' +
+                '</div>' +
+                '<div class="actions">' +
+                    '<div class="ui black deny button">' +
+                        Localization.close +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+        $("body").prepend(overlay);
+
+        $(".congratulate-modal").modal("show");
+    },
+
+    /**
+     * Render the appropriate address' <td> tags according to the type of address.
+     *
+     * @param [object] address_details
+     * @param [string] address_type_name
+     * @returns {string}
+     */
+    renderAddress: function (address_details, address_type_name) {
+        var line2 = address_details.line2 == null ? '' : address_details.line2 + '<br/>';
+
+        return '<tr>' +
+                    '<td>' + address_type_name + '</td>' +
+                    '<td>' +
+                        address_details.name +
+                        '<br/>' +
+                        address_details.line1 +
+                        '<br/>' +
+                        line2 +
+                        address_details.city +
+                        ', ' +
+                        address_details.province +
+                        ', ' +
+                        address_details.postcode +
+                        '<br/>' +
+                        address_details.country +
+
+                    '</td>' +
+                '</tr>';
+    },
+
+
+    /**
+     * Check if there are any additional details.
+     * If there are, insert them in the summary table.
+     *
+     * @param order
+     * @returns {string}
+     */
+    renderAdditionalDetails: function (order) {
+        if (order.shipping_address != null) {
+            return this.renderAddress(order.shipping_address, Localization.shipping_address) +
+                    this.renderAddress(order.billing_address, Localization.billing_address) +
+                '<tr>' +
+                        '<td>' + Localization.subtotal + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.subtotal).toFixed(2) + '</td>' +
+                    '</tr>' +
+
+                    '<tr>' +
+                        '<td>' + Localization.taxes + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.taxes).toFixed(2) + '</td>' +
+                    '</tr>' +
+
+                    '<tr>' +
+                        '<td>' + Localization.total + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.total).toFixed(2) + '</td>' +
+                    '</tr>';
+        }
+        else {
+            return '';
+        }
+    },
+
+
+    /**
+     * Checks the status of the current order stored in _current_order cookie.
+     *
+     * If the order is paid and the call is made by the same user who passed the order,
+     * we display a summary. Laravel takes care of the check, as this can raise security
+     * concerns...
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_current_order')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_current_order'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(order_details) {
+                    if (order_details.status === 'pending') {
+                        this.displayUnpaidOverlay();
+                    }
+                    else if (order_details.status === 'paid') {
+                        // Display congratulation dimmer.
+                        this.displayCongratulateOverlay(order_details);
+
+                        // Remove products from cart
+                        UtilityContainer.removeAllProductsFromLocalStorage();
+
+                        // Delete the unpaid orders cookie (if any).
+                        Cookies.remove('_current_order');
+                    }
+                    else {
+                        Cookies.remove('_current_order');
+                    }
+                }.bind(this)
+            });
+        }
+
+    },
+
+
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+        self.checkPendingOrders();
+
+    }
+};
+
+/**
+ * Responsible for handling the switch between one, two and four columns per row depending on screen width.
+ *
+ * @type {{tablet: {setClasses: Function}, mobile: {setClasses: Function}, desktop: {setClasses: Function}, init: Function}}
+ */
+var responsiveContainer = {
+    // Everything between 400px and 768px is considered tablet size.
+    tablet : {
+        setClasses: function () {
+            // Take the stackable off the grid-layout.
+            $(".grid-layout").removeClass("stackable");
+            // Set two products per row.
+            $(".dense-product").removeClass("four wide column").addClass("eight wide column");
+        }
+    },
+
+    // Everything less than 400px is considered mobile size.
+    mobile : {
+        setClasses: function () {
+            $(".grid-layout").addClass("stackable");
+        }
+    },
+
+    // Everything more than 768px is considered desktop size.
+    desktop: {
+        setClasses: function () {
+            $(".grid-layout").removeClass("stackable");
+            // Set four products per row.
+            $(".dense-product").removeClass("eight four wide column").addClass("four wide column");
+        }
+    },
+
+    init: function () {
+        var self = responsiveContainer;
+
+        $(window).on("load resize", function () {
+            if ($(this).width() < 768 && $(this).width() > 400) {
+                self.tablet.setClasses();
+            }
+            else if ($(this).width() <= 400) {
+                self.mobile.setClasses();
+            }
+            else if ($(this).width() >= 768) {
+                self.desktop.setClasses();
+            }
+        });
+    }
+}
+/**
+ * Component responsible for activating semantic ui features.
+ *
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {closeDimmer: Function}, init: Function}}
+ */
+var semanticInitContainer = {
+
+    /**
+     * Initialize modules
+     *
+     */
+    module: {
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule: function() {
+            $(".ui.dropdown").dropdown();
+
+            $(".ui.dropdown").on("click", function () {
+                var action = $(this).data("action") || "activate";
+
+                $(this).dropdown({
+                    action: action
+                });
+            });
+        },
+
+        /**
+         * Initialize rating module.
+         *
+         */
+        initRatingModule: function () {
+            $(".ui.rating").rating();
+        },
+
+        /**
+         * Initialize popup module.
+         *
+         */
+        initPopupModule: function () {
+            $(".popup").popup();
+        },
+
+        /**
+         * Initialize checkbox module.
+         *
+         */
+        initCheckboxModule: function () {
+            $('.ui.checkbox')
+                .checkbox()
+            ;
+        },
+
+        /**
+         * Initialize accordion module.
+         *
+         */
+        initAccordionModule: function() {
+            $('.ui.accordion').accordion({
+                selector: {
+                    trigger: $(".ui.accordion").data("trigger")
+                }
+            });
+        }
+    },
+
+    /**
+     * Specify semantic custom behavior.
+     *
+     */
+    behaviors: {
+        closeDimmer: function () {
+            $(".close-dimmer").on("click", function() {
+                $(".dimmer").dimmer("hide");
+            });
+        }
+    },
+
+
+
+    init: function () {
+        var self = semanticInitContainer,
+            module = self.module,
+            behaviors = self.behaviors;
+
+        module.initDropdownModule();
+        module.initRatingModule();
+        module.initPopupModule();
+        module.initCheckboxModule();
+        module.initAccordionModule();
+
+        behaviors.closeDimmer();
+    }
 }
 /**
  * Component responsible for the view component of each category page.
@@ -1678,784 +2321,6 @@ var homepageContainer = {
 
         mixed.toggleSixteenWideColumn();
         self.bootstrap();
-    }
-}
-/**
- * Component responsible for handling the payment overlay behaviour.
- * Entry point is in checkPendingOrders.
- *
- * @type {{cancelOrder: Function, displayUnpaidOverlay: Function, displayCongratulateOverlay: Function, renderAddress: Function, renderAdditionalDetails: Function, checkPendingOrders: Function, init: Function}}
- */
-var paymentOverlayContainer = {
-
-    /**
-     * Cancel an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_current_order");
-
-            $("#cancelledOrder").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-        });
-    },
-
-
-    /**
-     * Display the unpaid overlay using semantic-ui modal module.
-     *
-     */
-    displayUnpaidOverlay: function () {
-        var order = JSON.parse(Cookies.get('_current_order'));
-
-        var unpaidOverlay =
-            '<div class="ui small modal text-center unpaid-modal">' +
-                '<i class="close icon"></i>' +
-                '<div class="header">' +
-                    Localization.pending_order.replace(':command', order.id) +
-                '</div>' +
-                '<div class="content">' +
-                    '<div class="description">' +
-                        '<div class="ui header">'  +
-                            Localization.what_to_do +
-                        '</div>' +
-                        '<a href="' + order.payment_url + '">' +
-                            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
-                        '</a>' +
-                        '<button class="ui button red" id="cancelOrder">'+
-                            Localization.cancel_order +
-                        '</button>'+
-                    '</div>' +
-                '</div>' +
-            '</div>';
-
-        $("body").prepend(unpaidOverlay);
-        $(".small.unpaid-modal").modal("show");
-
-    },
-
-
-    /**
-     * Display the congratulate overlay using semantic-ui modal module.
-     *
-     * @param order
-     */
-    displayCongratulateOverlay: function (order) {
-        var overlay =
-            '<div class="ui modal congratulate-modal payment_successful">' +
-                '<div class="header">' +
-                    Localization.payment_successful +
-                '</div>' +
-                '<div class="content">' +
-                    '<div class="description">' +
-                        '<div class="ui header">' +
-                            Localization.summary_below +
-                        '</div>' +
-                        '<p>' + Localization.summary_copy + '</p>' +
-                    '</div>' +
-                    '<br/>' +
-                    '<table class="ui striped table" style="margin: 0 auto">' +
-                        '<tbody class="center aligned">' +
-                            '<tr>' +
-                                '<td>' + Localization.order + '</td>' +
-                                '<td>' + "#" + order.id + '</td>' +
-                            '</tr>' +
-
-                            this.renderAdditionalDetails(order) +
-
-                        '</tbody>' +
-                    '</table>' +
-                '</div>' +
-                '<div class="actions">' +
-                    '<div class="ui black deny button">' +
-                        Localization.close +
-                    '</div>' +
-                '</div>' +
-            '</div>';
-
-        $("body").prepend(overlay);
-
-        $(".congratulate-modal").modal("show");
-    },
-
-    /**
-     * Render the appropriate address' <td> tags according to the type of address.
-     *
-     * @param [object] address_details
-     * @param [string] address_type_name
-     * @returns {string}
-     */
-    renderAddress: function (address_details, address_type_name) {
-        var line2 = address_details.line2 == null ? '' : address_details.line2 + '<br/>';
-
-        return '<tr>' +
-                    '<td>' + address_type_name + '</td>' +
-                    '<td>' +
-                        address_details.name +
-                        '<br/>' +
-                        address_details.line1 +
-                        '<br/>' +
-                        line2 +
-                        address_details.city +
-                        ', ' +
-                        address_details.province +
-                        ', ' +
-                        address_details.postcode +
-                        '<br/>' +
-                        address_details.country +
-
-                    '</td>' +
-                '</tr>';
-    },
-
-
-    /**
-     * Check if there are any additional details.
-     * If there are, insert them in the summary table.
-     *
-     * @param order
-     * @returns {string}
-     */
-    renderAdditionalDetails: function (order) {
-        if (order.shipping_address != null) {
-            return this.renderAddress(order.shipping_address, Localization.shipping_address) +
-                    this.renderAddress(order.billing_address, Localization.billing_address) +
-                '<tr>' +
-                        '<td>' + Localization.subtotal + '</td>' +
-                        '<td>' + "$" + parseFloat(order.payment_details.subtotal).toFixed(2) + '</td>' +
-                    '</tr>' +
-
-                    '<tr>' +
-                        '<td>' + Localization.taxes + '</td>' +
-                        '<td>' + "$" + parseFloat(order.payment_details.taxes).toFixed(2) + '</td>' +
-                    '</tr>' +
-
-                    '<tr>' +
-                        '<td>' + Localization.total + '</td>' +
-                        '<td>' + "$" + parseFloat(order.payment_details.total).toFixed(2) + '</td>' +
-                    '</tr>';
-        }
-        else {
-            return '';
-        }
-    },
-
-
-    /**
-     * Checks the status of the current order stored in _current_order cookie.
-     *
-     * If the order is paid and the call is made by the same user who passed the order,
-     * we display a summary. Laravel takes care of the check, as this can raise security
-     * concerns...
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_current_order')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_current_order'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(order_details) {
-                    if (order_details.status === 'pending') {
-                        this.displayUnpaidOverlay();
-                    }
-                    else if (order_details.status === 'paid') {
-                        // Display congratulation dimmer.
-                        this.displayCongratulateOverlay(order_details);
-
-                        // Remove products from cart
-                        UtilityContainer.removeAllProductsFromLocalStorage();
-
-                        // Delete the unpaid orders cookie (if any).
-                        Cookies.remove('_current_order');
-                    }
-                    else {
-                        Cookies.remove('_current_order');
-                    }
-                }.bind(this)
-            });
-        }
-
-    },
-
-
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-        self.checkPendingOrders();
-
-    }
-};
-
-/**
- * Responsible for handling the switch between one, two and four columns per row depending on screen width.
- *
- * @type {{tablet: {setClasses: Function}, mobile: {setClasses: Function}, desktop: {setClasses: Function}, init: Function}}
- */
-var responsiveContainer = {
-    // Everything between 400px and 768px is considered tablet size.
-    tablet : {
-        setClasses: function () {
-            // Take the stackable off the grid-layout.
-            $(".grid-layout").removeClass("stackable");
-            // Set two products per row.
-            $(".dense-product").removeClass("four wide column").addClass("eight wide column");
-        }
-    },
-
-    // Everything less than 400px is considered mobile size.
-    mobile : {
-        setClasses: function () {
-            $(".grid-layout").addClass("stackable");
-        }
-    },
-
-    // Everything more than 768px is considered desktop size.
-    desktop: {
-        setClasses: function () {
-            $(".grid-layout").removeClass("stackable");
-            // Set four products per row.
-            $(".dense-product").removeClass("eight four wide column").addClass("four wide column");
-        }
-    },
-
-    init: function () {
-        var self = responsiveContainer;
-
-        $(window).on("load resize", function () {
-            if ($(this).width() < 768 && $(this).width() > 400) {
-                self.tablet.setClasses();
-            }
-            else if ($(this).width() <= 400) {
-                self.mobile.setClasses();
-            }
-            else if ($(this).width() >= 768) {
-                self.desktop.setClasses();
-            }
-        });
-    }
-}
-/**
- * Component responsible for displaying a product description (with a nice fade  out effect)
- *
- * @type {{toggleDescription: Function, init: Function}}
- */
-var productDescriptionPreviewContainer = {
-
-    /**
-     * Toggle the description between its open state and its close state.
-     *
-     */
-    toggleDescription: function () {
-        var open = false;
-
-        $(".preview-trigger").on("click", function () {
-            open = !open;
-
-            if (open) {
-                $(this).text(Localization.show_less);
-                $(".preview-text").fadeOut();
-            }
-            else {
-                $(this).text(Localization.show_more);
-                setTimeout(function() {
-                    $(".preview-text").fadeIn()
-                }, 200);
-            }
-        });
-    },
-
-    init: function () {
-        var self = productDescriptionPreviewContainer;
-
-        self.toggleDescription();
-    }
-};
-/**
- * Component responsible for handling different formats of the same product.
- *
- * @type {{productWithFormat: Function, productWithoutFormat: Function, updateBuybuttonAttributes: Function, updateProductInformation: Function, init: Function}}
- */
-var productFormatContainer = {
-
-    /**
-     * Update price value for a product with format.
-     *
-     * @param option
-     */
-    productWithFormat: function(option) {
-        var price = '<span class="text-strikethrough">' +
-            'CAD $ ' + option.find(":selected").data("price") +
-            '</span>' +
-            '<span id="product-price" class="strong text-danger">' +
-            'CAD $ ' + option.find(":selected").data("reduced") +
-            '</span>';
-
-        $(".sub.header").text(price);
-    },
-
-
-    /**
-     * Update price value for a format-less product.
-     *
-     * @param option
-     */
-    productWithoutFormat: function(option) {
-        // Change description.
-        $("#product-format-name").text(option.find(":selected").data("format"));
-        $("#product-price").text("CAD $ " + option.find(":selected").data("price"));
-    },
-
-
-    /**
-     * Update buybutton data attributes according to format: id/price/name/format.
-     *
-     * @param option
-     */
-    updateBuybuttonAttributes: function (option) {
-        $(".buybutton").attr({
-            'data-product': option.val(),
-            'data-price': option.find(":selected").data("price"),
-            'data-name': option.find(":selected").data("name"),
-            'data-format': option.find(":selected").data("format")
-        });
-    },
-
-    /**
-     * Main function of this module.
-     * Once the format selector is clicked, trigger the appropriate helpers then update buybutton.
-     *
-     */
-    updateProductInformation: function() {
-        var self = productFormatContainer;
-
-        $("#product-format").on("change", function () {
-
-            if ($(this).find(":selected").data("reduced")) {
-                // Add discounted price for a product with different formats.
-                self.productWithFormat($(this));
-            }
-            else {
-                // Add discounted price for a single format product.
-                self.productWithoutFormat($(this));
-            }
-
-
-            // Update buybutton with right attributes.
-            self.updateBuybuttonAttributes($(this));
-        });
-
-    },
-
-    /**
-     * Entry point of this module.
-     *
-     */
-    init: function () {
-        const self = productFormatContainer;
-
-        self.updateProductInformation();
-
-    }
-}
-/**
- * Component responsible for adding products to a user's wishlist.
- *
- * @type {{fadeInFavoriteIcon: Function, setPopupText: Function, setWishlistBadgeQuantity: Function, addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
- */
-var productLayoutFavoriteContainer = {
-    /**
-     * Fade in the favorite icon (heart icon) when hovering on a product tile.
-     *
-     */
-    fadeInFavoriteIcon: function() {
-        self = productLayoutFavoriteContainer;
-
-        $(".dense-product").hover(function() {
-
-            $(this).children(".favorite-wrapper").fadeIn();
-            self.setPopupText($(this).children(".favorite-wrapper"));
-
-        }, function () {
-            $(this).children(".favorite-wrapper").hide();
-        });
-    },
-
-    /**
-     * Set popup text according to current state of the wrapper.
-     *
-     * @param wrapper
-     */
-    setPopupText: function (wrapper) {
-        if($(wrapper).hasClass("favorited")){
-            $(wrapper).attr("title", Localization.wishlist_remove);
-        }
-        else {
-            $(wrapper).attr("title", Localization.wishlist_add);
-        }
-    },
-
-    /**
-     * Update the value of .wishlist_badge when adding or deleting elements.
-     *
-     */
-    setWishlistBadgeQuantity : function() {
-        var total = UtilityContainer.getNumberOfProductsInWishlist();
-
-        $(".wishlist_badge").text(total);
-    },
-
-    /**
-     * Add the clicked product to the wish list.
-     *
-     */
-    addToFavorite: function() {
-        var self = productLayoutFavoriteContainer,
-            item;
-
-        $(".favorite-wrapper").on("click", function() {
-            //No favorited class.
-            if (!$(this).hasClass("favorited")) {
-                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
-                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
-
-                //Set the favorite icon to be displayed
-                $(this).addClass("favorited");
-
-                //Set wishlist badge quantity
-                self.setWishlistBadgeQuantity();
-            }
-            else
-            //Has a favorited class. We remove it, then delete the element from local Storage.
-            {
-                self.removeFromFavorite($(this), self);
-            }
-        });
-    },
-
-    /**
-     * Persist the heart icon next to products already marked as wished.
-     *
-     */
-    persistFavorite: function() {
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
-                for(var j = 0; j<$(".favorite-wrapper").length; j++)
-                {
-                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
-                    {
-                        $(".favorite-wrapper")[j].className += " favorited";
-                    }
-                }
-            }
-        }
-    },
-
-    /**
-     * Delete the clicked element from the wish list.
-     *
-     * @param element
-     * @param context
-     */
-    removeFromFavorite: function (element, context) {
-        element.removeClass("favorited");
-        localStorage.removeItem("_wish_product " + element.data("product"));
-        context.setWishlistBadgeQuantity();
-    },
-
-    init: function () {
-        var self = productLayoutFavoriteContainer;
-
-        self.setPopupText();
-        self.addToFavorite();
-        self.persistFavorite();
-        self.fadeInFavoriteIcon();
-        self.setWishlistBadgeQuantity();
-    }
-}
-/**
- * Component responsible for changing quantity on the product page view.
- *
- * @type {{addQuantity: Function, removeQuantity: Function, updateBuyButton: Function, init: Function}}
- */
-var productQuantityContainer = {
-    addQuantity : function(input, callback) {
-        $(".qty-selector[data-action='add']").on("click", function() {
-            input.val(parseInt(input.val()) + 1);
-
-            callback();
-        });
-    },
-
-    removeQuantity: function(input, callback) {
-        $(".qty-selector[data-action='remove']").on("click", function() {
-            var actual = parseInt(input.val());
-
-            if (actual > 1) {
-                input.val(parseInt(input.val()) - 1);
-            }
-
-            callback();
-        });
-    },
-
-    updateBuyButton: function() {
-        $(".buybutton").attr("data-quantity", $(".qty-selector-input").val());
-    },
-
-    init: function () {
-        var self = productQuantityContainer;
-        self.addQuantity($(".qty-selector-input"), self.updateBuyButton);
-        self.removeQuantity($(".qty-selector-input"), self.updateBuyButton);
-
-    }
-};
-/**
- * Component responsible for activating semantic ui features.
- *
- * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {closeDimmer: Function}, init: Function}}
- */
-var semanticInitContainer = {
-
-    /**
-     * Initialize modules
-     *
-     */
-    module: {
-        /**
-         * Initialize dropdown module.
-         *
-         */
-        initDropdownModule: function() {
-            $(".ui.dropdown").dropdown();
-
-            $(".ui.dropdown").on("click", function () {
-                var action = $(this).data("action") || "activate";
-
-                $(this).dropdown({
-                    action: action
-                });
-            });
-        },
-
-        /**
-         * Initialize rating module.
-         *
-         */
-        initRatingModule: function () {
-            $(".ui.rating").rating();
-        },
-
-        /**
-         * Initialize popup module.
-         *
-         */
-        initPopupModule: function () {
-            $(".popup").popup();
-        },
-
-        /**
-         * Initialize checkbox module.
-         *
-         */
-        initCheckboxModule: function () {
-            $('.ui.checkbox')
-                .checkbox()
-            ;
-        },
-
-        /**
-         * Initialize accordion module.
-         *
-         */
-        initAccordionModule: function() {
-            $('.ui.accordion').accordion({
-                selector: {
-                    trigger: $(".ui.accordion").data("trigger")
-                }
-            });
-        }
-    },
-
-    /**
-     * Specify semantic custom behavior.
-     *
-     */
-    behaviors: {
-        closeDimmer: function () {
-            $(".close-dimmer").on("click", function() {
-                $(".dimmer").dimmer("hide");
-            });
-        }
-    },
-
-
-
-    init: function () {
-        var self = semanticInitContainer,
-            module = self.module,
-            behaviors = self.behaviors;
-
-        module.initDropdownModule();
-        module.initRatingModule();
-        module.initPopupModule();
-        module.initCheckboxModule();
-        module.initAccordionModule();
-
-        behaviors.closeDimmer();
-    }
-}
-/**
- * Component responsible for handling the logic of the wish list page.
- * Layout handled in dev/components/site/wishlist.js
- *
- * @type {{createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
- */
-var wishlistLogicContainer = {
-
-    /**
-     * Create a list layout element from the information passed as an argument.
-     *
-     * Rounding to 2 decimals, courtesy of http://stackoverflow.com/a/6134070.
-     *
-     * @param item
-     */
-    createWishlistElement: function(item) {
-        var self = wishlistLogicContainer,
-            element =
-        '<div class="item list-layout-element">' +
-        '<div class="ui tiny image">' +
-        '<img src=' + item.thumbnail_lg + '>' +
-        '</div>' +
-        '<div class="middle aligned content">' +
-        '<div class="header">' +
-        '<a href=' + item.link + '>' + item.name + '</a>' +
-        '</div>' +
-        '<div class="description">' +
-        '<p>' + item.description + '</p>' +
-            '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
-        '</div>' +
-        '<div class="extra">' +
-        '<button class="ui right floated button green buybutton"' +
-        'data-product="' + item.product + '"' +
-        'data-price="' + item.price + '"' +
-        'data-thumbnail="' + item.thumbnail + '"' +
-        'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
-        'data-name="' + item.name + '"' +
-        'data-description="' + item.description + '"' +
-        'data-quantity="' + item.quantity  + '"' + ">" +
-        'Add to cart </button>' +
-        '</button>' +
-        '<button class="ui right floated button inverted red removeFavoriteButton" data-product="' + item.product + '">' +
-        'Remove from wishlist' +
-        '</button>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '<hr/>';
-
-
-        //Localize button (default in english)
-        self.localizeWishlistButton();
-
-        //Append elements
-        $(".list-layout-element-container").append(element);
-    },
-
-    /**
-     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
-     * The creation is handled in createWishlistElement function.
-     *
-     */
-    renderWishlist: function() {
-        var self = wishlistLogicContainer;
-
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
-            {
-                self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
-            }
-        }
-    },
-
-    localizeWishlistButton: function() {
-        $(".list-layout-element .buybutton").text(Localization.add_cart);
-        $(".list-layout-element .removeFavoriteButton").text(Localization.wishlist_remove);
-    },
-
-    /**
-     * Remove the element from the wishlist after a subtle animation.
-     *
-     */
-    removeWishlistElement: function () {
-        $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
-            //Animate the element.
-            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
-            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element").next());
-
-            //Delete the element from localStorage.
-            localStorage.removeItem("_wish_product " + $(this).data("product"));
-
-            //Set wishlist header quantity.
-            wishlistContainer.setNumberOfProductsInHeader();
-
-            //Set wishlist badge
-            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
-        });
-    },
-
-    init: function () {
-        var self = wishlistLogicContainer;
-
-        //Calls the layout container (wishlistContainer).
-        wishlistContainer.init();
-
-        //Initialize the logic.
-        self.renderWishlist();
-        self.removeWishlistElement();
-    }
-
-}
-/**
- * Component responsible for the view component of the wish list page.
- * Logic handled in dev/actions/site/wishlist-logic.js
- *
- * @type {{setNumberOfProductsInHeader: Function, init: Function}}
- */
-var wishlistContainer = {
-
-    /**
-     * Sets the number of products in the header (singular / plural).
-     *
-     */
-    setNumberOfProductsInHeader: function() {
-        var quantity = "";
-        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
-        $("#quantity-wishlist").text(quantity);
-    },
-
-
-    init: function() {
-        var self = wishlistContainer;
-
-        self.setNumberOfProductsInHeader();
     }
 }
 /**
@@ -2986,3 +2851,141 @@ var cartLogicContainer = {
         cartLogicContainer.setCartSubtotal();
     }
 };
+
+/**
+ * Component responsible for handling the logic of the wish list page.
+ * Layout handled in dev/components/site/wishlist.js
+ *
+ * @type {{createWishlistElement: Function, renderWishlist: Function, localizeWishlistButton: Function, removeWishlistElement: Function, init: Function}}
+ */
+var wishlistLogicContainer = {
+
+    /**
+     * Create a list layout element from the information passed as an argument.
+     *
+     * Rounding to 2 decimals, courtesy of http://stackoverflow.com/a/6134070.
+     *
+     * @param item
+     */
+    createWishlistElement: function(item) {
+        var self = wishlistLogicContainer,
+            element =
+        '<div class="item list-layout-element">' +
+        '<div class="ui tiny image">' +
+        '<img src=' + item.thumbnail_lg + '>' +
+        '</div>' +
+        '<div class="middle aligned content">' +
+        '<div class="header">' +
+        '<a href=' + item.link + '>' + item.name + '</a>' +
+        '</div>' +
+        '<div class="description">' +
+        '<p>' + item.description + '</p>' +
+            '<h5> $ ' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'+
+        '</div>' +
+        '<div class="extra">' +
+        '<button class="ui right floated button green buybutton"' +
+        'data-product="' + item.product + '"' +
+        'data-price="' + item.price + '"' +
+        'data-thumbnail="' + item.thumbnail + '"' +
+        'data-thumbnail_lg="' + item.thumbnail_lg + '"' +
+        'data-name="' + item.name + '"' +
+        'data-description="' + item.description + '"' +
+        'data-quantity="' + item.quantity  + '"' + ">" +
+        'Add to cart </button>' +
+        '</button>' +
+        '<button class="ui right floated button inverted red removeFavoriteButton" data-product="' + item.product + '">' +
+        'Remove from wishlist' +
+        '</button>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<hr/>';
+
+
+        //Localize button (default in english)
+        self.localizeWishlistButton();
+
+        //Append elements
+        $(".list-layout-element-container").append(element);
+    },
+
+    /**
+     * Populate the wishlist page with elements created on the fly from localStorage that has their key starting with "_wish_prod {id}".
+     * The creation is handled in createWishlistElement function.
+     *
+     */
+    renderWishlist: function() {
+        var self = wishlistLogicContainer;
+
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
+            {
+                self.createWishlistElement(JSON.parse(localStorage.getItem(localStorage.key(i))));
+            }
+        }
+    },
+
+    localizeWishlistButton: function() {
+        $(".list-layout-element .buybutton").text(Localization.add_cart);
+        $(".list-layout-element .removeFavoriteButton").text(Localization.wishlist_remove);
+    },
+
+    /**
+     * Remove the element from the wishlist after a subtle animation.
+     *
+     */
+    removeWishlistElement: function () {
+        $(".list-layout-element-container").on("click", ".removeFavoriteButton", function() {
+            //Animate the element.
+            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element"));
+            UtilityContainer.addFadeOutUpClass($(this).closest(".list-layout-element").next());
+
+            //Delete the element from localStorage.
+            localStorage.removeItem("_wish_product " + $(this).data("product"));
+
+            //Set wishlist header quantity.
+            wishlistContainer.setNumberOfProductsInHeader();
+
+            //Set wishlist badge
+            productLayoutFavoriteContainer.setWishlistBadgeQuantity();
+        });
+    },
+
+    init: function () {
+        var self = wishlistLogicContainer;
+
+        //Calls the layout container (wishlistContainer).
+        wishlistContainer.init();
+
+        //Initialize the logic.
+        self.renderWishlist();
+        self.removeWishlistElement();
+    }
+
+}
+/**
+ * Component responsible for the view component of the wish list page.
+ * Logic handled in dev/actions/site/wishlist-logic.js
+ *
+ * @type {{setNumberOfProductsInHeader: Function, init: Function}}
+ */
+var wishlistContainer = {
+
+    /**
+     * Sets the number of products in the header (singular / plural).
+     *
+     */
+    setNumberOfProductsInHeader: function() {
+        var quantity = "";
+        UtilityContainer.getNumberOfProductsInWishlist() == 0 || UtilityContainer.getNumberOfProductsInWishlist() == 1 ? quantity+= (UtilityContainer.getNumberOfProductsInWishlist() + "  item ") : quantity += (UtilityContainer.getNumberOfProductsInWishlist() + "  items ");
+        $("#quantity-wishlist").text(quantity);
+    },
+
+
+    init: function() {
+        var self = wishlistContainer;
+
+        self.setNumberOfProductsInHeader();
+    }
+}

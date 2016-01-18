@@ -360,17 +360,19 @@ var checkoutContainer = {
 
             for(var i = 0, shippingLength = data.shipping.services.length; i<shippingLength; i++)
             {
+                var delivery = data.shipping.services[i].delivery != null ? data.shipping.services[i].delivery : " - ";
+
                 var serviceDOM = "<tr data-service='" + data.shipping.services[i].method + "'>" +
                     "<td>" + data.shipping.services[i].name + "</td>" +
-                    "<td>" + data.shipping.services[i].delivery + "</td>" +
-                    "<td>" + "$" + data.shipping.services[i].price + "</td>" +
+                    "<td>" + delivery  + "</td>" +
+                    "<td>" + "$" + data.shipping.services[i].price.toFixed(2) + "</td>" +
                     "<td>" +
                     "<input " +
                     "type='radio' " +
                     "name='shipping' " +
                     "class='shipping_method' " +
                     "data-taxes='" + self.actions.getShipmentTaxes(data.shipping.services[i].method, data) + "' " +
-                    "data-cost='" + data.shipping.services[i].price + "' " +
+                    "data-cost='" + data.shipping.services[i].price.toFixed(2) + "' " +
                     "data-value='" + data.shipping.services[i].method + "' " +
                     "value='" + btoa(JSON.stringify(data.shipping.services[i])) + "' >" +
                     "</td>";
