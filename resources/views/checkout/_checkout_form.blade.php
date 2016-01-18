@@ -217,17 +217,6 @@
                 </button>
             </div>
 
-            <div class="ui basic segment">
-                <small class="hidden-xs ui basic small label pull-right">
-                    <i class="lock icon"></i> @lang("boukem.secure_payment")
-                    <br>
-                    <i class="paypal icon"><span class="sr-only">Paypal</span></i>
-                    <i class="visa icon"><span class="sr-only">Visa</span></i>
-                    <i class="mastercard icon"><span class="sr-only">Mastercard</span></i>
-                    <i class="american express icon"><span class="sr-only">American Express</span></i>
-                    <i class="discover icon"><span class="sr-only">Discover</span></i>
-                </small>
-            </div>
         </div>
     </div>
 
