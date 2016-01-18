@@ -168,14 +168,14 @@ var UtilityContainer = {
      */
     buyButton_to_Json : function(item) {
         return {
-            "product" : item.data("product"),
-            "name" : item.data("name"),
-            "price" : item.data("price"),
-            "thumbnail" : item.data("thumbnail"),
-            "thumbnail_lg" : item.data("thumbnail_lg"),
-            "quantity" : parseInt(item.data("quantity")),
-            "link" : item.data("link"),
-            "description" : item.data("description") ? item.data("description") : ""
+            "product" : item.attr("data-product"),
+            "name" : item.attr("data-name"),
+            "price" : item.attr("data-price"),
+            "thumbnail" : item.attr("data-thumbnail"),
+            "thumbnail_lg" : item.attr("data-thumbnail_lg"),
+            "quantity" : parseInt(item.attr("data-quantity")),
+            "link" : item.attr("data-link"),
+            "description" : item.attr("data-description") ? item.attr("data-description") : ""
         }
     },
 

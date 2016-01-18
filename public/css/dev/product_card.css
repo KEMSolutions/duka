@@ -232,7 +232,26 @@ ul.categories.highlight li a {
     display: inline-block;
 }
 
+/*
+    Quantity selector style.
+*/
+.qty-selector {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 28px;
+    height: 28px;
+    outline: none;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+}
 
+.qty-selector-input {
+    width: 36px;
+    height: 28px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
 
 
 

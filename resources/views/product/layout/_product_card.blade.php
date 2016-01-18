@@ -40,7 +40,7 @@
                                 @foreach($product->formats as $format)
                                     <button class="btn btn-one btn-one-inverted pull-right buybutton"
                                             data-product="{{ $product->id . '-' . $format->id }}"
-                                            data-price="{{ $format->price }}"
+                                            data-price="{{ isset($format->reduced_price) ? $format->reduced_price->price : $format->price }}"
                                             data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
                                             data-thumbnail_lg="{{ Products::getImage($product, 70, 110, "fit") }}"
                                             data-name="{{ $product->localization->name . " - " . $format->name }}"

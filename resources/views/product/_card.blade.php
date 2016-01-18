@@ -22,7 +22,7 @@
                  style="padding:1rem; outline:none"
                  tabindex="0"
                  data-product="{{ $product->id . '-' . $format->id }}"
-                 data-price="{{ $format->price }}"
+                 data-price="{{ isset($format->reduced_price) ? $format->reduced_price->price : $format->price }}"
                  data-thumbnail="{{ Products::getImage($product->id, 60, 60, "fit") }}"
                  data-thumbnail_lg="{{ Products::getImage($product->id, 70, 110, "fit") }}"
                  data-name="{{ $product->localization->name . " - " . $format->name }}"
@@ -31,7 +31,13 @@
                  data-link="{{ route('product', ['slug' => $product->slug]) }}">
                 <i class="add to cart icon"></i>
                 {{$format->name}}
-                <a class="detail dark">${{$format->price}}</a>
+                <a class="detail dark">$
+                    {{
+                        isset($format->reduced_price) ?
+                            number_format((float)$format->reduced_price->price, 2, '.', '') :
+                            number_format((float)$format->price, 2, '.', '')
+                    }}
+                </a>
             </div>
 
         @endforeach

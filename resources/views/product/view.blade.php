@@ -1,241 +1,246 @@
 @extends("app")
 
 @section('title')
-{{ $product->localization->name }}
+    {{ $product->localization->name }}
 @endsection
 
 @section('custom_metas')
-@foreach ($product->localization->alt as $localization)
-<link rel="alternate" hreflang="{{ $localization->locale->language }}" href="/{{ $localization->locale->language }}/prod/{{ $localization->slug }}.html" />
-@endforeach
+    @foreach ($product->localization->alt as $localization)
+        <link rel="alternate" hreflang="{{ $localization->locale->language }}" href="/{{ $localization->locale->language }}/prod/{{ $localization->slug }}.html" />
+    @endforeach
 @endsection
 
 @section("content")
     @include("product._breadcrumb", ["product" => $product])
 
-    <div class="ui container stackable grid product-view" itemscope itemtype="http://schema.org/Product">
 
-        {{-- Firt row includes product description, pricing plans, sharing and categories --}}
-        <div class="row">
 
-            {{-- Left column. --}}
-            <div class="ten wide column" id="product-description" data-product="{{ $product->id }}">
+    <div class="ui container stackable grid" itemscope itemtype="http://schema.org/Product">
+        <div class="ui row">
+            <div class="ten wide column">
 
-                <div class="ui raised very padded segment">
-
-                    {{-- Product image. --}}
-                    <img src="{{ Products::getImage($product->id, 300, 550) }}" alt="{{ $product->localization->name }}" class="center-block" itemprop="image"/>
-
-                    <br/>
-
-                    {{-- Product name and description. --}}
-                    <div id="product_long_description">
-                        <span>{!! $product->localization->long_description !!}</span>
-                        <ul class="meta-list text-center">
-
-                            <li>
-                                <span>{{ Lang::get("boukem.CUP/EAN") }}</span>
-                                <span class="bold" itemprop="gtin13">{{ isset($product->formats[0]->barcode) ? $product->formats[0]->barcode : "—" }}</span>
-                            </li>
-
-                            {{-- Some products are without brands. --}}
-                            @if(count($product->brand))
-                                <li itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
-                                    <span>{{ Lang::get("boukem.brand") }}</span>
-                                    <span class="bold" itemprop="name">{{ $product->brand->name }}</span>
-                                </li>
-                            @endif
-
-                        </ul>
-                    </div>
+                {{-- Product Image. --}}
+                <div class="ui image">
+                    <img src="{{ Products::getImage($product->id, 1000, 1000) }}"
+                         alt="{{ $product->localization->name }}"
+                         itemprop="image"/>
                 </div>
             </div>
-            {{-- End of left column. --}}
 
-            {{-- Right column. --}}
-            <div class="five wide column" id="product-info-box">
-                <div class="ui raised text segment pricing-plans">
-                    {{-- TODO: Show an image for smaller device (mobile) --}}
+            <div class="six wide column">
+                <div class="ui basic segment">
 
-                    {{-- Product name. --}}
-                    <h1 class="ui header text-center" itemprop="name">
-                        {{ $product->localization->name}} -
-                        <span id="product-format">{{ $product->formats[0]->name }}</span>
+                    {{--Product name and price. --}}
+                    <h1 class="ui header" itemprop="name">
+                        {{ $product->localization->name }}
+
+                        <div class="sub header">
+                            <span id="product-format-name">
+                                {{ $product->formats[0]->name }}
+                            </span>
+                            -
+                            @if(isset($product->formats[0]->reduced_price))
+                                <span class="text-strikethrough">
+                                    CAD ${{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
+                                </span>
+                                <span id="product-price" class="strong text-danger">
+                                    CAD ${{ number_format((float)$product->formats[0]->reduced_price->price, 2, '.', '') }}
+                                </span>
+                            @else
+                                <span id="product-price" class="strong">
+                                    CAD ${{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
+                                </span>
+                            @endif
+                        </div>
                     </h1>
 
-                    {{-- Product price. --}}
-                    @if($product->formats[0]->discontinued)
-                        <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                            <link itemprop="availability" href="http://schema.org/Discontinued">
-                            <p class="text-center text-danger">
-                                {{ Lang::get("boukem.product_unavailable") }}
-                            </p>
-                        </span>
-                    @else
-                        <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                            <h3 class="price-tag color-one">
-                                <meta itemprop="price" content="{{ $product->formats[0]->price }}">
-                                <span itemprop="priceCurrency" content="CAD">$</span>
-                                {{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
-                            </h3>
+                    <div class="content">
+                        {{--Short description. --}}
+                        <p id="product_short_description"
+                           itemprop="description">
+                            {{ str_limit(strip_tags($product->localization->short_description), 500, "...") }}
+                        </p>
 
-                            <ul>
-                                <li> <i class="fa fa-fw"><img src="https://cdn.kem.guru/boukem/spirit/flags/CA.png" width="17" alt="CA"></i>
-                                    {{ Lang::get("boukem.world_shipping") }}
-                                </li>
+                        <div class="ui divider"></div>
 
-                                <div id="inventory-count" data-country-code="{{ $country_code }}">
-                                    @if($product->formats[0]->inventory->count > 5)
-                                        <link itemprop="availability" href="http://schema.org/LimitedAvailability">
-                                        <li class="text-success"><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.express_shipping") }}</li>
-                                    @elseif($product->formats[0]->inventory->count > 0)
-                                        <link itemprop="availability" href="http://schema.org/InStock" >
-                                        <li class="text-warning"><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.stock_left", array("quantity" => $product->formats[0]->inventory->count)) }}</li>
-                                    @else
-                                        <link itemprop="availability" href="http://schema.org/LimitedAvailability" >
-                                        <li><i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i> {{ Lang::get("boukem.shipping_time") }}</li>
-                                    @endif
-                                </div>
+                        @if($product->formats[0]->discontinued)
+                            <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                                <span class="hidden" itemprop="price">
+                                    CAD ${{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
+                                </span>
+                                <link itemprop="availability" href="http://schema.org/Discontinued">
+                                <p class="text-center text-danger">
+                                    {{ Lang::get("boukem.product_unavailable") }}
+                                </p>
+                            </span>
+                        @else
+                            <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                                <span class="hidden" itemprop="price">
+                                    CAD ${{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
+                                </span>
 
-                                <li><i class="fa fa-lock fa-fw"></i>{{ Lang::get("boukem.secure_payment") }}</li>
+                                {{-- Product Format. --}}
+                                @if(count($product->formats) > 1)
+                                    <div>
+                                        <p class="inline-block pull-left">Format</p>
 
-                            </ul>
+                                        <div class="inline block pull-right">
+                                            <select name="product-format" id="product-format">
+                                                @foreach($product->formats as $index => $format)
+                                                    <option value="{{ $product->id . '-' . $format->id }}"
+                                                            data-format="{{ $format->name }}"
+                                                            data-price="{{ $format->price }}"
+                                                            data-reduced="{{ isset($format->reduced_price->price) ? $format->reduced_price->price : $format->reduced_price }}"
+                                                            data-name="{{ $product->localization->name . " - " . $format->name }}">
+                                                        {{ $format->name . " -  CAD $ " . $format->price }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
 
-                        </span>
-                    @endif
+                                    <div class="ui divider float-clear"></div>
+                                @endif
 
-                    {{-- Short description. --}}
-                    <p class="plan-info" id="product_short_description" itemprop="description">{{ str_limit(strip_tags($product->localization->short_description), 200, "...") }}</p>
+                                <div style="padding-bottom: 20px">
+                                    <p class="inline-block pull-left">@lang("boukem.quantity")</p>
 
-                    {{-- Quantity inputs. --}}
-                    @if(!$product->formats[0]->discontinued)
-                        <div class="input-qty-detail text-center">
-
-                            {{-- We have to let the .form-group class for the product format feature to work (as of now) --}}
-                            <div class="form-group">
-                                <div class="input-group horizontal-align" style="">
-                                    <span class="input-group-addon bootstrap-touchspin-prefix"></span>
-                                    <input type="text" class="form-control input-qty text-center" id="item_quantity" value="1" min="1">
-                                    <span class="input-group-addon bootstrap-touchspin-postfix"></span>
-                                </div>
-                            </div>
-
-                            {{-- If product has more than 1 format --}}
-                            @if(count($product->formats) > 1)
-                                <div class="ui buttons">
-
-                                    @foreach($product->formats as $index => $format)
-
-                                        {{-- Select format buttons (contains html5 data tags to be synced with the buybutton
-                                             located after
-                                        --}}
-                                        <button class="ui btn btn-three format-selection
-                                            @if ($index == 0)
-                                                {!! 'active' !!}
-                                            @endif
-                                                "
-                                                data-product="{{ $product->id . '-' . $format->id }}"
-                                                data-price="{{ $format->price }}"
-                                                data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
-                                                data-thumbnail_lg="{{ Products::getImage($product, 70, 110, "fit") }}"
-                                                data-name="{{ $product->localization->name . " - " . $format->name }}"
-                                                data-format="{{ $format->name }}"
-                                                data-inventory-count="{{ $format->inventory->count }}"
-                                                data-link="{{ route('product', ['slug' => $product->slug]) }}"
+                                    <div class="inline-block pull-right">
+                                        <button class="qty-selector" data-action="remove">-</button>
+                                        <input type="text"
+                                               class="qty-selector-input text-center"
+                                               value="1"
+                                               onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                                                 >
+                                        <button class="qty-selector" data-action="add">+</button>
+                                    </div>
+                                </div>
 
-                                            @if(count($product->formats) > 1)
-                                                <p class="ui sub header white">{{ $format->name }}</p>
-                                            @endif
-                                        </button>
+                                <div class="ui divider float-clear"></div>
 
-                                        @if($format != end($product->formats))
-                                            <div class="or" data-text=@lang("boukem.or")></div>
+                                {{-- buybutton takes by default the value of the first format --}}
+                                @if(isset($product->formats[0]->reduced_price))
+                                    <button class="btn btn-one btn-one-inverted fluid buybutton"
+                                            data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
+                                            data-price="{{ $product->formats[0]->reduced_price->price }}"
+                                            data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
+                                            data-thumbnail_lg="{{ Products::getImage($product, 70, 110, "fit") }}"
+                                            data-name="{{ $product->localization->name . " - " . $product->formats[0]->name }}"
+                                            data-format="{{ $product->formats[0]->name }}"
+                                            data-inventory-count="{{ $product->formats[0]->inventory->count }}"
+                                            data-quantity="1"
+                                            data-link="{{ route('product', ['slug' => $product->slug]) }}">
+                                        @lang("boukem.add_cart")
+                                    </button>
+                                @else
+                                    <button class="btn btn-one btn-one-inverted fluid buybutton"
+                                            data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
+                                            data-price="{{ $product->formats[0]->price }}"
+                                            data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
+                                            data-thumbnail_lg="{{ Products::getImage($product, 70, 110, "fit") }}"
+                                            data-name="{{ $product->localization->name . " - " . $product->formats[0]->name }}"
+                                            data-format="{{ $product->formats[0]->name }}"
+                                            data-inventory-count="{{ $product->formats[0]->inventory->count }}"
+                                            data-quantity="1"
+                                            data-link="{{ route('product', ['slug' => $product->slug]) }}">
+                                        @lang("boukem.add_cart")
+                                    </button>
+                                @endif
+
+                                {{-- Favorite feature is disabled for now. --}}
+                                {{--<button class="btn btn-link center-block favorite-link"--}}
+                                {{--data-product="{{$product->id . '-' . $product->formats[0]->id }}"--}}
+                                {{--data-description="{{ $product->localization->short_description }}"--}}
+                                {{--title='@lang("boukem.wishlist_add")'>--}}
+                                {{--<i class="icon heart"></i>--}}
+                                {{--Add to wishlist!--}}
+                                {{--</button>--}}
+
+                                <div class="ui divider"></div>
+
+
+                                {{-- Various informative shipping messages. --}}
+                                <div class="ui relaxed list">
+                                    <div class="item">
+                                        <i class="fa fa-fw"><img src="https://cdn.kem.guru/boukem/spirit/flags/CA.png" width="17" alt="CA"></i>
+                                        {{ Lang::get("boukem.world_shipping") }}
+                                    </div>
+
+                                    <div id="inventory-count" data-country-code="{{ $country_code }}">
+                                        @if($product->formats[0]->inventory->count > 5)
+                                            <link itemprop="availability" href="http://schema.org/LimitedAvailability">
+                                            <div class="item text-success">
+                                                <i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i>
+                                                {{ Lang::get("boukem.express_shipping") }}
+                                            </div>
+                                        @elseif($product->formats[0]->inventory->count > 0)
+                                            <link itemprop="availability" href="http://schema.org/InStock" >
+                                            <div class="item text-warning">
+                                                <i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i>
+                                                {{ Lang::get("boukem.stock_left", array("quantity" => $product->formats[0]->inventory->count)) }}
+                                            </div>
+                                        @else
+                                            <link itemprop="availability" href="http://schema.org/LimitedAvailability" >
+                                            <div class="item">
+                                                <i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i>
+                                                {{ Lang::get("boukem.shipping_time") }}
+                                            </div>
                                         @endif
-
-                                    @endforeach
+                                    </div>
                                 </div>
-                            @endif
-                            {{-- End of multiple formats product. --}}
-
-                            <br/>
-                            <br/>
-
-                            {{-- buybutton takes by default the value of the first format --}}
-                            <div class="buybutton-format-selection-wrapper">
-                                <button
-                                        class="btn btn-one buybutton horizontal-align"
-                                        data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
-                                        data-price="{{ $product->formats[0]->price }}"
-                                        data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
-                                        data-thumbnail_lg="{{ Products::getImage($product, 70, 110, "fit") }}"
-                                        data-name="{{ $product->localization->name . " - " . $product->formats[0]->name }}"
-                                        data-format="{{ $product->formats[0]->name }}"
-                                        data-inventory-count="{{ $product->formats[0]->inventory->count }}"
-                                        data-quantity="1"
-                                        data-link="{{ route('product', ['slug' => $product->slug]) }}"
-                                >
-                                <div class="add-cart">
-                                    <i class="check circle outline icon"></i>
-                                    @lang("boukem.add_cart")
-                                </div>
-                                </button>
-                            </div>
-                        </div>
-                    @endif
-                </div>
-
-                {{-- Sharing options. --}}
-                <div class="ui basic segment">
-                    <h4 class="ui header">{{ Lang::get("boukem.share") }}</h4>
-
-                    <ul class="categories highlight">
-
-                        <li class="facebook_share_button">
-                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ Store::info()->url }}/{{ Localization::getCurrentLocale() }}/prod/{{ $product->slug }}" >
-                            <i class="facebook icon"></i> {{ Lang::get("boukem.share_fb") }}
-                            </a>
-                        </li>
-
-                        <li class="pinterest_share_button"><a href="http://www.pinterest.com/pin/create/button/?url={{ Store::info()->url }}/{{ Localization::getCurrentLocale() }}/prod/{{ $product->slug }}&amp;media={{ $product->images[0]->thumbnail }}&amp;description={{ $product->localization->name }}-{{ $product->localization->short_description }}" data-pin-do="buttonPin" data-pin-config="above">
-                                <i class="pinterest icon"></i> {{ Lang::get("boukem.share_pin") }}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                {{-- End of sharing options. --}}
-
-
-                {{-- Categories related to the product. --}}
-
-                {{-- TODO: we do not display any categories if there is no brand associated with a product.
-                           As of the launch of duka, the only thing that appears here is the brand.
-                 --}}
-                @if(count($product->brand))
-                    <div class="ui basic segment">
-                        <h4 class="ui header">{{ Lang::get("boukem.categories") }}</h4>
-                        <ul class="tags-list">
-
-                            {{-- TOOD: INTEGRATE THE RIGHT CATEGORIES--}}
-
-                            <li>
-                                <i class="tags icon"></i>
-                                <a href="{{ route('brand', ['slug' => $product->brand->slug]) }}">{{ $product->brand->name }}</a>
-                            </li>
-                        </ul>
+                            </span>
+                        @endif
                     </div>
-                @endif
-                {{-- End of related categories. --}}
-
+                </div>
             </div>
         </div>
-        {{-- End of first row. --}}
 
-        {{-- Second row includes videos, reviews --}}
-        <div class="row sixteen wide column">
 
-            {{-- Videos. --}}
-            @if(count($product->videos) > 0)
+        <div class="ui row">
+            <div class="ui accordion horizontally-padded" data-trigger=".preview-trigger">
+                <div class="title">
+                    <h3 class="ui header">
+                        <i class="dropdown icon"></i>
+                        @lang("boukem.product_details")
+                    </h3>
+
+                    <div class="preview">
+                        <div class="preview-text">
+                            {!! str_limit($product->localization->long_description, 750, "...") !!}
+                        </div>
+
+                        <div>
+                            <button class="ui button black center-block preview-trigger">@lang("boukem.show_more")</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="content" id="product_long_description">
+                    <span>{!! $product->localization->long_description !!}</span>
+
+                    <div class="ui list text-center">
+                        <div class="item">
+                            <span>{{ Lang::get("boukem.CUP/EAN") }}</span>
+                            <span class="bold" itemprop="gtin13">{{ isset($product->formats[0]->barcode) ? $product->formats[0]->barcode : "—" }}</span>
+                        </div>
+
+                        {{--Some products are without brands. --}}
+                        @if(count($product->brand))
+                            <div class="item" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
+                                <span>{{ Lang::get("boukem.brand") }}</span>
+                                <span class="bold" itemprop="name">{{ $product->brand->name }}</span>
+                            </div>
+                        @endif
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="ui row">
+            <div class="row sixteen wide column">
+
+                {{--Videos. --}}
+                @if(count($product->videos) > 0)
                 @section("custom_css")
                     <link rel="stylesheet" href="//vjs.zencdn.net/4.8/video-js.css"/>
                 @endsection
@@ -251,9 +256,9 @@
                 @endsection
 
                 @include("product._product_video", ["videos" => $product->videos ])
-            @endif
+                @endif
 
-            <?php /* {{-- Reviews. --}}
+                <?php /*  Reviews.
             <div class="ui comments full-width hidden">
                 <h3 class="ui dividing header">Comments</h3>
                 <div class="comment">
@@ -333,11 +338,11 @@
                     </div>
                 </form>
             </div>
-            {{-- End of reviews. --}}
+             End of reviews.
             */ ?>
+            </div>
+            {{--End of third row. --}}
         </div>
-        {{-- End of second row. --}}
-
     </div>
 
 @endsection

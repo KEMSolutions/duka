@@ -16,9 +16,10 @@ var gulp = require('gulp'),
 gulp.task('js', function () {
     return gulp.src(
         [
-        'public/js/dev/utils/*.js',
-        'public/js/dev/analytics/*.js',
-        'public/js/dev/components/**/*.js'
+            'public/js/dev/utils/*.js',
+            'public/js/dev/analytics/*.js',
+            'public/js/dev/components/**/*.js',
+            'public/js/dev/components/init.js'
         ])
         .pipe(concat('duka.js'))
         //.pipe(uglify())

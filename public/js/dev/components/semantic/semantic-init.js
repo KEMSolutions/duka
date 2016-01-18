@@ -7,7 +7,7 @@ var semanticInitContainer = {
 
     /**
      * Initialize modules
-
+     *
      */
     module: {
         /**
@@ -50,6 +50,18 @@ var semanticInitContainer = {
             $('.ui.checkbox')
                 .checkbox()
             ;
+        },
+
+        /**
+         * Initialize accordion module.
+         *
+         */
+        initAccordionModule: function() {
+            $('.ui.accordion').accordion({
+                selector: {
+                    trigger: $(".ui.accordion").data("trigger")
+                }
+            });
         }
     },
 
@@ -76,6 +88,7 @@ var semanticInitContainer = {
         module.initRatingModule();
         module.initPopupModule();
         module.initCheckboxModule();
+        module.initAccordionModule();
 
         behaviors.closeDimmer();
     }

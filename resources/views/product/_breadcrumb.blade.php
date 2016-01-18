@@ -1,9 +1,5 @@
 <div class="ui container grid vertically padded">
     <div class="two column row">
-        <div class="left floated column">
-            <h1 class="ui header">{{ $product->localization->name }}</h1>
-        </div>
-
         <div class="right floated column">
             <div class="ui breadcrumb pull-right">
 

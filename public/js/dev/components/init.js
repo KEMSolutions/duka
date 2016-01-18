@@ -79,10 +79,16 @@
         productFormatContainer.init();
 
         /**
-         * Initialize column responsiveness in product pages.
+         * Initialize product quantity change.
          *
          */
-        productResponsiveContainer.init();
+        productQuantityContainer.init();
+
+        /**
+         * Initialize product description fade in.
+         *
+         */
+        productDescriptionPreviewContainer.init();
 
         /**
          * Initialize wishlist page.
@@ -90,15 +96,6 @@
          */
         wishlistLogicContainer.init();
 
-        /**
-         * Global initialization of elements.
-         *
-         */
-            //fancy plugin for product page (quantity input)
-        $(".input-qty").TouchSpin({
-            initval: 1
-        });
-
     });
 
-})(window, this.document, jQuery, undefined)
+})(window, window.document, jQuery, undefined)
