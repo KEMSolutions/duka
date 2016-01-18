@@ -164,36 +164,6 @@ var cartLogicContainer = {
     },
 
     /**
-     * Modify the quantity in a product page before buying
-     * Only used in a product page. (It is hackish, I'll admit it)
-     * Assuming the DOM has (and will keep) this structure:
-     *      .form-group
-     *          #item-quantity
-     *          .ui.buttons.huge
-     *          <br>
-     *          <br>
-     *      .buybutton
-     */
-    modifyQuantityBeforeBuying : function() {
-        $("#item_quantity").on("change", function() {
-
-            // Cache buybutton and format selection buttons.
-            var $buybutton = $(this).closest(".input-qty-detail").find(".buybutton"),
-                $formatSelection = $(this).closest(".input-qty-detail").find(".format-selection"),
-                self = $(this);
-
-            // Set quantity in html5 data attributes for each format selection button.
-            $formatSelection.each(function() {
-                this.dataset.quantity = parseInt(self.val());
-            });
-
-            // Set quantity in html5 data attribute for buybutton.
-            $buybutton.data("quantity", parseInt(self.val()));
-
-        });
-    },
-
-    /**
      * Update the value of #cart_badge when adding or deleting elements
      */
     setBadgeQuantity : function() {
