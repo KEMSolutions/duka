@@ -302,7 +302,6 @@ var cartLogicContainer = {
         cartLogicContainer.loadItem();
         cartLogicContainer.deleteItem();
         cartLogicContainer.modifyQuantity();
-        cartLogicContainer.modifyQuantityBeforeBuying();
         cartLogicContainer.setQuantityCookie();
         cartLogicContainer.setCartSubtotal();
     }

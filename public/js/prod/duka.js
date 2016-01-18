@@ -528,384 +528,6 @@ var UtilityContainer = {
 
 
 /**
- * Entry point of script.
- *
- */
-; (function(window, document, $) {
-    $(document).ready(function () {
-
-        /**
-         * Sets up the ajax token for all ajax requests.
-         *
-         */
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'locale': $('html').attr('lang')
-            }
-        });
-
-        /**
-         * Sets up Localization and ApiEndpoints variables.
-         *
-         */
-        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
-        Localization = env.Localization;
-        ApiEndpoints = env.ApiEndpoints;
-
-        /**
-         * Initialize semantic UI modules.
-         *
-         */
-        semanticInitContainer.init();
-
-        /**
-         * Initialize responsiveness feature.
-         *
-         */
-        responsiveContainer.init();
-
-        /**
-         * Initialize checkout logic.
-         *
-         */
-        checkoutContainer.init();
-
-        /**
-         * Initialize cart drawer logic.
-         *
-         */
-        cartDrawerInitContainer.init();
-
-        /**
-         * Initialize category container.
-         *
-         */
-        categoryContainer.init();
-
-        /**
-         * Initialize overlay plugin.
-         *
-         */
-        paymentOverlayContainer.init();
-
-        /**
-         * Initialize homepage sections.
-         *
-         */
-        homepageContainer.init();
-
-        /**
-         * Initialize favorite products feature.
-         *
-         */
-        productLayoutFavoriteContainer.init();
-
-        /**
-         * Initialize product formats feature.
-         *
-         */
-        productFormatContainer.init();
-
-        /**
-         * Initialize product quantity change.
-         *
-         */
-        productQuantityContainer.init();
-
-        /**
-         * Initialize product description fade in.
-         *
-         */
-        productDescriptionPreviewContainer.init();
-
-        /**
-         * Initialize wishlist page.
-         *
-         */
-        wishlistLogicContainer.init();
-
-    });
-
-})(window, window.document, jQuery, undefined)
-
-/**
- * Component responsible for displaying a product description (with a nice fade  out effect)
- *
- * @type {{toggleDescription: Function, init: Function}}
- */
-var productDescriptionPreviewContainer = {
-
-    /**
-     * Toggle the description between its open state and its close state.
-     *
-     */
-    toggleDescription: function () {
-        var open = false;
-
-        $(".preview-trigger").on("click", function () {
-            open = !open;
-
-            if (open) {
-                $(this).text(Localization.show_less);
-                $(".preview-text").fadeOut();
-            }
-            else {
-                $(this).text(Localization.show_more);
-                setTimeout(function() {
-                    $(".preview-text").fadeIn()
-                }, 200);
-            }
-        });
-    },
-
-    init: function () {
-        var self = productDescriptionPreviewContainer;
-
-        self.toggleDescription();
-    }
-};
-/**
- * Component responsible for handling different formats of the same product.
- *
- * @type {{productWithFormat: Function, productWithoutFormat: Function, updateBuybuttonAttributes: Function, updateProductInformation: Function, init: Function}}
- */
-var productFormatContainer = {
-
-    /**
-     * Update price value for a product with format.
-     *
-     * @param option
-     */
-    productWithFormat: function(option) {
-        var price = '<span class="text-strikethrough">' +
-            'CAD $ ' + option.find(":selected").data("price") +
-            '</span>' +
-            '<span id="product-price" class="strong text-danger">' +
-            'CAD $ ' + option.find(":selected").data("reduced") +
-            '</span>';
-
-        $(".sub.header").text(price);
-    },
-
-
-    /**
-     * Update price value for a format-less product.
-     *
-     * @param option
-     */
-    productWithoutFormat: function(option) {
-        // Change description.
-        $("#product-format-name").text(option.find(":selected").data("format"));
-        $("#product-price").text("CAD $ " + option.find(":selected").data("price"));
-    },
-
-
-    /**
-     * Update buybutton data attributes according to format: id/price/name/format.
-     *
-     * @param option
-     */
-    updateBuybuttonAttributes: function (option) {
-        $(".buybutton").attr({
-            'data-product': option.val(),
-            'data-price': option.find(":selected").data("price"),
-            'data-name': option.find(":selected").data("name"),
-            'data-format': option.find(":selected").data("format")
-        });
-    },
-
-    /**
-     * Main function of this module.
-     * Once the format selector is clicked, trigger the appropriate helpers then update buybutton.
-     *
-     */
-    updateProductInformation: function() {
-        var self = productFormatContainer;
-
-        $("#product-format").on("change", function () {
-
-            if ($(this).find(":selected").data("reduced")) {
-                // Add discounted price for a product with different formats.
-                self.productWithFormat($(this));
-            }
-            else {
-                // Add discounted price for a single format product.
-                self.productWithoutFormat($(this));
-            }
-
-
-            // Update buybutton with right attributes.
-            self.updateBuybuttonAttributes($(this));
-        });
-
-    },
-
-    /**
-     * Entry point of this module.
-     *
-     */
-    init: function () {
-        const self = productFormatContainer;
-
-        self.updateProductInformation();
-
-    }
-}
-/**
- * Component responsible for adding products to a user's wishlist.
- *
- * @type {{fadeInFavoriteIcon: Function, setPopupText: Function, setWishlistBadgeQuantity: Function, addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
- */
-var productLayoutFavoriteContainer = {
-    /**
-     * Fade in the favorite icon (heart icon) when hovering on a product tile.
-     *
-     */
-    fadeInFavoriteIcon: function() {
-        self = productLayoutFavoriteContainer;
-
-        $(".dense-product").hover(function() {
-
-            $(this).children(".favorite-wrapper").fadeIn();
-            self.setPopupText($(this).children(".favorite-wrapper"));
-
-        }, function () {
-            $(this).children(".favorite-wrapper").hide();
-        });
-    },
-
-    /**
-     * Set popup text according to current state of the wrapper.
-     *
-     * @param wrapper
-     */
-    setPopupText: function (wrapper) {
-        if($(wrapper).hasClass("favorited")){
-            $(wrapper).attr("title", Localization.wishlist_remove);
-        }
-        else {
-            $(wrapper).attr("title", Localization.wishlist_add);
-        }
-    },
-
-    /**
-     * Update the value of .wishlist_badge when adding or deleting elements.
-     *
-     */
-    setWishlistBadgeQuantity : function() {
-        var total = UtilityContainer.getNumberOfProductsInWishlist();
-
-        $(".wishlist_badge").text(total);
-    },
-
-    /**
-     * Add the clicked product to the wish list.
-     *
-     */
-    addToFavorite: function() {
-        var self = productLayoutFavoriteContainer,
-            item;
-
-        $(".favorite-wrapper").on("click", function() {
-            //No favorited class.
-            if (!$(this).hasClass("favorited")) {
-                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
-                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
-
-                //Set the favorite icon to be displayed
-                $(this).addClass("favorited");
-
-                //Set wishlist badge quantity
-                self.setWishlistBadgeQuantity();
-            }
-            else
-            //Has a favorited class. We remove it, then delete the element from local Storage.
-            {
-                self.removeFromFavorite($(this), self);
-            }
-        });
-    },
-
-    /**
-     * Persist the heart icon next to products already marked as wished.
-     *
-     */
-    persistFavorite: function() {
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
-                for(var j = 0; j<$(".favorite-wrapper").length; j++)
-                {
-                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
-                    {
-                        $(".favorite-wrapper")[j].className += " favorited";
-                    }
-                }
-            }
-        }
-    },
-
-    /**
-     * Delete the clicked element from the wish list.
-     *
-     * @param element
-     * @param context
-     */
-    removeFromFavorite: function (element, context) {
-        element.removeClass("favorited");
-        localStorage.removeItem("_wish_product " + element.data("product"));
-        context.setWishlistBadgeQuantity();
-    },
-
-    init: function () {
-        var self = productLayoutFavoriteContainer;
-
-        self.setPopupText();
-        self.addToFavorite();
-        self.persistFavorite();
-        self.fadeInFavoriteIcon();
-        self.setWishlistBadgeQuantity();
-    }
-}
-/**
- * Component responsible for changing quantity on the product page view.
- *
- * @type {{addQuantity: Function, removeQuantity: Function, updateBuyButton: Function, init: Function}}
- */
-var productQuantityContainer = {
-    addQuantity : function(input, callback) {
-        $(".qty-selector[data-action='add']").on("click", function() {
-            input.val(parseInt(input.val()) + 1);
-
-            callback();
-        });
-    },
-
-    removeQuantity: function(input, callback) {
-        $(".qty-selector[data-action='remove']").on("click", function() {
-            var actual = parseInt(input.val());
-
-            if (actual > 1) {
-                input.val(parseInt(input.val()) - 1);
-            }
-
-            callback();
-        });
-    },
-
-    updateBuyButton: function() {
-        $(".buybutton").attr("data-quantity", $(".qty-selector-input").val());
-    },
-
-    init: function () {
-        var self = productQuantityContainer;
-        self.addQuantity($(".qty-selector-input"), self.updateBuyButton);
-        self.removeQuantity($(".qty-selector-input"), self.updateBuyButton);
-
-    }
-};
-/**
  * Component responsible for handling the checkout process.
  * @type {{validation: {validateFormFields: Function}, view: {autofillBillingInformation: Function, clearFields: Function, dispatchButtonsActions: Function, displayContactInformation: Function, displayShipmentMethodsAndPriceInformation: Function, fadeInBillingInformation: Function, fetchEstimate: Function, fetchPayment: Function, setInternationalFields: Function, updatePayment: Function}, actions: {createOrdersCookie: Function, getShipmentTaxes: Function, getTaxes: Function, placeOrderAjaxCall: Function, shipmentMethodsAjaxCall: Function}, bootstrap: {selectDefaultShipmentMethod: Function}, init: Function}}
  */
@@ -992,6 +614,10 @@ var checkoutContainer = {
                     rules: [
                         {
                             type   : 'empty',
+                            prompt : Localization.validation_post_shipping
+                        },
+                        {
+                            type   : 'postalCode[shippingCountry]',
                             prompt : Localization.validation_post_shipping
                         }
                     ]
@@ -1086,6 +712,10 @@ var checkoutContainer = {
                     rules: [
                         {
                             type   : 'empty',
+                            prompt : Localization.validation_post_billing
+                        },
+                        {
+                            type   : 'postalCode[billingCountry]',
                             prompt : Localization.validation_post_billing
                         }
                     ]
@@ -1818,6 +1448,282 @@ var responsiveContainer = {
     }
 }
 /**
+ * Component responsible for displaying a product description (with a nice fade  out effect)
+ *
+ * @type {{toggleDescription: Function, init: Function}}
+ */
+var productDescriptionPreviewContainer = {
+
+    /**
+     * Toggle the description between its open state and its close state.
+     *
+     */
+    toggleDescription: function () {
+        var open = false;
+
+        $(".preview-trigger").on("click", function () {
+            open = !open;
+
+            if (open) {
+                $(this).text(Localization.show_less);
+                $(".preview-text").fadeOut();
+            }
+            else {
+                $(this).text(Localization.show_more);
+                setTimeout(function() {
+                    $(".preview-text").fadeIn()
+                }, 200);
+            }
+        });
+    },
+
+    init: function () {
+        var self = productDescriptionPreviewContainer;
+
+        self.toggleDescription();
+    }
+};
+/**
+ * Component responsible for handling different formats of the same product.
+ *
+ * @type {{productWithFormat: Function, productWithoutFormat: Function, updateBuybuttonAttributes: Function, updateProductInformation: Function, init: Function}}
+ */
+var productFormatContainer = {
+
+    /**
+     * Update price value for a product with format.
+     *
+     * @param option
+     */
+    productWithFormat: function(option) {
+        var price = '<span class="text-strikethrough">' +
+            'CAD $ ' + option.find(":selected").data("price") +
+            '</span>' +
+            '<span id="product-price" class="strong text-danger">' +
+            'CAD $ ' + option.find(":selected").data("reduced") +
+            '</span>';
+
+        $(".sub.header").text(price);
+    },
+
+
+    /**
+     * Update price value for a format-less product.
+     *
+     * @param option
+     */
+    productWithoutFormat: function(option) {
+        // Change description.
+        $("#product-format-name").text(option.find(":selected").data("format"));
+        $("#product-price").text("CAD $ " + option.find(":selected").data("price"));
+    },
+
+
+    /**
+     * Update buybutton data attributes according to format: id/price/name/format.
+     *
+     * @param option
+     */
+    updateBuybuttonAttributes: function (option) {
+        $(".buybutton").attr({
+            'data-product': option.val(),
+            'data-price': option.find(":selected").data("price"),
+            'data-name': option.find(":selected").data("name"),
+            'data-format': option.find(":selected").data("format")
+        });
+    },
+
+    /**
+     * Main function of this module.
+     * Once the format selector is clicked, trigger the appropriate helpers then update buybutton.
+     *
+     */
+    updateProductInformation: function() {
+        var self = productFormatContainer;
+
+        $("#product-format").on("change", function () {
+
+            if ($(this).find(":selected").data("reduced")) {
+                // Add discounted price for a product with different formats.
+                self.productWithFormat($(this));
+            }
+            else {
+                // Add discounted price for a single format product.
+                self.productWithoutFormat($(this));
+            }
+
+
+            // Update buybutton with right attributes.
+            self.updateBuybuttonAttributes($(this));
+        });
+
+    },
+
+    /**
+     * Entry point of this module.
+     *
+     */
+    init: function () {
+        const self = productFormatContainer;
+
+        self.updateProductInformation();
+
+    }
+}
+/**
+ * Component responsible for adding products to a user's wishlist.
+ *
+ * @type {{fadeInFavoriteIcon: Function, setPopupText: Function, setWishlistBadgeQuantity: Function, addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
+ */
+var productLayoutFavoriteContainer = {
+    /**
+     * Fade in the favorite icon (heart icon) when hovering on a product tile.
+     *
+     */
+    fadeInFavoriteIcon: function() {
+        self = productLayoutFavoriteContainer;
+
+        $(".dense-product").hover(function() {
+
+            $(this).children(".favorite-wrapper").fadeIn();
+            self.setPopupText($(this).children(".favorite-wrapper"));
+
+        }, function () {
+            $(this).children(".favorite-wrapper").hide();
+        });
+    },
+
+    /**
+     * Set popup text according to current state of the wrapper.
+     *
+     * @param wrapper
+     */
+    setPopupText: function (wrapper) {
+        if($(wrapper).hasClass("favorited")){
+            $(wrapper).attr("title", Localization.wishlist_remove);
+        }
+        else {
+            $(wrapper).attr("title", Localization.wishlist_add);
+        }
+    },
+
+    /**
+     * Update the value of .wishlist_badge when adding or deleting elements.
+     *
+     */
+    setWishlistBadgeQuantity : function() {
+        var total = UtilityContainer.getNumberOfProductsInWishlist();
+
+        $(".wishlist_badge").text(total);
+    },
+
+    /**
+     * Add the clicked product to the wish list.
+     *
+     */
+    addToFavorite: function() {
+        var self = productLayoutFavoriteContainer,
+            item;
+
+        $(".favorite-wrapper").on("click", function() {
+            //No favorited class.
+            if (!$(this).hasClass("favorited")) {
+                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
+                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+
+                //Set the favorite icon to be displayed
+                $(this).addClass("favorited");
+
+                //Set wishlist badge quantity
+                self.setWishlistBadgeQuantity();
+            }
+            else
+            //Has a favorited class. We remove it, then delete the element from local Storage.
+            {
+                self.removeFromFavorite($(this), self);
+            }
+        });
+    },
+
+    /**
+     * Persist the heart icon next to products already marked as wished.
+     *
+     */
+    persistFavorite: function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
+                for(var j = 0; j<$(".favorite-wrapper").length; j++)
+                {
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
+                    {
+                        $(".favorite-wrapper")[j].className += " favorited";
+                    }
+                }
+            }
+        }
+    },
+
+    /**
+     * Delete the clicked element from the wish list.
+     *
+     * @param element
+     * @param context
+     */
+    removeFromFavorite: function (element, context) {
+        element.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + element.data("product"));
+        context.setWishlistBadgeQuantity();
+    },
+
+    init: function () {
+        var self = productLayoutFavoriteContainer;
+
+        self.setPopupText();
+        self.addToFavorite();
+        self.persistFavorite();
+        self.fadeInFavoriteIcon();
+        self.setWishlistBadgeQuantity();
+    }
+}
+/**
+ * Component responsible for changing quantity on the product page view.
+ *
+ * @type {{addQuantity: Function, removeQuantity: Function, updateBuyButton: Function, init: Function}}
+ */
+var productQuantityContainer = {
+    addQuantity : function(input, callback) {
+        $(".qty-selector[data-action='add']").on("click", function() {
+            input.val(parseInt(input.val()) + 1);
+
+            callback();
+        });
+    },
+
+    removeQuantity: function(input, callback) {
+        $(".qty-selector[data-action='remove']").on("click", function() {
+            var actual = parseInt(input.val());
+
+            if (actual > 1) {
+                input.val(parseInt(input.val()) - 1);
+            }
+
+            callback();
+        });
+    },
+
+    updateBuyButton: function() {
+        $(".buybutton").attr("data-quantity", $(".qty-selector-input").val());
+    },
+
+    init: function () {
+        var self = productQuantityContainer;
+        self.addQuantity($(".qty-selector-input"), self.updateBuyButton);
+        self.removeQuantity($(".qty-selector-input"), self.updateBuyButton);
+
+    }
+};
+/**
  * Component responsible for activating semantic ui features.
  *
  * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {closeDimmer: Function}, init: Function}}
@@ -1896,12 +1802,29 @@ var semanticInitContainer = {
         }
     },
 
+    /**
+     * Specify custom form validation rules.
+     *
+     */
+    rules: {
+        postalCode: function() {
+            $.fn.form.settings.rules.postalCode = function(value, fieldIdentifier) {
+                if ($("#" + fieldIdentifier).val() === "CA")
+                    return value.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
+                else if ($("#" + fieldIdentifier).val() === "US")
+                    return value.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
+                else
+                    return true;
+            }
+        }
+    },
 
 
     init: function () {
         var self = semanticInitContainer,
             module = self.module,
-            behaviors = self.behaviors;
+            behaviors = self.behaviors,
+            rules = self.rules;
 
         module.initDropdownModule();
         module.initRatingModule();
@@ -1910,6 +1833,8 @@ var semanticInitContainer = {
         module.initAccordionModule();
 
         behaviors.closeDimmer();
+
+        rules.postalCode();
     }
 }
 /**
@@ -2678,36 +2603,6 @@ var cartLogicContainer = {
     },
 
     /**
-     * Modify the quantity in a product page before buying
-     * Only used in a product page. (It is hackish, I'll admit it)
-     * Assuming the DOM has (and will keep) this structure:
-     *      .form-group
-     *          #item-quantity
-     *          .ui.buttons.huge
-     *          <br>
-     *          <br>
-     *      .buybutton
-     */
-    modifyQuantityBeforeBuying : function() {
-        $("#item_quantity").on("change", function() {
-
-            // Cache buybutton and format selection buttons.
-            var $buybutton = $(this).closest(".input-qty-detail").find(".buybutton"),
-                $formatSelection = $(this).closest(".input-qty-detail").find(".format-selection"),
-                self = $(this);
-
-            // Set quantity in html5 data attributes for each format selection button.
-            $formatSelection.each(function() {
-                this.dataset.quantity = parseInt(self.val());
-            });
-
-            // Set quantity in html5 data attribute for buybutton.
-            $buybutton.data("quantity", parseInt(self.val()));
-
-        });
-    },
-
-    /**
      * Update the value of #cart_badge when adding or deleting elements
      */
     setBadgeQuantity : function() {
@@ -2846,7 +2741,6 @@ var cartLogicContainer = {
         cartLogicContainer.loadItem();
         cartLogicContainer.deleteItem();
         cartLogicContainer.modifyQuantity();
-        cartLogicContainer.modifyQuantityBeforeBuying();
         cartLogicContainer.setQuantityCookie();
         cartLogicContainer.setCartSubtotal();
     }
@@ -2989,3 +2883,104 @@ var wishlistContainer = {
         self.setNumberOfProductsInHeader();
     }
 }
+/**
+ * Entry point of script.
+ *
+ */
+; (function(window, document, $) {
+    $(document).ready(function () {
+
+        /**
+         * Sets up the ajax token for all ajax requests.
+         *
+         */
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'locale': $('html').attr('lang')
+            }
+        });
+
+        /**
+         * Sets up Localization and ApiEndpoints variables.
+         *
+         */
+        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
+        Localization = env.Localization;
+        ApiEndpoints = env.ApiEndpoints;
+
+        /**
+         * Initialize semantic UI modules.
+         *
+         */
+        semanticInitContainer.init();
+
+        /**
+         * Initialize responsiveness feature.
+         *
+         */
+        responsiveContainer.init();
+
+        /**
+         * Initialize checkout logic.
+         *
+         */
+        checkoutContainer.init();
+
+        /**
+         * Initialize cart drawer logic.
+         *
+         */
+        cartDrawerInitContainer.init();
+
+        /**
+         * Initialize category container.
+         *
+         */
+        categoryContainer.init();
+
+        /**
+         * Initialize overlay plugin.
+         *
+         */
+        paymentOverlayContainer.init();
+
+        /**
+         * Initialize homepage sections.
+         *
+         */
+        homepageContainer.init();
+
+        /**
+         * Initialize favorite products feature.
+         *
+         */
+        productLayoutFavoriteContainer.init();
+
+        /**
+         * Initialize product formats feature.
+         *
+         */
+        productFormatContainer.init();
+
+        /**
+         * Initialize product quantity change.
+         *
+         */
+        productQuantityContainer.init();
+
+        /**
+         * Initialize product description fade in.
+         *
+         */
+        productDescriptionPreviewContainer.init();
+
+        /**
+         * Initialize wishlist page.
+         *
+         */
+        wishlistLogicContainer.init();
+
+    });
+
+})(window, window.document, jQuery, undefined)

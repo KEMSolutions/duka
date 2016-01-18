@@ -77,12 +77,29 @@ var semanticInitContainer = {
         }
     },
 
+    /**
+     * Specify custom form validation rules.
+     *
+     */
+    rules: {
+        postalCode: function() {
+            $.fn.form.settings.rules.postalCode = function(value, fieldIdentifier) {
+                if ($("#" + fieldIdentifier).val() === "CA")
+                    return value.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
+                else if ($("#" + fieldIdentifier).val() === "US")
+                    return value.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
+                else
+                    return true;
+            }
+        }
+    },
 
 
     init: function () {
         var self = semanticInitContainer,
             module = self.module,
-            behaviors = self.behaviors;
+            behaviors = self.behaviors,
+            rules = self.rules;
 
         module.initDropdownModule();
         module.initRatingModule();
@@ -91,5 +108,7 @@ var semanticInitContainer = {
         module.initAccordionModule();
 
         behaviors.closeDimmer();
+
+        rules.postalCode();
     }
 }

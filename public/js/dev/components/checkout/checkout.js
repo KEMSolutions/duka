@@ -86,6 +86,10 @@ var checkoutContainer = {
                         {
                             type   : 'empty',
                             prompt : Localization.validation_post_shipping
+                        },
+                        {
+                            type   : 'postalCode[shippingCountry]',
+                            prompt : Localization.validation_post_shipping
                         }
                     ]
                 },
@@ -179,6 +183,10 @@ var checkoutContainer = {
                     rules: [
                         {
                             type   : 'empty',
+                            prompt : Localization.validation_post_billing
+                        },
+                        {
+                            type   : 'postalCode[billingCountry]',
                             prompt : Localization.validation_post_billing
                         }
                     ]
