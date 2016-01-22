@@ -17,11 +17,11 @@
 
     <div class="ui container stackable grid" itemscope itemtype="http://schema.org/Product">
         <div class="ui row">
-            <div class="ten wide column">
+            <div class="ten wide center aligned column">
 
                 {{-- Product Image. --}}
-                <div class="ui image">
-                    <img src="{{ Products::getImage($product->id, 1000, 1000) }}"
+                <div class="ui medium image">
+                    <img src="{{ Products::getImage($product->id, 500, 500) }}"
                          alt="{{ $product->localization->name }}"
                          itemprop="image"/>
                 </div>
