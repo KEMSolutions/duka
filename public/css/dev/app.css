@@ -352,14 +352,10 @@ section.slice {
 /*-----------------------------------*/
 /*-----------------------------------*/
 
-.header-banner {
-  height: 53px;
+.supertop{
+  background: linear-gradient(to bottom,  #ffffff 73%,#efefef 100%);
 }
 
-.header-banner .btn {
-  padding-top: 2px !important;
-  border: none;
-}
 
 .inline-block {
   display: inline-block;
@@ -372,12 +368,6 @@ section.slice {
 .wishlist-button:hover {
   text-decoration: none;
   text-color: #222;
-}
-
-@media (max-width: 767px) {
-  .header-topbar .four.wide > * {
-    margin-top: 2px;
-  }
 }
 
 .ui.horizontal.list:not(.celled)>.item:first-child {
