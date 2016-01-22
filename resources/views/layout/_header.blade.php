@@ -24,13 +24,20 @@
                 </div>
                 <div class="six wide column">
                     <form action="{{ route('search') }}" method="get">
-                        <div class="ui fluid icon input">
+                        {{--<div class="ui fluid icon input">--}}
+                            {{--<input type="text" name="q" placeholder="@lang("boukem.search")">--}}
+                            {{--<i class="inverted circular search link icon" onclick="$(this).closest('form').submit();"></i>--}}
+                        {{--</div>--}}
+
+                        <div class="ui fluid action input">
                             <input type="text" name="q" placeholder="@lang("boukem.search")">
-                            <i class="inverted circular search link icon" onclick="$(this).closest('form').submit();"></i>
+                            <button class="ui button" onclick="$(this).closest('form').submit();">
+                                <i class="search button icon"></i>
+                            </button>
                         </div>
                     </form>
                 </div>
-                <div class="five wide right aligned column">
+                <div class="five wide right aligned column fluid">
 
                     @if(Auth::check())
                         <div class="ui button">
