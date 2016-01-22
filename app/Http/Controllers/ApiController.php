@@ -239,7 +239,7 @@ class ApiController extends Controller
 
         // Retrieve other details.
         $itemList = Request::input('products');
-        $shippingDetails = json_decode(base64_decode(Request::input('shipping')), true);
+        $shippingDetails = json_decode(utf8_encode(base64_decode(Request::input('shipping'))), true);
 
         // Place order.
         $response = Orders::placeOrder($customer, $itemList, $shippingDetails, $shipAddress, $billAddress);
