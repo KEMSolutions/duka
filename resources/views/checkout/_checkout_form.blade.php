@@ -93,21 +93,21 @@
                     <label>@lang("boukem.name")</label>
                     <div class="two fields">
                         <div class="field">
-                            <input type="text" name="billing[first-name]" id="billingFirstname" placeholder=@lang("boukem.first_name")>
+                            <input type="text" name="billing_address[firstname]" id="billingFirstname" placeholder=@lang("boukem.first_name")>
                         </div>
                         <div class="field">
-                            <input type="text" name="billing[last-name]" id="billingLastname" placeholder=@lang("boukem.last_name")>
+                            <input type="text" name="billing_address[lastname]" id="billingLastname" placeholder=@lang("boukem.last_name")>
                         </div>
                     </div>
                 </div>
 
                 <div class="field">
                     <label>@lang("boukem.billing_address")</label>
-                    <input type="text" name="billing[address]" id="billingAddress1" placeholder=@lang("boukem.address_1")>
+                    <input type="text" name="billing_address[line1]" id="billingAddress1" placeholder=@lang("boukem.address_1")>
                 </div>
 
                 <div class="field">
-                    <input type="text" name="billing[address-2]" id="billingAddress2" placeholder="@lang("boukem.address_2") (@lang("boukem.optional"))">
+                    <input type="text" name="billing_address[line2]" id="billingAddress2" placeholder="@lang("boukem.address_2") (@lang("boukem.optional"))">
                 </div>
 
                 <div class="two fields">
