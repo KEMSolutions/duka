@@ -1,7 +1,7 @@
 <div class="card">
-    <div class="image">
+    <a class="image" href="{{ route('product', ['slug' => $product->slug]) }}">
         <img src="{{ Products::getImage($product->id, 350, 350, 'fit') }}">
-    </div>
+    </a>
     <div class="content">
         <div class="header"><a href="{{ route('product', ['slug' => $product->slug]) }}">{{ $product->localization->name }}</a></div>
         <div class="meta">
