@@ -11,7 +11,7 @@
 
         </div>
         <div class="description">
-            {{ $product->localization->short_description }}
+            {{ (strlen($product->localization->short_description) > 200) ? substr($product->localization->short_description,0,200).'…' : $product->localization->short_description }}
         </div>
     </div>
 
