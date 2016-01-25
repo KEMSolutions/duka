@@ -1,5 +1,11 @@
 <div class="card">
     <a class="image" href="{{ route('product', ['slug' => $product->slug]) }}">
+    @if (count($product->formats) > 0 && $product->formats[0]->reduced_price)
+    <div class="ui red right corner label">
+        <i class="flag icon"></i>
+      </div>
+    @endif
+
         <img src="{{ Products::getImage($product->id, 350, 350, 'fit') }}">
     </a>
     <div class="content">
@@ -37,8 +43,6 @@
                             money_format('%n', $format->price)
                     }}
   </div>
-                
-                
             </div>
 
         @endforeach

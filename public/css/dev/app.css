@@ -65,10 +65,7 @@ p {
 .invisible {
   visibility: hidden;
 }
-.hidden {
-  display: none !important;
-  visibility: hidden !important;
-}
+
 .transparent {
   border-color: transparent !important;
   border-top: 1px solid;
