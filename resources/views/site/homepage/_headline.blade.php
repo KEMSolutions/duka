@@ -14,8 +14,8 @@
             @endif
 
             <div class="ui text container {{ $layoutData["headline"]["style"] }} headline-section-text">
-                <h1 class="ui header centered aligned">{{ $layoutData["headline"]["title"] }}</h1>
-                <h3 class="ui header centered aligned">{{ $layoutData["headline"]["subtitle"] }}</h3>
+                <h1 class="ui centered aligned inverted header">{{ $layoutData["headline"]["title"] }}</h1>
+                <h3 class="ui centered aligned inverted header">{{ $layoutData["headline"]["subtitle"] }}</h3>
             </div>
 
         </div>
