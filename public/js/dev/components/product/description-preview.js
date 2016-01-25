@@ -17,13 +17,16 @@ var productDescriptionPreviewContainer = {
 
             if (open) {
                 $(this).text(Localization.show_less);
-                $(".preview-text").fadeOut();
+                $(".preview-text").transition("fade out");
             }
             else {
                 $(this).text(Localization.show_more);
                 setTimeout(function() {
-                    $(".preview-text").fadeIn()
-                }, 200);
+                    $(".preview-text").transition({
+                        animation: 'fade in',
+                        duration: 400
+                    })
+                }, 100);
             }
         });
     },
