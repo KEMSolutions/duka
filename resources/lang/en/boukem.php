@@ -60,7 +60,7 @@ return [
     "about"         => "About you",
     "first_name"    =>"First name",
     "last_name"     =>"Last name",
-    "name"          =>"Nom",
+    "name"          =>"Name",
     "phone"         =>"Phone",
     "billing_address"=>"Billing address",
     "address_1"     =>"Address line 1",
