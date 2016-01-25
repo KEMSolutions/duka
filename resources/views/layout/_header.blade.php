@@ -16,7 +16,7 @@
 
                     {{-- Include a condition here to display a back to website --}}
 
-                    {{--<a href="http://www.lamoisson.com" class="ui left labeled icon button">--}}
+                    {{--<a href="http://www.lamoisson.com" class="ui left labeled icon button color-one">--}}
                         {{--<i class="left arrow icon"></i>--}}
                         {{--@lang('boukem.back_to_main')--}}
                     {{--</a>--}}
@@ -56,7 +56,7 @@
                     @endif
 
                     <div class="view-cart ui labeled button" tabindex="0">
-                        <div class="ui button">
+                        <div class="ui button color-one">
                             <i class="cart icon"></i> {{ Lang::get("boukem.cart") }}
                         </div>
                         <a class="view-cart ui basic left pointing label cart_badge">0</a>
@@ -77,11 +77,11 @@
                 <div class="thirteen wide bottom aligned column">
                     <div class="ui secondary stackable menu topmenu">
 
-                        <a class="active right item" href="{{ route("home") }}">
+                        <a class="active right item color-one" href="{{ route("home") }}">
                             {{ Lang::get("boukem.home") }}
                         </a><!-- Item (Home) -->
 
-                        <div class="ui scrolling dropdown item">
+                        <div class="ui scrolling dropdown item color-one">
                             @lang('boukem.categories')
                             <i class="dropdown icon"></i>
 
@@ -92,7 +92,7 @@
                             </div><!-- Menu -->
                         </div><!-- Item (Categories) -->
 
-                        <div class="ui scrolling dropdown item">
+                        <div class="ui scrolling dropdown item color-one">
                             @lang('boukem.brands')
                             <i class="dropdown icon"></i>
 
@@ -118,7 +118,7 @@
                             </a>
                         @endif
 
-                        <div class="ui top right pointing dropdown item" style="margin-left: 0 !important">
+                        <div class="ui top right pointing dropdown item color-one" style="margin-left: 0 !important">
                             @lang('boukem.contact')
                             <i class="dropdown icon"></i>
 
