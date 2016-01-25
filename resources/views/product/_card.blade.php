@@ -34,6 +34,7 @@
                  data-description="{{ $product->localization->short_description }}"
                  data-link="{{ route('product', ['slug' => $product->slug]) }}">
   <div class="ui red button" style="background-color: #{{ Store::info()->colors->color_two }}!important">
+  <i class="add to cart icon"></i>
     {{ $format->name ? $format->name : "1" }}
   </div>
   <div class="ui basic red left pointing label" style="border-color: #{{ Store::info()->colors->color_two }}!important;color: #{{ Store::info()->colors->color_two }}!important;">
