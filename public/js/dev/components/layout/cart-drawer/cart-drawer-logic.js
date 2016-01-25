@@ -258,8 +258,8 @@ var cartLogicContainer = {
             },
             complete : function() {
                 $(".price-estimate").fadeOut(300, function() {
-                    $(".calculation.hidden").fadeIn().removeClass("hidden");
-                    $(".cart-total.hidden").fadeIn().removeClass("hidden");
+                    $(".calculation.invisible").fadeIn().removeClass("invisible");
+                    $(".cart-total.invisible").fadeIn().removeClass("invisible");
                 });
             }
         });
@@ -271,13 +271,13 @@ var cartLogicContainer = {
      */
     updateAjaxCall : function() {
         //If the total is displayed, it means that there's already been an ajax call: we have to display an update!
-        if(!$(".total").parent().hasClass("hidden")) {
+        if(!$(".total").parent().hasClass("invisible")) {
             $(".cart-total dl").hide();
             $(".price-estimate-update").fadeIn('fast');
         }
 
         $(".changeLocation").click(function() {
-            $("dl.calculation").addClass("hidden");
+            $("dl.calculation").addClass("invisible");
             $(".getEstimate").html(Localization.update);
             $(".price-estimate-update").fadeOut();
             $(".price-estimate").fadeIn();

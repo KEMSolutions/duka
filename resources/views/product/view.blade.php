@@ -65,7 +65,7 @@
 
                         @if($product->formats[0]->discontinued)
                             <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                                <span class="hidden" itemprop="price">
+                                <span class="invisible" itemprop="price">
                                     CAD ${{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
                                 </span>
                                 <link itemprop="availability" href="http://schema.org/Discontinued">
@@ -75,7 +75,7 @@
                             </span>
                         @else
                             <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                                <span class="hidden" itemprop="price">
+                                <span class="invisible" itemprop="price">
                                     CAD ${{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
                                 </span>
 
@@ -259,7 +259,7 @@
                 @endif
 
                 <?php /*  Reviews.
-            <div class="ui comments full-width hidden">
+            <div class="ui comments full-width invisible">
                 <h3 class="ui dividing header">Comments</h3>
                 <div class="comment">
                     <a class="avatar">

@@ -1,34 +1,31 @@
 {{-- HEADER. --}}
 
-{{----}}
-
-    {{-- FUTURE DESCRIPTION OF HEADER GOES HERE.--}}
-
-{{----}}
 
 @include("layout._header_helpers")
 
+
+{{-- First row of header --}}
 <nav class="supertop">
     <div class="ui container">
         <div class="ui sixteen column padded stackable grid">
             <div class="row">
+
+
                 <div class="five wide column">
 
                     {{-- Include a condition here to display a back to website --}}
 
-                    {{--<a href="http://www.lamoisson.com" class="ui left labeled icon button">--}}
+                    {{--<a href="http://www.lamoisson.com" class="ui left labeled icon button color-one">--}}
                         {{--<i class="left arrow icon"></i>--}}
                         {{--@lang('boukem.back_to_main')--}}
                     {{--</a>--}}
-
                 </div>
-                <div class="six wide column">
-                    <form action="{{ route('search') }}" method="get">
-                        {{--<div class="ui fluid icon input">--}}
-                            {{--<input type="text" name="q" placeholder="@lang("boukem.search")">--}}
-                            {{--<i class="inverted circular search link icon" onclick="$(this).closest('form').submit();"></i>--}}
-                        {{--</div>--}}
 
+
+                <div class="six wide column">
+
+                    {{-- Search bar --}}
+                    <form action="{{ route('search') }}" method="get">
                         <div class="ui fluid action input">
                             <input type="text" name="q" placeholder="@lang("boukem.search")">
                             <button class="ui button" onclick="$(this).closest('form').submit();">
@@ -36,7 +33,10 @@
                             </button>
                         </div>
                     </form>
+
                 </div>
+
+
                 <div class="five wide right aligned column fluid">
 
                     @if(Auth::check())
@@ -55,33 +55,48 @@
                         </div>
                     @endif
 
+
                     <div class="view-cart ui labeled button" tabindex="0">
-                        <div class="ui button">
+                        <div class="ui button color-one">
                             <i class="cart icon"></i> {{ Lang::get("boukem.cart") }}
                         </div>
                         <a class="view-cart ui basic left pointing label cart_badge">0</a>
                     </div>
+
+
                 </div>
             </div>
         </div>
     </div>
 </nav>
 
+
+{{-- Second row of header --}}
 <nav class="mainmenu">
     <div class="ui container">
         <div class="ui sixteen column padded stackable grid">
             <div class="row">
-                <div class="three wide column">
-                    <a href="/"><img src="{{ Store::logo() }}" class="ui image" alt="{{ Store::info()->url }}"></a>
-                </div>
-                <div class="thirteen wide bottom aligned column">
-                    <div class="ui secondary stackable menu topmenu">
 
-                        <a class="active right item" href="{{ route("home") }}">
+
+                {{-- Logo --}}
+                <div class="three wide column">
+                    <a href="/">
+                        <img src="{{ Store::logo() }}" class="ui image" alt="{{ Store::info()->url }}">
+                    </a>
+                </div>
+
+
+                {{-- Right menu. --}}
+                <div class="thirteen wide bottom aligned column">
+                    <div class="ui secondary stackable menu">
+
+
+                        <a class="right item color-one" href="{{ route("home") }}">
                             {{ Lang::get("boukem.home") }}
                         </a><!-- Item (Home) -->
 
-                        <div class="ui scrolling dropdown item">
+
+                        <div class="ui scrolling dropdown item color-one">
                             @lang('boukem.categories')
                             <i class="dropdown icon"></i>
 
@@ -92,7 +107,8 @@
                             </div><!-- Menu -->
                         </div><!-- Item (Categories) -->
 
-                        <div class="ui scrolling dropdown item">
+
+                        <div class="ui scrolling dropdown item color-one">
                             @lang('boukem.brands')
                             <i class="dropdown icon"></i>
 
@@ -103,22 +119,26 @@
                             </div><!-- Menu -->
                         </div><!-- Item (Brands) -->
 
+
                         {{-- Links to custom pages. --}}
                         @if (count(Pages::all()))
                             @foreach (Pages::all() as $page)
-                                <a class="item" href="{{ route('page', ['slug' => $page->slug]) }}">
+                                <a class="item color-one" href="{{ route('page', ['slug' => $page->slug]) }}">
                                     {{ $page->title }}
                                 </a>
                             @endforeach
                         @endif
 
+
+                        {{-- Links to blog. --}}
                         @if(count(Store::info()->blogs) > 0)
-                            <a class="item" href="{{ action('BlogController@index') }}">
+                            <a class="item color-one" href="{{ action('BlogController@index') }}">
                                 @lang('boukem.blog')
                             </a>
                         @endif
 
-                        <div class="ui top right pointing dropdown item" style="margin-left: 0 !important">
+
+                        <div class="ui top right pointing dropdown item color-one" style="margin-left: 5px !important">
                             @lang('boukem.contact')
                             <i class="dropdown icon"></i>
 
@@ -139,6 +159,7 @@
                                 </div>
                             </div><!-- Menu -->
                         </div><!-- Item (Contact) -->
+
 
                     </div> <!-- Menu -->
                 </div><!-- Column -->

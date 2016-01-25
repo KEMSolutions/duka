@@ -528,6 +528,108 @@ var UtilityContainer = {
 
 
 /**
+ * Entry point of script.
+ *
+ */
+; (function(window, document, $) {
+    $(document).ready(function () {
+
+        /**
+         * Sets up the ajax token for all ajax requests.
+         *
+         */
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'locale': $('html').attr('lang')
+            }
+        });
+
+        /**
+         * Sets up Localization and ApiEndpoints variables.
+         *
+         */
+        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
+        Localization = env.Localization;
+        ApiEndpoints = env.ApiEndpoints;
+
+        /**
+         * Initialize semantic UI modules.
+         *
+         */
+        semanticInitContainer.init();
+
+        /**
+         * Initialize responsiveness feature.
+         *
+         */
+        responsiveContainer.init();
+
+        /**
+         * Initialize checkout logic.
+         *
+         */
+        checkoutContainer.init();
+
+        /**
+         * Initialize cart drawer logic.
+         *
+         */
+        cartDrawerInitContainer.init();
+
+        /**
+         * Initialize category container.
+         *
+         */
+        categoryContainer.init();
+
+        /**
+         * Initialize overlay plugin.
+         *
+         */
+        paymentOverlayContainer.init();
+
+        /**
+         * Initialize homepage sections.
+         *
+         */
+        homepageContainer.init();
+
+        /**
+         * Initialize favorite products feature.
+         *
+         */
+        productLayoutFavoriteContainer.init();
+
+        /**
+         * Initialize product formats feature.
+         *
+         */
+        productFormatContainer.init();
+
+        /**
+         * Initialize product quantity change.
+         *
+         */
+        productQuantityContainer.init();
+
+        /**
+         * Initialize product description fade in.
+         *
+         */
+        productDescriptionPreviewContainer.init();
+
+        /**
+         * Initialize wishlist page.
+         *
+         */
+        wishlistLogicContainer.init();
+
+    });
+
+})(window, window.document, jQuery, undefined)
+
+/**
  * Component responsible for handling the checkout process.
  * @type {{validation: {validateFormFields: Function}, view: {autofillBillingInformation: Function, clearFields: Function, dispatchButtonsActions: Function, displayContactInformation: Function, displayShipmentMethodsAndPriceInformation: Function, fadeInBillingInformation: Function, fetchEstimate: Function, fetchPayment: Function, setInternationalFields: Function, updatePayment: Function}, actions: {createOrdersCookie: Function, getShipmentTaxes: Function, getTaxes: Function, placeOrderAjaxCall: Function, shipmentMethodsAjaxCall: Function}, bootstrap: {selectDefaultShipmentMethod: Function}, init: Function}}
  */
@@ -1178,6 +1280,120 @@ var checkoutContainer = {
 
 }
 /**
+ * Component responsible for activating semantic ui features.
+ *
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {closeDimmer: Function}, init: Function}}
+ */
+var semanticInitContainer = {
+
+    /**
+     * Initialize modules
+     *
+     */
+    module: {
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule: function() {
+            $(".ui.dropdown").dropdown();
+
+            $(".ui.dropdown").on("click", function () {
+                var action = $(this).data("action") || "activate";
+
+                $(this).dropdown({
+                    action: action
+                });
+            });
+        },
+
+        /**
+         * Initialize rating module.
+         *
+         */
+        initRatingModule: function () {
+            $(".ui.rating").rating();
+        },
+
+        /**
+         * Initialize popup module.
+         *
+         */
+        initPopupModule: function () {
+            $(".popup").popup();
+        },
+
+        /**
+         * Initialize checkbox module.
+         *
+         */
+        initCheckboxModule: function () {
+            $('.ui.checkbox')
+                .checkbox()
+            ;
+        },
+
+        /**
+         * Initialize accordion module.
+         *
+         */
+        initAccordionModule: function() {
+            $('.ui.accordion').accordion({
+                selector: {
+                    trigger: $(".ui.accordion").data("trigger")
+                }
+            });
+        }
+    },
+
+    /**
+     * Specify semantic custom behavior.
+     *
+     */
+    behaviors: {
+        closeDimmer: function () {
+            $(".close-dimmer").on("click", function() {
+                $(".dimmer").dimmer("hide");
+            });
+        }
+    },
+
+    /**
+     * Specify custom form validation rules.
+     *
+     */
+    rules: {
+        postalCode: function() {
+            $.fn.form.settings.rules.postalCode = function(value, fieldIdentifier) {
+                if ($("#" + fieldIdentifier).val() === "CA")
+                    return value.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
+                else if ($("#" + fieldIdentifier).val() === "US")
+                    return value.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
+                else
+                    return true;
+            }
+        }
+    },
+
+
+    init: function () {
+        var self = semanticInitContainer,
+            module = self.module,
+            behaviors = self.behaviors,
+            rules = self.rules;
+
+        module.initDropdownModule();
+        module.initRatingModule();
+        module.initPopupModule();
+        module.initCheckboxModule();
+        module.initAccordionModule();
+
+        behaviors.closeDimmer();
+
+        rules.postalCode();
+    }
+}
+/**
  * Component responsible for handling the payment overlay behaviour.
  * Entry point is in checkPendingOrders.
  *
@@ -1723,120 +1939,6 @@ var productQuantityContainer = {
 
     }
 };
-/**
- * Component responsible for activating semantic ui features.
- *
- * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {closeDimmer: Function}, init: Function}}
- */
-var semanticInitContainer = {
-
-    /**
-     * Initialize modules
-     *
-     */
-    module: {
-        /**
-         * Initialize dropdown module.
-         *
-         */
-        initDropdownModule: function() {
-            $(".ui.dropdown").dropdown();
-
-            $(".ui.dropdown").on("click", function () {
-                var action = $(this).data("action") || "activate";
-
-                $(this).dropdown({
-                    action: action
-                });
-            });
-        },
-
-        /**
-         * Initialize rating module.
-         *
-         */
-        initRatingModule: function () {
-            $(".ui.rating").rating();
-        },
-
-        /**
-         * Initialize popup module.
-         *
-         */
-        initPopupModule: function () {
-            $(".popup").popup();
-        },
-
-        /**
-         * Initialize checkbox module.
-         *
-         */
-        initCheckboxModule: function () {
-            $('.ui.checkbox')
-                .checkbox()
-            ;
-        },
-
-        /**
-         * Initialize accordion module.
-         *
-         */
-        initAccordionModule: function() {
-            $('.ui.accordion').accordion({
-                selector: {
-                    trigger: $(".ui.accordion").data("trigger")
-                }
-            });
-        }
-    },
-
-    /**
-     * Specify semantic custom behavior.
-     *
-     */
-    behaviors: {
-        closeDimmer: function () {
-            $(".close-dimmer").on("click", function() {
-                $(".dimmer").dimmer("hide");
-            });
-        }
-    },
-
-    /**
-     * Specify custom form validation rules.
-     *
-     */
-    rules: {
-        postalCode: function() {
-            $.fn.form.settings.rules.postalCode = function(value, fieldIdentifier) {
-                if ($("#" + fieldIdentifier).val() === "CA")
-                    return value.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
-                else if ($("#" + fieldIdentifier).val() === "US")
-                    return value.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
-                else
-                    return true;
-            }
-        }
-    },
-
-
-    init: function () {
-        var self = semanticInitContainer,
-            module = self.module,
-            behaviors = self.behaviors,
-            rules = self.rules;
-
-        module.initDropdownModule();
-        module.initRatingModule();
-        module.initPopupModule();
-        module.initCheckboxModule();
-        module.initAccordionModule();
-
-        behaviors.closeDimmer();
-
-        rules.postalCode();
-    }
-}
 /**
  * Component responsible for the view component of each category page.
  *
@@ -2395,8 +2497,7 @@ var cartDrawerInitContainer = {
             cartLogicContainer.storeItem(UtilityContainer.buyButton_to_Json($(this)));
 
             // We remove the "Your cart is empty" message at the top every time we add an item.
-            // TODO : Maybe improve it?
-            $("#cart-items .empty-cart").addClass("hidden");
+            $("#cart-items .empty-cart").addClass("invisible");
         });
     },
 
@@ -2417,7 +2518,7 @@ var cartDrawerInitContainer = {
 
             }
             else if (UtilityContainer.validateEmptyCart()) {
-                $("#cart-items .empty-cart").removeClass("hidden");
+                $("#cart-items .empty-cart").removeClass("invisible");
             }
             else {
                 UtilityContainer.addErrorClassToFieldsWithRules($("#postcode"));
@@ -2697,8 +2798,8 @@ var cartLogicContainer = {
             },
             complete : function() {
                 $(".price-estimate").fadeOut(300, function() {
-                    $(".calculation.hidden").fadeIn().removeClass("hidden");
-                    $(".cart-total.hidden").fadeIn().removeClass("hidden");
+                    $(".calculation.invisible").fadeIn().removeClass("invisible");
+                    $(".cart-total.invisible").fadeIn().removeClass("invisible");
                 });
             }
         });
@@ -2710,13 +2811,13 @@ var cartLogicContainer = {
      */
     updateAjaxCall : function() {
         //If the total is displayed, it means that there's already been an ajax call: we have to display an update!
-        if(!$(".total").parent().hasClass("hidden")) {
+        if(!$(".total").parent().hasClass("invisible")) {
             $(".cart-total dl").hide();
             $(".price-estimate-update").fadeIn('fast');
         }
 
         $(".changeLocation").click(function() {
-            $("dl.calculation").addClass("hidden");
+            $("dl.calculation").addClass("invisible");
             $(".getEstimate").html(Localization.update);
             $(".price-estimate-update").fadeOut();
             $(".price-estimate").fadeIn();
@@ -2883,104 +2984,3 @@ var wishlistContainer = {
         self.setNumberOfProductsInHeader();
     }
 }
-/**
- * Entry point of script.
- *
- */
-; (function(window, document, $) {
-    $(document).ready(function () {
-
-        /**
-         * Sets up the ajax token for all ajax requests.
-         *
-         */
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'locale': $('html').attr('lang')
-            }
-        });
-
-        /**
-         * Sets up Localization and ApiEndpoints variables.
-         *
-         */
-        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
-        Localization = env.Localization;
-        ApiEndpoints = env.ApiEndpoints;
-
-        /**
-         * Initialize semantic UI modules.
-         *
-         */
-        semanticInitContainer.init();
-
-        /**
-         * Initialize responsiveness feature.
-         *
-         */
-        responsiveContainer.init();
-
-        /**
-         * Initialize checkout logic.
-         *
-         */
-        checkoutContainer.init();
-
-        /**
-         * Initialize cart drawer logic.
-         *
-         */
-        cartDrawerInitContainer.init();
-
-        /**
-         * Initialize category container.
-         *
-         */
-        categoryContainer.init();
-
-        /**
-         * Initialize overlay plugin.
-         *
-         */
-        paymentOverlayContainer.init();
-
-        /**
-         * Initialize homepage sections.
-         *
-         */
-        homepageContainer.init();
-
-        /**
-         * Initialize favorite products feature.
-         *
-         */
-        productLayoutFavoriteContainer.init();
-
-        /**
-         * Initialize product formats feature.
-         *
-         */
-        productFormatContainer.init();
-
-        /**
-         * Initialize product quantity change.
-         *
-         */
-        productQuantityContainer.init();
-
-        /**
-         * Initialize product description fade in.
-         *
-         */
-        productDescriptionPreviewContainer.init();
-
-        /**
-         * Initialize wishlist page.
-         *
-         */
-        wishlistLogicContainer.init();
-
-    });
-
-})(window, window.document, jQuery, undefined)
