@@ -106,14 +106,14 @@
                         {{-- Links to custom pages. --}}
                         @if (count(Pages::all()))
                             @foreach (Pages::all() as $page)
-                                <a class="item" href="{{ route('page', ['slug' => $page->slug]) }}">
+                                <a class="item color-one" href="{{ route('page', ['slug' => $page->slug]) }}">
                                     {{ $page->title }}
                                 </a>
                             @endforeach
                         @endif
 
                         @if(count(Store::info()->blogs) > 0)
-                            <a class="item" href="{{ action('BlogController@index') }}">
+                            <a class="item color-one" href="{{ action('BlogController@index') }}">
                                 @lang('boukem.blog')
                             </a>
                         @endif
