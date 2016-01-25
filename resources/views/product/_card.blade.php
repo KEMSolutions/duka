@@ -17,9 +17,7 @@
 
     <div class="extra content">
         @foreach ($product->formats as $format)
-
-            <div class="ui large label text-center center-block btn btn-one-inverted buybutton"
-                 style="padding:1rem; outline:none"
+<div class="ui right floated labeled button buybutton" tabindex="0"
                  tabindex="0"
                  data-product="{{ $product->id . '-' . $format->id }}"
                  data-price="{{ isset($format->reduced_price) ? $format->reduced_price->price : $format->price }}"
@@ -29,15 +27,18 @@
                  data-quantity="1"
                  data-description="{{ $product->localization->short_description }}"
                  data-link="{{ route('product', ['slug' => $product->slug]) }}">
-                <i class="add to cart icon"></i>
-                {{$format->name}}
-                <a class="detail dark">$
-                    {{
+  <div class="ui red button" style="background-color: #{{ Store::info()->colors->color_two }}!important">
+    {{ $format->name ? $format->name : "1" }}
+  </div>
+  <div class="ui basic red left pointing label" style="border-color: #{{ Store::info()->colors->color_two }}!important;color: #{{ Store::info()->colors->color_two }}!important;">
+    {{
                         isset($format->reduced_price) ?
-                            number_format((float)$format->reduced_price->price, 2, '.', '') :
-                            number_format((float)$format->price, 2, '.', '')
+                            money_format('%n', $format->reduced_price->price) :
+                            money_format('%n', $format->price)
                     }}
-                </a>
+  </div>
+                
+                
             </div>
 
         @endforeach
