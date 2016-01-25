@@ -6,7 +6,7 @@
         </header>
 
         <div id="cart-items">
-            <h4 class="text-center empty-cart hidden">
+            <h4 class="text-center empty-cart invisible">
                 {{ Lang::get("boukem.empty_cart") }}
             </h4>
 
@@ -43,18 +43,18 @@
                         </p>
                     </div>
 
-                    <dl class="calculation  hidden">
+                    <dl class="calculation  invisible">
                         <dt>{{ Lang::get("boukem.shipping") }}</dt>
                         <dd id="shipping"></dd>
                     </dl>
 
-                    <dl class="calculation hidden">
+                    <dl class="calculation invisible">
                         <dt>{{ Lang::get("boukem.taxes") }}</dt>
                         <dd id="taxes"></dd>
                     </dl>
 
                 </div>
-                <div class="cart-total hidden"><dl class="calculation total">
+                <div class="cart-total invisible"><dl class="calculation total">
                         <dt>{{ Lang::get("boukem.total") }}</dt>
                         <dd></dd>
                     </dl></div>

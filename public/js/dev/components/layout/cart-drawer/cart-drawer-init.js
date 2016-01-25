@@ -19,8 +19,7 @@ var cartDrawerInitContainer = {
             cartLogicContainer.storeItem(UtilityContainer.buyButton_to_Json($(this)));
 
             // We remove the "Your cart is empty" message at the top every time we add an item.
-            // TODO : Maybe improve it?
-            $("#cart-items .empty-cart").addClass("hidden");
+            $("#cart-items .empty-cart").addClass("invisible");
         });
     },
 
@@ -41,7 +40,7 @@ var cartDrawerInitContainer = {
 
             }
             else if (UtilityContainer.validateEmptyCart()) {
-                $("#cart-items .empty-cart").removeClass("hidden");
+                $("#cart-items .empty-cart").removeClass("invisible");
             }
             else {
                 UtilityContainer.addErrorClassToFieldsWithRules($("#postcode"));
