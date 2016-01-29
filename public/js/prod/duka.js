@@ -528,398 +528,107 @@ var UtilityContainer = {
 
 
 /**
- * Component responsible for displaying a product description (with a nice fade  out effect)
+ * Entry point of script.
  *
- * @type {{toggleDescription: Function, init: Function}}
  */
-var productDescriptionPreviewContainer = {
-
-    /**
-     * Toggle the description between its open state and its close state.
-     *
-     */
-    toggleDescription: function () {
-        var open = false;
-
-        $(".preview-trigger").on("click", function () {
-            open = !open;
-
-            if (open) {
-                $(this).text(Localization.show_less);
-                $(".preview-text").transition("fade out");
-            }
-            else {
-                $(this).text(Localization.show_more);
-                setTimeout(function() {
-                    $(".preview-text").transition({
-                        animation: 'fade in',
-                        duration: 400
-                    })
-                }, 100);
-            }
-        });
-    },
-
-    init: function () {
-        var self = productDescriptionPreviewContainer;
-
-        self.toggleDescription();
-    }
-};
-/**
- * Component responsible for handling different formats of the same product.
- *
- * @type {{productWithFormat: Function, productWithoutFormat: Function, updateBuybuttonAttributes: Function, updateProductInformation: Function, init: Function}}
- */
-var productFormatContainer = {
-
-    /**
-     * Update price value for a product with format.
-     *
-     * @param option
-     */
-    productWithFormat: function(option) {
-        var price = '<span class="text-strikethrough">' +
-            'CAD $ ' + option.find(":selected").data("price") +
-            '</span>' +
-            '<span id="product-price" class="strong text-danger">' +
-            'CAD $ ' + option.find(":selected").data("reduced") +
-            '</span>';
-
-        $(".sub.header").text(price);
-    },
-
-
-    /**
-     * Update price value for a format-less product.
-     *
-     * @param option
-     */
-    productWithoutFormat: function(option) {
-        // Change description.
-        $("#product-format-name").text(option.find(":selected").data("format"));
-        $("#product-price").text("CAD $ " + option.find(":selected").data("price"));
-    },
-
-
-    /**
-     * Update buybutton data attributes according to format: id/price/name/format.
-     *
-     * @param option
-     */
-    updateBuybuttonAttributes: function (option) {
-        $(".buybutton").attr({
-            'data-product': option.val(),
-            'data-price': option.find(":selected").data("price"),
-            'data-name': option.find(":selected").data("name"),
-            'data-format': option.find(":selected").data("format")
-        });
-    },
-
-    /**
-     * Main function of this module.
-     * Once the format selector is clicked, trigger the appropriate helpers then update buybutton.
-     *
-     */
-    updateProductInformation: function() {
-        var self = productFormatContainer;
-
-        $("#product-format").on("change", function () {
-
-            if ($(this).find(":selected").data("reduced")) {
-                // Add discounted price for a product with different formats.
-                self.productWithFormat($(this));
-            }
-            else {
-                // Add discounted price for a single format product.
-                self.productWithoutFormat($(this));
-            }
-
-
-            // Update buybutton with right attributes.
-            self.updateBuybuttonAttributes($(this));
-        });
-
-    },
-
-    /**
-     * Entry point of this module.
-     *
-     */
-    init: function () {
-        const self = productFormatContainer;
-
-        self.updateProductInformation();
-
-    }
-}
-/**
- * Component responsible for adding products to a user's wishlist.
- *
- * @type {{fadeInFavoriteIcon: Function, setPopupText: Function, setWishlistBadgeQuantity: Function, addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
- */
-var productLayoutFavoriteContainer = {
-    /**
-     * Fade in the favorite icon (heart icon) when hovering on a product tile.
-     *
-     */
-    fadeInFavoriteIcon: function() {
-        self = productLayoutFavoriteContainer;
-
-        $(".dense-product").hover(function() {
-
-            $(this).children(".favorite-wrapper").fadeIn();
-            self.setPopupText($(this).children(".favorite-wrapper"));
-
-        }, function () {
-            $(this).children(".favorite-wrapper").hide();
-        });
-    },
-
-    /**
-     * Set popup text according to current state of the wrapper.
-     *
-     * @param wrapper
-     */
-    setPopupText: function (wrapper) {
-        if($(wrapper).hasClass("favorited")){
-            $(wrapper).attr("title", Localization.wishlist_remove);
-        }
-        else {
-            $(wrapper).attr("title", Localization.wishlist_add);
-        }
-    },
-
-    /**
-     * Update the value of .wishlist_badge when adding or deleting elements.
-     *
-     */
-    setWishlistBadgeQuantity : function() {
-        var total = UtilityContainer.getNumberOfProductsInWishlist();
-
-        $(".wishlist_badge").text(total);
-    },
-
-    /**
-     * Add the clicked product to the wish list.
-     *
-     */
-    addToFavorite: function() {
-        var self = productLayoutFavoriteContainer,
-            item;
-
-        $(".favorite-wrapper").on("click", function() {
-            //No favorited class.
-            if (!$(this).hasClass("favorited")) {
-                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
-                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
-
-                //Set the favorite icon to be displayed
-                $(this).addClass("favorited");
-
-                //Set wishlist badge quantity
-                self.setWishlistBadgeQuantity();
-            }
-            else
-            //Has a favorited class. We remove it, then delete the element from local Storage.
-            {
-                self.removeFromFavorite($(this), self);
-            }
-        });
-    },
-
-    /**
-     * Persist the heart icon next to products already marked as wished.
-     *
-     */
-    persistFavorite: function() {
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
-                for(var j = 0; j<$(".favorite-wrapper").length; j++)
-                {
-                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
-                    {
-                        $(".favorite-wrapper")[j].className += " favorited";
-                    }
-                }
-            }
-        }
-    },
-
-    /**
-     * Delete the clicked element from the wish list.
-     *
-     * @param element
-     * @param context
-     */
-    removeFromFavorite: function (element, context) {
-        element.removeClass("favorited");
-        localStorage.removeItem("_wish_product " + element.data("product"));
-        context.setWishlistBadgeQuantity();
-    },
-
-    init: function () {
-        var self = productLayoutFavoriteContainer;
-
-        self.setPopupText();
-        self.addToFavorite();
-        self.persistFavorite();
-        self.fadeInFavoriteIcon();
-        self.setWishlistBadgeQuantity();
-    }
-}
-/**
- * Component responsible for changing quantity on the product page view.
- *
- * @type {{addQuantity: Function, removeQuantity: Function, updateBuyButton: Function, init: Function}}
- */
-var productQuantityContainer = {
-    addQuantity : function(input, callback) {
-        $(".qty-selector[data-action='add']").on("click", function() {
-            input.val(parseInt(input.val()) + 1);
-
-            callback();
-        });
-    },
-
-    removeQuantity: function(input, callback) {
-        $(".qty-selector[data-action='remove']").on("click", function() {
-            var actual = parseInt(input.val());
-
-            if (actual > 1) {
-                input.val(parseInt(input.val()) - 1);
-            }
-
-            callback();
-        });
-    },
-
-    updateBuyButton: function() {
-        $(".buybutton").attr("data-quantity", $(".qty-selector-input").val());
-    },
-
-    init: function () {
-        var self = productQuantityContainer;
-        self.addQuantity($(".qty-selector-input"), self.updateBuyButton);
-        self.removeQuantity($(".qty-selector-input"), self.updateBuyButton);
-
-    }
-};
-/**
- * Component responsible for activating semantic ui features.
- *
- * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {closeDimmer: Function}, init: Function}}
- */
-var semanticInitContainer = {
-
-    /**
-     * Initialize modules
-     *
-     */
-    module: {
-        /**
-         * Initialize dropdown module.
-         *
-         */
-        initDropdownModule: function() {
-            $(".ui.dropdown").dropdown();
-
-            $(".ui.dropdown").on("click", function () {
-                var action = $(this).data("action") || "activate";
-
-                $(this).dropdown({
-                    action: action
-                });
-            });
-        },
+; (function(window, document, $) {
+    $(document).ready(function () {
 
         /**
-         * Initialize rating module.
+         * Sets up the ajax token for all ajax requests.
          *
          */
-        initRatingModule: function () {
-            $(".ui.rating").rating();
-        },
-
-        /**
-         * Initialize popup module.
-         *
-         */
-        initPopupModule: function () {
-            $(".popup").popup();
-        },
-
-        /**
-         * Initialize checkbox module.
-         *
-         */
-        initCheckboxModule: function () {
-            $('.ui.checkbox')
-                .checkbox()
-            ;
-        },
-
-        /**
-         * Initialize accordion module.
-         *
-         */
-        initAccordionModule: function() {
-            $('.ui.accordion').accordion({
-                selector: {
-                    trigger: $(".ui.accordion").data("trigger")
-                }
-            });
-        }
-    },
-
-    /**
-     * Specify semantic custom behavior.
-     *
-     */
-    behaviors: {
-        closeDimmer: function () {
-            $(".close-dimmer").on("click", function() {
-                $(".dimmer").dimmer("hide");
-            });
-        }
-    },
-
-    /**
-     * Specify custom form validation rules.
-     *
-     */
-    rules: {
-        postalCode: function() {
-            $.fn.form.settings.rules.postalCode = function(value, fieldIdentifier) {
-                if ($("#" + fieldIdentifier).val() === "CA")
-                    return value.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
-                else if ($("#" + fieldIdentifier).val() === "US")
-                    return value.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
-                else
-                    return true;
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'locale': $('html').attr('lang')
             }
-        }
-    },
+        });
 
+        /**
+         * Sets up Localization and ApiEndpoints variables.
+         *
+         */
+        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
+        Localization = env.Localization;
+        ApiEndpoints = env.ApiEndpoints;
 
-    init: function () {
-        var self = semanticInitContainer,
-            module = self.module,
-            behaviors = self.behaviors,
-            rules = self.rules;
+        /**
+         * Initialize semantic UI modules.
+         *
+         */
+        semanticInitContainer.init();
 
-        module.initDropdownModule();
-        module.initRatingModule();
-        module.initPopupModule();
-        module.initCheckboxModule();
-        module.initAccordionModule();
+        /**
+         * Initialize responsiveness feature.
+         *
+         */
+        responsiveContainer.init();
 
-        behaviors.closeDimmer();
+        /**
+         * Initialize checkout logic.
+         *
+         */
+        checkoutContainer.init();
 
-        rules.postalCode();
-    }
-}
+        /**
+         * Initialize cart slider logic.
+         *
+         */
+        cartSliderContainer.init();
+
+        /**
+         * Initialize category container.
+         *
+         */
+        categoryContainer.init();
+
+        /**
+         * Initialize overlay plugin.
+         *
+         */
+        paymentOverlayContainer.init();
+
+        /**
+         * Initialize homepage sections.
+         *
+         */
+        homepageContainer.init();
+
+        /**
+         * Initialize favorite products feature.
+         *
+         */
+        productLayoutFavoriteContainer.init();
+
+        /**
+         * Initialize product formats feature.
+         *
+         */
+        productFormatContainer.init();
+
+        /**
+         * Initialize product quantity change.
+         *
+         */
+        productQuantityContainer.init();
+
+        /**
+         * Initialize product description fade in.
+         *
+         */
+        productDescriptionPreviewContainer.init();
+
+        /**
+         * Initialize wishlist page.
+         *
+         */
+        wishlistLogicContainer.init();
+
+    });
+
+})(window, window.document, jQuery, undefined)
+
 /**
  * Component responsible for handling the checkout process.
  * @type {{validation: {validateFormFields: Function}, view: {autofillBillingInformation: Function, clearFields: Function, dispatchButtonsActions: Function, displayContactInformation: Function, displayShipmentMethodsAndPriceInformation: Function, fadeInBillingInformation: Function, fetchEstimate: Function, fetchPayment: Function, setInternationalFields: Function, updatePayment: Function}, actions: {createOrdersCookie: Function, getShipmentTaxes: Function, getTaxes: Function, placeOrderAjaxCall: Function, shipmentMethodsAjaxCall: Function}, bootstrap: {selectDefaultShipmentMethod: Function}, init: Function}}
@@ -1571,6 +1280,907 @@ var checkoutContainer = {
 
 }
 /**
+ * Component responsible for displaying a product description (with a nice fade  out effect)
+ *
+ * @type {{toggleDescription: Function, init: Function}}
+ */
+var productDescriptionPreviewContainer = {
+
+    /**
+     * Toggle the description between its open state and its close state.
+     *
+     */
+    toggleDescription: function () {
+        var open = false;
+
+        $(".preview-trigger").on("click", function () {
+            open = !open;
+
+            if (open) {
+                $(this).text(Localization.show_less);
+                $(".preview-text").transition("fade out");
+            }
+            else {
+                $(this).text(Localization.show_more);
+                setTimeout(function() {
+                    $(".preview-text").transition({
+                        animation: 'fade in',
+                        duration: 400
+                    })
+                }, 100);
+            }
+        });
+    },
+
+    init: function () {
+        var self = productDescriptionPreviewContainer;
+
+        self.toggleDescription();
+    }
+};
+/**
+ * Component responsible for handling different formats of the same product.
+ *
+ * @type {{productWithFormat: Function, productWithoutFormat: Function, updateBuybuttonAttributes: Function, updateProductInformation: Function, init: Function}}
+ */
+var productFormatContainer = {
+
+    /**
+     * Update price value for a product with format.
+     *
+     * @param option
+     */
+    productWithFormat: function(option) {
+        var price = '<span class="text-strikethrough">' +
+            'CAD $ ' + option.find(":selected").data("price") +
+            '</span>' +
+            '<span id="product-price" class="strong text-danger">' +
+            'CAD $ ' + option.find(":selected").data("reduced") +
+            '</span>';
+
+        $(".sub.header").text(price);
+    },
+
+
+    /**
+     * Update price value for a format-less product.
+     *
+     * @param option
+     */
+    productWithoutFormat: function(option) {
+        // Change description.
+        $("#product-format-name").text(option.find(":selected").data("format"));
+        $("#product-price").text("CAD $ " + option.find(":selected").data("price"));
+    },
+
+
+    /**
+     * Update buybutton data attributes according to format: id/price/name/format.
+     *
+     * @param option
+     */
+    updateBuybuttonAttributes: function (option) {
+        $(".buybutton").attr({
+            'data-product': option.val(),
+            'data-price': option.find(":selected").data("price"),
+            'data-name': option.find(":selected").data("name"),
+            'data-format': option.find(":selected").data("format")
+        });
+    },
+
+    /**
+     * Main function of this module.
+     * Once the format selector is clicked, trigger the appropriate helpers then update buybutton.
+     *
+     */
+    updateProductInformation: function() {
+        var self = productFormatContainer;
+
+        $("#product-format").on("change", function () {
+
+            if ($(this).find(":selected").data("reduced")) {
+                // Add discounted price for a product with different formats.
+                self.productWithFormat($(this));
+            }
+            else {
+                // Add discounted price for a single format product.
+                self.productWithoutFormat($(this));
+            }
+
+
+            // Update buybutton with right attributes.
+            self.updateBuybuttonAttributes($(this));
+        });
+
+    },
+
+    /**
+     * Entry point of this module.
+     *
+     */
+    init: function () {
+        const self = productFormatContainer;
+
+        self.updateProductInformation();
+
+    }
+}
+/**
+ * Component responsible for adding products to a user's wishlist.
+ *
+ * @type {{fadeInFavoriteIcon: Function, setPopupText: Function, setWishlistBadgeQuantity: Function, addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
+ */
+var productLayoutFavoriteContainer = {
+    /**
+     * Fade in the favorite icon (heart icon) when hovering on a product tile.
+     *
+     */
+    fadeInFavoriteIcon: function() {
+        self = productLayoutFavoriteContainer;
+
+        $(".dense-product").hover(function() {
+
+            $(this).children(".favorite-wrapper").fadeIn();
+            self.setPopupText($(this).children(".favorite-wrapper"));
+
+        }, function () {
+            $(this).children(".favorite-wrapper").hide();
+        });
+    },
+
+    /**
+     * Set popup text according to current state of the wrapper.
+     *
+     * @param wrapper
+     */
+    setPopupText: function (wrapper) {
+        if($(wrapper).hasClass("favorited")){
+            $(wrapper).attr("title", Localization.wishlist_remove);
+        }
+        else {
+            $(wrapper).attr("title", Localization.wishlist_add);
+        }
+    },
+
+    /**
+     * Update the value of .wishlist_badge when adding or deleting elements.
+     *
+     */
+    setWishlistBadgeQuantity : function() {
+        var total = UtilityContainer.getNumberOfProductsInWishlist();
+
+        $(".wishlist_badge").text(total);
+    },
+
+    /**
+     * Add the clicked product to the wish list.
+     *
+     */
+    addToFavorite: function() {
+        var self = productLayoutFavoriteContainer,
+            item;
+
+        $(".favorite-wrapper").on("click", function() {
+            //No favorited class.
+            if (!$(this).hasClass("favorited")) {
+                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
+                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+
+                //Set the favorite icon to be displayed
+                $(this).addClass("favorited");
+
+                //Set wishlist badge quantity
+                self.setWishlistBadgeQuantity();
+            }
+            else
+            //Has a favorited class. We remove it, then delete the element from local Storage.
+            {
+                self.removeFromFavorite($(this), self);
+            }
+        });
+    },
+
+    /**
+     * Persist the heart icon next to products already marked as wished.
+     *
+     */
+    persistFavorite: function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
+                for(var j = 0; j<$(".favorite-wrapper").length; j++)
+                {
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
+                    {
+                        $(".favorite-wrapper")[j].className += " favorited";
+                    }
+                }
+            }
+        }
+    },
+
+    /**
+     * Delete the clicked element from the wish list.
+     *
+     * @param element
+     * @param context
+     */
+    removeFromFavorite: function (element, context) {
+        element.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + element.data("product"));
+        context.setWishlistBadgeQuantity();
+    },
+
+    init: function () {
+        var self = productLayoutFavoriteContainer;
+
+        self.setPopupText();
+        self.addToFavorite();
+        self.persistFavorite();
+        self.fadeInFavoriteIcon();
+        self.setWishlistBadgeQuantity();
+    }
+}
+/**
+ * Component responsible for changing quantity on the product page view.
+ *
+ * @type {{addQuantity: Function, removeQuantity: Function, updateBuyButton: Function, init: Function}}
+ */
+var productQuantityContainer = {
+    addQuantity : function(input, callback) {
+        $(".qty-selector[data-action='add']").on("click", function() {
+            input.val(parseInt(input.val()) + 1);
+
+            callback();
+        });
+    },
+
+    removeQuantity: function(input, callback) {
+        $(".qty-selector[data-action='remove']").on("click", function() {
+            var actual = parseInt(input.val());
+
+            if (actual > 1) {
+                input.val(parseInt(input.val()) - 1);
+            }
+
+            callback();
+        });
+    },
+
+    updateBuyButton: function() {
+        $(".buybutton").attr("data-quantity", $(".qty-selector-input").val());
+    },
+
+    init: function () {
+        var self = productQuantityContainer;
+        self.addQuantity($(".qty-selector-input"), self.updateBuyButton);
+        self.removeQuantity($(".qty-selector-input"), self.updateBuyButton);
+
+    }
+};
+/**
+ * Component responsible for activating semantic ui features.
+ *
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {closeDimmer: Function}, init: Function}}
+ */
+var semanticInitContainer = {
+
+    /**
+     * Initialize modules
+     *
+     */
+    module: {
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule: function() {
+            $(".ui.dropdown").dropdown();
+
+            $(".ui.dropdown").on("click", function () {
+                var action = $(this).data("action") || "activate";
+
+                $(this).dropdown({
+                    action: action
+                });
+            });
+        },
+
+        /**
+         * Initialize rating module.
+         *
+         */
+        initRatingModule: function () {
+            $(".ui.rating").rating();
+        },
+
+        /**
+         * Initialize popup module.
+         *
+         */
+        initPopupModule: function () {
+            $(".popup").popup();
+        },
+
+        /**
+         * Initialize checkbox module.
+         *
+         */
+        initCheckboxModule: function () {
+            $('.ui.checkbox')
+                .checkbox()
+            ;
+        },
+
+        /**
+         * Initialize accordion module.
+         *
+         */
+        initAccordionModule: function() {
+            $('.ui.accordion').accordion({
+                selector: {
+                    trigger: $(".ui.accordion").data("trigger")
+                }
+            });
+        }
+    },
+
+    /**
+     * Specify semantic custom behavior.
+     *
+     */
+    behaviors: {
+        closeDimmer: function () {
+            $(".close-dimmer").on("click", function() {
+                $(".dimmer").dimmer("hide");
+            });
+        }
+    },
+
+    /**
+     * Specify custom form validation rules.
+     *
+     */
+    rules: {
+        postalCode: function() {
+            $.fn.form.settings.rules.postalCode = function(value, fieldIdentifier) {
+                if ($("#" + fieldIdentifier).val() === "CA")
+                    return value.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
+                else if ($("#" + fieldIdentifier).val() === "US")
+                    return value.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
+                else
+                    return true;
+            }
+        }
+    },
+
+
+    init: function () {
+        var self = semanticInitContainer,
+            module = self.module,
+            behaviors = self.behaviors,
+            rules = self.rules;
+
+        module.initDropdownModule();
+        module.initRatingModule();
+        module.initPopupModule();
+        module.initCheckboxModule();
+        module.initAccordionModule();
+
+        behaviors.closeDimmer();
+
+        rules.postalCode();
+    }
+}
+var cartSliderContainer = {
+
+    /**
+     * Responsible for the logic.
+     * CRUD.
+     *
+     */
+    behaviour: {
+        /**
+         * Event triggered when a buy button is clicked.
+         *
+         */
+        buyButtonClick : function () {
+            $("body").on("click", ".buybutton", function() {
+
+                cartSliderContainer.behaviour.addItem(UtilityContainer.buyButton_to_Json($(this)));
+                cartSliderContainer.behaviour.storeItem(UtilityContainer.buyButton_to_Json($(this)));
+
+                // We remove the "Your cart is empty" message at the top every time we add an item.
+                $("#cart-items").addClass("hidden");
+            });
+        },
+
+
+        /**
+         * Add an item in the list.
+         *
+         * @param item JSON format converted from attributes on the .buybutton
+         */
+        addItem : function(item) {
+            var price = (parseInt(item.quantity) * parseFloat(item.price)).toFixed(2);
+
+            var productItem =
+                '<div class="very padded item animated fadeInUp" style="margin: 1rem auto;" data-product="' + item.product + '"data-quantity=1>' +
+                '<div class="ui tiny left floated image">' +
+                '<img src="' + item.thumbnail_lg + '"/>' +
+                '</div>' +
+                '<div class="middle aligned content">' +
+                '<h4 class="ui header">' + item.name + '</h4>' +
+                '<div class="meta">' +
+                '<span class="price" data-price="' + item.price + '">$' + price  + '</span>' +
+                '<i class="trash icon large pull-right close-button"></i>' +
+                '</div>' +
+                '<div class="content cart-content">' +
+                '<span>'+ Localization.quantity + '</span>' +
+                '<div class="ui input one-quarter">' +
+                '<input type="number" class="quantity" min="1" step="1" value="' + item.quantity + '" name="products[' + item.product + '][quantity]">' +
+                '<input type="hidden" name="products[' + item.product + '][id]" value="' + item.product + '"/> ' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+            if (!$(".cart-items-list [data-product='" + item.product + "']").length){
+                $(".cart-items-list").append(productItem);
+            }
+
+        },
+
+
+        /**
+         * Store a product in localStorage.
+         * Update badge quantity.
+         * Create/update a quantity cookie.
+         *
+         * @param item JSON format converted from attributes on the .buybutton
+         */
+        storeItem : function(item) {
+            if(localStorage.getItem("_product " + item.product) != null)
+            {
+                // Update the value on localStorage of an already existing product.
+                var quantity_updated = JSON.parse(localStorage.getItem("_product " + item.product)).quantity + 1;
+
+                // Update the input value already displayed in the cart drawer.
+                $("input[name='products[" + item.product + "][quantity]']").attr("value", quantity_updated);
+
+                // Set the item.
+                localStorage.setItem("_product " + item.product, JSON.stringify(
+                    {
+                        "product" : item.product,
+                        "name" : item.name,
+                        "price" : item.price,
+                        "thumbnail" : item.thumbnail,
+                        "thumbnail_lg" : item.thumbnail_lg,
+                        "quantity" : quantity_updated,
+                        "link" : item.link,
+                        "description" : item.description
+                    }
+                ));
+            }
+            else {
+                localStorage.setItem("_product " + item.product, JSON.stringify(item));
+            }
+            cartSliderContainer.view.setBadgeQuantity();
+            cartSliderContainer.behaviour.setQuantityCookie();
+        },
+
+
+        /**
+         * Load a list of items previously bought into the cart.
+         * If there is no item in localStorage starting with the key "_product", then nothing is loaded.
+         */
+        loadItem : function() {
+            for(var i = 0, length = localStorage.length; i<length; i++)
+            {
+                if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
+                {
+                    cartSliderContainer.behaviour.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
+                }
+            }
+        },
+
+
+        /**
+         * Delete an item from the cart drawer list.
+         * Remove it from the DOM.
+         * Delete the object on localStorage.
+         * Set Badge quantity accordingly.
+         * Update Cookie quantity accordingly.
+         *
+         */
+        deleteItem: function() {
+            $(document).on('click', ".close-button", function() {
+
+                // We fade out the item...
+                var $item = $(this).closest(".animated").addClass("animated fadeOutUp");
+
+                // Then we remove it from the dom...
+                $item.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                    $(this).remove();
+
+                    // Display a message if the cart has no more item in it.
+                    UtilityContainer.getNumberOfProducts() === 0 ? $("#cart-items").removeClass("hidden") : null;
+                });
+
+                // To finally delete it from localstorage.
+                localStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
+
+                cartSliderContainer.view.setBadgeQuantity();
+                cartSliderContainer.behaviour.setQuantityCookie();
+
+            });
+        },
+
+
+        /**
+         * Modify the quantity of a product in the cart.
+         * Update its price label accordingly.
+         * Update the localStorage.
+         * Set badge quantity.
+         * Update Cookie quantity.
+         *
+         */
+        modifyQuantity : function() {
+            $(".cart-items-list").on("change", ".quantity", function() {
+                var $container = $(this).closest(".item"),
+                    $product_price = $container.find(".price");
+
+                //update the total value
+                $product_price.text("$" + ($product_price.data("price") * $(this).val()).toFixed(2));
+
+                //retrieve old data from old object then update the quantity and finally update the object
+                var oldData = JSON.parse(localStorage.getItem("_product " + $container.data("product")));
+                oldData.quantity = parseInt($(this).val());
+                localStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
+
+                cartSliderContainer.view.setBadgeQuantity();
+                cartSliderContainer.behaviour.setQuantityCookie();
+
+            });
+        },
+
+
+        /**
+         * Create or Update a cookie with the quantity present in the cart.
+         * The value of the cookie is encoded in base64 (btoa)
+         *
+         */
+        setQuantityCookie : function () {
+            var number = UtilityContainer.getNumberOfProducts();
+
+            if (Cookies.get("quantityCart") == undefined || number === 0)
+            {
+                Cookies.set("quantityCart", btoa("0"));
+            }
+            else {
+                Cookies.set("quantityCart", btoa(number));
+            }
+        }
+    },
+
+
+
+    /**
+     * Responsible for the view aspect.
+     *
+     */
+    view: {
+        /**
+         * Slide in the cart-drawer (slider?) when adding items or clicking on the .view-cart trigger.
+         *
+         */
+        slideIn: function () {
+            $(".view-cart, .buybutton").on("click", function () {
+                $(".cart-drawer").sidebar("toggle");
+            });
+        },
+
+
+        /**
+         * Update the value of #cart_badge when adding or deleting elements.
+         *
+         */
+        setBadgeQuantity : function() {
+            var total = UtilityContainer.getNumberOfProducts();
+
+            $(".cart_badge").text(total);
+        }
+    },
+
+
+    init : function() {
+        var behaviour = cartSliderContainer.behaviour;
+        var view = cartSliderContainer.view;
+
+
+        view.setBadgeQuantity();
+        view.slideIn();
+
+
+        behaviour.buyButtonClick();
+        behaviour.loadItem();
+        behaviour.deleteItem();
+        behaviour.modifyQuantity();
+        behaviour.setQuantityCookie();
+    }
+
+};
+/**
+ * Component responsible for handling the payment overlay behaviour.
+ * Entry point is in checkPendingOrders.
+ *
+ * @type {{cancelOrder: Function, displayUnpaidOverlay: Function, displayCongratulateOverlay: Function, renderAddress: Function, renderAdditionalDetails: Function, checkPendingOrders: Function, init: Function}}
+ */
+var paymentOverlayContainer = {
+
+    /**
+     * Cancel an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     *
+     */
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            Cookies.remove("_current_order");
+
+            $("#cancelledOrder").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+        });
+    },
+
+
+    /**
+     * Display the unpaid overlay using semantic-ui modal module.
+     *
+     */
+    displayUnpaidOverlay: function () {
+        var order = JSON.parse(Cookies.get('_current_order'));
+
+        var unpaidOverlay =
+            '<div class="ui small modal text-center unpaid-modal">' +
+                '<i class="close icon"></i>' +
+                '<div class="header">' +
+                    Localization.pending_order.replace(':command', order.id) +
+                '</div>' +
+                '<div class="content">' +
+                    '<div class="description">' +
+                        '<div class="ui header">'  +
+                            Localization.what_to_do +
+                        '</div>' +
+                        '<a href="' + order.payment_url + '">' +
+                            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
+                        '</a>' +
+                        '<button class="ui button red" id="cancelOrder">'+
+                            Localization.cancel_order +
+                        '</button>'+
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+        $("body").prepend(unpaidOverlay);
+        $(".small.unpaid-modal").modal("show");
+
+    },
+
+
+    /**
+     * Display the congratulate overlay using semantic-ui modal module.
+     *
+     * @param order
+     */
+    displayCongratulateOverlay: function (order) {
+        var overlay =
+            '<div class="ui modal congratulate-modal payment_successful">' +
+                '<div class="header">' +
+                    Localization.payment_successful +
+                '</div>' +
+                '<div class="content">' +
+                    '<div class="description">' +
+                        '<div class="ui header">' +
+                            Localization.summary_below +
+                        '</div>' +
+                        '<p>' + Localization.summary_copy + '</p>' +
+                    '</div>' +
+                    '<br/>' +
+                    '<table class="ui striped table" style="margin: 0 auto">' +
+                        '<tbody class="center aligned">' +
+                            '<tr>' +
+                                '<td>' + Localization.order + '</td>' +
+                                '<td>' + "#" + order.id + '</td>' +
+                            '</tr>' +
+
+                            this.renderAdditionalDetails(order) +
+
+                        '</tbody>' +
+                    '</table>' +
+                '</div>' +
+                '<div class="actions">' +
+                    '<div class="ui black deny button">' +
+                        Localization.close +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+        $("body").prepend(overlay);
+
+        $(".congratulate-modal").modal("show");
+    },
+
+    /**
+     * Render the appropriate address' <td> tags according to the type of address.
+     *
+     * @param [object] address_details
+     * @param [string] address_type_name
+     * @returns {string}
+     */
+    renderAddress: function (address_details, address_type_name) {
+        var line2 = address_details.line2 == null ? '' : address_details.line2 + '<br/>';
+
+        return '<tr>' +
+                    '<td>' + address_type_name + '</td>' +
+                    '<td>' +
+                        address_details.name +
+                        '<br/>' +
+                        address_details.line1 +
+                        '<br/>' +
+                        line2 +
+                        address_details.city +
+                        ', ' +
+                        address_details.province +
+                        ', ' +
+                        address_details.postcode +
+                        '<br/>' +
+                        address_details.country +
+
+                    '</td>' +
+                '</tr>';
+    },
+
+
+    /**
+     * Check if there are any additional details.
+     * If there are, insert them in the summary table.
+     *
+     * @param order
+     * @returns {string}
+     */
+    renderAdditionalDetails: function (order) {
+        if (order.shipping_address != null) {
+            return this.renderAddress(order.shipping_address, Localization.shipping_address) +
+                    this.renderAddress(order.billing_address, Localization.billing_address) +
+                '<tr>' +
+                        '<td>' + Localization.subtotal + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.subtotal).toFixed(2) + '</td>' +
+                    '</tr>' +
+
+                    '<tr>' +
+                        '<td>' + Localization.taxes + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.taxes).toFixed(2) + '</td>' +
+                    '</tr>' +
+
+                    '<tr>' +
+                        '<td>' + Localization.total + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.total).toFixed(2) + '</td>' +
+                    '</tr>';
+        }
+        else {
+            return '';
+        }
+    },
+
+
+    /**
+     * Checks the status of the current order stored in _current_order cookie.
+     *
+     * If the order is paid and the call is made by the same user who passed the order,
+     * we display a summary. Laravel takes care of the check, as this can raise security
+     * concerns...
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_current_order')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_current_order'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(order_details) {
+                    if (order_details.status === 'pending') {
+                        this.displayUnpaidOverlay();
+                    }
+                    else if (order_details.status === 'paid') {
+                        // Display congratulation dimmer.
+                        this.displayCongratulateOverlay(order_details);
+
+                        // Remove products from cart
+                        UtilityContainer.removeAllProductsFromLocalStorage();
+
+                        // Delete the unpaid orders cookie (if any).
+                        Cookies.remove('_current_order');
+                    }
+                    else {
+                        Cookies.remove('_current_order');
+                    }
+                }.bind(this)
+            });
+        }
+
+    },
+
+
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+        self.checkPendingOrders();
+
+    }
+};
+
+/**
+ * Responsible for handling the switch between one, two and four columns per row depending on screen width.
+ *
+ * @type {{tablet: {setClasses: Function}, mobile: {setClasses: Function}, desktop: {setClasses: Function}, init: Function}}
+ */
+var responsiveContainer = {
+    // Everything between 400px and 768px is considered tablet size.
+    tablet : {
+        setClasses: function () {
+            // Take the stackable off the grid-layout.
+            $(".grid-layout").removeClass("stackable");
+            // Set two products per row.
+            $(".dense-product").removeClass("four wide column").addClass("eight wide column");
+        }
+    },
+
+    // Everything less than 400px is considered mobile size.
+    mobile : {
+        setClasses: function () {
+            $(".grid-layout").addClass("stackable");
+        }
+    },
+
+    // Everything more than 768px is considered desktop size.
+    desktop: {
+        setClasses: function () {
+            $(".grid-layout").removeClass("stackable");
+            // Set four products per row.
+            $(".dense-product").removeClass("eight four wide column").addClass("four wide column");
+        }
+    },
+
+    init: function () {
+        var self = responsiveContainer;
+
+        $(window).on("load resize", function () {
+            if ($(this).width() < 768 && $(this).width() > 400) {
+                self.tablet.setClasses();
+            }
+            else if ($(this).width() <= 400) {
+                self.mobile.setClasses();
+            }
+            else if ($(this).width() >= 768) {
+                self.desktop.setClasses();
+            }
+        });
+    }
+}
+/**
  * Component responsible for the view component of each category page.
  *
  * @type {{searchParameters: {page: number, per_page: number, order: string, min_price: null, max_price: null, brands: Array, categories: Array}, blurBackground: Function, itemsPerPage: Function, sortBy: Function, price: Function, categories: Function, brands: Function, updateFilterList: Function, addTag: Function, tags: Function, addFilter: Function, removeFilter: Function, updateFilters: Function, toggleLayout: Function, localizeSwitcher: Function, retrieveSearchParameters: Function, toggleTagsList: Function, localizeDimmer: Function, addDimmer: Function, init: Function}}
@@ -1982,276 +2592,6 @@ var homepageContainer = {
     }
 }
 /**
- * Component responsible for handling the payment overlay behaviour.
- * Entry point is in checkPendingOrders.
- *
- * @type {{cancelOrder: Function, displayUnpaidOverlay: Function, displayCongratulateOverlay: Function, renderAddress: Function, renderAdditionalDetails: Function, checkPendingOrders: Function, init: Function}}
- */
-var paymentOverlayContainer = {
-
-    /**
-     * Cancel an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_current_order");
-
-            $("#cancelledOrder").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-        });
-    },
-
-
-    /**
-     * Display the unpaid overlay using semantic-ui modal module.
-     *
-     */
-    displayUnpaidOverlay: function () {
-        var order = JSON.parse(Cookies.get('_current_order'));
-
-        var unpaidOverlay =
-            '<div class="ui small modal text-center unpaid-modal">' +
-                '<i class="close icon"></i>' +
-                '<div class="header">' +
-                    Localization.pending_order.replace(':command', order.id) +
-                '</div>' +
-                '<div class="content">' +
-                    '<div class="description">' +
-                        '<div class="ui header">'  +
-                            Localization.what_to_do +
-                        '</div>' +
-                        '<a href="' + order.payment_url + '">' +
-                            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
-                        '</a>' +
-                        '<button class="ui button red" id="cancelOrder">'+
-                            Localization.cancel_order +
-                        '</button>'+
-                    '</div>' +
-                '</div>' +
-            '</div>';
-
-        $("body").prepend(unpaidOverlay);
-        $(".small.unpaid-modal").modal("show");
-
-    },
-
-
-    /**
-     * Display the congratulate overlay using semantic-ui modal module.
-     *
-     * @param order
-     */
-    displayCongratulateOverlay: function (order) {
-        var overlay =
-            '<div class="ui modal congratulate-modal payment_successful">' +
-                '<div class="header">' +
-                    Localization.payment_successful +
-                '</div>' +
-                '<div class="content">' +
-                    '<div class="description">' +
-                        '<div class="ui header">' +
-                            Localization.summary_below +
-                        '</div>' +
-                        '<p>' + Localization.summary_copy + '</p>' +
-                    '</div>' +
-                    '<br/>' +
-                    '<table class="ui striped table" style="margin: 0 auto">' +
-                        '<tbody class="center aligned">' +
-                            '<tr>' +
-                                '<td>' + Localization.order + '</td>' +
-                                '<td>' + "#" + order.id + '</td>' +
-                            '</tr>' +
-
-                            this.renderAdditionalDetails(order) +
-
-                        '</tbody>' +
-                    '</table>' +
-                '</div>' +
-                '<div class="actions">' +
-                    '<div class="ui black deny button">' +
-                        Localization.close +
-                    '</div>' +
-                '</div>' +
-            '</div>';
-
-        $("body").prepend(overlay);
-
-        $(".congratulate-modal").modal("show");
-    },
-
-    /**
-     * Render the appropriate address' <td> tags according to the type of address.
-     *
-     * @param [object] address_details
-     * @param [string] address_type_name
-     * @returns {string}
-     */
-    renderAddress: function (address_details, address_type_name) {
-        var line2 = address_details.line2 == null ? '' : address_details.line2 + '<br/>';
-
-        return '<tr>' +
-                    '<td>' + address_type_name + '</td>' +
-                    '<td>' +
-                        address_details.name +
-                        '<br/>' +
-                        address_details.line1 +
-                        '<br/>' +
-                        line2 +
-                        address_details.city +
-                        ', ' +
-                        address_details.province +
-                        ', ' +
-                        address_details.postcode +
-                        '<br/>' +
-                        address_details.country +
-
-                    '</td>' +
-                '</tr>';
-    },
-
-
-    /**
-     * Check if there are any additional details.
-     * If there are, insert them in the summary table.
-     *
-     * @param order
-     * @returns {string}
-     */
-    renderAdditionalDetails: function (order) {
-        if (order.shipping_address != null) {
-            return this.renderAddress(order.shipping_address, Localization.shipping_address) +
-                    this.renderAddress(order.billing_address, Localization.billing_address) +
-                '<tr>' +
-                        '<td>' + Localization.subtotal + '</td>' +
-                        '<td>' + "$" + parseFloat(order.payment_details.subtotal).toFixed(2) + '</td>' +
-                    '</tr>' +
-
-                    '<tr>' +
-                        '<td>' + Localization.taxes + '</td>' +
-                        '<td>' + "$" + parseFloat(order.payment_details.taxes).toFixed(2) + '</td>' +
-                    '</tr>' +
-
-                    '<tr>' +
-                        '<td>' + Localization.total + '</td>' +
-                        '<td>' + "$" + parseFloat(order.payment_details.total).toFixed(2) + '</td>' +
-                    '</tr>';
-        }
-        else {
-            return '';
-        }
-    },
-
-
-    /**
-     * Checks the status of the current order stored in _current_order cookie.
-     *
-     * If the order is paid and the call is made by the same user who passed the order,
-     * we display a summary. Laravel takes care of the check, as this can raise security
-     * concerns...
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_current_order')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_current_order'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(order_details) {
-                    if (order_details.status === 'pending') {
-                        this.displayUnpaidOverlay();
-                    }
-                    else if (order_details.status === 'paid') {
-                        // Display congratulation dimmer.
-                        this.displayCongratulateOverlay(order_details);
-
-                        // Remove products from cart
-                        UtilityContainer.removeAllProductsFromLocalStorage();
-
-                        // Delete the unpaid orders cookie (if any).
-                        Cookies.remove('_current_order');
-                    }
-                    else {
-                        Cookies.remove('_current_order');
-                    }
-                }.bind(this)
-            });
-        }
-
-    },
-
-
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-        self.checkPendingOrders();
-
-    }
-};
-
-/**
- * Responsible for handling the switch between one, two and four columns per row depending on screen width.
- *
- * @type {{tablet: {setClasses: Function}, mobile: {setClasses: Function}, desktop: {setClasses: Function}, init: Function}}
- */
-var responsiveContainer = {
-    // Everything between 400px and 768px is considered tablet size.
-    tablet : {
-        setClasses: function () {
-            // Take the stackable off the grid-layout.
-            $(".grid-layout").removeClass("stackable");
-            // Set two products per row.
-            $(".dense-product").removeClass("four wide column").addClass("eight wide column");
-        }
-    },
-
-    // Everything less than 400px is considered mobile size.
-    mobile : {
-        setClasses: function () {
-            $(".grid-layout").addClass("stackable");
-        }
-    },
-
-    // Everything more than 768px is considered desktop size.
-    desktop: {
-        setClasses: function () {
-            $(".grid-layout").removeClass("stackable");
-            // Set four products per row.
-            $(".dense-product").removeClass("eight four wide column").addClass("four wide column");
-        }
-    },
-
-    init: function () {
-        var self = responsiveContainer;
-
-        $(window).on("load resize", function () {
-            if ($(this).width() < 768 && $(this).width() > 400) {
-                self.tablet.setClasses();
-            }
-            else if ($(this).width() <= 400) {
-                self.mobile.setClasses();
-            }
-            else if ($(this).width() >= 768) {
-                self.desktop.setClasses();
-            }
-        });
-    }
-}
-/**
  * Component responsible for handling the logic of the wish list page.
  * Layout handled in dev/components/site/wishlist.js
  *
@@ -2388,604 +2728,3 @@ var wishlistContainer = {
         self.setNumberOfProductsInHeader();
     }
 }
-/**
- * Component responsible for displaying the cart drawer.
- * Logic handled in dev/layout/cart-drawer/cart-drawer-logic.js
- *
- * @type {{$el: {$back: (*|jQuery|HTMLElement), $proceed: (*|jQuery|HTMLElement), $trigger: (*|jQuery|HTMLElement), $container: (*|jQuery|HTMLElement), $checkout: (*|jQuery|HTMLElement), $body: (*|jQuery|HTMLElement)}, displayOn: Function, displayOff: Function, animateIn: Function, animateOut: Function, setCartItemsHeight: Function, computeCartItemsHeight: Function, fadeInDimmer: Function, fadeOutDimmer: Function, init: Function}}
- */
-var cartDisplayContainer = {
-    $el : {
-        $back : $("#back"),
-        $proceed : $("#proceed"),
-        $trigger : $(".view-cart"),
-        $container : $("#cart-container"),
-        $checkout : $("#checkout"),
-        $body : $("body")
-    },
-
-    /**
-     * Display the cart drawer on first load if localStorage cookie "isDisplayed" is set to true.
-     *
-     */
-    displayOn: function() {
-        var _width = cartDisplayContainer.$el.$container.width();
-        cartDisplayContainer.$el.$container.css( {
-            "margin-right" : -_width
-        });
-
-        cartDisplayContainer.$el.$trigger.click(function() {
-            $(window).width() > 768 ? cartDisplayContainer.animateIn() : cartDisplayContainer.fadeInDimmer();
-        });
-    },
-
-    /**
-     * Hide the cart drawer on first load if localStorage cookie "isDisplayed" is set to false.
-     *
-     */
-    displayOff : function() {
-        cartDisplayContainer.$el.$back.click(function() {
-            cartDisplayContainer.animateOut();
-        });
-        cartDisplayContainer.$el.$checkout.click(function() {
-            sessionStorage.isDisplayed = false;
-        });
-    },
-
-    /**
-     * Animate in the cart drawer (sets its margin right to +width).
-     *
-     */
-    animateIn : function() {
-        cartDisplayContainer.$el.$container.css('visibility', 'visible');
-        cartDisplayContainer.$el.$container.animate( {
-            "margin-right" : 0
-        }, 400);
-        sessionStorage.isDisplayed = true;
-    },
-
-    /**
-     * Animate out the cart drawer (sets its margin right to -width).
-     *
-     */
-    animateOut: function() {
-        var _width = cartDisplayContainer.$el.$container.width();
-        cartDisplayContainer.$el.$container.animate( {
-            "margin-right" : -_width
-        }, 400, function() {
-            $(this).css("visibility", "hidden");
-        });
-        sessionStorage.isDisplayed = false;
-    },
-
-    /**
-     * Set the appropriate height for #cart-items list.
-     *
-     */
-    setCartItemsHeight : function() {
-        $(window).on("load resize", function() {
-            $("#cart-items").css("height", cartDisplayContainer.computeCartItemsHeight());
-        });
-    },
-
-    /**
-     * Compute the appropriate height for #cart-items list.
-     *
-     */
-    computeCartItemsHeight : function() {
-        return $("#cart-container").height() - ($(".cart-header").height() + $(".cart-footer").height());
-    },
-
-    /**
-     * Fade in the cart dimmer.
-     *
-     */
-    fadeInDimmer: function () {
-        $('.ui.dimmer')
-            .dimmer('show')
-        ;
-    },
-
-    /**
-     * Fade out the cart dimmer.
-     *
-     */
-    fadeOutDimmer: function () {
-        $(".close-cart-dimmer").on("click touchend", function () {
-            $(".ui.dimmer")
-                .dimmer('hide')
-            ;
-        })
-    },
-
-    init : function() {
-        cartDisplayContainer.displayOn();
-        cartDisplayContainer.displayOff();
-        UtilityContainer.populateCountry($("html").attr("lang"));
-        cartDisplayContainer.fadeOutDimmer();
-
-        if (sessionStorage.isDisplayed == "true")
-        {
-            cartDisplayContainer.$el.$container.css({
-                "margin-right": 0,
-                "visibility": "visible"
-            });
-        }
-
-    }
-};
-/**
- * Component responsible for initializing the cart drawer feature.
- *
- * @type {{buyButtonClick: Function, getEstimateClick: Function, init: Function}}
- */
-var cartDrawerInitContainer = {
-
-    /**
-     * Event triggered when a buy button is clicked.
-     *
-     */
-    buyButtonClick : function () {
-        $("body").on("click", ".buybutton", function() {
-
-            // Call animateIn only if window width is greater than 768px.
-            $(window).width() > 768 ? cartDisplayContainer.animateIn() : cartDisplayContainer.fadeInDimmer();
-
-            cartLogicContainer.addItem(UtilityContainer.buyButton_to_Json($(this)));
-            cartLogicContainer.storeItem(UtilityContainer.buyButton_to_Json($(this)));
-
-            // We remove the "Your cart is empty" message at the top every time we add an item.
-            $("#cart-items .empty-cart").addClass("invisible");
-        });
-    },
-
-    /**
-     * Event triggered when the Calculate button (to get a price estimate) is clicked.
-     *
-     */
-    getEstimateClick: function () {
-        $(".getEstimate").on("click", function() {
-            //Fields validation + Empty cart validation.
-            if(UtilityContainer.validatePostCode($("#postcode").val(), $(".price-estimate #country").val())
-                && UtilityContainer.validateEmptyFields([$("#postcode")])
-                && !UtilityContainer.validateEmptyCart()) {
-
-                $(this).html('<i class="fa fa-spinner fa-spin"></i>');
-
-                cartLogicContainer.ajaxCall();
-
-            }
-            else if (UtilityContainer.validateEmptyCart()) {
-                $("#cart-items .empty-cart").removeClass("invisible");
-            }
-            else {
-                UtilityContainer.addErrorClassToFieldsWithRules($("#postcode"));
-            }
-        });
-    },
-
-    init: function () {
-        cartDisplayContainer.init();
-        cartLogicContainer.init();
-        cartDisplayContainer.setCartItemsHeight();
-
-        var self = cartDrawerInitContainer;
-        self.buyButtonClick();
-        self.getEstimateClick();
-    }
-
-}
-
-/**
- * Component responsible for the overall logic (CRUD) of the cart drawer.
- * Layout handled in dev/components/layout/cart-drawer/cart-drawer-display.js
- *
- * @type {{$el: {$list: (*|jQuery|HTMLElement)}, addItem: Function, storeItem: Function, loadItem: Function, deleteItem: Function, modifyQuantity: Function, modifyQuantityBeforeBuying: Function, setBadgeQuantity: Function, setQuantityCookie: Function, setCartSubtotal: Function, setCartShipping: Function, setCartTaxes: Function, setCartTotal: Function, ajaxCall: Function, updateAjaxCall: Function, init: Function}}
- */
-var cartLogicContainer = {
-    /**
-     * Cache a set of elements commonly used (to be updated)
-     */
-    $el : {
-        $list : $(".cart-items-list")
-    },
-
-    /**
-     * Add an item in the list.
-     *
-     * @param item JSON format converted from attributes on the .buybutton
-     */
-    addItem : function(item) {
-        var price = (parseInt(item.quantity) * parseFloat(item.price)).toFixed(2);
-
-        var sidebarElement =
-        '<div class="item horizontally-padded animated bounceInDown" data-product="' + item.product + '"data-quantity=1>' +
-        '<div class="ui tiny images">' +
-        '<img src="' + item.thumbnail_lg + '"/>' +
-        '</div>' +
-        '<div class="middle aligned content" style="padding-left: 1.7531%">' +
-        '<h4 class="ui header">' + item.name + '</h4>' +
-        '<div class="meta">' +
-        '<span class="price" data-price="' + item.price + '">$' + price  + '</span>' +
-        '<i class="remove icon large pull-right close-button"></i>' +
-        '</div>' +
-        '<div class="content cart-content">' +
-        '<span style="padding: 0 1.7531% 0 0">'+ Localization.quantity + '</span>' +
-        '<div class="ui input one-quarter">' +
-        '<input type="number" class="quantity" min="1" step="1" value="' + item.quantity + '" name="products[' + item.product + '][quantity]">' +
-        '<input type="hidden" name="products[' + item.product + '][id]" value="' + item.product + '"/> ' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
-
-        if (!$(".cart-items-list [data-product='" + item.product + "']").length){
-            $(".cart-items-list").append(sidebarElement);
-        }
-
-    },
-
-    /**
-     * Store a product in localStorage
-     * Update badge quantity
-     * Create/update a quantity cookie
-     *
-     * @param item JSON format converted from attributes on the .buybutton
-     */
-    storeItem : function(item) {
-        if(localStorage.getItem("_product " + item.product) != null)
-        {
-            // Update the value on localStorage of an already existing product.
-            var quantity_updated = JSON.parse(localStorage.getItem("_product " + item.product)).quantity + 1;
-
-            // Update the input value already displayed in the cart drawer.
-            $("input[name='products[" + item.product + "][quantity]']").attr("value", quantity_updated);
-
-            // Set the item.
-            localStorage.setItem("_product " + item.product, JSON.stringify(
-                {
-                    "product" : item.product,
-                    "name" : item.name,
-                    "price" : item.price,
-                    "thumbnail" : item.thumbnail,
-                    "thumbnail_lg" : item.thumbnail_lg,
-                    "quantity" : quantity_updated,
-                    "link" : item.link,
-                    "description" : item.description
-                }
-            ));
-        }
-        else {
-            localStorage.setItem("_product " + item.product, JSON.stringify(item));
-        }
-        cartLogicContainer.setBadgeQuantity();
-        cartLogicContainer.setQuantityCookie();
-        cartLogicContainer.setCartSubtotal();
-        cartLogicContainer.setCartTotal();
-        cartLogicContainer.updateAjaxCall();
-    },
-
-    /**
-     * Load a list of items previously bought into the cart.
-     * If there is no item in localStorage starting with the key "_product", then nothing is loaded.
-     */
-    loadItem : function() {
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
-            {
-                cartLogicContainer.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
-            }
-        }
-    },
-
-    /**
-     * Delete an item from the cart drawer list.
-     * Remove it from the DOM.
-     * Delete the object on localStorage.
-     * Set Badge quantity accordingly.
-     * Update Cookie quantity accordingly.
-     */
-    deleteItem: function() {
-        $(document).on('click', ".close-button", function() {
-
-            // We have two cart-items-list now ! (cart drawer and dimmer)
-            // So when deleting on one list, we should also delete the item on the other.
-            var $parent = $(this).closest(".animated").addClass("animated bounceOutLeft"),
-                $otherList = $(this).closest(".cart-items-list").hasClass("dimmered") ?
-                    $(".cart-items-list").not(".dimmered") :
-                    $(".cart-items-list.dimmered");
-
-            $parent.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-                $(this).remove();
-                $otherList.find('[data-product="' + $parent.data("product") + '"]').remove();
-            });
-
-            localStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
-
-            cartLogicContainer.setBadgeQuantity();
-            cartLogicContainer.setQuantityCookie();
-            cartLogicContainer.setCartSubtotal();
-            cartLogicContainer.setCartTotal();
-            cartLogicContainer.updateAjaxCall();
-
-        });
-    },
-
-    /**
-     * Modify the quantity of a product in the cart
-     * Update its price label accordingly
-     * Update the localStorage
-     * Set badge quantity
-     * Update Cookie quantity
-     */
-    modifyQuantity : function() {
-        $(".cart-items-list").on("change", ".quantity", function() {
-            var $container = $(this).closest(".item"),
-                $product_price = $container.find(".price");
-
-            //update the total value
-            $product_price.text("$" + ($product_price.data("price") * $(this).val()).toFixed(2));
-
-            //retrieve old data from old object then update the quantity and finally update the object
-            var oldData = JSON.parse(localStorage.getItem("_product " + $container.data("product")));
-            oldData.quantity = parseInt($(this).val());
-            localStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
-
-            cartLogicContainer.setBadgeQuantity();
-            cartLogicContainer.setQuantityCookie();
-            cartLogicContainer.setCartSubtotal();
-            cartLogicContainer.setCartTotal();
-            cartLogicContainer.updateAjaxCall();
-
-        });
-    },
-
-    /**
-     * Update the value of #cart_badge when adding or deleting elements
-     */
-    setBadgeQuantity : function() {
-        var total = UtilityContainer.getNumberOfProducts();
-
-        $(".cart_badge").text(total);
-    },
-
-    /**
-     * Create or Update a cookie with the quantity present in the cart.
-     * The value of the cookie is encoded in base64 (btoa)
-     */
-    setQuantityCookie : function () {
-        var number = UtilityContainer.getNumberOfProducts();
-
-        if (Cookies.get("quantityCart") == undefined || number === 0)
-        {
-            Cookies.set("quantityCart", btoa("0"));
-        }
-        else {
-            Cookies.set("quantityCart", btoa(number));
-        }
-    },
-
-    /**
-     * Update subtotal when users put something in or out of their cart.
-     *
-     */
-    setCartSubtotal : function () {
-        $("dd#subtotal").text("$" + UtilityContainer.getProductsPriceFromLocalStorage().toFixed(2));
-    },
-
-    /**
-     * Set shipping field
-     *
-     * @param data
-     */
-    setCartShipping : function(data) {
-        $("dd#shipping").text("$" + (UtilityContainer.getCheapestShippingMethod(data).fare));
-    },
-
-
-    /**
-     * Set taxes field
-     *
-     * @param taxes
-     */
-    setCartTaxes : function(taxes) {
-        $("#taxes").text("$" + taxes.toFixed(2));
-    },
-
-    /**
-     * Set total field
-     *
-     * @param total
-     */
-    setCartTotal : function (total) {
-        $(".cart-total dl").show();
-        $(".calculation.total dd").text("$ " + total);
-    },
-
-
-
-    /**
-     * Ajax call to /api/estimate after all verifications have passed.
-     *
-     */
-    ajaxCall : function() {
-        $.ajax({
-            type: "POST",
-            url: "/api/estimate",
-            data: {
-                products: UtilityContainer.getProductsFromLocalStorage(),
-                shipping_address: {
-                    "postcode": $("#postcode").val(),
-                    "country": $(".price-estimate #country").val(),
-                    "province" : "QC"
-                }
-            },
-            success: function(data) {
-                cartLogicContainer.setCartShipping(data);
-                cartLogicContainer.setCartTaxes(UtilityContainer.getCartTaxes(UtilityContainer.getCheapestShippingMethod(data).method, data));
-                cartLogicContainer.setCartTotal(UtilityContainer.getCartTotal(UtilityContainer.getCheapestShippingMethod(data), data));
-
-                // Check if GAE is defined, and if does, register the event: Estimate
-                if (window.ga && ga.create) {
-                    GAEAnalytics.events.estimate(UtilityContainer.getCartTotal(UtilityContainer.getCheapestShippingMethod(data), data));
-                }
-            },
-            error: function(e) {
-                console.log(e);
-            },
-            complete : function() {
-                $(".price-estimate").fadeOut(300, function() {
-                    $(".calculation.invisible").fadeIn().removeClass("invisible");
-                    $(".cart-total.invisible").fadeIn().removeClass("invisible");
-                });
-            }
-        });
-    },
-
-    /**
-     * Display an update panel when changes are made to the cart drawer.
-     *
-     */
-    updateAjaxCall : function() {
-        //If the total is displayed, it means that there's already been an ajax call: we have to display an update!
-        if(!$(".total").parent().hasClass("invisible")) {
-            $(".cart-total dl").hide();
-            $(".price-estimate-update").fadeIn('fast');
-        }
-
-        $(".changeLocation").click(function() {
-            $("dl.calculation").addClass("invisible");
-            $(".getEstimate").html(Localization.update);
-            $(".price-estimate-update").fadeOut();
-            $(".price-estimate").fadeIn();
-
-        });
-
-        //TODO: Refactor the arbitrary xxxxms to an actual end of ajax call.
-
-        $(".price-estimate-update .getEstimate").click(function() {
-            if(!UtilityContainer.validateEmptyCart()) {
-                setTimeout(function() {
-                    $(".price-estimate-update .getEstimate").parent().fadeOut(300);
-                    $(".price-estimate-update .getEstimate").html(Localization.update);
-                }, 2250);
-            }
-        });
-
-    },
-
-    init : function() {
-        cartLogicContainer.setBadgeQuantity();
-        cartLogicContainer.loadItem();
-        cartLogicContainer.deleteItem();
-        cartLogicContainer.modifyQuantity();
-        cartLogicContainer.setQuantityCookie();
-        cartLogicContainer.setCartSubtotal();
-    }
-};
-
-/**
- * Entry point of script.
- *
- */
-; (function(window, document, $) {
-    $(document).ready(function () {
-
-        /**
-         * Sets up the ajax token for all ajax requests.
-         *
-         */
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'locale': $('html').attr('lang')
-            }
-        });
-
-        /**
-         * Sets up Localization and ApiEndpoints variables.
-         *
-         */
-        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
-        Localization = env.Localization;
-        ApiEndpoints = env.ApiEndpoints;
-
-        /**
-         * Initialize semantic UI modules.
-         *
-         */
-        semanticInitContainer.init();
-
-        /**
-         * Initialize responsiveness feature.
-         *
-         */
-        responsiveContainer.init();
-
-        /**
-         * Initialize checkout logic.
-         *
-         */
-        checkoutContainer.init();
-
-        /**
-         * Initialize cart drawer logic.
-         *
-         */
-        //cartDrawerInitContainer.init();
-        $(".view-cart").on("click", function () {
-            $(".cart-drawer").sidebar("toggle");
-        })
-
-        /**
-         * Initialize category container.
-         *
-         */
-        categoryContainer.init();
-
-        /**
-         * Initialize overlay plugin.
-         *
-         */
-        paymentOverlayContainer.init();
-
-        /**
-         * Initialize homepage sections.
-         *
-         */
-        homepageContainer.init();
-
-        /**
-         * Initialize favorite products feature.
-         *
-         */
-        productLayoutFavoriteContainer.init();
-
-        /**
-         * Initialize product formats feature.
-         *
-         */
-        productFormatContainer.init();
-
-        /**
-         * Initialize product quantity change.
-         *
-         */
-        productQuantityContainer.init();
-
-        /**
-         * Initialize product description fade in.
-         *
-         */
-        productDescriptionPreviewContainer.init();
-
-        /**
-         * Initialize wishlist page.
-         *
-         */
-        wishlistLogicContainer.init();
-
-    });
-
-})(window, window.document, jQuery, undefined)

@@ -43,13 +43,10 @@
         checkoutContainer.init();
 
         /**
-         * Initialize cart drawer logic.
+         * Initialize cart slider logic.
          *
          */
-        //cartDrawerInitContainer.init();
-        $(".view-cart").on("click", function () {
-            $(".cart-drawer").sidebar("toggle");
-        })
+        cartSliderContainer.init();
 
         /**
          * Initialize category container.

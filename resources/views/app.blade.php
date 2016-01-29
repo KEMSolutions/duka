@@ -67,7 +67,7 @@
 </head>
 <body>
 
-	@include("layout._drawer")
+	@include("layout._slider")
 
 	<div class="pusher">
 		@include("layout._header")
@@ -101,8 +101,6 @@
 		@include("analytics.GAE._init")
 	@endif
 
-	{{-- Include cart dimmer for mobile --}}
-	@include("layout._dimmer")
 	@yield("custom_scripts")
 
 </body>
