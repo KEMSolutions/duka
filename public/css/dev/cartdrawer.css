@@ -1,160 +1,27 @@
-#cart-container, #cart-footer, .cart-actions {
-    width: 400px;
-}
-
-#cart-container {
-    background : #fff;
-    height: 100%;
-    position : fixed;
-    top: 0;
-    right: 0;
-    overflow-x: hidden;
-    z-index: 10000000;
-    visibility: hidden;
-    box-shadow: rgba(0, 0, 0, 0.2) -3px 0px 30px 2px;
-}
-
 .cart-header {
     -webkit-font-smoothing: antialiased;
-    background-color: rgb(51, 51, 51);
     box-sizing: border-box;
-    color: rgb(255, 255, 255);
     display: table;
     font-size: 15px;
-    height: 50px;
-    width: 400px;
     cursor: default;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    width: 100%;
 }
 
 .cart-header h2 {
-    width: 80%;
     margin: 20px 0px;
-    font-size: 22px;
-    text-align: center;
-    display: inline-block;
-}
-
-.cart-header #back {
-    padding: 10px 10px 10px 20px;
-    opacity: 0.5;
-    cursor: pointer;
-    outline: none;
-    font-size: 3rem;
-}
-
-.cart-header #back:hover {
-    opacity: 1;
-}
-
-#cart-items {
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-
-.cart-footer {
-    font-family: "Roboto Condensed", sans-serif;
-    position: absolute;
-    bottom: 0;
-    padding-bottom: 0;
-    font-size: 14px;
-}
-
-.cart-footer .order-summary {
-    color: #666;
-    background-color: #F4F4F4;
-    line-height: 12px;
-    height: 180px;
-}
-
-.cart-subtotal {
-    -webkit-font-smoothing: antialiased;
-    box-sizing: border-box;
-    color: rgb(102, 102, 102);
-    display: block;
-    font-size: 14px;
-    font-weight: normal;
-    height: 96px;
-    letter-spacing: 1px;
-    line-height: 12px;
-    text-transform: uppercase;
-    margin-bottom: 15px;
-}
-
-.price-estimate {
-    float: left;
-    padding: 20px 30px;
-}
-
-.price-estimate-update {
-    display: none;
-    position: absolute;
-    top: 40px;
-    left: 0;
-    width: 400px;
-    background-color: #FFF;
-    height: 140px;
-    padding-top: 30px;
-}
-
-.price-estimate-update .getEstimate {
-    margin-bottom: 10px;
-}
-
-.price-estimate p:first-child {
-    text-align: center;
-}
-
-.calculation {
-    margin: 0;
-    padding: 15px 20px;
-    text-transform: uppercase;
-}
-
-.calculation.total {
-    border-top: 1px solid #D2D2D2;
-}
-
-.calculation .total dd, #subtotal {
-    font-size: 1.1rem;
-    color: #111;
-}
-
-.cart-subtotal dt, .cart-total dt {
-    float: left;
-    font-weight: 400;
-}
-
-.cart-total dt {
-    font-weight: 700;
-}
-
-.cart-subtotal dd, .cart-total dd {
-    float: right;
-    font-size: 14px;
-    font-weight: 800;
-}
-
-.getEstimate {
-    margin-top: 5px;
 }
 
 
-.cart-total {
-    font-weight: 900;
-    font-size: 14px;
-}
-
-.cart-actions {
-    padding: 5px;
-}
-
+/*
+    Checkout button.
+*/
 #checkout {
-    display: inline-block;
     text-align: center;
     vertical-align: middle;
-    border: 1px solid rgba(0, 0, 0, 0);
     padding: 20px 50px;
-    font-size: 14px;
     line-height: 20px;
     font-weight: 700;
     letter-spacing: 1px;
@@ -172,136 +39,26 @@
     transition: all 0.2s ease-in;
 }
 
-.close-button:hover {
+.close-button {
     cursor: pointer;
 }
 
-h4 {
-    margin-top: 18px;
-}
 
-#cart-container hr {
-    margin-top: 0;
-}
-
-#cart-container .btn-group, #cart-container .btn{
-    border-radius: 0px;
-}
-
-#cart-total {
-    padding-left: 8%;
-    padding-right: 8%;
-}
-
-.subtotal dd, .item dd{
-    float: left;
-    margin-right: 40%;
-}
-
-.subtotal dd {
-    font-size: 2.5rem;
-    text-transform: uppercase;
-}
-
-.subtotal dt {
-    font-size: 2.5rem;
-}
-
-.item dt, .subtotal dt {
-    text-align: right;
-}
-
-.cart-items-list {
-    padding: 0;
-}
-
-.cart-items-list input {
-    margin-top: 1px;
+/*
+    Height of each item in cart drawer
+*/
+.cart-content {
+    margin-top: 2.958rem;
 }
 
 
-.cart-items-list li, .cart-content-giftcard, .cart-content-agreement {
-    margin: 1em;
-    height: 110px;
-}
-
-.cart-items-list li img {
-    margin: 0.5em 0;
-}
-
-.cart-items-list h2{
-    padding: 15px 0;
-    border-bottom: 0;
-}
-
-.cart-items-list .no-padding-left{
-    padding-left: 0;
-}
-
-
-.cart-checkout{
-    overflow: hidden;
-    width: 100%;
-}
-
-
-.cart-checkout .one-half {
-    width: 50%;
-    position: relative;
-    min-height: 1px;
-    padding-left: 15px;
-    padding-right: 15px;
-    float: left;
-}
-
-.cart-checkout .one-fourth {
-    width: 25%;
-    position: relative;
-    min-height: 1px;
-    padding-left: 15px;
-    padding-right: 15px;
-    float: left;
-}
-
-/* cart page styles */
-
-.credit-cart-trust{
-    font-size:1em;
-    opacity:0.7;
-    height: 47px!important;
-    margin-right:0.5em;
-    transition: opacity .25s ease-in-out, box-shadow .5s ease-in-out;
-    -moz-transition: opacity .25s ease-in-out, box-shadow .5s ease-in-out;
-    -webkit-transition: opacity .25s ease-in-out, box-shadow .5s ease-in-out;
-    box-shadow: none;
-}
-
-.credit-cart-trust:hover{
-    opacity:1;
-    box-shadow: 0 0 8px rgba(0,0,0,0.1);
-}
-
-.cart-checkout-content{
-    min-height: 100%;
-    padding-bottom: 0.5em;
-}
-
-.cart-content-giftcard .btn-sm, .w-box .btn-sm{
-    height: 30px;
-}
-
-.w-box {
-    background: #fff;
-    border-bottom: 2px solid #dfe3e6;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid #dddddd;
-    cursor: default;
-}
-
+/*
+    Used to display the agreement at the bottom of checkout.
+*/
 .cart-content-agreement p{
     opacity: 0.8;
     font-size: 0.75em;
+    pointer: default;
     transition: opacity .25s ease-in-out;
     -moz-transition: opacity .25s ease-in-out;
     -webkit-transition: opacity .25s ease-in-out;
@@ -309,45 +66,4 @@ h4 {
 
 .cart-content-agreement p:hover{
     opacity: 1.0;
-}
-
-.cart-content-checkout-process{
-    padding-bottom: 1em;
-    padding-top: 1em;
-}
-
-.update_quantity_indicator{
-    background-color: transparent;
-    border: none;
-}
-.update_quantity_indicator .fa{
-    min-width: 1em;
-}
-
-.proceed {
-    padding: 20px;
-}
-
-#back {
-    color: #FFF;
-    height: 60px;
-    background-color: #333;
-}
-
-.cart-content {
-    margin-top: 2.958rem;
-}
-
-.cart-dimmer .cart-content {
-    margin-top: 0;
-}
-
-.cart-dimmer {
-    overflow: auto;
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
-}
-
-.view-cart:hover, .view-cart:active {
-    cursor: pointer;
 }

@@ -84,12 +84,17 @@ var semanticInitContainer = {
     rules: {
         postalCode: function() {
             $.fn.form.settings.rules.postalCode = function(value, fieldIdentifier) {
-                if ($("#" + fieldIdentifier).val() === "CA")
-                    return value.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
-                else if ($("#" + fieldIdentifier).val() === "US")
-                    return value.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
-                else
+                if(document.getElementById('checkboxSuccess').checked && fieldIdentifier == "billingCountry") {
                     return true;
+                } else {
+                    if ($("#" + fieldIdentifier).val() === "CA")
+                        return value.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
+                    else if ($("#" + fieldIdentifier).val() === "US")
+                        return value.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
+                    else {
+                        return true;
+                    }
+                }
             }
         }
     },

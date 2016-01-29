@@ -84,10 +84,6 @@ var checkoutContainer = {
                     identifier: 'shippingPostcode',
                     rules: [
                         {
-                            type   : 'empty',
-                            prompt : Localization.validation_post_shipping
-                        },
-                        {
                             type   : 'postalCode[shippingCountry]',
                             prompt : Localization.validation_post_shipping
                         }

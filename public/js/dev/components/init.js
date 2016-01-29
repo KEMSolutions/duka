@@ -43,10 +43,10 @@
         checkoutContainer.init();
 
         /**
-         * Initialize cart drawer logic.
+         * Initialize cart slider logic.
          *
          */
-        cartDrawerInitContainer.init();
+        cartSliderContainer.init();
 
         /**
          * Initialize category container.

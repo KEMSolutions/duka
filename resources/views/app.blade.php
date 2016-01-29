@@ -34,7 +34,7 @@
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
 	<!-- Semantic UI css dependencies -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.7/semantic.min.css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css"/>
 
 	<!-- Required -->
 	<link href="//cdn.kem.guru/css/outdatedBrowser.min.css" rel="stylesheet">
@@ -67,17 +67,19 @@
 </head>
 <body>
 
-	@include("layout._header")
+	@include("layout._slider")
 
-	@include("layout._drawer")
+	<div class="pusher">
+		@include("layout._header")
 
-	@include("layout._messages")
-
-
-	@yield("content")
+		@include("layout._messages")
 
 
-	@include("layout._footer")
+		@yield("content")
+
+
+		@include("layout._footer")
+	</div>
 
 	<!-- Scripts -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -86,7 +88,7 @@
 	<script src="/js_assets/blur/blur.min.js"></script>
 
 	<!-- Semantic ui dependencies -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.7/semantic.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
 
 	<script src="/js/prod/duka.js"></script>
 
@@ -99,8 +101,6 @@
 		@include("analytics.GAE._init")
 	@endif
 
-	{{-- Include cart dimmer for mobile --}}
-	@include("layout._dimmer")
 	@yield("custom_scripts")
 
 </body>
