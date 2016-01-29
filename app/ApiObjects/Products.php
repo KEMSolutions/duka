@@ -49,6 +49,41 @@ class Products extends BaseObject
         return $products;
     }
 
+
+    /**
+     * Retrieves a list of promoted products. 
+     *
+     * @return mixed promoted products
+     */
+    public function promoted()
+    {
+        
+        $key = $this->cacheNamespace . "products_promoted";
+        $promotedProducts = Cache::remember($key, Carbon::now()->addHours(1), function() {
+            return $response = KemAPI::get('products/promoted', [], [], false);
+        });
+        $this->extractAndCache($promotedProducts, $this->getCacheNamespace());
+
+        return $promotedProducts;
+    }
+
+    /**
+     * Retrieves a list of promoted products. 
+     *
+     * @return mixed promoted products
+     */
+    public function featured()
+    {
+        
+        $key = $this->cacheNamespace . "products_featured";
+        $featuredProducts = Cache::remember($key, Carbon::now()->addHours(1), function() {
+            return $response = KemAPI::get('products/featured', [], [], false);
+        });
+        $this->extractAndCache($featuredProducts, $this->getCacheNamespace());
+        return $featuredProducts;
+    }
+
+
     /**
      * Retrieves a product by ID or slug.
      *

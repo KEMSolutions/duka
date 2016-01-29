@@ -1,25 +1,60 @@
 @extends("app")
 
 @section("content")
-    @forelse($sites as $site)
-        {{-- TODO FRANCIS HERE !!!!!
-             Temporary fix : check if the sections rebates, featured, mixed have an array of products.
-                If they do, @include them
-                If not, skip them.
-        --}}
-        @if(isset($layoutData[$site]["products"]) || $site === "headline")
-            @include("site.homepage._" . $site)
-        @endif
+
+
+<section class="ui padded centered container">
+
+<div class="padded row">
+<h3 class="ui top attached block center aligned header" style="background-color:#{{ Store::info()->colors->color_one }};color:#fff;border-color: #{{ Store::info()->colors->color_one }};">
+    @lang("boukem.featured_title")
+</h3>
+<div class="ui attached segment" style="border-color: #{{ Store::info()->colors->color_one }};">
+    <div class="ui row four stackable doubling link cards">
+    @forelse($featured as $product)
+        {{--  Present all the promoted products. You can tweak what product appear here from KEM's Admin Panel > Customize > Promoted --}}
+        {!! view("product._card", ["product"=>$product])->render() !!}
+        
     @empty
+        {{-- When no products are promoted, just fetch 4 random products and present them inside of cards. --}}
+        
+            @foreach(Products::random(1) as $product)
+                {!! view("product._card", ["product"=>$product])->render() !!}
+            @endforeach
+        
 
-    <div class="ui vertical padded stripe segment">
+    @endforelse
+    </div>
+</div>
+</div>
+</section>
 
-        <div class="ui four stackable doubling link cards">
+
+
+<section class="ui padded centered container">
+<div class="padded row">
+<h3 class="ui top attached block center aligned header" style="background-color:#{{ Store::info()->colors->color_two }};color:#fff;border-color: #{{ Store::info()->colors->color_two }};">
+    @lang("boukem.promoted_title")
+</h3>
+<div class="ui attached segment" style="border-color: #{{ Store::info()->colors->color_two }};">
+    <div class="ui row four stackable doubling link cards">
+    @forelse($promoted as $product)
+        {{--  Present all the promoted products. You can tweak what product appear here from KEM's Admin Panel > Customize > Promoted --}}
+        {!! view("product._card", ["product"=>$product])->render() !!}
+        
+    @empty
+        {{-- When no products are promoted, just fetch 4 random products and present them inside of cards. --}}
+        
             @foreach(Products::random(4) as $product)
                 {!! view("product._card", ["product"=>$product])->render() !!}
             @endforeach
-        </div>
-</div>
+        
 
     @endforelse
+    </div>
+</div>
+</div>
+
+        
+</section>
 @endsection
