@@ -21,10 +21,12 @@ class HomeController extends Controller
 		$currentLocale = Localization::getCurrentLocale();
 
 		$promoted = \Products::promoted();
+		$featured = \Products::featured();
 
 		// Return the homepage view.
 		return View::make("site.homepage.home")->with([
 			"promoted"=>$promoted,
+			"featured"=>$featured,
 		]);
 	}
 
