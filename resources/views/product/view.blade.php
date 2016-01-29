@@ -75,7 +75,7 @@
                             </span>
                         @else
                             <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                                <span class="invisible" itemprop="price">
+                                <span class="hidden" itemprop="price">
                                     CAD ${{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
                                 </span>
 
