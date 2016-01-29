@@ -85,12 +85,6 @@
         productQuantityContainer.init();
 
         /**
-         * Initialize product description fade in.
-         *
-         */
-        productDescriptionPreviewContainer.init();
-
-        /**
          * Initialize wishlist page.
          *
          */

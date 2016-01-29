@@ -446,19 +446,11 @@ section.slice {
 /*-----------------------------------*/
 /*-----------------------------------*/
 /*-----------------------------------*/
-.preview-text {
-  background: -webkit-linear-gradient(#333, #eee);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
 
 .ui.accordion, .ui.accordion .accordion {
   width: 100%;
 }
 
-#product_long_description {
-  display: none;
-}
 
 /*-----------------------------------*/
 /*-----------------------------------*/

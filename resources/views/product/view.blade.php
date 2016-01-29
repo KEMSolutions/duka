@@ -197,24 +197,15 @@
 
 
         <div class="ui row">
-            <div class="ui accordion horizontally-padded" data-trigger=".preview-trigger">
-                <div class="title">
+            <div class="ui accordion horizontally-padded">
+                <div class="active title">
                     <h3 class="ui header">
                         <i class="dropdown icon"></i>
                         @lang("boukem.product_details")
                     </h3>
 
-                    <div class="preview">
-                        <div class="preview-text">
-                            {!! str_limit($product->localization->long_description, 750, "...") !!}
-                        </div>
-
-                        <div>
-                            <button class="ui button black center-block preview-trigger">@lang("boukem.show_more")</button>
-                        </div>
-                    </div>
                 </div>
-                <div class="content" id="product_long_description">
+                <div class="active content">
                     <span>{!! $product->localization->long_description !!}</span>
 
                     <div class="ui list text-center">
