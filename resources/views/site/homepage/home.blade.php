@@ -5,14 +5,11 @@
 
 <section class="ui padded centered container">
 
-
-<h2 class="ui center aligned icon header" style="color:#{{ Store::info()->colors->color_two }}">
-  <i class="star icon"></i>
-  <div class="content">
+<h3 class="ui top attached block center aligned header" style="background-color:#{{ Store::info()->colors->color_two }};color:#fff;border-color: #{{ Store::info()->colors->color_two }};">
     @lang("boukem.promoted_title")
-  </div>
-</h2>
-<div class="ui row four stackable doubling link cards">
+</h3>
+<div class="ui attached segment" style="border-color: #{{ Store::info()->colors->color_two }};">
+    <div class="ui row four stackable doubling link cards">
     @forelse($promoted as $product)
         {{--  Present all the promoted products. You can tweak what product appear here from KEM's Admin Panel > Customize > Promoted --}}
         {!! view("product._card", ["product"=>$product])->render() !!}
@@ -26,7 +23,10 @@
         
 
     @endforelse
+    </div>
 </div>
+
+
         
 </section>
 @endsection
