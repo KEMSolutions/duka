@@ -46,7 +46,10 @@
          * Initialize cart drawer logic.
          *
          */
-        cartDrawerInitContainer.init();
+        //cartDrawerInitContainer.init();
+        $(".view-cart").on("click", function () {
+            $(".cart-drawer").sidebar("toggle");
+        })
 
         /**
          * Initialize category container.

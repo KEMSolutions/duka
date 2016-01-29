@@ -67,17 +67,19 @@
 </head>
 <body>
 
-	@include("layout._header")
-
 	@include("layout._drawer")
 
-	@include("layout._messages")
+	<div class="pusher">
+		@include("layout._header")
+
+		@include("layout._messages")
 
 
-	@yield("content")
+		@yield("content")
 
 
-	@include("layout._footer")
+		@include("layout._footer")
+	</div>
 
 	<!-- Scripts -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
