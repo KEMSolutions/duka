@@ -240,22 +240,22 @@
             <div class="row sixteen wide column">
 
                 {{--Videos. --}}
-                @if(count($product->videos) > 0)
-                @section("custom_css")
-                    <link rel="stylesheet" href="//vjs.zencdn.net/4.8/video-js.css"/>
-                @endsection
+                @if(isset($product->videos) && count($product->videos) > 0)
+                    @section("custom_css")
+                        <link rel="stylesheet" href="//vjs.zencdn.net/4.8/video-js.css"/>
+                    @endsection
 
-                @section("scripts")
-                    <script src="//vjs.zencdn.net/4.8/video.js"></script>
-                    <script>
-                        //store_video
-                        document.createElement('video');
-                        document.createElement('audio');
-                        document.createElement('track');
-                    </script>
-                @endsection
+                    @section("scripts")
+                        <script src="//vjs.zencdn.net/4.8/video.js"></script>
+                        <script>
+                            //store_video
+                            document.createElement('video');
+                            document.createElement('audio');
+                            document.createElement('track');
+                        </script>
+                    @endsection
 
-                @include("product._product_video", ["videos" => $product->videos ])
+                    @include("product._product_video", ["videos" => $product->videos ])
                 @endif
 
                 <?php /*  Reviews.
