@@ -59,7 +59,7 @@ class Products extends BaseObject
     {
         
         $key = $this->cacheNamespace . "products_promoted";
-        $promotedProducts = Cache::remember('key', Carbon::now()->addHours(1), function() {
+        $promotedProducts = Cache::remember($key, Carbon::now()->addHours(1), function() {
             return $response = KemAPI::get('products/promoted', [], [], false);
         });
         $this->extractAndCache($promotedProducts, $this->getCacheNamespace());
@@ -76,12 +76,12 @@ class Products extends BaseObject
     {
         
         $key = $this->cacheNamespace . "products_featured";
-        $promotedProducts = Cache::remember('key', Carbon::now()->addHours(1), function() {
+        $featuredProducts = Cache::remember($key, Carbon::now()->addHours(1), function() {
+            dd(KemAPI::get('products/featured', [], [], false));
             return $response = KemAPI::get('products/featured', [], [], false);
         });
-        $this->extractAndCache($promotedProducts, $this->getCacheNamespace());
-
-        return $promotedProducts;
+        $this->extractAndCache($featuredProducts, $this->getCacheNamespace());
+        return $featuredProducts;
     }
 
 
