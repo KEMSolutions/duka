@@ -7,7 +7,7 @@
 
 <div class="padded row">
 <h3 class="ui top attached block center aligned header" style="background-color:#{{ Store::info()->colors->color_one }};color:#fff;border-color: #{{ Store::info()->colors->color_one }};">
-    @lang("boukem.promoted_title")
+    @lang("boukem.featured_title")
 </h3>
 <div class="ui attached segment" style="border-color: #{{ Store::info()->colors->color_one }};">
     <div class="ui row four stackable doubling link cards">
