@@ -272,6 +272,7 @@ return [
     "503"               =>"Service temporairement indisponible indépendamment de notre volonté. Désolé :(",
     "refine_by"         =>"Raffiner par",
     "blog"              =>"Blogue",
+    "promoted_title"    =>"Produits en promotion",
 
     "validation_name"   =>"Veuillez saisir votre nom",
     "validation_address_shipping"=>"Veuillez saisir votre adresse de livraison",

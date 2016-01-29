@@ -272,6 +272,7 @@ return [
     "503"               =>"We are taking a nap right now. Be right back :)",
     "refine_by"         =>"Refine By",
     "blog"              =>"Blog",
+    "promoted_title"    =>"Promoted Products",
 
     "validation_name"   =>"Please enter your name",
     "validation_address_shipping"=>"Please enter your shipping address",

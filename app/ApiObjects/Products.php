@@ -58,12 +58,11 @@ class Products extends BaseObject
     public function promoted()
     {
         
-
         $key = $this->cacheNamespace . "products_promoted";
         $promotedProducts = Cache::remember('key', Carbon::now()->addHours(1), function() {
             return $response = KemAPI::get('products/promoted', [], [], false);
         });
-        
+        $this->extractAndCache($promotedProducts, $this->getCacheNamespace());
 
         return $promotedProducts;
     }

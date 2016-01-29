@@ -12,47 +12,22 @@ use App\Http\Requests;
 class HomeController extends Controller
 {
 	/**
-	 *Renders the homepage view.
+	 * Renders the homepage view.
 	 *
 	 * @return mixed
 	 */
 	public function index()
 	{
-		$apiData = Layouts::get('');
 		$currentLocale = Localization::getCurrentLocale();
-		$elementType = [];
-		$layoutData = [];
 
-
-		// Get all the data types presented on the api call.
-		for($i = 0; $i < count($apiData); $i++)
-		{
-			array_push($elementType, $apiData[$i]->type);
-		}
-
-		// For all the data types, create an array containing its relevant information, according to the current locale.
-		for($i = 0; $i < count($elementType); $i++)
-		{
-			$layoutData[$elementType[$i]] = $this->getData($apiData, $currentLocale, $i);
-
-			if ($elementType[$i] == "headline")
-			{
-				$layoutData["headline"] = $this->getHeadlineContent($apiData, $currentLocale, $i);
-			}
-		}
+		$promoted = \Products::promoted();
 
 		// Return the homepage view.
-		// To access data on each section, do {{ $LayoutData["name_of_section"]["property"]  }}
 		return View::make("site.homepage.home")->with([
-			"sites" => $elementType,
-
-			"showTab" => true,
-			"color" => "color-two",
-			"locale" => $currentLocale,
-
-			"layoutData" => $layoutData
+			"promoted"=>$promoted,
 		]);
 	}
+
 
 
 	/**
