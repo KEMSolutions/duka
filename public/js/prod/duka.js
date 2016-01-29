@@ -527,102 +527,927 @@ var UtilityContainer = {
 };
 
 
-/**
- * Entry point of script.
- *
- */
-; (function(window, document, $) {
-    $(document).ready(function () {
+var cartSliderContainer = {
 
+    /**
+     * Responsible for the logic.
+     * CRUD.
+     *
+     */
+    behaviour: {
         /**
-         * Sets up the ajax token for all ajax requests.
+         * Event triggered when a buy button is clicked.
          *
          */
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'locale': $('html').attr('lang')
+        buyButtonClick : function () {
+            $("body").on("click", ".buybutton", function() {
+
+                cartSliderContainer.behaviour.addItem(UtilityContainer.buyButton_to_Json($(this)));
+                cartSliderContainer.behaviour.storeItem(UtilityContainer.buyButton_to_Json($(this)));
+
+                // We remove the "Your cart is empty" message at the top every time we add an item.
+                $("#cart-items").addClass("hidden");
+            });
+        },
+
+
+        /**
+         * Add an item in the list.
+         *
+         * @param item JSON format converted from attributes on the .buybutton
+         */
+        addItem : function(item) {
+            var price = (parseInt(item.quantity) * parseFloat(item.price)).toFixed(2);
+
+            var productItem =
+                '<div class="very padded item animated fadeInUp" style="margin: 1rem auto;" data-product="' + item.product + '"data-quantity=1>' +
+                '<div class="ui tiny left floated image">' +
+                '<img src="' + item.thumbnail_lg + '"/>' +
+                '</div>' +
+                '<div class="middle aligned content">' +
+                '<h4 class="ui header">' + item.name + '</h4>' +
+                '<div class="meta">' +
+                '<span class="price" data-price="' + item.price + '">$' + price  + '</span>' +
+                '<i class="trash icon large pull-right close-button"></i>' +
+                '</div>' +
+                '<div class="content cart-content">' +
+                '<span>'+ Localization.quantity + '</span>' +
+                '<div class="ui input one-quarter">' +
+                '<input type="number" class="quantity" min="1" step="1" value="' + item.quantity + '" name="products[' + item.product + '][quantity]">' +
+                '<input type="hidden" name="products[' + item.product + '][id]" value="' + item.product + '"/> ' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+            if (!$(".cart-items-list [data-product='" + item.product + "']").length){
+                $(".cart-items-list").append(productItem);
+            }
+
+        },
+
+
+        /**
+         * Store a product in localStorage.
+         * Update badge quantity.
+         * Create/update a quantity cookie.
+         *
+         * @param item JSON format converted from attributes on the .buybutton
+         */
+        storeItem : function(item) {
+            if(localStorage.getItem("_product " + item.product) != null)
+            {
+                // Update the value on localStorage of an already existing product.
+                var quantity_updated = JSON.parse(localStorage.getItem("_product " + item.product)).quantity + 1;
+
+                // Update the input value already displayed in the cart drawer.
+                $("input[name='products[" + item.product + "][quantity]']").attr("value", quantity_updated);
+
+                // Set the item.
+                localStorage.setItem("_product " + item.product, JSON.stringify(
+                    {
+                        "product" : item.product,
+                        "name" : item.name,
+                        "price" : item.price,
+                        "thumbnail" : item.thumbnail,
+                        "thumbnail_lg" : item.thumbnail_lg,
+                        "quantity" : quantity_updated,
+                        "link" : item.link,
+                        "description" : item.description
+                    }
+                ));
+            }
+            else {
+                localStorage.setItem("_product " + item.product, JSON.stringify(item));
+            }
+            cartSliderContainer.view.setBadgeQuantity();
+            cartSliderContainer.behaviour.setQuantityCookie();
+        },
+
+
+        /**
+         * Load a list of items previously bought into the cart.
+         * If there is no item in localStorage starting with the key "_product", then nothing is loaded.
+         */
+        loadItem : function() {
+            $("#cart-items").addClass("hidden");
+
+            for(var i = 0, length = localStorage.length; i<length; i++)
+            {
+                if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
+                {
+                    cartSliderContainer.behaviour.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
+                }
+            }
+        },
+
+
+        /**
+         * Delete an item from the cart drawer list.
+         * Remove it from the DOM.
+         * Delete the object on localStorage.
+         * Set Badge quantity accordingly.
+         * Update Cookie quantity accordingly.
+         *
+         */
+        deleteItem: function() {
+            $(document).on('click', ".close-button", function() {
+
+                // We fade out the item...
+                var $item = $(this).closest(".animated").addClass("animated fadeOutUp");
+
+                // Then we remove it from the dom...
+                $item.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                    $(this).remove();
+
+                    // Display a message if the cart has no more item in it.
+                    UtilityContainer.getNumberOfProducts() === 0 ? $("#cart-items").removeClass("hidden") : null;
+                });
+
+                // To finally delete it from localstorage.
+                localStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
+
+                cartSliderContainer.view.setBadgeQuantity();
+                cartSliderContainer.behaviour.setQuantityCookie();
+
+            });
+        },
+
+
+        /**
+         * Modify the quantity of a product in the cart.
+         * Update its price label accordingly.
+         * Update the localStorage.
+         * Set badge quantity.
+         * Update Cookie quantity.
+         *
+         */
+        modifyQuantity : function() {
+            $(".cart-items-list").on("change", ".quantity", function() {
+                var $container = $(this).closest(".item"),
+                    $product_price = $container.find(".price");
+
+                //update the total value
+                $product_price.text("$" + ($product_price.data("price") * $(this).val()).toFixed(2));
+
+                //retrieve old data from old object then update the quantity and finally update the object
+                var oldData = JSON.parse(localStorage.getItem("_product " + $container.data("product")));
+                oldData.quantity = parseInt($(this).val());
+                localStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
+
+                cartSliderContainer.view.setBadgeQuantity();
+                cartSliderContainer.behaviour.setQuantityCookie();
+
+            });
+        },
+
+
+        /**
+         * Create or Update a cookie with the quantity present in the cart.
+         * The value of the cookie is encoded in base64 (btoa)
+         *
+         */
+        setQuantityCookie : function () {
+            var number = UtilityContainer.getNumberOfProducts();
+
+            if (Cookies.get("quantityCart") == undefined || number === 0)
+            {
+                Cookies.set("quantityCart", btoa("0"));
+            }
+            else {
+                Cookies.set("quantityCart", btoa(number));
+            }
+        }
+    },
+
+
+
+    /**
+     * Responsible for the view aspect.
+     *
+     */
+    view: {
+        /**
+         * Slide in the cart-drawer (slider?) when adding items or clicking on the .view-cart trigger.
+         *
+         */
+        slideIn: function () {
+            $(".view-cart, .buybutton").on("click", function () {
+                $(".cart-drawer").sidebar("toggle");
+            });
+        },
+
+
+        /**
+         * Update the value of #cart_badge when adding or deleting elements.
+         *
+         */
+        setBadgeQuantity : function() {
+            var total = UtilityContainer.getNumberOfProducts();
+
+            $(".cart_badge").text(total);
+        }
+    },
+
+
+    init : function() {
+        var behaviour = cartSliderContainer.behaviour;
+        var view = cartSliderContainer.view;
+
+
+        view.setBadgeQuantity();
+        view.slideIn();
+
+
+        behaviour.buyButtonClick();
+        behaviour.loadItem();
+        behaviour.deleteItem();
+        behaviour.modifyQuantity();
+        behaviour.setQuantityCookie();
+    }
+
+};
+/**
+ * Component responsible for handling the payment overlay behaviour.
+ * Entry point is in checkPendingOrders.
+ *
+ * @type {{cancelOrder: Function, displayUnpaidOverlay: Function, displayCongratulateOverlay: Function, renderAddress: Function, renderAdditionalDetails: Function, checkPendingOrders: Function, init: Function}}
+ */
+var paymentOverlayContainer = {
+
+    /**
+     * Cancel an order.
+     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
+     *
+     */
+    cancelOrder : function() {
+        $("body").on("click", "#cancelOrder", function() {
+            Cookies.remove("_current_order");
+
+            $("#cancelledOrder").fadeOut();
+
+            window.location.replace("/");
+
+            UtilityContainer.removeAllProductsFromLocalStorage();
+        });
+    },
+
+
+    /**
+     * Display the unpaid overlay using semantic-ui modal module.
+     *
+     */
+    displayUnpaidOverlay: function () {
+        var order = JSON.parse(Cookies.get('_current_order'));
+
+        var unpaidOverlay =
+            '<div class="ui small modal text-center unpaid-modal">' +
+                '<i class="close icon"></i>' +
+                '<div class="header">' +
+                    Localization.pending_order.replace(':command', order.id) +
+                '</div>' +
+                '<div class="content">' +
+                    '<div class="description">' +
+                        '<div class="ui header">'  +
+                            Localization.what_to_do +
+                        '</div>' +
+                        '<a href="' + order.payment_url + '">' +
+                            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
+                        '</a>' +
+                        '<button class="ui button red" id="cancelOrder">'+
+                            Localization.cancel_order +
+                        '</button>'+
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+        $("body").prepend(unpaidOverlay);
+        $(".small.unpaid-modal").modal("show");
+
+    },
+
+
+    /**
+     * Display the congratulate overlay using semantic-ui modal module.
+     *
+     * @param order
+     */
+    displayCongratulateOverlay: function (order) {
+        var overlay =
+            '<div class="ui modal congratulate-modal payment_successful">' +
+                '<div class="header">' +
+                    Localization.payment_successful +
+                '</div>' +
+                '<div class="content">' +
+                    '<div class="description">' +
+                        '<div class="ui header">' +
+                            Localization.summary_below +
+                        '</div>' +
+                        '<p>' + Localization.summary_copy + '</p>' +
+                    '</div>' +
+                    '<br/>' +
+                    '<table class="ui striped table" style="margin: 0 auto">' +
+                        '<tbody class="center aligned">' +
+                            '<tr>' +
+                                '<td>' + Localization.order + '</td>' +
+                                '<td>' + "#" + order.id + '</td>' +
+                            '</tr>' +
+
+                            this.renderAdditionalDetails(order) +
+
+                        '</tbody>' +
+                    '</table>' +
+                '</div>' +
+                '<div class="actions">' +
+                    '<div class="ui black deny button">' +
+                        Localization.close +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+        $("body").prepend(overlay);
+
+        $(".congratulate-modal").modal("show");
+    },
+
+    /**
+     * Render the appropriate address' <td> tags according to the type of address.
+     *
+     * @param [object] address_details
+     * @param [string] address_type_name
+     * @returns {string}
+     */
+    renderAddress: function (address_details, address_type_name) {
+        var line2 = address_details.line2 == null ? '' : address_details.line2 + '<br/>';
+
+        return '<tr>' +
+                    '<td>' + address_type_name + '</td>' +
+                    '<td>' +
+                        address_details.name +
+                        '<br/>' +
+                        address_details.line1 +
+                        '<br/>' +
+                        line2 +
+                        address_details.city +
+                        ', ' +
+                        address_details.province +
+                        ', ' +
+                        address_details.postcode +
+                        '<br/>' +
+                        address_details.country +
+
+                    '</td>' +
+                '</tr>';
+    },
+
+
+    /**
+     * Check if there are any additional details.
+     * If there are, insert them in the summary table.
+     *
+     * @param order
+     * @returns {string}
+     */
+    renderAdditionalDetails: function (order) {
+        if (order.shipping_address != null) {
+            return this.renderAddress(order.shipping_address, Localization.shipping_address) +
+                    this.renderAddress(order.billing_address, Localization.billing_address) +
+                '<tr>' +
+                        '<td>' + Localization.subtotal + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.subtotal).toFixed(2) + '</td>' +
+                    '</tr>' +
+
+                    '<tr>' +
+                        '<td>' + Localization.taxes + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.taxes).toFixed(2) + '</td>' +
+                    '</tr>' +
+
+                    '<tr>' +
+                        '<td>' + Localization.total + '</td>' +
+                        '<td>' + "$" + parseFloat(order.payment_details.total).toFixed(2) + '</td>' +
+                    '</tr>';
+        }
+        else {
+            return '';
+        }
+    },
+
+
+    /**
+     * Checks the status of the current order stored in _current_order cookie.
+     *
+     * If the order is paid and the call is made by the same user who passed the order,
+     * we display a summary. Laravel takes care of the check, as this can raise security
+     * concerns...
+     *
+     */
+    checkPendingOrders : function() {
+
+        if (Cookies.get('_current_order')) {
+
+            // Retrieve order details.
+            var order = JSON.parse(Cookies.get('_current_order'));
+
+            // Check whether current order has been paid.
+            $.ajax({
+                type: 'GET',
+                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
+                success: function(order_details) {
+                    if (order_details.status === 'pending') {
+                        this.displayUnpaidOverlay();
+                    }
+                    else if (order_details.status === 'paid') {
+                        // Display congratulation dimmer.
+                        this.displayCongratulateOverlay(order_details);
+
+                        // Remove products from cart
+                        UtilityContainer.removeAllProductsFromLocalStorage();
+
+                        // Delete the unpaid orders cookie (if any).
+                        Cookies.remove('_current_order');
+                    }
+                    else {
+                        Cookies.remove('_current_order');
+                    }
+                }.bind(this)
+            });
+        }
+
+    },
+
+
+    /**
+     * Register functions to be called outside paymentOverlayContainer.
+     *
+     */
+    init : function() {
+        var self = paymentOverlayContainer;
+
+        self.cancelOrder();
+        self.checkPendingOrders();
+
+    }
+};
+
+/**
+ * Responsible for handling the switch between one, two and four columns per row depending on screen width.
+ *
+ * @type {{tablet: {setClasses: Function}, mobile: {setClasses: Function}, desktop: {setClasses: Function}, init: Function}}
+ */
+var responsiveContainer = {
+    // Everything between 400px and 768px is considered tablet size.
+    tablet : {
+        setClasses: function () {
+            // Take the stackable off the grid-layout.
+            $(".grid-layout").removeClass("stackable");
+            // Set two products per row.
+            $(".dense-product").removeClass("four wide column").addClass("eight wide column");
+        }
+    },
+
+    // Everything less than 400px is considered mobile size.
+    mobile : {
+        setClasses: function () {
+            $(".grid-layout").addClass("stackable");
+        }
+    },
+
+    // Everything more than 768px is considered desktop size.
+    desktop: {
+        setClasses: function () {
+            $(".grid-layout").removeClass("stackable");
+            // Set four products per row.
+            $(".dense-product").removeClass("eight four wide column").addClass("four wide column");
+        }
+    },
+
+    init: function () {
+        var self = responsiveContainer;
+
+        $(window).on("load resize", function () {
+            if ($(this).width() < 768 && $(this).width() > 400) {
+                self.tablet.setClasses();
+            }
+            else if ($(this).width() <= 400) {
+                self.mobile.setClasses();
+            }
+            else if ($(this).width() >= 768) {
+                self.desktop.setClasses();
             }
         });
+    }
+}
+/**
+ * Component responsible for the view component of each category page.
+ *
+ * @type {{searchParameters: {page: number, per_page: number, order: string, min_price: null, max_price: null, brands: Array, categories: Array}, blurBackground: Function, itemsPerPage: Function, sortBy: Function, price: Function, categories: Function, brands: Function, updateFilterList: Function, addTag: Function, tags: Function, addFilter: Function, removeFilter: Function, updateFilters: Function, toggleLayout: Function, localizeSwitcher: Function, retrieveSearchParameters: Function, toggleTagsList: Function, localizeDimmer: Function, addDimmer: Function, init: Function}}
+ */
+var categoryContainer = {
 
-        /**
-         * Sets up Localization and ApiEndpoints variables.
-         *
-         */
-        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
-        Localization = env.Localization;
-        ApiEndpoints = env.ApiEndpoints;
+    /**
+     * Contains the updated URL parameters,
+     *
+     */
+    searchParameters: {
+        page: 1,
+        per_page: 8,
+        order: 'relevance',
+        min_price: null,
+        max_price: null,
+        brands: [],
+        categories: []
+    },
 
-        /**
-         * Initialize semantic UI modules.
-         *
-         */
-        semanticInitContainer.init();
+    /**
+     * Blurs the background of each category's page header.
+     *
+     */
+    blurBackground: function () {
+        $(".category-header").blurjs({
+            source: ".category-header"
+        });
+    },
 
-        /**
-         * Initialize responsiveness feature.
-         *
-         */
-        responsiveContainer.init();
 
-        /**
-         * Initialize checkout logic.
-         *
-         */
-        checkoutContainer.init();
+    /**
+     * Sets a number of items per page and set the value to the appropriate input.
+     *
+     */
+    itemsPerPage: function () {
+        $(".items-per-page .item").on("click", function() {
+            categoryContainer.addDimmer();
+            UtilityContainer.urlAddParameters("per_page", $(this).data("sort"));
+        });
 
-        /**
-         * Initialize cart slider logic.
-         *
-         */
-        cartSliderContainer.init();
+        // Set the selected option.
+        $('#items-per-page-box').dropdown('set selected', this.searchParameters.per_page);
+    },
 
-        /**
-         * Initialize category container.
-         *
-         */
-        categoryContainer.init();
 
-        /**
-         * Initialize overlay plugin.
-         *
-         */
-        paymentOverlayContainer.init();
+    /**
+     * Sets the sort by filter and set the value to the appropriate input.
+     *
+     */
+    sortBy: function () {
+        $(".sort-by .item").on("click", function() {
+            categoryContainer.addDimmer();
+            UtilityContainer.urlAddParameters("order", $(this).data("sort"));
+        });
 
-        /**
-         * Initialize homepage sections.
-         *
-         */
-        homepageContainer.init();
+        // Find the text for the selected option.
+        $(".sort-by .item").each(function(index, element) {
+            if ($(element).data('sort') == categoryContainer.searchParameters.order) {
+                $("#sort-by-box").dropdown("set selected", $(element).data('sort'));
+                return false;
+            }
+        });
+    },
 
-        /**
-         * Initialize favorite products feature.
-         *
-         */
-        productLayoutFavoriteContainer.init();
+    /**
+     * Adds the price filter to the search query and updates the filter on the page.
+     *
+     */
+    price: function() {
 
-        /**
-         * Initialize product formats feature.
-         *
-         */
-        productFormatContainer.init();
+        $("#price-update").on("click", function()
+        {
+            categoryContainer.addDimmer();
 
-        /**
-         * Initialize product quantity change.
-         *
-         */
-        productQuantityContainer.init();
+            UtilityContainer.urlAddParameters({
+                min_price : $("#min-price").val(),
+                max_price : $("#max-price").val()
+            });
+        });
 
-        /**
-         * Initialize wishlist page.
-         *
-         */
-        wishlistLogicContainer.init();
+        // Set the specified price range.
+        if (this.searchParameters.min_price) {
+            $('#min-price').val(this.searchParameters.min_price);
+        }
 
-    });
+        if (this.searchParameters.max_price) {
+            $('#max-price').val(this.searchParameters.max_price);
+        }
+    },
 
-})(window, window.document, jQuery, undefined)
+    /**
+     * Adds the category filter to the search query and updates the filter on the page.
+     *
+     */
+    categories: function() {
+        this.updateFilterList($("#refine-by-category"), "categories");
+    },
 
+    /**
+     * Adds the brands filter to the search query and updates the filter on the page.
+     *
+     */
+    brands: function() {
+        this.updateFilterList($("#refine-by-brand"), "brands");
+    },
+
+    /**
+     * Shortcut to handle filter lists such as brands and categories.
+     *
+     * @param element
+     * @param filterType
+     */
+    updateFilterList : function(element, filterType)
+    {
+        // Add the event listeners to each child element.
+        element.find(".item").on("change",
+            {
+                filter : filterType || "brands"
+            },
+
+            function(event)
+            {
+                var id = $(this).data("filter"),
+                    filterList = categoryContainer.searchParameters[event.data.filter],
+                    filter = $(this);
+
+                // If the checkbox is checked, add the filter to the list.
+                if (filter.prop("checked")) {
+                    categoryContainer.addFilter(event.data.filter, id);
+                }
+
+                // If not, then remove it from the list.
+                else {
+                    categoryContainer.removeFilter(event.data.filter, id);
+                }
+            }
+        );
+
+        // Update selected checkboxes. IDs are stored as strings in "categoryContainer.searchParameters".
+        element.find(".item").each(function() {
+
+            $(this).prop("checked", categoryContainer.searchParameters[filterType].indexOf(""+ $(this).data("filter")) > -1);
+
+            // And add the filter as a tag.
+            if ($(this).prop("checked")) {
+                categoryContainer.addTag($(this));
+            }
+        });
+    },
+
+    /**
+     * Create a new tag to be appended to the tags list.
+     *
+     * @param filter (filter being the checkbox DOM node)
+     */
+    addTag: function (filter) {
+        var item =
+        '<div class="item">' +
+        '<a class="ui grey tag label">' + filter.data("name") +
+        '<i class="icon remove right floated" data-id="' + filter.data("filter") + '" data-type="' + filter.data('type') + '"></i>' +
+        '</a>' +
+        '</div>';
+
+        $(".tags-list").append(item);
+    },
+
+    /**
+     * Attaches the remove event to the tags.
+     *
+     */
+    tags: function() {
+        $(".tags-list .item .remove").on("click", function() {
+            categoryContainer.removeFilter($(this).data('type'), $(this).data('id'));
+        });
+    },
+
+    /**
+     * Adds a filter and refreshes the page.
+     *
+     * @param filterType    Either "brands" or "categories".
+     * @param id            ID of brand or category.
+     */
+    addFilter: function(filterType, id) {
+        this.searchParameters[filterType].push(id);
+        this.updateFilters(filterType);
+    },
+
+    /**
+     * Removes a filter and refreshes the page.
+     *
+     * @param filterType    Either "brands" or "categories".
+     * @param id            ID of brand or category.
+     */
+    removeFilter: function(filterType, id) {
+
+        // Retrieve filter list.
+        var filterList = this.searchParameters[filterType], newList = [];
+
+        // Rebuild a new list, without the filter we want removed.
+        if (filterList.length > 1) {
+            for (var index in filterList) {
+                if (filterList[index] != id) {
+                    newList.push(filterList[index]);
+                }
+            }
+        }
+
+        this.searchParameters[filterType] = newList;
+        this.updateFilters(filterType);
+    },
+
+    updateFilters: function(filterType) {
+
+        // Reorder filter list (this will help with caching on Laravel's end).
+        var filterList = this.searchParameters[filterType];
+        filterList.sort(function(a, b) {
+            return a - b;
+        });
+
+        // If we have filters, update the query string and refresh the page.
+        if (filterList.length > 0) {
+            var filter = filterList.length > 1 ? filterList.join(';') : filterList[0];
+            categoryContainer.addDimmer();
+            UtilityContainer.urlAddParameters(filterType, filter);
+        }
+
+        // If we don't have any filters left, refresh the page without the filter parameter.
+        else {
+            UtilityContainer.urlRemoveParameters(filterType);
+        }
+    },
+
+    /**
+     * Switch between grid or list layout.
+     *
+     */
+    toggleLayout: function () {
+        var self= categoryContainer,
+            $container = $(".layout-toggle-container"),
+            $product = $(".dense-product"),
+            $product_img = $(".product-image"),
+            $product_buybutton = $(".dense-product .buybutton"),
+            $product_shortDescription = $(".dense-product .short-description"),
+            $product_name = $(".dense-product .name a");
+
+        $("#category-layout-switcher").on("click", function () {
+
+            if($container.hasClass("grid-layout"))
+            {
+                // List layout
+                $container.removeClass("grid-layout").addClass("list-layout");
+
+                $product.removeClass("four wide column text-center no-border")
+                    .addClass("sixteen wide column border-bottom-clear");
+
+                $product_shortDescription.removeClass("hidden");
+
+                $product_name.addClass("ui medium header");
+
+                $product_img.removeClass("center-block").addClass("pull-left").css("margin-right", "5%");
+
+                $product_buybutton.css("margin-top", "2rem");
+
+                self.localizeSwitcher($(this), "grid");
+            }
+            else if ($container.hasClass("list-layout"))
+            {
+                // Grid layout
+                $container.removeClass("list-layout").addClass("grid-layout");
+
+                $product.removeClass("sixteen wide column border-bottom-clear").
+                    addClass("four wide column text-center no-border");
+
+                $product_img.addClass("center-block").removeClass("pull-left").css("margin-right", "0");
+
+                $product_shortDescription.addClass("hidden");
+
+                $product_name.removeClass("medium").addClass("tiny");
+
+                $product_buybutton.css("margin-top", "0");
+
+                self.localizeSwitcher($(this), "list");
+            }
+        })
+    },
+
+    /**
+     * Utility function to localize the layout switch button in the appropriate locale.
+     *
+     * @param element
+     * @param layout
+     */
+    localizeSwitcher: function(element, layout) {
+        layout === "list" ?
+            element.html("<i class='list layout icon'></i>" + Localization.list) :
+            element.html("<i class='grid layout icon'></i>" + Localization.grid);
+    },
+
+    /**
+     * Retrieves the query parameters from the URL and stores them locally.
+     *
+     */
+    retrieveSearchParameters: function() {
+
+        var query = UtilityContainer.urlGetParameters();
+
+        for (var key in query)
+        {
+            this.searchParameters[key] = query[key];
+
+            // For brands and categories, the value should be an array.
+            if (["brands", "categories"].indexOf(key) > -1 && typeof query[key] != 'object') {
+                this.searchParameters[key] = [query[key]];
+            }
+        }
+    },
+
+    toggleTagsList: function () {
+        $(".tags-list").children().size() > 0 ? $(".tags-list").parent().removeClass("hidden") : "";
+    },
+
+    /**
+     * Localize the dimmer text with the appropriate message.
+     *
+     */
+    localizeDimmer: function () {
+        $(".loading-text").text(Localization.loading);
+    },
+
+    /**
+     * Add a dimmer to the body when adding / removing a new filter.
+     *
+     */
+    addDimmer: function () {
+        var dimmer =
+        '<div class="ui page dimmer loading-dimmer">' +
+        '<div class="content">' +
+        '<div class="center">' +
+        '<div class="ui text loader">' +
+        '<h1 class="ui header loading-text white"></h1></div>' +
+        '</div>' +
+        '</div>';
+
+        $("body").append(dimmer);
+
+        categoryContainer.localizeDimmer();
+
+        $('.ui.dimmer.loading-dimmer')
+            .dimmer('show')
+        ;
+    },
+
+    init: function () {
+        var self = categoryContainer;
+
+        self.retrieveSearchParameters();
+        self.blurBackground();
+        self.itemsPerPage();
+        self.sortBy();
+        self.price();
+        self.categories();
+        self.brands();
+        self.tags();
+        self.toggleLayout();
+        self.toggleTagsList();
+    }
+};
+
+/**
+ * Component responsible for specific behaviours of homepage sections.
+ *
+ * @type {{mixed: {toggleSixteenWideColumn: Function}, init: Function}}
+ */
+var homepageContainer = {
+
+    /**
+     * Mixed section
+     *
+     */
+    mixed: {
+        toggleSixteenWideColumn: function () {
+                var $productColumn = $(".mixed-section .eleven"),
+                $widgetColumn = $(".mixed-section .four");
+
+            $(window).on("load resize", function() {
+                if(!$widgetColumn.is(":visible")) {
+                    $productColumn.removeClass().addClass("sixteen wide column");
+                }
+                else {
+                    $productColumn.removeClass().addClass("eleven wide column");
+                }
+            });
+
+        }
+    },
+
+    bootstrap: function () {
+        $(".indicator-down:first").hide();
+        $(".section-title:first").hide();
+    },
+
+    init: function () {
+        var self = homepageContainer,
+            mixed = self.mixed;
+
+        mixed.toggleSixteenWideColumn();
+        self.bootstrap();
+    }
+}
 /**
  * Component responsible for handling the checkout process.
  * @type {{validation: {validateFormFields: Function}, view: {autofillBillingInformation: Function, clearFields: Function, dispatchButtonsActions: Function, displayContactInformation: Function, displayShipmentMethodsAndPriceInformation: Function, fadeInBillingInformation: Function, fetchEstimate: Function, fetchPayment: Function, setInternationalFields: Function, updatePayment: Function}, actions: {createOrdersCookie: Function, getShipmentTaxes: Function, getTaxes: Function, placeOrderAjaxCall: Function, shipmentMethodsAjaxCall: Function}, bootstrap: {selectDefaultShipmentMethod: Function}, init: Function}}
@@ -1269,514 +2094,6 @@ var checkoutContainer = {
     }
 
 }
-var cartSliderContainer = {
-
-    /**
-     * Responsible for the logic.
-     * CRUD.
-     *
-     */
-    behaviour: {
-        /**
-         * Event triggered when a buy button is clicked.
-         *
-         */
-        buyButtonClick : function () {
-            $("body").on("click", ".buybutton", function() {
-
-                cartSliderContainer.behaviour.addItem(UtilityContainer.buyButton_to_Json($(this)));
-                cartSliderContainer.behaviour.storeItem(UtilityContainer.buyButton_to_Json($(this)));
-
-                // We remove the "Your cart is empty" message at the top every time we add an item.
-                $("#cart-items").addClass("hidden");
-            });
-        },
-
-
-        /**
-         * Add an item in the list.
-         *
-         * @param item JSON format converted from attributes on the .buybutton
-         */
-        addItem : function(item) {
-            var price = (parseInt(item.quantity) * parseFloat(item.price)).toFixed(2);
-
-            var productItem =
-                '<div class="very padded item animated fadeInUp" style="margin: 1rem auto;" data-product="' + item.product + '"data-quantity=1>' +
-                '<div class="ui tiny left floated image">' +
-                '<img src="' + item.thumbnail_lg + '"/>' +
-                '</div>' +
-                '<div class="middle aligned content">' +
-                '<h4 class="ui header">' + item.name + '</h4>' +
-                '<div class="meta">' +
-                '<span class="price" data-price="' + item.price + '">$' + price  + '</span>' +
-                '<i class="trash icon large pull-right close-button"></i>' +
-                '</div>' +
-                '<div class="content cart-content">' +
-                '<span>'+ Localization.quantity + '</span>' +
-                '<div class="ui input one-quarter">' +
-                '<input type="number" class="quantity" min="1" step="1" value="' + item.quantity + '" name="products[' + item.product + '][quantity]">' +
-                '<input type="hidden" name="products[' + item.product + '][id]" value="' + item.product + '"/> ' +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
-
-            if (!$(".cart-items-list [data-product='" + item.product + "']").length){
-                $(".cart-items-list").append(productItem);
-            }
-
-        },
-
-
-        /**
-         * Store a product in localStorage.
-         * Update badge quantity.
-         * Create/update a quantity cookie.
-         *
-         * @param item JSON format converted from attributes on the .buybutton
-         */
-        storeItem : function(item) {
-            if(localStorage.getItem("_product " + item.product) != null)
-            {
-                // Update the value on localStorage of an already existing product.
-                var quantity_updated = JSON.parse(localStorage.getItem("_product " + item.product)).quantity + 1;
-
-                // Update the input value already displayed in the cart drawer.
-                $("input[name='products[" + item.product + "][quantity]']").attr("value", quantity_updated);
-
-                // Set the item.
-                localStorage.setItem("_product " + item.product, JSON.stringify(
-                    {
-                        "product" : item.product,
-                        "name" : item.name,
-                        "price" : item.price,
-                        "thumbnail" : item.thumbnail,
-                        "thumbnail_lg" : item.thumbnail_lg,
-                        "quantity" : quantity_updated,
-                        "link" : item.link,
-                        "description" : item.description
-                    }
-                ));
-            }
-            else {
-                localStorage.setItem("_product " + item.product, JSON.stringify(item));
-            }
-            cartSliderContainer.view.setBadgeQuantity();
-            cartSliderContainer.behaviour.setQuantityCookie();
-        },
-
-
-        /**
-         * Load a list of items previously bought into the cart.
-         * If there is no item in localStorage starting with the key "_product", then nothing is loaded.
-         */
-        loadItem : function() {
-            for(var i = 0, length = localStorage.length; i<length; i++)
-            {
-                if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
-                {
-                    cartSliderContainer.behaviour.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
-                }
-            }
-        },
-
-
-        /**
-         * Delete an item from the cart drawer list.
-         * Remove it from the DOM.
-         * Delete the object on localStorage.
-         * Set Badge quantity accordingly.
-         * Update Cookie quantity accordingly.
-         *
-         */
-        deleteItem: function() {
-            $(document).on('click', ".close-button", function() {
-
-                // We fade out the item...
-                var $item = $(this).closest(".animated").addClass("animated fadeOutUp");
-
-                // Then we remove it from the dom...
-                $item.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-                    $(this).remove();
-
-                    // Display a message if the cart has no more item in it.
-                    UtilityContainer.getNumberOfProducts() === 0 ? $("#cart-items").removeClass("hidden") : null;
-                });
-
-                // To finally delete it from localstorage.
-                localStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
-
-                cartSliderContainer.view.setBadgeQuantity();
-                cartSliderContainer.behaviour.setQuantityCookie();
-
-            });
-        },
-
-
-        /**
-         * Modify the quantity of a product in the cart.
-         * Update its price label accordingly.
-         * Update the localStorage.
-         * Set badge quantity.
-         * Update Cookie quantity.
-         *
-         */
-        modifyQuantity : function() {
-            $(".cart-items-list").on("change", ".quantity", function() {
-                var $container = $(this).closest(".item"),
-                    $product_price = $container.find(".price");
-
-                //update the total value
-                $product_price.text("$" + ($product_price.data("price") * $(this).val()).toFixed(2));
-
-                //retrieve old data from old object then update the quantity and finally update the object
-                var oldData = JSON.parse(localStorage.getItem("_product " + $container.data("product")));
-                oldData.quantity = parseInt($(this).val());
-                localStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
-
-                cartSliderContainer.view.setBadgeQuantity();
-                cartSliderContainer.behaviour.setQuantityCookie();
-
-            });
-        },
-
-
-        /**
-         * Create or Update a cookie with the quantity present in the cart.
-         * The value of the cookie is encoded in base64 (btoa)
-         *
-         */
-        setQuantityCookie : function () {
-            var number = UtilityContainer.getNumberOfProducts();
-
-            if (Cookies.get("quantityCart") == undefined || number === 0)
-            {
-                Cookies.set("quantityCart", btoa("0"));
-            }
-            else {
-                Cookies.set("quantityCart", btoa(number));
-            }
-        }
-    },
-
-
-
-    /**
-     * Responsible for the view aspect.
-     *
-     */
-    view: {
-        /**
-         * Slide in the cart-drawer (slider?) when adding items or clicking on the .view-cart trigger.
-         *
-         */
-        slideIn: function () {
-            $(".view-cart, .buybutton").on("click", function () {
-                $(".cart-drawer").sidebar("toggle");
-            });
-        },
-
-
-        /**
-         * Update the value of #cart_badge when adding or deleting elements.
-         *
-         */
-        setBadgeQuantity : function() {
-            var total = UtilityContainer.getNumberOfProducts();
-
-            $(".cart_badge").text(total);
-        }
-    },
-
-
-    init : function() {
-        var behaviour = cartSliderContainer.behaviour;
-        var view = cartSliderContainer.view;
-
-
-        view.setBadgeQuantity();
-        view.slideIn();
-
-
-        behaviour.buyButtonClick();
-        behaviour.loadItem();
-        behaviour.deleteItem();
-        behaviour.modifyQuantity();
-        behaviour.setQuantityCookie();
-    }
-
-};
-/**
- * Component responsible for handling the payment overlay behaviour.
- * Entry point is in checkPendingOrders.
- *
- * @type {{cancelOrder: Function, displayUnpaidOverlay: Function, displayCongratulateOverlay: Function, renderAddress: Function, renderAdditionalDetails: Function, checkPendingOrders: Function, init: Function}}
- */
-var paymentOverlayContainer = {
-
-    /**
-     * Cancel an order.
-     * If the user clicks the cancel button, remove the cookie, flush the card, fadeOut the jumbotron then redirect to homepage.
-     *
-     */
-    cancelOrder : function() {
-        $("body").on("click", "#cancelOrder", function() {
-            Cookies.remove("_current_order");
-
-            $("#cancelledOrder").fadeOut();
-
-            window.location.replace("/");
-
-            UtilityContainer.removeAllProductsFromLocalStorage();
-        });
-    },
-
-
-    /**
-     * Display the unpaid overlay using semantic-ui modal module.
-     *
-     */
-    displayUnpaidOverlay: function () {
-        var order = JSON.parse(Cookies.get('_current_order'));
-
-        var unpaidOverlay =
-            '<div class="ui small modal text-center unpaid-modal">' +
-                '<i class="close icon"></i>' +
-                '<div class="header">' +
-                    Localization.pending_order.replace(':command', order.id) +
-                '</div>' +
-                '<div class="content">' +
-                    '<div class="description">' +
-                        '<div class="ui header">'  +
-                            Localization.what_to_do +
-                        '</div>' +
-                        '<a href="' + order.payment_url + '">' +
-                            '<button class="ui button green" id="payOrder">'+ Localization.pay_now +'</button>'+
-                        '</a>' +
-                        '<button class="ui button red" id="cancelOrder">'+
-                            Localization.cancel_order +
-                        '</button>'+
-                    '</div>' +
-                '</div>' +
-            '</div>';
-
-        $("body").prepend(unpaidOverlay);
-        $(".small.unpaid-modal").modal("show");
-
-    },
-
-
-    /**
-     * Display the congratulate overlay using semantic-ui modal module.
-     *
-     * @param order
-     */
-    displayCongratulateOverlay: function (order) {
-        var overlay =
-            '<div class="ui modal congratulate-modal payment_successful">' +
-                '<div class="header">' +
-                    Localization.payment_successful +
-                '</div>' +
-                '<div class="content">' +
-                    '<div class="description">' +
-                        '<div class="ui header">' +
-                            Localization.summary_below +
-                        '</div>' +
-                        '<p>' + Localization.summary_copy + '</p>' +
-                    '</div>' +
-                    '<br/>' +
-                    '<table class="ui striped table" style="margin: 0 auto">' +
-                        '<tbody class="center aligned">' +
-                            '<tr>' +
-                                '<td>' + Localization.order + '</td>' +
-                                '<td>' + "#" + order.id + '</td>' +
-                            '</tr>' +
-
-                            this.renderAdditionalDetails(order) +
-
-                        '</tbody>' +
-                    '</table>' +
-                '</div>' +
-                '<div class="actions">' +
-                    '<div class="ui black deny button">' +
-                        Localization.close +
-                    '</div>' +
-                '</div>' +
-            '</div>';
-
-        $("body").prepend(overlay);
-
-        $(".congratulate-modal").modal("show");
-    },
-
-    /**
-     * Render the appropriate address' <td> tags according to the type of address.
-     *
-     * @param [object] address_details
-     * @param [string] address_type_name
-     * @returns {string}
-     */
-    renderAddress: function (address_details, address_type_name) {
-        var line2 = address_details.line2 == null ? '' : address_details.line2 + '<br/>';
-
-        return '<tr>' +
-                    '<td>' + address_type_name + '</td>' +
-                    '<td>' +
-                        address_details.name +
-                        '<br/>' +
-                        address_details.line1 +
-                        '<br/>' +
-                        line2 +
-                        address_details.city +
-                        ', ' +
-                        address_details.province +
-                        ', ' +
-                        address_details.postcode +
-                        '<br/>' +
-                        address_details.country +
-
-                    '</td>' +
-                '</tr>';
-    },
-
-
-    /**
-     * Check if there are any additional details.
-     * If there are, insert them in the summary table.
-     *
-     * @param order
-     * @returns {string}
-     */
-    renderAdditionalDetails: function (order) {
-        if (order.shipping_address != null) {
-            return this.renderAddress(order.shipping_address, Localization.shipping_address) +
-                    this.renderAddress(order.billing_address, Localization.billing_address) +
-                '<tr>' +
-                        '<td>' + Localization.subtotal + '</td>' +
-                        '<td>' + "$" + parseFloat(order.payment_details.subtotal).toFixed(2) + '</td>' +
-                    '</tr>' +
-
-                    '<tr>' +
-                        '<td>' + Localization.taxes + '</td>' +
-                        '<td>' + "$" + parseFloat(order.payment_details.taxes).toFixed(2) + '</td>' +
-                    '</tr>' +
-
-                    '<tr>' +
-                        '<td>' + Localization.total + '</td>' +
-                        '<td>' + "$" + parseFloat(order.payment_details.total).toFixed(2) + '</td>' +
-                    '</tr>';
-        }
-        else {
-            return '';
-        }
-    },
-
-
-    /**
-     * Checks the status of the current order stored in _current_order cookie.
-     *
-     * If the order is paid and the call is made by the same user who passed the order,
-     * we display a summary. Laravel takes care of the check, as this can raise security
-     * concerns...
-     *
-     */
-    checkPendingOrders : function() {
-
-        if (Cookies.get('_current_order')) {
-
-            // Retrieve order details.
-            var order = JSON.parse(Cookies.get('_current_order'));
-
-            // Check whether current order has been paid.
-            $.ajax({
-                type: 'GET',
-                url: ApiEndpoints.orders.view.replace(':id', order.id).replace(':verification', order.verification),
-                success: function(order_details) {
-                    if (order_details.status === 'pending') {
-                        this.displayUnpaidOverlay();
-                    }
-                    else if (order_details.status === 'paid') {
-                        // Display congratulation dimmer.
-                        this.displayCongratulateOverlay(order_details);
-
-                        // Remove products from cart
-                        UtilityContainer.removeAllProductsFromLocalStorage();
-
-                        // Delete the unpaid orders cookie (if any).
-                        Cookies.remove('_current_order');
-                    }
-                    else {
-                        Cookies.remove('_current_order');
-                    }
-                }.bind(this)
-            });
-        }
-
-    },
-
-
-    /**
-     * Register functions to be called outside paymentOverlayContainer.
-     *
-     */
-    init : function() {
-        var self = paymentOverlayContainer;
-
-        self.cancelOrder();
-        self.checkPendingOrders();
-
-    }
-};
-
-/**
- * Responsible for handling the switch between one, two and four columns per row depending on screen width.
- *
- * @type {{tablet: {setClasses: Function}, mobile: {setClasses: Function}, desktop: {setClasses: Function}, init: Function}}
- */
-var responsiveContainer = {
-    // Everything between 400px and 768px is considered tablet size.
-    tablet : {
-        setClasses: function () {
-            // Take the stackable off the grid-layout.
-            $(".grid-layout").removeClass("stackable");
-            // Set two products per row.
-            $(".dense-product").removeClass("four wide column").addClass("eight wide column");
-        }
-    },
-
-    // Everything less than 400px is considered mobile size.
-    mobile : {
-        setClasses: function () {
-            $(".grid-layout").addClass("stackable");
-        }
-    },
-
-    // Everything more than 768px is considered desktop size.
-    desktop: {
-        setClasses: function () {
-            $(".grid-layout").removeClass("stackable");
-            // Set four products per row.
-            $(".dense-product").removeClass("eight four wide column").addClass("four wide column");
-        }
-    },
-
-    init: function () {
-        var self = responsiveContainer;
-
-        $(window).on("load resize", function () {
-            if ($(this).width() < 768 && $(this).width() > 400) {
-                self.tablet.setClasses();
-            }
-            else if ($(this).width() <= 400) {
-                self.mobile.setClasses();
-            }
-            else if ($(this).width() >= 768) {
-                self.desktop.setClasses();
-            }
-        });
-    }
-}
 /**
  * Component responsible for handling different formats of the same product.
  *
@@ -2133,417 +2450,6 @@ var semanticInitContainer = {
     }
 }
 /**
- * Component responsible for the view component of each category page.
- *
- * @type {{searchParameters: {page: number, per_page: number, order: string, min_price: null, max_price: null, brands: Array, categories: Array}, blurBackground: Function, itemsPerPage: Function, sortBy: Function, price: Function, categories: Function, brands: Function, updateFilterList: Function, addTag: Function, tags: Function, addFilter: Function, removeFilter: Function, updateFilters: Function, toggleLayout: Function, localizeSwitcher: Function, retrieveSearchParameters: Function, toggleTagsList: Function, localizeDimmer: Function, addDimmer: Function, init: Function}}
- */
-var categoryContainer = {
-
-    /**
-     * Contains the updated URL parameters,
-     *
-     */
-    searchParameters: {
-        page: 1,
-        per_page: 8,
-        order: 'relevance',
-        min_price: null,
-        max_price: null,
-        brands: [],
-        categories: []
-    },
-
-    /**
-     * Blurs the background of each category's page header.
-     *
-     */
-    blurBackground: function () {
-        $(".category-header").blurjs({
-            source: ".category-header"
-        });
-    },
-
-
-    /**
-     * Sets a number of items per page and set the value to the appropriate input.
-     *
-     */
-    itemsPerPage: function () {
-        $(".items-per-page .item").on("click", function() {
-            categoryContainer.addDimmer();
-            UtilityContainer.urlAddParameters("per_page", $(this).data("sort"));
-        });
-
-        // Set the selected option.
-        $('#items-per-page-box').dropdown('set selected', this.searchParameters.per_page);
-    },
-
-
-    /**
-     * Sets the sort by filter and set the value to the appropriate input.
-     *
-     */
-    sortBy: function () {
-        $(".sort-by .item").on("click", function() {
-            categoryContainer.addDimmer();
-            UtilityContainer.urlAddParameters("order", $(this).data("sort"));
-        });
-
-        // Find the text for the selected option.
-        $(".sort-by .item").each(function(index, element) {
-            if ($(element).data('sort') == categoryContainer.searchParameters.order) {
-                $("#sort-by-box").dropdown("set selected", $(element).data('sort'));
-                return false;
-            }
-        });
-    },
-
-    /**
-     * Adds the price filter to the search query and updates the filter on the page.
-     *
-     */
-    price: function() {
-
-        $("#price-update").on("click", function()
-        {
-            categoryContainer.addDimmer();
-
-            UtilityContainer.urlAddParameters({
-                min_price : $("#min-price").val(),
-                max_price : $("#max-price").val()
-            });
-        });
-
-        // Set the specified price range.
-        if (this.searchParameters.min_price) {
-            $('#min-price').val(this.searchParameters.min_price);
-        }
-
-        if (this.searchParameters.max_price) {
-            $('#max-price').val(this.searchParameters.max_price);
-        }
-    },
-
-    /**
-     * Adds the category filter to the search query and updates the filter on the page.
-     *
-     */
-    categories: function() {
-        this.updateFilterList($("#refine-by-category"), "categories");
-    },
-
-    /**
-     * Adds the brands filter to the search query and updates the filter on the page.
-     *
-     */
-    brands: function() {
-        this.updateFilterList($("#refine-by-brand"), "brands");
-    },
-
-    /**
-     * Shortcut to handle filter lists such as brands and categories.
-     *
-     * @param element
-     * @param filterType
-     */
-    updateFilterList : function(element, filterType)
-    {
-        // Add the event listeners to each child element.
-        element.find(".item").on("change",
-            {
-                filter : filterType || "brands"
-            },
-
-            function(event)
-            {
-                var id = $(this).data("filter"),
-                    filterList = categoryContainer.searchParameters[event.data.filter],
-                    filter = $(this);
-
-                // If the checkbox is checked, add the filter to the list.
-                if (filter.prop("checked")) {
-                    categoryContainer.addFilter(event.data.filter, id);
-                }
-
-                // If not, then remove it from the list.
-                else {
-                    categoryContainer.removeFilter(event.data.filter, id);
-                }
-            }
-        );
-
-        // Update selected checkboxes. IDs are stored as strings in "categoryContainer.searchParameters".
-        element.find(".item").each(function() {
-
-            $(this).prop("checked", categoryContainer.searchParameters[filterType].indexOf(""+ $(this).data("filter")) > -1);
-
-            // And add the filter as a tag.
-            if ($(this).prop("checked")) {
-                categoryContainer.addTag($(this));
-            }
-        });
-    },
-
-    /**
-     * Create a new tag to be appended to the tags list.
-     *
-     * @param filter (filter being the checkbox DOM node)
-     */
-    addTag: function (filter) {
-        var item =
-        '<div class="item">' +
-        '<a class="ui grey tag label">' + filter.data("name") +
-        '<i class="icon remove right floated" data-id="' + filter.data("filter") + '" data-type="' + filter.data('type') + '"></i>' +
-        '</a>' +
-        '</div>';
-
-        $(".tags-list").append(item);
-    },
-
-    /**
-     * Attaches the remove event to the tags.
-     *
-     */
-    tags: function() {
-        $(".tags-list .item .remove").on("click", function() {
-            categoryContainer.removeFilter($(this).data('type'), $(this).data('id'));
-        });
-    },
-
-    /**
-     * Adds a filter and refreshes the page.
-     *
-     * @param filterType    Either "brands" or "categories".
-     * @param id            ID of brand or category.
-     */
-    addFilter: function(filterType, id) {
-        this.searchParameters[filterType].push(id);
-        this.updateFilters(filterType);
-    },
-
-    /**
-     * Removes a filter and refreshes the page.
-     *
-     * @param filterType    Either "brands" or "categories".
-     * @param id            ID of brand or category.
-     */
-    removeFilter: function(filterType, id) {
-
-        // Retrieve filter list.
-        var filterList = this.searchParameters[filterType], newList = [];
-
-        // Rebuild a new list, without the filter we want removed.
-        if (filterList.length > 1) {
-            for (var index in filterList) {
-                if (filterList[index] != id) {
-                    newList.push(filterList[index]);
-                }
-            }
-        }
-
-        this.searchParameters[filterType] = newList;
-        this.updateFilters(filterType);
-    },
-
-    updateFilters: function(filterType) {
-
-        // Reorder filter list (this will help with caching on Laravel's end).
-        var filterList = this.searchParameters[filterType];
-        filterList.sort(function(a, b) {
-            return a - b;
-        });
-
-        // If we have filters, update the query string and refresh the page.
-        if (filterList.length > 0) {
-            var filter = filterList.length > 1 ? filterList.join(';') : filterList[0];
-            categoryContainer.addDimmer();
-            UtilityContainer.urlAddParameters(filterType, filter);
-        }
-
-        // If we don't have any filters left, refresh the page without the filter parameter.
-        else {
-            UtilityContainer.urlRemoveParameters(filterType);
-        }
-    },
-
-    /**
-     * Switch between grid or list layout.
-     *
-     */
-    toggleLayout: function () {
-        var self= categoryContainer,
-            $container = $(".layout-toggle-container"),
-            $product = $(".dense-product"),
-            $product_img = $(".product-image"),
-            $product_buybutton = $(".dense-product .buybutton"),
-            $product_shortDescription = $(".dense-product .short-description"),
-            $product_name = $(".dense-product .name a");
-
-        $("#category-layout-switcher").on("click", function () {
-
-            if($container.hasClass("grid-layout"))
-            {
-                // List layout
-                $container.removeClass("grid-layout").addClass("list-layout");
-
-                $product.removeClass("four wide column text-center no-border")
-                    .addClass("sixteen wide column border-bottom-clear");
-
-                $product_shortDescription.removeClass("hidden");
-
-                $product_name.addClass("ui medium header");
-
-                $product_img.removeClass("center-block").addClass("pull-left").css("margin-right", "5%");
-
-                $product_buybutton.css("margin-top", "2rem");
-
-                self.localizeSwitcher($(this), "grid");
-            }
-            else if ($container.hasClass("list-layout"))
-            {
-                // Grid layout
-                $container.removeClass("list-layout").addClass("grid-layout");
-
-                $product.removeClass("sixteen wide column border-bottom-clear").
-                    addClass("four wide column text-center no-border");
-
-                $product_img.addClass("center-block").removeClass("pull-left").css("margin-right", "0");
-
-                $product_shortDescription.addClass("hidden");
-
-                $product_name.removeClass("medium").addClass("tiny");
-
-                $product_buybutton.css("margin-top", "0");
-
-                self.localizeSwitcher($(this), "list");
-            }
-        })
-    },
-
-    /**
-     * Utility function to localize the layout switch button in the appropriate locale.
-     *
-     * @param element
-     * @param layout
-     */
-    localizeSwitcher: function(element, layout) {
-        layout === "list" ?
-            element.html("<i class='list layout icon'></i>" + Localization.list) :
-            element.html("<i class='grid layout icon'></i>" + Localization.grid);
-    },
-
-    /**
-     * Retrieves the query parameters from the URL and stores them locally.
-     *
-     */
-    retrieveSearchParameters: function() {
-
-        var query = UtilityContainer.urlGetParameters();
-
-        for (var key in query)
-        {
-            this.searchParameters[key] = query[key];
-
-            // For brands and categories, the value should be an array.
-            if (["brands", "categories"].indexOf(key) > -1 && typeof query[key] != 'object') {
-                this.searchParameters[key] = [query[key]];
-            }
-        }
-    },
-
-    toggleTagsList: function () {
-        $(".tags-list").children().size() > 0 ? $(".tags-list").parent().removeClass("hidden") : "";
-    },
-
-    /**
-     * Localize the dimmer text with the appropriate message.
-     *
-     */
-    localizeDimmer: function () {
-        $(".loading-text").text(Localization.loading);
-    },
-
-    /**
-     * Add a dimmer to the body when adding / removing a new filter.
-     *
-     */
-    addDimmer: function () {
-        var dimmer =
-        '<div class="ui page dimmer loading-dimmer">' +
-        '<div class="content">' +
-        '<div class="center">' +
-        '<div class="ui text loader">' +
-        '<h1 class="ui header loading-text white"></h1></div>' +
-        '</div>' +
-        '</div>';
-
-        $("body").append(dimmer);
-
-        categoryContainer.localizeDimmer();
-
-        $('.ui.dimmer.loading-dimmer')
-            .dimmer('show')
-        ;
-    },
-
-    init: function () {
-        var self = categoryContainer;
-
-        self.retrieveSearchParameters();
-        self.blurBackground();
-        self.itemsPerPage();
-        self.sortBy();
-        self.price();
-        self.categories();
-        self.brands();
-        self.tags();
-        self.toggleLayout();
-        self.toggleTagsList();
-    }
-};
-
-/**
- * Component responsible for specific behaviours of homepage sections.
- *
- * @type {{mixed: {toggleSixteenWideColumn: Function}, init: Function}}
- */
-var homepageContainer = {
-
-    /**
-     * Mixed section
-     *
-     */
-    mixed: {
-        toggleSixteenWideColumn: function () {
-                var $productColumn = $(".mixed-section .eleven"),
-                $widgetColumn = $(".mixed-section .four");
-
-            $(window).on("load resize", function() {
-                if(!$widgetColumn.is(":visible")) {
-                    $productColumn.removeClass().addClass("sixteen wide column");
-                }
-                else {
-                    $productColumn.removeClass().addClass("eleven wide column");
-                }
-            });
-
-        }
-    },
-
-    bootstrap: function () {
-        $(".indicator-down:first").hide();
-        $(".section-title:first").hide();
-    },
-
-    init: function () {
-        var self = homepageContainer,
-            mixed = self.mixed;
-
-        mixed.toggleSixteenWideColumn();
-        self.bootstrap();
-    }
-}
-/**
  * Component responsible for handling the logic of the wish list page.
  * Layout handled in dev/components/site/wishlist.js
  *
@@ -2680,3 +2586,98 @@ var wishlistContainer = {
         self.setNumberOfProductsInHeader();
     }
 }
+/**
+ * Entry point of script.
+ *
+ */
+; (function(window, document, $) {
+    $(document).ready(function () {
+
+        /**
+         * Sets up the ajax token for all ajax requests.
+         *
+         */
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'locale': $('html').attr('lang')
+            }
+        });
+
+        /**
+         * Sets up Localization and ApiEndpoints variables.
+         *
+         */
+        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
+        Localization = env.Localization;
+        ApiEndpoints = env.ApiEndpoints;
+
+        /**
+         * Initialize semantic UI modules.
+         *
+         */
+        semanticInitContainer.init();
+
+        /**
+         * Initialize responsiveness feature.
+         *
+         */
+        responsiveContainer.init();
+
+        /**
+         * Initialize checkout logic.
+         *
+         */
+        checkoutContainer.init();
+
+        /**
+         * Initialize cart slider logic.
+         *
+         */
+        cartSliderContainer.init();
+
+        /**
+         * Initialize category container.
+         *
+         */
+        categoryContainer.init();
+
+        /**
+         * Initialize overlay plugin.
+         *
+         */
+        paymentOverlayContainer.init();
+
+        /**
+         * Initialize homepage sections.
+         *
+         */
+        homepageContainer.init();
+
+        /**
+         * Initialize favorite products feature.
+         *
+         */
+        productLayoutFavoriteContainer.init();
+
+        /**
+         * Initialize product formats feature.
+         *
+         */
+        productFormatContainer.init();
+
+        /**
+         * Initialize product quantity change.
+         *
+         */
+        productQuantityContainer.init();
+
+        /**
+         * Initialize wishlist page.
+         *
+         */
+        wishlistLogicContainer.init();
+
+    });
+
+})(window, window.document, jQuery, undefined)

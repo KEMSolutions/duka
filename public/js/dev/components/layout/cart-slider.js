@@ -101,6 +101,8 @@ var cartSliderContainer = {
          * If there is no item in localStorage starting with the key "_product", then nothing is loaded.
          */
         loadItem : function() {
+            $("#cart-items").addClass("hidden");
+
             for(var i = 0, length = localStorage.length; i<length; i++)
             {
                 if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
