@@ -120,7 +120,7 @@
 
                                 {{-- buybutton takes by default the value of the first format --}}
                                 @if(isset($product->formats[0]->reduced_price))
-                                    <button class="btn btn-one btn-one-inverted fluid buybutton"
+                                    <button class="ui button color-one fluid big buybutton"
                                             data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
                                             data-price="{{ $product->formats[0]->reduced_price->price }}"
                                             data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
@@ -133,7 +133,7 @@
                                         @lang("boukem.add_cart")
                                     </button>
                                 @else
-                                    <button class="btn btn-one btn-one-inverted fluid buybutton"
+                                    <button class="ui button color-one fluid big buybutton"
                                             data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
                                             data-price="{{ $product->formats[0]->price }}"
                                             data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
