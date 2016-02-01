@@ -23,7 +23,10 @@
 
     <div class="extra content">
         @foreach ($product->formats as $format)
-<div class="ui right floated labeled button buybutton" tabindex="0"
+<div class="ui right floated labeled button buybutton
+@if ($format->discontinued)
+disabled
+@endif" tabindex="0"
                  tabindex="0"
                  data-product="{{ $product->id . '-' . $format->id }}"
                  data-price="{{ isset($format->reduced_price) ? $format->reduced_price->price : $format->price }}"
