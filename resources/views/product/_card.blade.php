@@ -1,9 +1,9 @@
 <div class="card">
-    <a class="image" href="{{ route('product', ['slug' => $product->slug]) }}">
+    <a class="ui fluid image" href="{{ route('product', ['slug' => $product->slug]) }}">
         @if (count($product->formats) > 0 && $product->formats[0]->reduced_price)
-            <div class="ui red right corner label">
-                <i class="flag icon"></i>
-            </div>
+      <div class="ui orange ribbon label">
+        - {{ App\ApiObjects\Products::formatRebatePercent($product->formats[0]) }} %
+      </div>
         @endif
 
         <img src="{{ Products::getImage($product->id, 350, 350, 'fit') }}">
