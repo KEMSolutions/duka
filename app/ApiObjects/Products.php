@@ -189,4 +189,17 @@ class Products extends BaseObject
         return Utilities::setImageSizeAndMode($width, $height, $mode, $this->get($id)->images[0]->url);
     }
 
+    /**
+     * Gets the product discount percent, as a nice displayable string.
+     *
+     * @param $format the format for wich you want the rebate percentage
+     * @return string
+     */
+    public static function formatRebatePercent($format)
+    {
+        return round(($format->reduced_price->price / $format->price) * 100);
+    }
+
+    
+
 }
