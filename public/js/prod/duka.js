@@ -527,6 +527,984 @@ var UtilityContainer = {
 };
 
 
+/**
+ * Entry point of script.
+ *
+ */
+; (function(window, document, $) {
+    $(document).ready(function () {
+
+        /**
+         * Sets up the ajax token for all ajax requests.
+         *
+         */
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'locale': $('html').attr('lang')
+            }
+        });
+
+        /**
+         * Sets up Localization and ApiEndpoints variables.
+         *
+         */
+        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
+        Localization = env.Localization;
+        ApiEndpoints = env.ApiEndpoints;
+
+        /**
+         * Initialize semantic UI modules.
+         *
+         */
+        semanticInitContainer.init();
+
+        /**
+         * Initialize responsiveness feature.
+         *
+         */
+        responsiveContainer.init();
+
+        /**
+         * Initialize checkout logic.
+         *
+         */
+        checkoutContainer.init();
+
+        /**
+         * Initialize cart slider logic.
+         *
+         */
+        cartSliderContainer.init();
+
+        /**
+         * Initialize category container.
+         *
+         */
+        categoryContainer.init();
+
+        /**
+         * Initialize overlay plugin.
+         *
+         */
+        paymentOverlayContainer.init();
+
+        /**
+         * Initialize homepage sections.
+         *
+         */
+        homepageContainer.init();
+
+        /**
+         * Initialize favorite products feature.
+         *
+         */
+        productLayoutFavoriteContainer.init();
+
+        /**
+         * Initialize product formats feature.
+         *
+         */
+        productFormatContainer.init();
+
+        /**
+         * Initialize product quantity change.
+         *
+         */
+        productQuantityContainer.init();
+
+        /**
+         * Initialize wishlist page.
+         *
+         */
+        wishlistLogicContainer.init();
+
+    });
+
+})(window, window.document, jQuery, undefined)
+
+/**
+ * Component responsible for handling different formats of the same product.
+ *
+ * @type {{productWithFormat: Function, productWithoutFormat: Function, updateBuybuttonAttributes: Function, updateProductInformation: Function, init: Function}}
+ */
+var productFormatContainer = {
+
+    /**
+     * Update price value for a product with format.
+     *
+     * @param option
+     */
+    productWithFormat: function(option) {
+        var price = '<span class="text-strikethrough">' +
+            'CAD $ ' + option.find(":selected").data("price") +
+            '</span>' +
+            '<span id="product-price" class="strong text-danger">' +
+            'CAD $ ' + option.find(":selected").data("reduced") +
+            '</span>';
+
+        $(".sub.header").text(price);
+    },
+
+
+    /**
+     * Update price value for a format-less product.
+     *
+     * @param option
+     */
+    productWithoutFormat: function(option) {
+        // Change description.
+        $("#product-format-name").text(option.find(":selected").data("format"));
+        $("#product-price").text("CAD $ " + option.find(":selected").data("price"));
+    },
+
+
+    /**
+     * Update buybutton data attributes according to format: id/price/name/format.
+     *
+     * @param option
+     */
+    updateBuybuttonAttributes: function (option) {
+        $(".buybutton").attr({
+            'data-product': option.val(),
+            'data-price': option.find(":selected").data("price"),
+            'data-name': option.find(":selected").data("name"),
+            'data-format': option.find(":selected").data("format")
+        });
+    },
+
+    /**
+     * Main function of this module.
+     * Once the format selector is clicked, trigger the appropriate helpers then update buybutton.
+     *
+     */
+    updateProductInformation: function() {
+        var self = productFormatContainer;
+
+        $("#product-format").on("change", function () {
+
+            if ($(this).find(":selected").data("reduced")) {
+                // Add discounted price for a product with different formats.
+                self.productWithFormat($(this));
+            }
+            else {
+                // Add discounted price for a single format product.
+                self.productWithoutFormat($(this));
+            }
+
+
+            // Update buybutton with right attributes.
+            self.updateBuybuttonAttributes($(this));
+        });
+
+    },
+
+    /**
+     * Entry point of this module.
+     *
+     */
+    init: function () {
+        const self = productFormatContainer;
+
+        self.updateProductInformation();
+
+    }
+}
+/**
+ * Component responsible for adding products to a user's wishlist.
+ *
+ * @type {{fadeInFavoriteIcon: Function, setPopupText: Function, setWishlistBadgeQuantity: Function, addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
+ */
+var productLayoutFavoriteContainer = {
+    /**
+     * Fade in the favorite icon (heart icon) when hovering on a product tile.
+     *
+     */
+    fadeInFavoriteIcon: function() {
+        self = productLayoutFavoriteContainer;
+
+        $(".dense-product").hover(function() {
+
+            $(this).children(".favorite-wrapper").fadeIn();
+            self.setPopupText($(this).children(".favorite-wrapper"));
+
+        }, function () {
+            $(this).children(".favorite-wrapper").hide();
+        });
+    },
+
+    /**
+     * Set popup text according to current state of the wrapper.
+     *
+     * @param wrapper
+     */
+    setPopupText: function (wrapper) {
+        if($(wrapper).hasClass("favorited")){
+            $(wrapper).attr("title", Localization.wishlist_remove);
+        }
+        else {
+            $(wrapper).attr("title", Localization.wishlist_add);
+        }
+    },
+
+    /**
+     * Update the value of .wishlist_badge when adding or deleting elements.
+     *
+     */
+    setWishlistBadgeQuantity : function() {
+        var total = UtilityContainer.getNumberOfProductsInWishlist();
+
+        $(".wishlist_badge").text(total);
+    },
+
+    /**
+     * Add the clicked product to the wish list.
+     *
+     */
+    addToFavorite: function() {
+        var self = productLayoutFavoriteContainer,
+            item;
+
+        $(".favorite-wrapper").on("click", function() {
+            //No favorited class.
+            if (!$(this).hasClass("favorited")) {
+                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
+                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
+
+                //Set the favorite icon to be displayed
+                $(this).addClass("favorited");
+
+                //Set wishlist badge quantity
+                self.setWishlistBadgeQuantity();
+            }
+            else
+            //Has a favorited class. We remove it, then delete the element from local Storage.
+            {
+                self.removeFromFavorite($(this), self);
+            }
+        });
+    },
+
+    /**
+     * Persist the heart icon next to products already marked as wished.
+     *
+     */
+    persistFavorite: function() {
+        for(var i = 0, length = localStorage.length; i<length; i++)
+        {
+            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
+                for(var j = 0; j<$(".favorite-wrapper").length; j++)
+                {
+                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
+                    {
+                        $(".favorite-wrapper")[j].className += " favorited";
+                    }
+                }
+            }
+        }
+    },
+
+    /**
+     * Delete the clicked element from the wish list.
+     *
+     * @param element
+     * @param context
+     */
+    removeFromFavorite: function (element, context) {
+        element.removeClass("favorited");
+        localStorage.removeItem("_wish_product " + element.data("product"));
+        context.setWishlistBadgeQuantity();
+    },
+
+    init: function () {
+        var self = productLayoutFavoriteContainer;
+
+        self.setPopupText();
+        self.addToFavorite();
+        self.persistFavorite();
+        self.fadeInFavoriteIcon();
+        self.setWishlistBadgeQuantity();
+    }
+}
+/**
+ * Component responsible for changing quantity on the product page view.
+ *
+ * @type {{addQuantity: Function, removeQuantity: Function, updateBuyButton: Function, init: Function}}
+ */
+var productQuantityContainer = {
+    addQuantity : function(input, callback) {
+        $(".qty-selector[data-action='add']").on("click", function() {
+            input.val(parseInt(input.val()) + 1);
+
+            callback();
+        });
+    },
+
+    removeQuantity: function(input, callback) {
+        $(".qty-selector[data-action='remove']").on("click", function() {
+            var actual = parseInt(input.val());
+
+            if (actual > 1) {
+                input.val(parseInt(input.val()) - 1);
+            }
+
+            callback();
+        });
+    },
+
+    updateBuyButton: function() {
+        $(".buybutton").attr("data-quantity", $(".qty-selector-input").val());
+    },
+
+    init: function () {
+        var self = productQuantityContainer;
+        self.addQuantity($(".qty-selector-input"), self.updateBuyButton);
+        self.removeQuantity($(".qty-selector-input"), self.updateBuyButton);
+
+    }
+};
+/**
+ * Component responsible for handling the checkout process.
+ * @type {{validation: {validateFormFields: Function}, view: {autofillBillingInformation: Function, clearFields: Function, dispatchButtonsActions: Function, displayContactInformation: Function, displayShipmentMethodsAndPriceInformation: Function, fadeInBillingInformation: Function, fetchEstimate: Function, fetchPayment: Function, setInternationalFields: Function, updatePayment: Function}, actions: {createOrdersCookie: Function, getShipmentTaxes: Function, getTaxes: Function, placeOrderAjaxCall: Function, shipmentMethodsAjaxCall: Function}, bootstrap: {selectDefaultShipmentMethod: Function}, init: Function}}
+ */
+var checkoutContainer = {
+
+    /**
+     * Responsible for validating the form.
+     *
+     */
+    validation: {
+
+        /**
+         * Validate the form by following a set of rules defined in validationRules.
+         *
+         */
+        validateFormFields: function () {
+            var self = checkoutContainer;
+
+            var validationRules =
+            {
+                shippingFirstname: {
+                    identifier: 'shippingFirstname',
+                    rules: [
+                        {
+                            type   : 'empty',
+                            prompt : Localization.validation_name
+                        }
+                    ]
+                },
+
+                shippingLastname: {
+                    identifier: 'shippingLastname',
+                    rules: [
+                        {
+                            type   : 'empty',
+                            prompt : Localization.validation_name
+                        }
+                    ]
+                },
+
+                shippingAddress1: {
+                    identifier: 'shippingAddress1',
+                    rules: [
+                        {
+                            type   : 'empty',
+                            prompt : Localization.validation_address_shipping
+                        }
+                    ]
+                },
+
+
+                shippingCountry: {
+                    identifier: 'shippingCountry',
+                    rules: [
+                        {
+                            type   : 'empty',
+                            prompt : Localization.validation_address_shipping
+                        }
+                    ]
+                },
+
+                shippingProvince: {
+                    identifier: 'shippingProvince',
+                    rules: [
+                        {
+                            type   : 'empty',
+                            prompt : Localization.validation_address_shipping
+                        }
+                    ]
+                },
+
+                shippingCity: {
+                    identifier: 'shippingCity',
+                    rules: [
+                        {
+                            type   : 'empty',
+                            prompt : Localization.validation_city_shipping
+                        }
+                    ]
+                },
+
+                shippingPostcode: {
+                    identifier: 'shippingPostcode',
+                    rules: [
+                        {
+                            type   : 'postalCode[shippingCountry]',
+                            prompt : Localization.validation_post_shipping
+                        }
+                    ]
+                },
+
+                customer_email: {
+                    identifier: 'customer_email',
+                    rules: [
+                        {
+                            type   : 'empty',
+                            prompt : Localization.validation_email
+                        },
+                        {
+                            type   : 'email',
+                            prompt : Localization.validation_valid_email
+                        }
+                    ]
+                },
+
+                customer_phone: {
+                    identifier: 'customer_phone',
+                    rules: [
+                        {
+                            type   : 'empty',
+                            prompt : Localization.validation_phone
+                        }
+                    ]
+                },
+
+                billingFirstname: {
+                    identifier: 'billingFirstname',
+                    rules: [
+                        {
+                            type   : 'empty',
+                            prompt : Localization.validation_name
+                        }
+                    ]
+                },
+
+                billingLastname: {
+                    identifier: 'billingLastname',
+                    rules: [
+                        {
+                            type   : 'empty',
+                            prompt : Localization.validation_name
+                        }
+                    ]
+                },
+
+                billingAddress1: {
+                    identifier: 'billingAddress1',
+                    rules: [
+                        {
+                            type   : 'empty',
+                            prompt : Localization.validation_address_billing
+                        }
+                    ]
+                },
+
+                billingCountry: {
+                    identifier: 'billingCountry',
+                    rules: [
+                        {
+                            type   : 'empty',
+                            prompt : Localization.validation_address_shipping
+                        }
+                    ]
+                },
+
+                billingProvince: {
+                    identifier: 'billingProvince',
+                    rules: [
+                        {
+                            type   : 'empty',
+                            prompt : Localization.validation_address_shipping
+                        }
+                    ]
+                },
+
+                billingCity: {
+                    identifier: 'billingCity',
+                    rules: [
+                        {
+                            type   : 'empty',
+                            prompt : Localization.validation_city_billing
+                        }
+                    ]
+                },
+
+                billingPostcode: {
+                    identifier: 'billingPostcode',
+                    rules: [
+                        {
+                            type   : 'postalCode[billingCountry]',
+                            prompt : Localization.validation_post_billing
+                        }
+                    ]
+                }
+            };
+
+
+            $(".form-checkout").form({
+                fields: validationRules,
+                inline: true,
+                on    : 'blur',
+
+                onSuccess: function (e) {
+                    // We prevent default here, so that the form is not submitted when clicked on "next" (which is a submit button)
+                    e.preventDefault();
+
+                    // We are calling a function responsible for attributing each button's behaviour.
+                    self.view.dispatchButtonsActions();
+                }
+            });
+
+        }
+    },
+
+    /**
+     * Responsible for handling the view aspect of checkout.
+     *
+     */
+    view: {
+        /**
+         * Auto fill the billing information if the checkbox is ticked.
+         *
+         */
+        autofillBillingInformation: function () {
+            var shippingFirstname = $("#shippingFirstname").val(),
+                shippingLastname = $("#shippingLastname").val(),
+                shippingAddress1 = $("#shippingAddress1").val(),
+                shippingCity = $("#shippingCity").val(),
+                shippingPostcode = $("#shippingPostcode").val();
+
+            $(".form-checkout").form('set values', {
+                billingFirstname: shippingFirstname,
+                billingLastname : shippingLastname,
+                billingAddress1 : shippingAddress1,
+                billingCity     : shippingCity,
+                billingPostcode : shippingPostcode
+            });
+        },
+
+
+        /**
+         * Small utility function used to clear a field.
+         *
+         * @param node
+         * @param fields
+         */
+        clearFields: function (node, fields) {
+            node.find(fields).val("");
+        },
+
+
+        /**
+         *  Defines a specific behaviour depending on which button is clicked after a form validation passes.
+         *
+         */
+        dispatchButtonsActions: function () {
+            var self = checkoutContainer;
+
+            // Default actions triggered right after all validation passes and the next button is clicked.
+            self.view.displayShipmentMethodsAndPriceInformation();
+            self.actions.shipmentMethodsAjaxCall();
+
+            // When clicked on the back button, display the contact information.
+            $(".back-contact-info").on("click", function (e) {
+
+                // Once again, we prevent default here since, oddly, every button inside a semantic-ui validated form
+                // triggers a form submit.
+                e.preventDefault();
+
+                self.view.displayContactInformation(e);
+            });
+
+            // When clicked on the next button, we process the payment.
+            $(".next-payment-process").on("click", function (e) {
+                e.preventDefault();
+
+                // Creates a redirecting dimmer.
+                var dimmer = '<div class="ui page dimmer redirect-dimmer">' +
+                    '<div class="content">' +
+                    '<div class="center"><div class="ui text loader"><h3 class="ui header white">' + Localization.payment_redirect +'</h3></div></div>' +
+                    '</div>' +
+                    '</div>';
+
+                $(dimmer).appendTo("body");
+                $(".redirect-dimmer").dimmer("show");
+
+                // Makes the ajax call.
+                self.actions.placeOrderAjaxCall();
+
+            });
+        },
+
+
+        /**
+         * Displays the contact information.
+         *
+         * @param e
+         */
+        displayContactInformation: function (e) {
+            $(".priceInformation").fadeOut(300);
+            $(".shippingMethod").fadeOut(300, function() {
+                $(".contactInformation").fadeIn();
+            });
+
+            // We need to stop event bubbling from the back button.
+            // TBH, I didn't really look into it but one of these two should be enough...
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+        },
+
+
+        /**
+         * Fades out the contact information segments then fades in the shipping methods and price information segment.
+         *
+         */
+        displayShipmentMethodsAndPriceInformation: function () {
+
+            var $contactInformation = $(".contactInformation"),
+                $shippingMethod = $(".shippingMethod"),
+                $priceInformation = $(".priceInformation");
+
+            $contactInformation.fadeOut(300, function() {
+                $(".shippingMethod .loadable-segment, .priceInformation .loadable-segment").addClass("loading");
+
+                //Fade the shipping methods and price info from the left.
+                $shippingMethod.show(0, function() {
+                    $(this).removeClass("hidden animated fadeInLeft").addClass("animated fadeInLeft");
+                });
+
+
+                $priceInformation.show(0, function() {
+                    $(this).removeClass("hidden animated fadeInLeft").addClass("animated fadeInLeft");
+                });
+            });
+        },
+
+
+        /**
+         * Fades in the billing information segment.
+         *
+         */
+        fadeInBillingInformation: function () {
+            var self = checkoutContainer;
+
+            $(".billing-checkbox").checkbox({
+                onUnchecked: function () {
+                    $(".billingInformation").hide().removeClass("hidden").fadeIn(400);
+                    self.view.clearFields($(".billingInformation"), "input:text");
+                },
+
+                onChecked: function () {
+                    $(".billingInformation").fadeOut(300, function () {
+                        $(this).delay(300).addClass("hidden");
+                    })
+                }
+            })
+        },
+
+
+        /**
+         * Creates a table of available shipments populated with data from the api call.
+         *
+         * @param data
+         */
+        fetchEstimate: function (data) {
+            var self = checkoutContainer;
+
+            $("#shippingMethod-table-tbody").empty();
+
+            for(var i = 0, shippingLength = data.shipping.services.length; i<shippingLength; i++)
+            {
+                var delivery = data.shipping.services[i].delivery != null ? data.shipping.services[i].delivery : " - ";
+
+                var serviceDOM = "<tr data-service='" + data.shipping.services[i].method + "'>" +
+                    "<td>" + data.shipping.services[i].name + "</td>" +
+                    "<td>" + delivery  + "</td>" +
+                    "<td>" + "$" + data.shipping.services[i].price.toFixed(2) + "</td>" +
+                    "<td>" +
+                    "<input " +
+                    "type='radio' " +
+                    "name='shipping' " +
+                    "class='shipping_method' " +
+                    "data-taxes='" + self.actions.getShipmentTaxes(data.shipping.services[i].method, data) + "' " +
+                    "data-cost='" + data.shipping.services[i].price.toFixed(2) + "' " +
+                    "data-value='" + data.shipping.services[i].method + "' " +
+                    "value='" + btoa(JSON.stringify(data.shipping.services[i])) + "' >" +
+                    "</td>";
+
+                $("#shippingMethod-table-tbody").append(serviceDOM);
+
+            }
+
+            // After all shipments are appended, remove the loading sign on the appropriate segment.
+            $(".shippingMethod .segment").removeClass("loading");
+
+            // Select the default shipment method.
+            self.bootstrap.selectDefaultShipmentMethod();
+        },
+
+
+        /**
+         * Displays the various prices according to the chosen shipment method option.
+         *
+         * @param data
+         */
+        fetchPayment: function (data) {
+            var subtotal = UtilityContainer.getProductsPriceFromLocalStorage().toFixed(2),
+                priceTransport = $("input:radio.shipping_method:checked").data("cost"),
+                taxes = checkoutContainer.actions.getTaxes(data) + parseFloat($("input:radio.shipping_method:checked").data("taxes")),
+                total = parseFloat(subtotal) + parseFloat(priceTransport) + parseFloat(taxes);
+
+            $("#price_subtotal").text("$" + subtotal);
+            $("#price_transport").text("$" + priceTransport);
+            $("#price_taxes").text("$" + taxes.toFixed(2));
+            $("#price_total").text("$" + total.toFixed(2));
+
+            $(".priceInformation .segment").removeClass("loading");
+        },
+
+
+        /**
+         * Sets the province/state/region dropdown state according to the country entered.
+         *
+         * @param fields
+         */
+        setInternationalFields: function (fields) {
+            fields.map(function(field) {
+                field.on("change", function () {
+                    if($(this).val() != "CA") {
+
+                        // We assume the structure is not changing and stays like so:
+                        // Country list is a sibling of province state region, both of them wrapped
+                        // in a parent container.
+                        $(this).parent().next().addClass("disabled");
+                        $(this).parent().next().find("select").attr("disabled", true);
+                    }
+                    else {
+                        $(this).parent().next().removeClass("disabled");
+                        $(this).parent().next().find("select").attr("disabled", false);
+                    }
+                });
+            });
+        },
+
+
+        /**
+         * Update the payment panel with right values (shipment method)
+         *
+         * @param data
+         */
+        updatePayment : function(data) {
+            var subtotal = parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()).toFixed(2),
+                priceTransport, taxes, total;
+
+            $(".shipping_method").on("change", function() {
+                priceTransport = $(this).data("cost");
+                taxes = checkoutContainer.actions.getTaxes(data) + parseFloat($(this).data("taxes"));
+                total = parseFloat(subtotal) + parseFloat(priceTransport) + parseFloat(taxes);
+
+                $("#price_subtotal").text("$" + subtotal);
+                $("#price_transport").text("$" + priceTransport);
+                $("#price_taxes").text("$" + taxes.toFixed(2));
+                $("#price_total").text("$" + total.toFixed(2));
+            });
+        }
+    },
+
+    /**
+     * Responsible for the overall checkout behaviour.
+     *
+     */
+    actions: {
+        /**
+         * Create a localStorage object containing the id, verification code and
+         * redirection link of the order.
+         *
+         * @param data
+         */
+        createOrdersCookie: function(data) {
+            var paymentId = data.id,
+                paymentVerification = data.verification,
+                payment_url = data.payment_details.payment_url;
+
+            Cookies.set("_current_order", JSON.stringify( {
+                id : paymentId,
+                verification : paymentVerification,
+                payment_url : payment_url
+            }));
+        },
+
+
+        /**
+         * Get the relevant taxes according to the chosen shipping method.
+         *
+         * @param serviceCode
+         * @param data
+         * @returns {string}
+         */
+        getShipmentTaxes : function(serviceCode, data) {
+            var taxes = 0;
+
+            for(var i=0; i<data.shipping.services.length; i++)
+            {
+                if(data.shipping.services[i].method == serviceCode)
+                {
+                    if (data.shipping.services[i].taxes.length != 0)
+                    {
+                        for(var j=0; j<data.shipping.services[i].taxes.length; j++)
+                        {
+                            taxes += data.shipping.services[i].taxes[j].amount;
+                        }
+                    }
+                }
+            }
+
+            return taxes.toFixed(2);
+        },
+
+
+        /**
+         * Get the total taxes (TPS/TVQ or TVH or TPS or null) + shipping method taxes.
+         *
+         * @param data
+         * @returns {number}
+         */
+        getTaxes : function(data) {
+            var taxes = 0,
+                dataTaxesLength = data.taxes.length;
+
+            if (dataTaxesLength != 0)
+            {
+                for(var i=0; i<dataTaxesLength; i++)
+                {
+                    taxes += data.taxes[i].amount;
+                }
+            }
+            return parseFloat(taxes);
+        },
+
+
+        /**
+         * Makes an ajax call to api/orders with the values from the form
+         *
+         * @param self
+         */
+        placeOrderAjaxCall: function() {
+            $.ajax({
+                method: "POST",
+                url: ApiEndpoints.placeOrder,
+                data: $("#cart_form").serialize(),
+                cache: false,
+                success: function(data) {
+                    var self = checkoutContainer;
+
+                    self.actions.createOrdersCookie(data);
+
+                    //redirect the user to the checkout page if he backs from the payment page
+                    history.pushState({data: data}, "Checkout ","/cart");
+
+                    //Redirect to success url
+                    window.location.replace(data.payment_details.payment_url);
+                },
+                error: function(xhr, e) {
+                    console.log(xhr);
+                    console.log(e);
+                }
+            });
+        },
+
+
+        /**
+         * Makes an ajax call to api/estimate with the contact information.
+         *
+         * @param self
+         */
+        shipmentMethodsAjaxCall: function () {
+            $.ajax({
+                type: "POST",
+                url: ApiEndpoints.estimate,
+                data: {
+                    email: $("#customer_email").val(),
+                    shipping: {},
+                    products: UtilityContainer.getProductsFromLocalStorage(),
+                    shipping_address: UtilityContainer.getShippingFromForm()
+                },
+                success: function(data) {
+                    checkoutContainer.view.fetchEstimate(data);
+                    checkoutContainer.view.fetchPayment(data);
+
+                    checkoutContainer.view.updatePayment(data);
+                    console.log(data);
+                },
+                error: function(e, status) {
+                    if (e.status == 403){
+                        // TODO: replace with an actual link
+                        window.location.replace("/auth/login");
+                        return;
+                    }
+                    $('#estimate').html('<div class="alert alert-danger">Une erreur est survenue. Veuillez vérifier les informations fournies.</div>');
+                }
+            });
+        }
+    },
+
+    /**
+     * Functions meant to be called for default behaviour.
+     *
+     */
+    bootstrap: {
+        /**
+         * Select the default shipment method from a predefined list.
+         *
+         */
+        selectDefaultShipmentMethod : function() {
+            var defaultShipment = ["DOM.EP", "USA.TP", "INT.TP"],
+                availableShipment = $("input[name=shipping]");
+
+            for(var i= 0, length = availableShipment.length; i<length; i++)
+            {
+                if (defaultShipment.indexOf(availableShipment[i].dataset.value) != -1)
+                {
+                    availableShipment[i].checked = true;
+                }
+            }
+        }
+    },
+
+    /**
+     * Register outside calling methods.
+     *
+     */
+    init: function () {
+        var self = checkoutContainer;
+        self.validation.validateFormFields();
+        self.view.fadeInBillingInformation();
+        self.view.setInternationalFields([$("#shippingCountry"), $("#billingCountry")]);
+
+        // This is where it all begins...
+        // This automatically calls the form.onSuccess method upon validating all fields from the contact information
+        // segment.
+        $(".shipment-trigger").on("click", function (e) {
+            if ($(".billing-checkbox").checkbox("is checked")) {
+                self.view.autofillBillingInformation();
+            }
+
+            // We prevent default here, to avoid a double form submission.
+            e.preventDefault();
+        });
+    }
+
+}
 var cartSliderContainer = {
 
     /**
@@ -1038,6 +2016,121 @@ var responsiveContainer = {
     }
 }
 /**
+ * Component responsible for activating semantic ui features.
+ *
+ * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {closeDimmer: Function}, init: Function}}
+ */
+var semanticInitContainer = {
+
+    /**
+     * Initialize modules
+     *
+     */
+    module: {
+        /**
+         * Initialize dropdown module.
+         *
+         */
+        initDropdownModule: function() {
+            $(".ui.dropdown").dropdown();
+
+            $(".ui.dropdown").on("click", function () {
+                var action = $(this).data("action") || "activate";
+
+                $(this).dropdown({
+                    action: action
+                });
+            });
+        },
+
+        /**
+         * Initialize rating module.
+         *
+         */
+        initRatingModule: function () {
+            $(".ui.rating").rating();
+        },
+
+        /**
+         * Initialize popup module.
+         *
+         */
+        initPopupModule: function () {
+            $(".popup").popup();
+        },
+
+        /**
+         * Initialize checkbox module.
+         *
+         */
+        initCheckboxModule: function () {
+            $('.ui.checkbox')
+                .checkbox()
+            ;
+        },
+
+        /**
+         * Initialize accordion module.
+         *
+         */
+        initAccordionModule: function() {
+            $('.ui.accordion').accordion();
+        }
+    },
+
+    /**
+     * Specify semantic custom behavior.
+     *
+     */
+    behaviors: {
+        closeDimmer: function () {
+            $(".close-dimmer").on("click", function() {
+                $(".dimmer").dimmer("hide");
+            });
+        }
+    },
+
+    /**
+     * Specify custom form validation rules.
+     *
+     */
+    rules: {
+        postalCode: function() {
+            $.fn.form.settings.rules.postalCode = function(value, fieldIdentifier) {
+                if(document.getElementById('checkboxSuccess').checked && fieldIdentifier == "billingCountry") {
+                    return true;
+                } else {
+                    if ($("#" + fieldIdentifier).val() === "CA")
+                        return value.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
+                    else if ($("#" + fieldIdentifier).val() === "US")
+                        return value.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
+                    else {
+                        return true;
+                    }
+                }
+            }
+        }
+    },
+
+
+    init: function () {
+        var self = semanticInitContainer,
+            module = self.module,
+            behaviors = self.behaviors,
+            rules = self.rules;
+
+        module.initDropdownModule();
+        module.initRatingModule();
+        module.initPopupModule();
+        module.initCheckboxModule();
+        module.initAccordionModule();
+
+        behaviors.closeDimmer();
+
+        rules.postalCode();
+    }
+}
+/**
  * Component responsible for the view component of each category page.
  *
  * @type {{searchParameters: {page: number, per_page: number, order: string, min_price: null, max_price: null, brands: Array, categories: Array}, blurBackground: Function, itemsPerPage: Function, sortBy: Function, price: Function, categories: Function, brands: Function, updateFilterList: Function, addTag: Function, tags: Function, addFilter: Function, removeFilter: Function, updateFilters: Function, toggleLayout: Function, localizeSwitcher: Function, retrieveSearchParameters: Function, toggleTagsList: Function, localizeDimmer: Function, addDimmer: Function, init: Function}}
@@ -1449,1007 +2542,6 @@ var homepageContainer = {
     }
 }
 /**
- * Component responsible for handling the checkout process.
- * @type {{validation: {validateFormFields: Function}, view: {autofillBillingInformation: Function, clearFields: Function, dispatchButtonsActions: Function, displayContactInformation: Function, displayShipmentMethodsAndPriceInformation: Function, fadeInBillingInformation: Function, fetchEstimate: Function, fetchPayment: Function, setInternationalFields: Function, updatePayment: Function}, actions: {createOrdersCookie: Function, getShipmentTaxes: Function, getTaxes: Function, placeOrderAjaxCall: Function, shipmentMethodsAjaxCall: Function}, bootstrap: {selectDefaultShipmentMethod: Function}, init: Function}}
- */
-var checkoutContainer = {
-
-    /**
-     * Responsible for validating the form.
-     *
-     */
-    validation: {
-
-        /**
-         * Validate the form by following a set of rules defined in validationRules.
-         *
-         */
-        validateFormFields: function () {
-            var self = checkoutContainer;
-
-            var validationRules =
-            {
-                shippingFirstname: {
-                    identifier: 'shippingFirstname',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_name
-                        }
-                    ]
-                },
-
-                shippingLastname: {
-                    identifier: 'shippingLastname',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_name
-                        }
-                    ]
-                },
-
-                shippingAddress1: {
-                    identifier: 'shippingAddress1',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_address_shipping
-                        }
-                    ]
-                },
-
-
-                shippingCountry: {
-                    identifier: 'shippingCountry',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_address_shipping
-                        }
-                    ]
-                },
-
-                shippingProvince: {
-                    identifier: 'shippingProvince',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_address_shipping
-                        }
-                    ]
-                },
-
-                shippingCity: {
-                    identifier: 'shippingCity',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_city_shipping
-                        }
-                    ]
-                },
-
-                shippingPostcode: {
-                    identifier: 'shippingPostcode',
-                    rules: [
-                        {
-                            type   : 'postalCode[shippingCountry]',
-                            prompt : Localization.validation_post_shipping
-                        }
-                    ]
-                },
-
-                customer_email: {
-                    identifier: 'customer_email',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_email
-                        },
-                        {
-                            type   : 'email',
-                            prompt : Localization.validation_valid_email
-                        }
-                    ]
-                },
-
-                customer_phone: {
-                    identifier: 'customer_phone',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_phone
-                        }
-                    ]
-                },
-
-                billingFirstname: {
-                    identifier: 'billingFirstname',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_name
-                        }
-                    ]
-                },
-
-                billingLastname: {
-                    identifier: 'billingLastname',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_name
-                        }
-                    ]
-                },
-
-                billingAddress1: {
-                    identifier: 'billingAddress1',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_address_billing
-                        }
-                    ]
-                },
-
-                billingCountry: {
-                    identifier: 'billingCountry',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_address_shipping
-                        }
-                    ]
-                },
-
-                billingProvince: {
-                    identifier: 'billingProvince',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_address_shipping
-                        }
-                    ]
-                },
-
-                billingCity: {
-                    identifier: 'billingCity',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_city_billing
-                        }
-                    ]
-                },
-
-                billingPostcode: {
-                    identifier: 'billingPostcode',
-                    rules: [
-                        {
-                            type   : 'empty',
-                            prompt : Localization.validation_post_billing
-                        },
-                        {
-                            type   : 'postalCode[billingCountry]',
-                            prompt : Localization.validation_post_billing
-                        }
-                    ]
-                }
-            };
-
-
-            $(".form-checkout").form({
-                fields: validationRules,
-                inline: true,
-                on    : 'blur',
-
-                onSuccess: function (e) {
-                    // We prevent default here, so that the form is not submitted when clicked on "next" (which is a submit button)
-                    e.preventDefault();
-
-                    // We are calling a function responsible for attributing each button's behaviour.
-                    self.view.dispatchButtonsActions();
-                }
-            });
-
-        }
-    },
-
-    /**
-     * Responsible for handling the view aspect of checkout.
-     *
-     */
-    view: {
-        /**
-         * Auto fill the billing information if the checkbox is ticked.
-         *
-         */
-        autofillBillingInformation: function () {
-            var shippingFirstname = $("#shippingFirstname").val(),
-                shippingLastname = $("#shippingLastname").val(),
-                shippingAddress1 = $("#shippingAddress1").val(),
-                shippingCity = $("#shippingCity").val(),
-                shippingPostcode = $("#shippingPostcode").val();
-
-            $(".form-checkout").form('set values', {
-                billingFirstname: shippingFirstname,
-                billingLastname : shippingLastname,
-                billingAddress1 : shippingAddress1,
-                billingCity     : shippingCity,
-                billingPostcode : shippingPostcode
-            });
-        },
-
-
-        /**
-         * Small utility function used to clear a field.
-         *
-         * @param node
-         * @param fields
-         */
-        clearFields: function (node, fields) {
-            node.find(fields).val("");
-        },
-
-
-        /**
-         *  Defines a specific behaviour depending on which button is clicked after a form validation passes.
-         *
-         */
-        dispatchButtonsActions: function () {
-            var self = checkoutContainer;
-
-            // Default actions triggered right after all validation passes and the next button is clicked.
-            self.view.displayShipmentMethodsAndPriceInformation();
-            self.actions.shipmentMethodsAjaxCall();
-
-            // When clicked on the back button, display the contact information.
-            $(".back-contact-info").on("click", function (e) {
-
-                // Once again, we prevent default here since, oddly, every button inside a semantic-ui validated form
-                // triggers a form submit.
-                e.preventDefault();
-
-                self.view.displayContactInformation(e);
-            });
-
-            // When clicked on the next button, we process the payment.
-            $(".next-payment-process").on("click", function (e) {
-                e.preventDefault();
-
-                // Creates a redirecting dimmer.
-                var dimmer = '<div class="ui page dimmer redirect-dimmer">' +
-                    '<div class="content">' +
-                    '<div class="center"><div class="ui text loader"><h3 class="ui header white">' + Localization.payment_redirect +'</h3></div></div>' +
-                    '</div>' +
-                    '</div>';
-
-                $(dimmer).appendTo("body");
-                $(".redirect-dimmer").dimmer("show");
-
-                // Makes the ajax call.
-                self.actions.placeOrderAjaxCall();
-
-            });
-        },
-
-
-        /**
-         * Displays the contact information.
-         *
-         * @param e
-         */
-        displayContactInformation: function (e) {
-            $(".priceInformation").fadeOut(300);
-            $(".shippingMethod").fadeOut(300, function() {
-                $(".contactInformation").fadeIn();
-            });
-
-            // We need to stop event bubbling from the back button.
-            // TBH, I didn't really look into it but one of these two should be enough...
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-        },
-
-
-        /**
-         * Fades out the contact information segments then fades in the shipping methods and price information segment.
-         *
-         */
-        displayShipmentMethodsAndPriceInformation: function () {
-
-            var $contactInformation = $(".contactInformation"),
-                $shippingMethod = $(".shippingMethod"),
-                $priceInformation = $(".priceInformation");
-
-            $contactInformation.fadeOut(300, function() {
-                $(".shippingMethod .loadable-segment, .priceInformation .loadable-segment").addClass("loading");
-
-                //Fade the shipping methods and price info from the left.
-                $shippingMethod.show(0, function() {
-                    $(this).removeClass("hidden animated fadeInLeft").addClass("animated fadeInLeft");
-                });
-
-
-                $priceInformation.show(0, function() {
-                    $(this).removeClass("hidden animated fadeInLeft").addClass("animated fadeInLeft");
-                });
-            });
-        },
-
-
-        /**
-         * Fades in the billing information segment.
-         *
-         */
-        fadeInBillingInformation: function () {
-            var self = checkoutContainer;
-
-            $(".billing-checkbox").checkbox({
-                onUnchecked: function () {
-                    $(".billingInformation").hide().removeClass("hidden").fadeIn(400);
-                    self.view.clearFields($(".billingInformation"), "input:text");
-                },
-
-                onChecked: function () {
-                    $(".billingInformation").fadeOut(300, function () {
-                        $(this).delay(300).addClass("hidden");
-                    })
-                }
-            })
-        },
-
-
-        /**
-         * Creates a table of available shipments populated with data from the api call.
-         *
-         * @param data
-         */
-        fetchEstimate: function (data) {
-            var self = checkoutContainer;
-
-            $("#shippingMethod-table-tbody").empty();
-
-            for(var i = 0, shippingLength = data.shipping.services.length; i<shippingLength; i++)
-            {
-                var delivery = data.shipping.services[i].delivery != null ? data.shipping.services[i].delivery : " - ";
-
-                var serviceDOM = "<tr data-service='" + data.shipping.services[i].method + "'>" +
-                    "<td>" + data.shipping.services[i].name + "</td>" +
-                    "<td>" + delivery  + "</td>" +
-                    "<td>" + "$" + data.shipping.services[i].price.toFixed(2) + "</td>" +
-                    "<td>" +
-                    "<input " +
-                    "type='radio' " +
-                    "name='shipping' " +
-                    "class='shipping_method' " +
-                    "data-taxes='" + self.actions.getShipmentTaxes(data.shipping.services[i].method, data) + "' " +
-                    "data-cost='" + data.shipping.services[i].price.toFixed(2) + "' " +
-                    "data-value='" + data.shipping.services[i].method + "' " +
-                    "value='" + btoa(JSON.stringify(data.shipping.services[i])) + "' >" +
-                    "</td>";
-
-                $("#shippingMethod-table-tbody").append(serviceDOM);
-
-            }
-
-            // After all shipments are appended, remove the loading sign on the appropriate segment.
-            $(".shippingMethod .segment").removeClass("loading");
-
-            // Select the default shipment method.
-            self.bootstrap.selectDefaultShipmentMethod();
-        },
-
-
-        /**
-         * Displays the various prices according to the chosen shipment method option.
-         *
-         * @param data
-         */
-        fetchPayment: function (data) {
-            var subtotal = UtilityContainer.getProductsPriceFromLocalStorage().toFixed(2),
-                priceTransport = $("input:radio.shipping_method:checked").data("cost"),
-                taxes = checkoutContainer.actions.getTaxes(data) + parseFloat($("input:radio.shipping_method:checked").data("taxes")),
-                total = parseFloat(subtotal) + parseFloat(priceTransport) + parseFloat(taxes);
-
-            $("#price_subtotal").text("$" + subtotal);
-            $("#price_transport").text("$" + priceTransport);
-            $("#price_taxes").text("$" + taxes.toFixed(2));
-            $("#price_total").text("$" + total.toFixed(2));
-
-            $(".priceInformation .segment").removeClass("loading");
-        },
-
-
-        /**
-         * Sets the province/state/region dropdown state according to the country entered.
-         *
-         * @param fields
-         */
-        setInternationalFields: function (fields) {
-            fields.map(function(field) {
-                field.on("change", function () {
-                    if($(this).val() != "CA") {
-
-                        // We assume the structure is not changing and stays like so:
-                        // Country list is a sibling of province state region, both of them wrapped
-                        // in a parent container.
-                        $(this).parent().next().addClass("disabled");
-                        $(this).parent().next().find("select").attr("disabled", true);
-                    }
-                    else {
-                        $(this).parent().next().removeClass("disabled");
-                        $(this).parent().next().find("select").attr("disabled", false);
-                    }
-                });
-            });
-        },
-
-
-        /**
-         * Update the payment panel with right values (shipment method)
-         *
-         * @param data
-         */
-        updatePayment : function(data) {
-            var subtotal = parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()).toFixed(2),
-                priceTransport, taxes, total;
-
-            $(".shipping_method").on("change", function() {
-                priceTransport = $(this).data("cost");
-                taxes = checkoutContainer.actions.getTaxes(data) + parseFloat($(this).data("taxes"));
-                total = parseFloat(subtotal) + parseFloat(priceTransport) + parseFloat(taxes);
-
-                $("#price_subtotal").text("$" + subtotal);
-                $("#price_transport").text("$" + priceTransport);
-                $("#price_taxes").text("$" + taxes.toFixed(2));
-                $("#price_total").text("$" + total.toFixed(2));
-            });
-        }
-    },
-
-    /**
-     * Responsible for the overall checkout behaviour.
-     *
-     */
-    actions: {
-        /**
-         * Create a localStorage object containing the id, verification code and
-         * redirection link of the order.
-         *
-         * @param data
-         */
-        createOrdersCookie: function(data) {
-            var paymentId = data.id,
-                paymentVerification = data.verification,
-                payment_url = data.payment_details.payment_url;
-
-            Cookies.set("_current_order", JSON.stringify( {
-                id : paymentId,
-                verification : paymentVerification,
-                payment_url : payment_url
-            }));
-        },
-
-
-        /**
-         * Get the relevant taxes according to the chosen shipping method.
-         *
-         * @param serviceCode
-         * @param data
-         * @returns {string}
-         */
-        getShipmentTaxes : function(serviceCode, data) {
-            var taxes = 0;
-
-            for(var i=0; i<data.shipping.services.length; i++)
-            {
-                if(data.shipping.services[i].method == serviceCode)
-                {
-                    if (data.shipping.services[i].taxes.length != 0)
-                    {
-                        for(var j=0; j<data.shipping.services[i].taxes.length; j++)
-                        {
-                            taxes += data.shipping.services[i].taxes[j].amount;
-                        }
-                    }
-                }
-            }
-
-            return taxes.toFixed(2);
-        },
-
-
-        /**
-         * Get the total taxes (TPS/TVQ or TVH or TPS or null) + shipping method taxes.
-         *
-         * @param data
-         * @returns {number}
-         */
-        getTaxes : function(data) {
-            var taxes = 0,
-                dataTaxesLength = data.taxes.length;
-
-            if (dataTaxesLength != 0)
-            {
-                for(var i=0; i<dataTaxesLength; i++)
-                {
-                    taxes += data.taxes[i].amount;
-                }
-            }
-            return parseFloat(taxes);
-        },
-
-
-        /**
-         * Makes an ajax call to api/orders with the values from the form
-         *
-         * @param self
-         */
-        placeOrderAjaxCall: function() {
-            $.ajax({
-                method: "POST",
-                url: ApiEndpoints.placeOrder,
-                data: $("#cart_form").serialize(),
-                cache: false,
-                success: function(data) {
-                    var self = checkoutContainer;
-
-                    self.actions.createOrdersCookie(data);
-
-                    //redirect the user to the checkout page if he backs from the payment page
-                    history.pushState({data: data}, "Checkout ","/cart");
-
-                    //Redirect to success url
-                    window.location.replace(data.payment_details.payment_url);
-                },
-                error: function(xhr, e) {
-                    console.log(xhr);
-                    console.log(e);
-                }
-            });
-        },
-
-
-        /**
-         * Makes an ajax call to api/estimate with the contact information.
-         *
-         * @param self
-         */
-        shipmentMethodsAjaxCall: function () {
-            $.ajax({
-                type: "POST",
-                url: ApiEndpoints.estimate,
-                data: {
-                    email: $("#customer_email").val(),
-                    shipping: {},
-                    products: UtilityContainer.getProductsFromLocalStorage(),
-                    shipping_address: UtilityContainer.getShippingFromForm()
-                },
-                success: function(data) {
-                    checkoutContainer.view.fetchEstimate(data);
-                    checkoutContainer.view.fetchPayment(data);
-
-                    checkoutContainer.view.updatePayment(data);
-                    console.log(data);
-                },
-                error: function(e, status) {
-                    if (e.status == 403){
-                        // TODO: replace with an actual link
-                        window.location.replace("/auth/login");
-                        return;
-                    }
-                    $('#estimate').html('<div class="alert alert-danger">Une erreur est survenue. Veuillez vérifier les informations fournies.</div>');
-                }
-            });
-        }
-    },
-
-    /**
-     * Functions meant to be called for default behaviour.
-     *
-     */
-    bootstrap: {
-        /**
-         * Select the default shipment method from a predefined list.
-         *
-         */
-        selectDefaultShipmentMethod : function() {
-            var defaultShipment = ["DOM.EP", "USA.TP", "INT.TP"],
-                availableShipment = $("input[name=shipping]");
-
-            for(var i= 0, length = availableShipment.length; i<length; i++)
-            {
-                if (defaultShipment.indexOf(availableShipment[i].dataset.value) != -1)
-                {
-                    availableShipment[i].checked = true;
-                }
-            }
-        }
-    },
-
-    /**
-     * Register outside calling methods.
-     *
-     */
-    init: function () {
-        var self = checkoutContainer;
-        self.validation.validateFormFields();
-        self.view.fadeInBillingInformation();
-        self.view.setInternationalFields([$("#shippingCountry"), $("#billingCountry")]);
-
-        // This is where it all begins...
-        // This automatically calls the form.onSuccess method upon validating all fields from the contact information
-        // segment.
-        $(".shipment-trigger").on("click", function (e) {
-            if ($(".billing-checkbox").checkbox("is checked")) {
-                self.view.autofillBillingInformation();
-            }
-
-            // We prevent default here, to avoid a double form submission.
-            e.preventDefault();
-        });
-    }
-
-}
-/**
- * Component responsible for handling different formats of the same product.
- *
- * @type {{productWithFormat: Function, productWithoutFormat: Function, updateBuybuttonAttributes: Function, updateProductInformation: Function, init: Function}}
- */
-var productFormatContainer = {
-
-    /**
-     * Update price value for a product with format.
-     *
-     * @param option
-     */
-    productWithFormat: function(option) {
-        var price = '<span class="text-strikethrough">' +
-            'CAD $ ' + option.find(":selected").data("price") +
-            '</span>' +
-            '<span id="product-price" class="strong text-danger">' +
-            'CAD $ ' + option.find(":selected").data("reduced") +
-            '</span>';
-
-        $(".sub.header").text(price);
-    },
-
-
-    /**
-     * Update price value for a format-less product.
-     *
-     * @param option
-     */
-    productWithoutFormat: function(option) {
-        // Change description.
-        $("#product-format-name").text(option.find(":selected").data("format"));
-        $("#product-price").text("CAD $ " + option.find(":selected").data("price"));
-    },
-
-
-    /**
-     * Update buybutton data attributes according to format: id/price/name/format.
-     *
-     * @param option
-     */
-    updateBuybuttonAttributes: function (option) {
-        $(".buybutton").attr({
-            'data-product': option.val(),
-            'data-price': option.find(":selected").data("price"),
-            'data-name': option.find(":selected").data("name"),
-            'data-format': option.find(":selected").data("format")
-        });
-    },
-
-    /**
-     * Main function of this module.
-     * Once the format selector is clicked, trigger the appropriate helpers then update buybutton.
-     *
-     */
-    updateProductInformation: function() {
-        var self = productFormatContainer;
-
-        $("#product-format").on("change", function () {
-
-            if ($(this).find(":selected").data("reduced")) {
-                // Add discounted price for a product with different formats.
-                self.productWithFormat($(this));
-            }
-            else {
-                // Add discounted price for a single format product.
-                self.productWithoutFormat($(this));
-            }
-
-
-            // Update buybutton with right attributes.
-            self.updateBuybuttonAttributes($(this));
-        });
-
-    },
-
-    /**
-     * Entry point of this module.
-     *
-     */
-    init: function () {
-        const self = productFormatContainer;
-
-        self.updateProductInformation();
-
-    }
-}
-/**
- * Component responsible for adding products to a user's wishlist.
- *
- * @type {{fadeInFavoriteIcon: Function, setPopupText: Function, setWishlistBadgeQuantity: Function, addToFavorite: Function, persistFavorite: Function, removeFromFavorite: Function, init: Function}}
- */
-var productLayoutFavoriteContainer = {
-    /**
-     * Fade in the favorite icon (heart icon) when hovering on a product tile.
-     *
-     */
-    fadeInFavoriteIcon: function() {
-        self = productLayoutFavoriteContainer;
-
-        $(".dense-product").hover(function() {
-
-            $(this).children(".favorite-wrapper").fadeIn();
-            self.setPopupText($(this).children(".favorite-wrapper"));
-
-        }, function () {
-            $(this).children(".favorite-wrapper").hide();
-        });
-    },
-
-    /**
-     * Set popup text according to current state of the wrapper.
-     *
-     * @param wrapper
-     */
-    setPopupText: function (wrapper) {
-        if($(wrapper).hasClass("favorited")){
-            $(wrapper).attr("title", Localization.wishlist_remove);
-        }
-        else {
-            $(wrapper).attr("title", Localization.wishlist_add);
-        }
-    },
-
-    /**
-     * Update the value of .wishlist_badge when adding or deleting elements.
-     *
-     */
-    setWishlistBadgeQuantity : function() {
-        var total = UtilityContainer.getNumberOfProductsInWishlist();
-
-        $(".wishlist_badge").text(total);
-    },
-
-    /**
-     * Add the clicked product to the wish list.
-     *
-     */
-    addToFavorite: function() {
-        var self = productLayoutFavoriteContainer,
-            item;
-
-        $(".favorite-wrapper").on("click", function() {
-            //No favorited class.
-            if (!$(this).hasClass("favorited")) {
-                item = UtilityContainer.buyButton_to_Json($(this).parent().find(".buybutton"));
-                localStorage.setItem("_wish_product " + item.product, JSON.stringify(item));
-
-                //Set the favorite icon to be displayed
-                $(this).addClass("favorited");
-
-                //Set wishlist badge quantity
-                self.setWishlistBadgeQuantity();
-            }
-            else
-            //Has a favorited class. We remove it, then delete the element from local Storage.
-            {
-                self.removeFromFavorite($(this), self);
-            }
-        });
-    },
-
-    /**
-     * Persist the heart icon next to products already marked as wished.
-     *
-     */
-    persistFavorite: function() {
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0) {
-                for(var j = 0; j<$(".favorite-wrapper").length; j++)
-                {
-                    if(JSON.parse(localStorage.getItem(localStorage.key(i))).product === $(".favorite-wrapper")[j].dataset.product)
-                    {
-                        $(".favorite-wrapper")[j].className += " favorited";
-                    }
-                }
-            }
-        }
-    },
-
-    /**
-     * Delete the clicked element from the wish list.
-     *
-     * @param element
-     * @param context
-     */
-    removeFromFavorite: function (element, context) {
-        element.removeClass("favorited");
-        localStorage.removeItem("_wish_product " + element.data("product"));
-        context.setWishlistBadgeQuantity();
-    },
-
-    init: function () {
-        var self = productLayoutFavoriteContainer;
-
-        self.setPopupText();
-        self.addToFavorite();
-        self.persistFavorite();
-        self.fadeInFavoriteIcon();
-        self.setWishlistBadgeQuantity();
-    }
-}
-/**
- * Component responsible for changing quantity on the product page view.
- *
- * @type {{addQuantity: Function, removeQuantity: Function, updateBuyButton: Function, init: Function}}
- */
-var productQuantityContainer = {
-    addQuantity : function(input, callback) {
-        $(".qty-selector[data-action='add']").on("click", function() {
-            input.val(parseInt(input.val()) + 1);
-
-            callback();
-        });
-    },
-
-    removeQuantity: function(input, callback) {
-        $(".qty-selector[data-action='remove']").on("click", function() {
-            var actual = parseInt(input.val());
-
-            if (actual > 1) {
-                input.val(parseInt(input.val()) - 1);
-            }
-
-            callback();
-        });
-    },
-
-    updateBuyButton: function() {
-        $(".buybutton").attr("data-quantity", $(".qty-selector-input").val());
-    },
-
-    init: function () {
-        var self = productQuantityContainer;
-        self.addQuantity($(".qty-selector-input"), self.updateBuyButton);
-        self.removeQuantity($(".qty-selector-input"), self.updateBuyButton);
-
-    }
-};
-/**
- * Component responsible for activating semantic ui features.
- *
- * @type {{module: {initDropdownModule: Function, initRatingModule: Function, initPopupModule: Function, initCheckboxModule: Function}, behaviors: {closeDimmer: Function}, init: Function}}
- */
-var semanticInitContainer = {
-
-    /**
-     * Initialize modules
-     *
-     */
-    module: {
-        /**
-         * Initialize dropdown module.
-         *
-         */
-        initDropdownModule: function() {
-            $(".ui.dropdown").dropdown();
-
-            $(".ui.dropdown").on("click", function () {
-                var action = $(this).data("action") || "activate";
-
-                $(this).dropdown({
-                    action: action
-                });
-            });
-        },
-
-        /**
-         * Initialize rating module.
-         *
-         */
-        initRatingModule: function () {
-            $(".ui.rating").rating();
-        },
-
-        /**
-         * Initialize popup module.
-         *
-         */
-        initPopupModule: function () {
-            $(".popup").popup();
-        },
-
-        /**
-         * Initialize checkbox module.
-         *
-         */
-        initCheckboxModule: function () {
-            $('.ui.checkbox')
-                .checkbox()
-            ;
-        },
-
-        /**
-         * Initialize accordion module.
-         *
-         */
-        initAccordionModule: function() {
-            $('.ui.accordion').accordion();
-        }
-    },
-
-    /**
-     * Specify semantic custom behavior.
-     *
-     */
-    behaviors: {
-        closeDimmer: function () {
-            $(".close-dimmer").on("click", function() {
-                $(".dimmer").dimmer("hide");
-            });
-        }
-    },
-
-    /**
-     * Specify custom form validation rules.
-     *
-     */
-    rules: {
-        postalCode: function() {
-            $.fn.form.settings.rules.postalCode = function(value, fieldIdentifier) {
-                if($('#checkboxSuccess').is("checked") && fieldIdentifier === "billingCountry") {
-                    return true;
-                } else {
-                    if ($("#" + fieldIdentifier).val() === "CA")
-                        return value.match(/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} ?\d{1}[A-Z]{1}\d{1}$/i) ? true : false;
-                    else if ($("#" + fieldIdentifier).val() === "US")
-                        return value.match(/^\d{5}(?:[-\s]\d{4})?$/) ? true : false;
-                    else {
-                        return true;
-                    }
-                }
-            }
-        }
-    },
-
-
-    init: function () {
-        var self = semanticInitContainer,
-            module = self.module,
-            behaviors = self.behaviors,
-            rules = self.rules;
-
-        module.initDropdownModule();
-        module.initRatingModule();
-        module.initPopupModule();
-        module.initCheckboxModule();
-        module.initAccordionModule();
-
-        behaviors.closeDimmer();
-
-        rules.postalCode();
-    }
-}
-/**
  * Component responsible for handling the logic of the wish list page.
  * Layout handled in dev/components/site/wishlist.js
  *
@@ -2586,98 +2678,3 @@ var wishlistContainer = {
         self.setNumberOfProductsInHeader();
     }
 }
-/**
- * Entry point of script.
- *
- */
-; (function(window, document, $) {
-    $(document).ready(function () {
-
-        /**
-         * Sets up the ajax token for all ajax requests.
-         *
-         */
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'locale': $('html').attr('lang')
-            }
-        });
-
-        /**
-         * Sets up Localization and ApiEndpoints variables.
-         *
-         */
-        var env = UtilityContainer.getLocalizationAndEndpointUrl().responseJSON;
-        Localization = env.Localization;
-        ApiEndpoints = env.ApiEndpoints;
-
-        /**
-         * Initialize semantic UI modules.
-         *
-         */
-        semanticInitContainer.init();
-
-        /**
-         * Initialize responsiveness feature.
-         *
-         */
-        responsiveContainer.init();
-
-        /**
-         * Initialize checkout logic.
-         *
-         */
-        checkoutContainer.init();
-
-        /**
-         * Initialize cart slider logic.
-         *
-         */
-        cartSliderContainer.init();
-
-        /**
-         * Initialize category container.
-         *
-         */
-        categoryContainer.init();
-
-        /**
-         * Initialize overlay plugin.
-         *
-         */
-        paymentOverlayContainer.init();
-
-        /**
-         * Initialize homepage sections.
-         *
-         */
-        homepageContainer.init();
-
-        /**
-         * Initialize favorite products feature.
-         *
-         */
-        productLayoutFavoriteContainer.init();
-
-        /**
-         * Initialize product formats feature.
-         *
-         */
-        productFormatContainer.init();
-
-        /**
-         * Initialize product quantity change.
-         *
-         */
-        productQuantityContainer.init();
-
-        /**
-         * Initialize wishlist page.
-         *
-         */
-        wishlistLogicContainer.init();
-
-    });
-
-})(window, window.document, jQuery, undefined)

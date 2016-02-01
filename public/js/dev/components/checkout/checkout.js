@@ -178,10 +178,6 @@ var checkoutContainer = {
                     identifier: 'billingPostcode',
                     rules: [
                         {
-                            type   : 'empty',
-                            prompt : Localization.validation_post_billing
-                        },
-                        {
                             type   : 'postalCode[billingCountry]',
                             prompt : Localization.validation_post_billing
                         }

@@ -80,7 +80,7 @@ var semanticInitContainer = {
     rules: {
         postalCode: function() {
             $.fn.form.settings.rules.postalCode = function(value, fieldIdentifier) {
-                if($('#checkboxSuccess').is("checked") && fieldIdentifier === "billingCountry") {
+                if(document.getElementById('checkboxSuccess').checked && fieldIdentifier == "billingCountry") {
                     return true;
                 } else {
                     if ($("#" + fieldIdentifier).val() === "CA")
