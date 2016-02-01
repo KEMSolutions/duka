@@ -202,7 +202,7 @@ var cartSliderContainer = {
          *
          */
         slideIn: function () {
-            $(".view-cart, .buybutton").on("click", function () {
+            $(".view-cart, .buybutton, .close-cart").on("click", function () {
                 $(".cart-drawer").sidebar("toggle");
             });
         },
