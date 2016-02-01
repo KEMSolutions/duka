@@ -16,8 +16,8 @@
                     {{-- Include a condition here to display a back to website --}}
 
                     {{--<a href="http://www.lamoisson.com" class="ui left labeled icon button color-one">--}}
-                        {{--<i class="left arrow icon"></i>--}}
-                        {{--@lang('boukem.back_to_main')--}}
+                    {{--<i class="left arrow icon"></i>--}}
+                    {{--@lang('boukem.back_to_main')--}}
                     {{--</a>--}}
                 </div>
 
@@ -55,13 +55,24 @@
                         </div>
                     @endif
 
-
-                    <div class="view-cart ui labeled button" tabindex="0">
-                        <div class="ui button color-one">
-                            <i class="cart icon"></i> {{ Lang::get("boukem.cart") }}
+                    @if(Request::route()->getName() != "cart")
+                        <div class="view-cart ui labeled button" tabindex="0">
+                            <div class="ui button color-one">
+                                <i class="cart icon"></i> {{ Lang::get("boukem.cart") }}
+                            </div>
+                            <a class="view-cart ui basic left pointing label cart_badge">0</a>
                         </div>
-                        <a class="view-cart ui basic left pointing label cart_badge">0</a>
-                    </div>
+                    @else
+                        <div class="ui labeled button" tabindex="0">
+                            <a href="{{ route('cart') }}">
+                                <div class="ui button color-one" style="margin-right: 0">
+                                    <i class="cart icon"></i> {{ Lang::get("boukem.cart") }}
+                                </div>
+                            </a>
+                            <a class="view-cart ui basic left pointing label cart_badge">0</a>
+                        </div>
+                    @endif
+
 
 
                 </div>

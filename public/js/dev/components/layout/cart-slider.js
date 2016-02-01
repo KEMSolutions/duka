@@ -43,7 +43,7 @@ var cartSliderContainer = {
                 '</div>' +
                 '<div class="content cart-content">' +
                 '<span>'+ Localization.quantity + '</span>' +
-                '<div class="ui input one-quarter">' +
+                '<div class="ui input small">' +
                 '<input type="number" class="quantity" min="1" step="1" value="' + item.quantity + '" name="products[' + item.product + '][quantity]">' +
                 '<input type="hidden" name="products[' + item.product + '][id]" value="' + item.product + '"/> ' +
                 '</div>' +

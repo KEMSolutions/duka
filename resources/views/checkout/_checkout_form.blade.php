@@ -221,9 +221,7 @@
     </div>
 
     <div class="six wide column">
-        <div id="cart-items">
-            <div class="ui divided items cart-items-list">
-            </div>
+        <div class="ui divided items cart-items-list">
         </div>
 
         <hr>
