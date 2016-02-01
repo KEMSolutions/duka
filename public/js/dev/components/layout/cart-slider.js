@@ -17,7 +17,7 @@ var cartSliderContainer = {
                 cartSliderContainer.behaviour.storeItem(UtilityContainer.buyButton_to_Json($(this)));
 
                 // We remove the "Your cart is empty" message at the top every time we add an item.
-                $("#cart-items").addClass("hidden");
+                $("#empty-cart").addClass("hidden");
             });
         },
 
@@ -101,12 +101,11 @@ var cartSliderContainer = {
          * If there is no item in localStorage starting with the key "_product", then nothing is loaded.
          */
         loadItem : function() {
-            $("#cart-items").addClass("hidden");
-
             for(var i = 0, length = localStorage.length; i<length; i++)
             {
                 if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
                 {
+                    $("#empty-cart").addClass("hidden");
                     cartSliderContainer.behaviour.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
                 }
             }
@@ -132,7 +131,7 @@ var cartSliderContainer = {
                     $(this).remove();
 
                     // Display a message if the cart has no more item in it.
-                    UtilityContainer.getNumberOfProducts() === 0 ? $("#cart-items").removeClass("hidden") : null;
+                    UtilityContainer.getNumberOfProducts() === 0 ? $("#empty-cart").removeClass("hidden") : null;
                 });
 
                 // To finally delete it from localstorage.

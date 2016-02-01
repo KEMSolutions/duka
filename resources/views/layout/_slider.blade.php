@@ -3,8 +3,8 @@
         <h2>{{ Lang::get("boukem.cart") }}</h2>
     </header>
 
-    <div class="item" id="cart-items">
-        <h4 class="text-center empty-cart">
+    <div class="item" id="empty-cart">
+        <h4 class="text-center">
         {{ Lang::get("boukem.empty_cart") }}
         </h4>
     </div>
