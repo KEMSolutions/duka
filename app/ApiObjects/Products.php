@@ -197,7 +197,7 @@ class Products extends BaseObject
      */
     public static function formatRebatePercent($format)
     {
-        return round(($format->reduced_price->price / $format->price) * 100);
+        return round((($format->price - $format->reduced_price->price) * 100) / $format->price);
     }
 
     
