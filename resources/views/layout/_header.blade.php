@@ -162,12 +162,14 @@
                                         </a>
                                     </div>
                                 @endif
+                                @if  (Store::info()->support->email)
                                 <div class="item">
                                     <i class="fa fa-envelope-o icon"></i>
                                     <a href="mailto:{{ Store::info()->support->email }}">
                                         {{ Store::info()->support->email }}
                                     </a>
                                 </div>
+                                @endif
                             </div><!-- Menu -->
                         </div><!-- Item (Contact) -->
 
