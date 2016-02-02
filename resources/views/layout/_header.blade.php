@@ -154,7 +154,7 @@
                             <i class="dropdown icon"></i>
 
                             <div class="menu">
-                                @if (Store::info()->support->phone)
+                                @if (Store::info()->support->phone && Store::info()->support->phone !== "")
                                     <div class="item">
                                         <i class="fa fa-phone icon"></i>
                                         <a href="tel:{{ Store::info()->support->phone->number }}">
@@ -162,7 +162,7 @@
                                         </a>
                                     </div>
                                 @endif
-                                @if  (Store::info()->support->email)
+                                @if  (Store::info()->support->email && Store::info()->support->email !== "")
                                 <div class="item">
                                     <i class="fa fa-envelope-o icon"></i>
                                     <a href="mailto:{{ Store::info()->support->email }}">
