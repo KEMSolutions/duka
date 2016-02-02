@@ -69,12 +69,46 @@ class Store extends BaseObject
     /**
      * Gets the URL to the stores logo.
      *
+     * @deprecated
      * @param int $width
      * @param int $height
      * @param string $mode
      * @return string
      */
-    public function logo($width = 200, $height = 60, $mode = 'fit') {
-        return Utilities::setImageSizeAndMode($width, $height, '', $this->info()->logo->url);
+    public function logo($width = 200, $height = 200, $mode = 'fit') {
+        return $this->squareLogo($width, $height, $mode, $force_bitmap=true);
     }
+
+    /**
+     * Gets the URL to the store's square logo. Will return a vector and ignore width, height and mode if a vector is available and force_bitmap is set to true.
+     *
+     * @param int $width
+     * @param int $height
+     * @param string $mode
+     * @return string
+     */
+    public function squareLogo($width = 200, $height = 200, $mode = '', $force_bitmap=false){
+
+        if (isset($this->info()->logos->square->vector) && $force_bitmap===false){
+            return $this->info()->logos->square->vector->url;
+        }
+
+        return Utilities::setImageSizeAndMode($width, $height, $mode, $this->info()->logos->square->bitmap->url);
+
+    }
+
+    /**
+     * Gets the URL to the store's rectangular logo. The rectangular logo will always be a vector or null if no rectangular logo is available
+     *
+     * @return string
+     */
+    public function rectangularLogo(){
+
+        if (isset($this->info()->logos->rectangle->vector)){
+            return $this->info()->logos->rectangle->vector->url;
+        }
+
+        return null;
+    }
+
 }

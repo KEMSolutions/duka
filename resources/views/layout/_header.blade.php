@@ -90,13 +90,17 @@
 
 
                 {{-- Logo --}}
+                
                 <div class="three wide column">
                     <a href="/">
-                        <img src="{{ Store::logo() }}" class="ui image" alt="{{ Store::info()->url }}">
+                    @if (Store::rectangularLogo())
+                        <img src="{{ Store::rectangularLogo() }}" class="ui fluid image" alt="{{ Store::info()->url }}">
+                    @else
+                        <img src="{{ Store::squareLogo() }}" class="ui fluid tiny image" alt="{{ Store::info()->url }}">
+                    @endif
                     </a>
                 </div>
-
-
+                
                 {{-- Right menu. --}}
                 <div class="thirteen wide bottom aligned column">
                     <div class="ui secondary stackable menu">
