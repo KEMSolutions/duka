@@ -201,7 +201,7 @@ return [
     "curated"           =>"Suggestions",
     "all_results"       =>"Tous les résultats",
     "all_categories"    =>"Toutes les catégories",
-    "world_shipping"    =>"Nous livrons à travers tout le Canada",
+    "world_shipping"    =>"Nous livrons partout au Canada",
     "shipping_estimate" =>"Expédition prévue dans les 3 à 7 jours.",
     "brand"             =>"Marque",
     "continue"          =>"Continuer",
