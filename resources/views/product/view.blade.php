@@ -163,7 +163,7 @@
                                 <div class="ui relaxed list">
                                     
                                     <div class="item">
-                                    @if (in_array($country_code, ["FR", "DE", "US", "GB", "IT", "BE", "CH", "LU", "ES", "PT", "MX"]))
+                                    @if (in_array($country_code, $supported_countries))
                                         <i class="fa fa-fw"><i class="{{ strtolower($country_code) }} flag"></i></i>
                                         {{ Lang::get("boukem.world_shipping") }}
                                     @else
