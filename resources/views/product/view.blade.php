@@ -161,10 +161,17 @@
 
                                 {{-- Various informative shipping messages. --}}
                                 <div class="ui relaxed list">
+                                    
                                     <div class="item">
-                                        <i class="fa fa-fw"><img src="https://cdn.kem.guru/boukem/spirit/flags/CA.png" width="17" alt="CA"></i>
+                                    @if (in_array($country_code, ["FR", "DE", "US", "GB", "IT", "BE", "CH", "LU", "ES", "PT", "MX"]))
+                                        <i class="fa fa-fw"><i class="{{ $country_code }} flag"></i></i>
                                         {{ Lang::get("boukem.world_shipping") }}
+                                    @else
+                                        <i class="fa fa-fw"><i class="ca flag"></i></i>
+                                        {{ Lang::get("boukem.canadian_shipping") }}
+                                    @endif
                                     </div>
+
 
                                     <div id="inventory-count" data-country-code="{{ $country_code }}">
                                         @if($product->formats[0]->inventory->count > 5)
