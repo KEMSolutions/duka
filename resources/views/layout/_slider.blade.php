@@ -5,7 +5,7 @@
             <tbody>
             <tr>
                 <td class="five wide center aligned">
-                    <button class="ui button mini close-cart cart-header-item">
+                    <button class="ui button mini close-cart">
                         @lang("boukem.close")
                     </button>
                 </td>
@@ -16,7 +16,7 @@
                 </td>
                 <td class="five wide center aligned">
                     <a href="{{ url("/cart") }}">
-                        <button class="ui button mini color-one cart-header-item">
+                        <button class="ui button mini color-one">
                             @lang("boukem.check_out")
                         </button>
                     </a>

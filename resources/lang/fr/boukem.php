@@ -111,7 +111,7 @@ return [
     "confirmation"  =>"Confirmation",
     "continue_shopping" =>"Continuer les achats",
     "next"          =>"Suivant",
-    "check_out"     =>"Passer à la caisse",
+    "check_out"     =>"Payer",
     "close"         =>"Fermer",
     "create_pass"   =>"Créer un mot de passe",
     "password_purpose"=>"Retrouvez la liste de vos achats précédents et obtenez le statut de vos commandes en créant un mot de passe.",
