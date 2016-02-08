@@ -1,5 +1,5 @@
 <div class="ui right vertical menu wide sidebar cart-drawer">
-    <header class="cart-header">
+    <header class="cart-header" style="height: 70px">
 
         <div class="vertical-align">
             <h3 class="ui header white inline-block horizontal-align"
