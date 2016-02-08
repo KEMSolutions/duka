@@ -57,11 +57,7 @@ var semanticInitContainer = {
          *
          */
         initAccordionModule: function() {
-            $('.ui.accordion').accordion({
-                selector: {
-                    trigger: $(".ui.accordion").data("trigger")
-                }
-            });
+            $('.ui.accordion').accordion();
         }
     },
 

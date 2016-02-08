@@ -1,4 +1,4 @@
-<div class="row little-padded">
+<div class="row">
     <div class="layout-toggle-container grid-layout">
         @include(
         'product.layout._product_card_dense', [

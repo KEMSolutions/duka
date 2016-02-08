@@ -29,7 +29,7 @@ class ProductController extends Controller
         return View::make("product.view")->with([
             "product" => $product,
             "locale" => $locale,
-            "supported_countries" => array("US", "FR", "BE", "IT", "CH", "GB", "IE", "ES", "DE"),
+            "supported_countries" => ["FR", "DE", "US", "GB", "IT", "BE", "CH", "LU", "ES", "PT", "MX"],
             "country_code" => Utilities::getUserCountryCode()
         ]);
     }

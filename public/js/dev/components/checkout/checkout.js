@@ -178,10 +178,6 @@ var checkoutContainer = {
                     identifier: 'billingPostcode',
                     rules: [
                         {
-                            type   : 'empty',
-                            prompt : Localization.validation_post_billing
-                        },
-                        {
                             type   : 'postalCode[billingCountry]',
                             prompt : Localization.validation_post_billing
                         }
@@ -201,6 +197,10 @@ var checkoutContainer = {
 
                     // We are calling a function responsible for attributing each button's behaviour.
                     self.view.dispatchButtonsActions();
+
+                    // Makes cart items not editable.
+                    $(".cart-items-list .close-button").fadeOut();
+                    $(".cart-items-list .cart-content .input").addClass("disabled");
                 }
             });
 
@@ -263,6 +263,10 @@ var checkoutContainer = {
                 e.preventDefault();
 
                 self.view.displayContactInformation(e);
+
+                // Makes cart items editable.
+                $(".cart-items-list .close-button").fadeIn();
+                $(".cart-items-list .cart-content .input").removeClass("disabled");
             });
 
             // When clicked on the next button, we process the payment.

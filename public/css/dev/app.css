@@ -21,6 +21,11 @@ body {
   color: rgba(0,0,0,0.8);
 }
 
+/*----------------------------------------*/
+
+/* Elements */
+
+/*----------------------------------------*/
 hr {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -30,6 +35,10 @@ hr {
 
 p {
   margin: 0 0 10px;
+}
+
+.btn {
+  outline: none;
 }
 
 .page-header {
@@ -42,8 +51,45 @@ p {
   list-style: none;
 }
 
-.btn {
-  outline: none;
+/*----------------------------------------*/
+
+/* Text */
+
+/*----------------------------------------*/
+.text-strikethrough {
+  text-decoration: line-through;
+}
+.text-center {
+  text-align: center !important;
+}
+.text-justify {
+  text-align: justify;
+}
+.text-nowrap {
+  white-space: nowrap;
+}
+.text-lowercase {
+  text-transform: lowercase;
+}
+.text-uppercase {
+  text-transform: uppercase;
+}
+.text-capitalize {
+  text-transform: capitalize;
+}
+.text-danger {
+  color: #a94442;
+}
+a.text-danger:hover {
+  color: #843534;
+}
+
+.light {
+  font-weight: 200 !important;
+}
+
+.strong {
+  font-weight: bold !important;
 }
 
 /*----------------------------------------*/
@@ -75,17 +121,6 @@ p {
   border-top: 1px solid;
   border-bottom: 1px solid;
 }
-.one-half {
-  width: 50% !important;
-}
-
-.one-third {
-  width: 33.333333% !important;
-}
-
-.one-quarter {
-  width: 25% !important;
-}
 
 .full-width {
   width: 100% !important;
@@ -116,22 +151,6 @@ p {
   padding: 5%;
 }
 
-.row.little-padded {
-  padding: 2%;
-}
-
-.row.horizontally-padded {
-  padding: 0 2%;
-}
-
-.row.vertically-padded {
-  padding: 2% 0;
-}
-
-.padding-side-lg {
-  padding: 10px 40px;
-}
-
 .vertical-align {
   position: relative;
   top: 50%;
@@ -140,19 +159,6 @@ p {
 
 .horizontal-align {
   margin: 0 auto;
-}
-
-.fluid {
-  width: 100%;
-  padding: 1rem;
-}
-
-.fullScreen {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  z-index: 10000;
-  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .pull-right {
@@ -166,63 +172,16 @@ p {
 .float-clear {
   clear: both;
 }
-.text-strikethrough {
-  text-decoration: line-through;
-}
-.text-center {
-  text-align: center !important;
-}
-.text-justify {
-  text-align: justify;
-}
-.text-nowrap {
-  white-space: nowrap;
-}
-.text-lowercase {
-  text-transform: lowercase;
-}
-.text-uppercase {
-  text-transform: uppercase;
-}
-.text-capitalize {
-  text-transform: capitalize;
-}
-.text-muted {
-  color: #777777;
-}
-.text-success {
-  color: #3c763d;
-}
-a.text-success:hover {
-  color: #2b542c;
-}
-.text-info {
-  color: #31708f;
-}
-a.text-info:hover {
-  color: #245269;
-}
-.text-warning {
-  color: #8a6d3b;
-}
-a.text-warning:hover {
-  color: #66512c;
-}
-.text-danger {
-  color: #a94442;
-}
-a.text-danger:hover {
-  color: #843534;
+
+.inline-block {
+  display: inline-block;
 }
 
-.light {
-  font-weight: 200 !important;
-}
+/*----------------------------------------*/
 
-.strong {
-  font-weight: bold !important;
-}
+/* Borders */
 
+/*----------------------------------------*/
 .no-border {
   border: none !important;
 }
@@ -251,13 +210,6 @@ a.text-danger:hover {
   border: 1px solid #E0E0E0;
 }
 
-.no-decoration {
-  text-decoration: none;
-}
-
-.no-decoration:hover, .no-decoration:active, .no-decoration:focus {
-  text-decoration: none;
-}
 /*----------------------------------------*/
 
 /* Button */
@@ -267,49 +219,6 @@ a.text-danger:hover {
   outline: none;
 }
 
-/*----------------------------------------*/
-
-/* Wishlist specific button               */
-
-/*----------------------------------------*/
-.btn-outline {
-  background: none;
-}
-
-.btn-outline {
-  border: 1px solid #D43F3A;
-  color: #D43F3A;
-  margin-left: 5px;
-}
-
-.btn-danger-outline:hover, .btn-danger-outline:focus, .btn-danger-outline:active, .btn-danger-outline.active {
-  color: #fff;
-  border-color: #D9534F;
-  background-color: #D43F3A;
-}
-.btn-danger-outline:active, .btn-danger-outline.active {
-  border-color: #D43F3A;
-  color: #D43F3A;
-  box-shadow: none;
-}
-
-.btn i {
-  margin-right: 4px;
-}
-
-
-section.slice {
-  padding: 36px 0;
-  position: relative;
-}
-
-.widget {
-  margin-bottom: 20px;
-}
-
-#why_email {
-  cursor: default ;
-}
 
 /*----------------------------------------*/
 /*----------------------------------------*/
@@ -330,10 +239,7 @@ section.slice {
 
 /*-----------------------------------*/
 .breadcrumb {
-  margin: 0;
   padding: 24px 0;
-  background: none;
-  border-radius: 0;
 }
 
 .ui.breadcrumb a {
@@ -345,6 +251,8 @@ section.slice {
 .ui.breadcrumb a:active {
   color: #F0FFF0;
 }
+
+
 /*-----------------------------------*/
 /*-----------------------------------*/
 /*-----------------------------------*/
@@ -360,10 +268,6 @@ section.slice {
 
 .supertop{
   background: linear-gradient(to bottom,  #ffffff 73%,#efefef 100%);
-}
-
-.inline-block {
-  display: inline-block;
 }
 
 .wishlist-button{
@@ -382,6 +286,8 @@ section.slice {
 .description a {
   color: #0FFF00;
 }
+
+
 /*-----------------------------------*/
 /*-----------------------------------*/
 /*-----------------------------------*/
@@ -439,6 +345,7 @@ section.slice {
   margin-left: 1rem !important;
 }
 
+
 /*-----------------------------------*/
 /*-----------------------------------*/
 /*-----------------------------------*/
@@ -446,19 +353,11 @@ section.slice {
 /*-----------------------------------*/
 /*-----------------------------------*/
 /*-----------------------------------*/
-.preview-text {
-  background: -webkit-linear-gradient(#333, #eee);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
 
 .ui.accordion, .ui.accordion .accordion {
   width: 100%;
 }
 
-#product_long_description {
-  display: none;
-}
 
 /*-----------------------------------*/
 /*-----------------------------------*/
@@ -470,6 +369,11 @@ section.slice {
 .field label {
   font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
+
+#why_email {
+  cursor: default ;
+}
+
 
 /*-----------------------------------*/
 /*-----------------------------------*/
@@ -483,6 +387,7 @@ section.slice {
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
 }
+
 
 /*-----------------------------------*/
 /*-----------------------------------*/

@@ -75,7 +75,7 @@
                             </span>
                         @else
                             <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                                <span class="invisible" itemprop="price">
+                                <span class="hidden" itemprop="price">
                                     CAD ${{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
                                 </span>
 
@@ -120,7 +120,7 @@
 
                                 {{-- buybutton takes by default the value of the first format --}}
                                 @if(isset($product->formats[0]->reduced_price))
-                                    <button class="btn btn-one btn-one-inverted fluid buybutton"
+                                    <button class="ui button color-one fluid big buybutton"
                                             data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
                                             data-price="{{ $product->formats[0]->reduced_price->price }}"
                                             data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
@@ -133,7 +133,7 @@
                                         @lang("boukem.add_cart")
                                     </button>
                                 @else
-                                    <button class="btn btn-one btn-one-inverted fluid buybutton"
+                                    <button class="ui button color-one fluid big buybutton"
                                             data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
                                             data-price="{{ $product->formats[0]->price }}"
                                             data-thumbnail="{{ Products::getImage($product, 60, 60, "fit") }}"
@@ -161,10 +161,17 @@
 
                                 {{-- Various informative shipping messages. --}}
                                 <div class="ui relaxed list">
+                                    
                                     <div class="item">
-                                        <i class="fa fa-fw"><img src="https://cdn.kem.guru/boukem/spirit/flags/CA.png" width="17" alt="CA"></i>
+                                    @if (in_array($country_code, $supported_countries))
+                                        <i class="fa fa-fw"><i class="{{ strtolower($country_code) }} flag"></i></i>
                                         {{ Lang::get("boukem.world_shipping") }}
+                                    @else
+                                        <i class="fa fa-fw"><i class="ca flag"></i></i>
+                                        {{ Lang::get("boukem.canadian_shipping") }}
+                                    @endif
                                     </div>
+
 
                                     <div id="inventory-count" data-country-code="{{ $country_code }}">
                                         @if($product->formats[0]->inventory->count > 5)
@@ -197,24 +204,15 @@
 
 
         <div class="ui row">
-            <div class="ui accordion horizontally-padded" data-trigger=".preview-trigger">
-                <div class="title">
+            <div class="ui accordion horizontally-padded">
+                <div class="active title">
                     <h3 class="ui header">
                         <i class="dropdown icon"></i>
                         @lang("boukem.product_details")
                     </h3>
 
-                    <div class="preview">
-                        <div class="preview-text">
-                            {!! str_limit($product->localization->long_description, 750, "...") !!}
-                        </div>
-
-                        <div>
-                            <button class="ui button black center-block preview-trigger">@lang("boukem.show_more")</button>
-                        </div>
-                    </div>
                 </div>
-                <div class="content" id="product_long_description">
+                <div class="active content">
                     <span>{!! $product->localization->long_description !!}</span>
 
                     <div class="ui list text-center">
@@ -240,22 +238,22 @@
             <div class="row sixteen wide column">
 
                 {{--Videos. --}}
-                @if(count($product->videos) > 0)
-                @section("custom_css")
-                    <link rel="stylesheet" href="//vjs.zencdn.net/4.8/video-js.css"/>
-                @endsection
+                @if(isset($product->videos) && count($product->videos) > 0)
+                    @section("custom_css")
+                        <link rel="stylesheet" href="//vjs.zencdn.net/4.8/video-js.css"/>
+                    @endsection
 
-                @section("scripts")
-                    <script src="//vjs.zencdn.net/4.8/video.js"></script>
-                    <script>
-                        //store_video
-                        document.createElement('video');
-                        document.createElement('audio');
-                        document.createElement('track');
-                    </script>
-                @endsection
+                    @section("scripts")
+                        <script src="//vjs.zencdn.net/4.8/video.js"></script>
+                        <script>
+                            //store_video
+                            document.createElement('video');
+                            document.createElement('audio');
+                            document.createElement('track');
+                        </script>
+                    @endsection
 
-                @include("product._product_video", ["videos" => $product->videos ])
+                    @include("product._product_video", ["videos" => $product->videos ])
                 @endif
 
                 <?php /*  Reviews.

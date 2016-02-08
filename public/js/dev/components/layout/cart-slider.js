@@ -17,7 +17,7 @@ var cartSliderContainer = {
                 cartSliderContainer.behaviour.storeItem(UtilityContainer.buyButton_to_Json($(this)));
 
                 // We remove the "Your cart is empty" message at the top every time we add an item.
-                $("#cart-items").addClass("hidden");
+                $("#empty-cart").addClass("hidden");
             });
         },
 
@@ -43,7 +43,7 @@ var cartSliderContainer = {
                 '</div>' +
                 '<div class="content cart-content">' +
                 '<span>'+ Localization.quantity + '</span>' +
-                '<div class="ui input one-quarter">' +
+                '<div class="ui input small">' +
                 '<input type="number" class="quantity" min="1" step="1" value="' + item.quantity + '" name="products[' + item.product + '][quantity]">' +
                 '<input type="hidden" name="products[' + item.product + '][id]" value="' + item.product + '"/> ' +
                 '</div>' +
@@ -105,6 +105,7 @@ var cartSliderContainer = {
             {
                 if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
                 {
+                    $("#empty-cart").addClass("hidden");
                     cartSliderContainer.behaviour.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
                 }
             }
@@ -130,7 +131,7 @@ var cartSliderContainer = {
                     $(this).remove();
 
                     // Display a message if the cart has no more item in it.
-                    UtilityContainer.getNumberOfProducts() === 0 ? $("#cart-items").removeClass("hidden") : null;
+                    UtilityContainer.getNumberOfProducts() === 0 ? $("#empty-cart").removeClass("hidden") : null;
                 });
 
                 // To finally delete it from localstorage.
@@ -201,7 +202,7 @@ var cartSliderContainer = {
          *
          */
         slideIn: function () {
-            $(".view-cart, .buybutton").on("click", function () {
+            $(".view-cart, .buybutton, .close-cart").on("click", function () {
                 $(".cart-drawer").sidebar("toggle");
             });
         },

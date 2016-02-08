@@ -16,8 +16,8 @@
                     {{-- Include a condition here to display a back to website --}}
 
                     {{--<a href="http://www.lamoisson.com" class="ui left labeled icon button color-one">--}}
-                        {{--<i class="left arrow icon"></i>--}}
-                        {{--@lang('boukem.back_to_main')--}}
+                    {{--<i class="left arrow icon"></i>--}}
+                    {{--@lang('boukem.back_to_main')--}}
                     {{--</a>--}}
                 </div>
 
@@ -55,13 +55,24 @@
                         </div>
                     @endif
 
-
-                    <div class="view-cart ui labeled button" tabindex="0">
-                        <div class="ui button color-one">
-                            <i class="cart icon"></i> {{ Lang::get("boukem.cart") }}
+                    @if(Request::route()->getName() != "cart")
+                        <div class="view-cart ui labeled button" tabindex="0">
+                            <div class="ui button color-one">
+                                <i class="cart icon"></i> {{ Lang::get("boukem.cart") }}
+                            </div>
+                            <a class="view-cart ui basic left pointing label cart_badge">0</a>
                         </div>
-                        <a class="view-cart ui basic left pointing label cart_badge">0</a>
-                    </div>
+                    @else
+                        <div class="ui labeled button" tabindex="0">
+                            <a href="{{ route('cart') }}">
+                                <div class="ui button color-one" style="margin-right: 0">
+                                    <i class="cart icon"></i> {{ Lang::get("boukem.cart") }}
+                                </div>
+                            </a>
+                            <a class="view-cart ui basic left pointing label cart_badge">0</a>
+                        </div>
+                    @endif
+
 
 
                 </div>
@@ -79,13 +90,17 @@
 
 
                 {{-- Logo --}}
+                
                 <div class="three wide column">
                     <a href="/">
-                        <img src="{{ Store::logo() }}" class="ui image" alt="{{ Store::info()->url }}">
+                    @if (Store::rectangularLogo())
+                        <img src="{{ Store::rectangularLogo() }}" class="ui fluid image" alt="{{ Store::info()->url }}">
+                    @else
+                        <img src="{{ Store::squareLogo() }}" class="ui fluid tiny image" alt="{{ Store::info()->url }}">
+                    @endif
                     </a>
                 </div>
-
-
+                
                 {{-- Right menu. --}}
                 <div class="thirteen wide bottom aligned column">
                     <div class="ui secondary stackable menu">
@@ -143,7 +158,7 @@
                             <i class="dropdown icon"></i>
 
                             <div class="menu">
-                                @if (Store::info()->support->phone)
+                                @if (Store::info()->support->phone && Store::info()->support->phone !== "")
                                     <div class="item">
                                         <i class="fa fa-phone icon"></i>
                                         <a href="tel:{{ Store::info()->support->phone->number }}">
@@ -151,12 +166,14 @@
                                         </a>
                                     </div>
                                 @endif
+                                @if  (Store::info()->support->email && Store::info()->support->email !== "")
                                 <div class="item">
                                     <i class="fa fa-envelope-o icon"></i>
                                     <a href="mailto:{{ Store::info()->support->email }}">
                                         {{ Store::info()->support->email }}
                                     </a>
                                 </div>
+                                @endif
                             </div><!-- Menu -->
                         </div><!-- Item (Contact) -->
 
