@@ -32,7 +32,7 @@ return [
     "canada_post_estimate"=>"Postes Canada ne peut fournir d'estimation en ce moment.",
     "error_occurred"=>'Une erreur est survenue.',
     "remove"        =>"Enlever du panier",
-    "taxes_delivery"=>"Taxes et livraison",
+    "taxes_delivery"=>"Taxes et livraison calculées au paiement",
     "country"       =>"Pays",
     'province_state_reg'  =>'Province/État/Région',
     "ca_province"   =>"Provinces canadiennes",

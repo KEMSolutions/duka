@@ -32,7 +32,7 @@ return [
     "canada_post_estimate"=>"Canada Post cannot provide an estimate at this time. Please try again later.",
     "error_occurred"=>'An error has occurred.',
     "remove"        =>"Remove from cart",
-    "taxes_delivery"=>"Taxes and delivery",
+    "taxes_delivery"=>"Taxes and shipping calculated at checkout",
     "country"       =>"Country",
     'province_state_reg'  =>'Province/State/Region',
     "ca_province"   =>"Canadian provinces",

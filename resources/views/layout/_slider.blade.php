@@ -38,4 +38,12 @@
     <div class="cart-items-list">
 
     </div>
+
+    <hr/>
+
+    <div class="cart-content-agreement text-center">
+        <p>
+            @lang('boukem.taxes_delivery')
+        </p>
+    </div>
 </div>
