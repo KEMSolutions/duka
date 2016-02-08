@@ -25,6 +25,12 @@
         ApiEndpoints = env.ApiEndpoints;
 
         /**
+         * Initialize Safari Private Browsing detection feature.
+         *
+         */
+        safariPrivateBrowsing.init();
+
+        /**
          * Initialize semantic UI modules.
          *
          */
