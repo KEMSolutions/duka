@@ -32,7 +32,7 @@ return [
     "canada_post_estimate"=>"Postes Canada ne peut fournir d'estimation en ce moment.",
     "error_occurred"=>'Une erreur est survenue.',
     "remove"        =>"Enlever du panier",
-    "taxes_delivery"=>"Taxes et livraison",
+    "taxes_delivery"=>"Taxes et livraison calculées au paiement",
     "country"       =>"Pays",
     'province_state_reg'  =>'Province/État/Région',
     "ca_province"   =>"Provinces canadiennes",
@@ -275,6 +275,7 @@ return [
     "blog"              =>"Blogue",
     "promoted_title"    =>"Notre sélection",
     "featured_title"    =>"Produits en vedette",
+    "price_currency"    =>"Prix en :currency",
 
     "validation_name"   =>"Veuillez saisir votre nom",
     "validation_address_shipping"=>"Veuillez saisir votre adresse de livraison",

@@ -210,6 +210,10 @@ a.text-danger:hover {
   border: 1px solid #E0E0E0;
 }
 
+.no-border-radius {
+  border-radius: 0 !important;
+}
+
 /*----------------------------------------*/
 
 /* Button */
