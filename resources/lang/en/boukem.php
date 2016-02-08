@@ -275,6 +275,7 @@ return [
     "blog"              =>"Blog",
     "promoted_title"    =>"Our selection",
     "featured_title"    =>"Featured Products",
+    "price_currency"    =>"Prince in :currency",
 
     "validation_name"   =>"Please enter your name",
     "validation_address_shipping"=>"Please enter your shipping address",
