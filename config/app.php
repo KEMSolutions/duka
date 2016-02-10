@@ -149,6 +149,7 @@ return [
 		'Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider',
         'App\Providers\RouteServiceProvider',
         'Roumen\Feed\FeedServiceProvider',
+        "App\Providers\DukamlServiceProvider",
 	],
 
 	/*

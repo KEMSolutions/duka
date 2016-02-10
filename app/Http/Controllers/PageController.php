@@ -6,6 +6,7 @@ use Store;
 
 use Illuminate\Support\Arr;
 use cebe\markdown\MarkdownExtra;
+use App\Helpers\Contracts\DukamlContract;
 
 /**
  * Class PagesController
@@ -32,7 +33,7 @@ class PageController extends Controller
      * @param string $slug
      * @return \Illuminate\View\View
      */
-	public function getPage($slug)
+	public function getPage(DukamlContract $dukaml, $slug)
     {
         // Retrieve page content.
         $page = Pages::get($slug);
@@ -46,7 +47,9 @@ class PageController extends Controller
             case 'markdown':
                 $html = $this->parser->parse($page->content);
                 break;
-
+            case 'dukaml':
+                $html = $dukaml->renderToHtml($page->content);
+                break;
             default:
                 $html = $page->content;
         }
