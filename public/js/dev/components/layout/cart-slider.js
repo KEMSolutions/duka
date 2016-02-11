@@ -59,37 +59,37 @@ var cartSliderContainer = {
 
 
         /**
-         * Store a product in localStorage.
+         * Store a product in Cookies.
          * Update badge quantity.
          * Create/update a quantity cookie.
          *
          * @param item JSON format converted from attributes on the .buybutton
          */
         storeItem : function(item) {
-            if(localStorage.getItem("_product " + item.product) != null)
+            if(Cookies.get("_product_" + item.product) != undefined)
             {
-                // Update the value on localStorage of an already existing product.
-                var quantity_updated = JSON.parse(localStorage.getItem("_product " + item.product)).quantity + 1;
+                // Update the Cookie value of an already existing product.
+                var quantity_updated = JSON.parse(Cookies.get("_product_" + item.product)).quantity + 1;
 
                 // Update the input value already displayed in the cart drawer.
                 $("input[name='products[" + item.product + "][quantity]']").attr("value", quantity_updated);
 
                 // Set the item.
-                localStorage.setItem("_product " + item.product, JSON.stringify(
+                Cookies.set("_product_" + item.product,
                     {
-                        "product" : item.product,
-                        "name" : item.name,
-                        "price" : item.price,
-                        "thumbnail" : item.thumbnail,
-                        "thumbnail_lg" : item.thumbnail_lg,
-                        "quantity" : quantity_updated,
-                        "link" : item.link,
-                        "description" : item.description
+                        product : item.product,
+                        name : item.name,
+                        price : item.price,
+                        thumbnail : item.thumbnail,
+                        thumbnail_lg : item.thumbnail_lg,
+                        quantity : quantity_updated,
+                        link : item.link,
+                        description : item.description
                     }
-                ));
+                );
             }
             else {
-                localStorage.setItem("_product " + item.product, JSON.stringify(item));
+                Cookies.set("_product_" + item.product, item);
             }
             cartSliderContainer.view.setBadgeQuantity();
             cartSliderContainer.behaviour.setQuantityCookie();
@@ -98,7 +98,7 @@ var cartSliderContainer = {
 
         /**
          * Load a list of items previously bought into the cart.
-         * If there is no item in localStorage starting with the key "_product", then nothing is loaded.
+         * If there is no item in Cookies starting with the key "_product", then nothing is loaded.
          */
         loadItem : function() {
             for(var i = 0, length = localStorage.length; i<length; i++)
@@ -115,7 +115,7 @@ var cartSliderContainer = {
         /**
          * Delete an item from the cart drawer list.
          * Remove it from the DOM.
-         * Delete the object on localStorage.
+         * Delete the object on Cookies.
          * Set Badge quantity accordingly.
          * Update Cookie quantity accordingly.
          *
@@ -134,8 +134,8 @@ var cartSliderContainer = {
                     UtilityContainer.getNumberOfProducts() === 0 ? $("#empty-cart").removeClass("hidden") : null;
                 });
 
-                // To finally delete it from localstorage.
-                localStorage.removeItem("_product " + $(this).closest(".animated").data("product"));
+                // To finally delete it from Cookies.
+                Cookies.remove("_product_" + $(this).closest(".animated").data("product"));
 
                 cartSliderContainer.view.setBadgeQuantity();
                 cartSliderContainer.behaviour.setQuantityCookie();
@@ -147,7 +147,7 @@ var cartSliderContainer = {
         /**
          * Modify the quantity of a product in the cart.
          * Update its price label accordingly.
-         * Update the localStorage.
+         * Update the Cookies.
          * Set badge quantity.
          * Update Cookie quantity.
          *
@@ -161,9 +161,9 @@ var cartSliderContainer = {
                 $product_price.text("$" + ($product_price.data("price") * $(this).val()).toFixed(2));
 
                 //retrieve old data from old object then update the quantity and finally update the object
-                var oldData = JSON.parse(localStorage.getItem("_product " + $container.data("product")));
+                var oldData = JSON.parse(Cookies.get("_product_" + $container.data("product")));
                 oldData.quantity = parseInt($(this).val());
-                localStorage.setItem("_product " + $container.data("product"), JSON.stringify(oldData));
+                Cookies.set("_product_" + $container.data("product"), oldData);
 
                 cartSliderContainer.view.setBadgeQuantity();
                 cartSliderContainer.behaviour.setQuantityCookie();
