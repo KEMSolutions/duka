@@ -11,7 +11,7 @@
             </h3>
 
 
-            <button class="circular ui icon button close-cart pull-right inverted black"
+            <button class="circular tiny ui icon button close-cart pull-right inverted black"
                     style="margin: 7px 40px"
                     >
                 <i class="icon remove"></i>
