@@ -53,7 +53,7 @@ class PageController extends Controller
             default:
                 $html = $page->content;
         }
-
+        
         return view('site.custom_pages.index', [
             'title' => $page->title,
             'html' => $html

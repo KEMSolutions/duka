@@ -31,6 +31,8 @@ class Dukaml implements DukamlContract
 	protected function unserializeRawDukaml($dukaml){
 
 		$document = new \SimpleXMLElement($dukaml);
+
+
 		return $document;
 
 	}
