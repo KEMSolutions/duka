@@ -210,8 +210,8 @@ return [
         'Store'     => 'App\Facades\Store',
         'Utilities' => 'App\Facades\Utilities',
         'Blogs'     => 'App\Facades\Blogs',
-        'Feed' => 'Roumen\Feed\Facades\Feed',
-
+        'Feed'		=> 'Roumen\Feed\Facades\Feed',
+        "Dukaml"	=> "App\Helpers\Dukaml",
 	],
 
 ];
