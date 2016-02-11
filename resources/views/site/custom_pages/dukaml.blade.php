@@ -1,10 +1,9 @@
 @foreach($document->container as $container)
-<div class="ui
+<div class="ui stackable grid 
 @if($container->fluid)
-fluid
+fluid 
 @endif
-grid
- container">
+container">
 
  @foreach($container->row as $row)
  <div class="ui row">
