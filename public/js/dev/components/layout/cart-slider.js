@@ -93,6 +93,7 @@ var cartSliderContainer = {
             }
             cartSliderContainer.view.setBadgeQuantity();
             cartSliderContainer.behaviour.setQuantityCookie();
+            cartSliderContainer.view.setSubtotal();
         },
 
 
@@ -138,6 +139,7 @@ var cartSliderContainer = {
                 Cookies.remove("_product_" + $(this).closest(".animated").data("product"));
 
                 cartSliderContainer.view.setBadgeQuantity();
+                cartSliderContainer.view.setSubtotal();
                 cartSliderContainer.behaviour.setQuantityCookie();
 
             });
@@ -166,6 +168,7 @@ var cartSliderContainer = {
                 Cookies.set("_product_" + $container.data("product"), oldData);
 
                 cartSliderContainer.view.setBadgeQuantity();
+                cartSliderContainer.view.setSubtotal();
                 cartSliderContainer.behaviour.setQuantityCookie();
 
             });
@@ -216,6 +219,15 @@ var cartSliderContainer = {
             var total = UtilityContainer.getNumberOfProducts();
 
             $(".cart_badge").text(total);
+        },
+
+
+        /**
+         * Update the value of .subtotal when adding or deleting elements.
+         *
+         */
+        setSubtotal: function () {
+            $(".subtotal").text(UtilityContainer.getProductsPrice());
         }
     },
 
@@ -225,8 +237,10 @@ var cartSliderContainer = {
         var view = cartSliderContainer.view;
 
 
+        view.setSubtotal();
         view.setBadgeQuantity();
         view.slideIn();
+
 
 
         behaviour.buyButtonClick();

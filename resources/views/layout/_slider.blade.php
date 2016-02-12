@@ -23,13 +23,13 @@
     <div class="item ">
         <ul class="no-margin">
             <li>
-                @lang('boukem.taxes_delivery')
+                @lang('boukem.subtotal'): <b>$ </b><b class="subtotal">0.00</b>
             </li>
 
             <br/>
 
             <li>
-                @lang('boukem.price_currency', ["currency" => "$ CAD"])
+                @lang('boukem.taxes_delivery')
             </li>
         </ul>
     </div>
