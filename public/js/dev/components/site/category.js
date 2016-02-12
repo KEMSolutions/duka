@@ -356,7 +356,7 @@ var categoryContainer = {
         var self = categoryContainer;
 
         self.retrieveSearchParameters();
-        self.blurBackground();
+        //self.blurBackground();
         self.itemsPerPage();
         self.sortBy();
         self.price();

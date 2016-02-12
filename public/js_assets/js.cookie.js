@@ -135,3 +135,41 @@
 
     return init();
 }));
+
+/**
+ * Extend Cookies plugin with Cookies.toObject() method.
+ * Returns an object wrapping each cookie as a key:value pair.
+ *
+ * @returns {{}}
+ */
+Cookies.toObject = function() {
+    // get all cookies into a skeleton array
+    var _array = document.cookie.split(";"),
+        result = {};
+
+    $.each(_array, function(index, item) {
+
+        //get individual cookie
+        var cookie = _array[index].trim();
+
+        //split the cookie into a key:value object
+        result[cookie.substring(0, cookie.indexOf('='))] = cookie.substring(cookie.indexOf('=')+1);
+    });
+
+    return result;
+};
+
+
+/**
+ * Returns the number of cookie for current domain.
+ *
+ * @returns {number}
+ */
+Cookies.getLength = function() {
+    var res = 0;
+    $.each(document.cookie.split(";"), function(){
+        res++;
+    });
+    return res;
+};
+

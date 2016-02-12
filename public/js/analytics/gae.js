@@ -52,7 +52,7 @@ var GAEAnalytics = {
                     hitType: 'event',
                     eventCategory: 'Checkout',
                     eventAction: 'Checkout success',
-                    eventValue: UtilityContainer.getProductsPriceFromLocalStorage()
+                    eventValue: UtilityContainer.getProductsPrice()
                 });
             }
         },
@@ -66,7 +66,7 @@ var GAEAnalytics = {
                     eventCategory: 'Checkout',
                     eventAction: 'Checkout failure',
                     eventLabel: 'Order #' + cookie_id,
-                    eventValue: UtilityContainer.getProductsPriceFromLocalStorage()
+                    eventValue: UtilityContainer.getProductsPrice()
                 });
             });
         }

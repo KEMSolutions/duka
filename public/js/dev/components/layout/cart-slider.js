@@ -101,12 +101,12 @@ var cartSliderContainer = {
          * If there is no item in Cookies starting with the key "_product", then nothing is loaded.
          */
         loadItem : function() {
-            for(var i = 0, length = localStorage.length; i<length; i++)
-            {
-                if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
-                {
+            var cookies = Cookies.toObject();
+
+            for (var item in cookies) {
+                if (item.indexOf("_product_", 0) === 0) {
                     $("#empty-cart").addClass("hidden");
-                    cartSliderContainer.behaviour.addItem(JSON.parse(localStorage.getItem(localStorage.key(i))));
+                    cartSliderContainer.behaviour.addItem(JSON.parse(Cookies.get(item)));
                 }
             }
         },
