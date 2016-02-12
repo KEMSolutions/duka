@@ -85,7 +85,6 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 	<script src="/js_assets/js.cookie.js"></script>
 	<script src="//cdn.kem.guru/boukem/spirit/js/gcc_ressources.js.gz"></script>
-	<script src="/js_assets/blur/blur.min.js"></script>
 
 	<!-- Semantic ui dependencies -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>

@@ -286,6 +286,6 @@ return [
     "validation_phone"  =>"Veuillez saisir votre numéro de téléphone.",
     "validation_address_billing"=>"Veuillez saisir votre adresse de facturation",
     "validation_city_billing"   =>"Veuillez saisir votre ville de facturation",
-    "validation_post_billing"   =>"Veuillez saisir votre code postal de facturation"
+    "validation_post_billing"   =>"Veuillez saisir votre code postal de facturation",
 
 ];

@@ -403,7 +403,7 @@ var checkoutContainer = {
          * @param data
          */
         fetchPayment: function (data) {
-            var subtotal = UtilityContainer.getProductsPriceFromLocalStorage().toFixed(2),
+            var subtotal = UtilityContainer.getProductsPrice().toFixed(2),
                 priceTransport = $("input:radio.shipping_method:checked").data("cost"),
                 taxes = checkoutContainer.actions.getTaxes(data) + parseFloat($("input:radio.shipping_method:checked").data("taxes")),
                 total = parseFloat(subtotal) + parseFloat(priceTransport) + parseFloat(taxes);
@@ -448,7 +448,7 @@ var checkoutContainer = {
          * @param data
          */
         updatePayment : function(data) {
-            var subtotal = parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()).toFixed(2),
+            var subtotal = parseFloat(UtilityContainer.getProductsPrice()).toFixed(2),
                 priceTransport, taxes, total;
 
             $(".shipping_method").on("change", function() {
@@ -579,7 +579,7 @@ var checkoutContainer = {
                 data: {
                     email: $("#customer_email").val(),
                     shipping: {},
-                    products: UtilityContainer.getProductsFromLocalStorage(),
+                    products: UtilityContainer.getAllProducts(),
                     shipping_address: UtilityContainer.getShippingFromForm()
                 },
                 success: function(data) {

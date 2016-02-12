@@ -3,11 +3,11 @@
  * Self Explanatory duh.
  *
  * @type {{ getLocalizationAndEndpointUrl: Function,
- *          getProductsFromLocalStorage: Function,
+ *          getAllProducts: Function,
  *          getNumberOfProductsInWishlist: Function,
  *          getNumberOfProducts: Function,
- *          getProductsPriceFromLocalStorage: Function,
- *          removeAllProductsFromLocalStorage: Function,
+ *          getProductsPrice: Function,
+ *          removeAllProducts: Function,
  *          getShippingFromForm: Function,
  *          buyButton_to_Json: Function,
  *          populateCountry: Function,
@@ -46,19 +46,17 @@ var UtilityContainer = {
 
 
     /**
-     * Utility function for getting all the products in localStorage.
+     * Utility function for getting all the products in cookies.
      * Returns an array containing their id, their quantity and their price.
      *
      * @returns {Array}
      */
-    getProductsFromLocalStorage : function() {
+    getAllProducts : function() {
         var res = [];
 
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
-            {
-                var product = JSON.parse(localStorage.getItem(localStorage.key(i))),
+        for (var item in Cookies.toObject()) {
+            if (item.indexOf("_product_", 0) === 0) {
+                var product = JSON.parse(Cookies.get(item)),
                     productId = product.product,
                     productQuantity = product.quantity,
                     productPrice = product.price;
@@ -70,7 +68,6 @@ var UtilityContainer = {
                 });
             }
         }
-
         return res;
     },
 
@@ -82,11 +79,9 @@ var UtilityContainer = {
     getNumberOfProductsInWishlist : function() {
         var total = 0;
 
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_wish_product", 0) === 0)
-            {
-                total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
+        for (var item in Cookies.toObject()) {
+            if (item.indexOf("_wish_product_", 0) === 0) {
+                total += JSON.parse(Cookies.get(item)).quantity;
             }
         }
 
@@ -101,11 +96,9 @@ var UtilityContainer = {
     getNumberOfProducts : function() {
         var total = 0;
 
-        for(var i = 0, length = localStorage.length; i<length; i++)
-        {
-            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
-            {
-                total += JSON.parse(localStorage.getItem(localStorage.key(i))).quantity;
+        for (var item in Cookies.toObject()) {
+            if (item.indexOf("_product_", 0) === 0) {
+                total += JSON.parse(Cookies.get(item)).quantity;
             }
         }
 
@@ -113,13 +106,13 @@ var UtilityContainer = {
     },
 
     /**
-     * Utility function to get the total price from all products present in localStorage.
+     * Utility function to get the total price from all products present in cookies.
      *
      * @returns {number}
      */
-    getProductsPriceFromLocalStorage : function() {
+    getProductsPrice : function() {
         var total = 0,
-            products = UtilityContainer.getProductsFromLocalStorage();
+            products = UtilityContainer.getAllProducts();
 
         for(var i= 0, length = products.length; i<length; i++)
         {
@@ -130,14 +123,13 @@ var UtilityContainer = {
     },
 
     /**
-     * Utility function to delete all products from localStorage.
+     * Utility function to delete all products from cookies.
      *
      */
-    removeAllProductsFromLocalStorage : function() {
-        for(var i= 0, length = localStorage.length; i<length; i++) {
-            if (localStorage.key(i).lastIndexOf("_product", 0) === 0)
-            {
-                localStorage.removeItem(localStorage.key(i));
+    removeAllProducts : function() {
+        for (var item in Cookies.toObject()) {
+            if (item.indexOf("_product_", 0) === 0) {
+                Cookies.remove(item);
             }
         }
     },
@@ -253,7 +245,7 @@ var UtilityContainer = {
      */
     validateEmptyCart : function () {
         var empty;
-        UtilityContainer.getProductsPriceFromLocalStorage() === 0 ?  empty = true : empty = false;
+        UtilityContainer.getProductsPrice() === 0 ?  empty = true : empty = false;
 
         return empty;
     },
@@ -415,7 +407,7 @@ var UtilityContainer = {
     getCartTotal : function(serviceCode, data) {
         var taxes = parseFloat(UtilityContainer.getCartTaxes(serviceCode.method, data)),
             shipping = parseFloat(UtilityContainer.getCheapestShippingMethod(data).fare),
-            subtotal = parseFloat(UtilityContainer.getProductsPriceFromLocalStorage()),
+            subtotal = parseFloat(UtilityContainer.getProductsPrice()),
             total = (taxes + shipping + subtotal).toFixed(2);
 
         return total;

@@ -19,7 +19,7 @@ var paymentOverlayContainer = {
 
             window.location.replace("/");
 
-            UtilityContainer.removeAllProductsFromLocalStorage();
+            UtilityContainer.removeAllProducts();
         });
     },
 
@@ -192,7 +192,7 @@ var paymentOverlayContainer = {
                         this.displayCongratulateOverlay(order_details);
 
                         // Remove products from cart
-                        UtilityContainer.removeAllProductsFromLocalStorage();
+                        UtilityContainer.removeAllProducts();
 
                         // Delete the unpaid orders cookie (if any).
                         Cookies.remove('_current_order');

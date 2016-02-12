@@ -24,6 +24,7 @@
         Localization = env.Localization;
         ApiEndpoints = env.ApiEndpoints;
 
+
         /**
          * Initialize semantic UI modules.
          *
