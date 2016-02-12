@@ -287,10 +287,5 @@ return [
     "validation_address_billing"=>"Please enter your billing address",
     "validation_city_billing"   =>"Please enter your billing address city",
     "validation_post_billing"   =>"Please enter your billing address postcode",
-
-    "private_browsing_alert"    =>"You are using a version of Safari in Private Browsing mode.
-Some site features will be blocked or degraded unless you turn off Private Browsing mode.
-
-We are working on this problem as of now and are sorry for the inconvenience."
-
+    
 ];

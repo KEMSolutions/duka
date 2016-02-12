@@ -288,9 +288,4 @@ return [
     "validation_city_billing"   =>"Veuillez saisir votre ville de facturation",
     "validation_post_billing"   =>"Veuillez saisir votre code postal de facturation",
 
-    "private_browsing_alert"    =>"Vous utilisez Safari en navigation privée.
-Certaines fonctionnalités seront indisponibles tant que vous ne désactiverez pas la navigation privée.
-
-Nous travaillons activement sur ce problème et sommes désolé de l'inconvénient."
-
 ];
