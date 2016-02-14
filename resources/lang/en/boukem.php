@@ -83,6 +83,7 @@ return [
     "secure_payment"=>"Secure payment",
     "categories"    =>"Categories",
     "subcategory"   =>"Subcategory",
+    "health_conditions"=>"Health Conditions",
     "buy"           =>"Buy",
     "about_us"      =>"About Us",
     "information"   =>"Information",
