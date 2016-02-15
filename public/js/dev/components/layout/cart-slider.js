@@ -91,7 +91,7 @@ var cartSliderContainer = {
             else {
                 Cookies.set("_product_" + item.product, item);
             }
-            cartSliderContainer.view.setBadgeQuantity();
+            UtilityContainer.setBadgeQuantity();
             cartSliderContainer.behaviour.setQuantityCookie();
             cartSliderContainer.view.setSubtotal();
         },
@@ -138,7 +138,7 @@ var cartSliderContainer = {
                 // To finally delete it from Cookies.
                 Cookies.remove("_product_" + $(this).closest(".animated").data("product"));
 
-                cartSliderContainer.view.setBadgeQuantity();
+                UtilityContainer.setBadgeQuantity();
                 cartSliderContainer.view.setSubtotal();
                 cartSliderContainer.behaviour.setQuantityCookie();
 
@@ -167,7 +167,7 @@ var cartSliderContainer = {
                 oldData.quantity = parseInt($(this).val());
                 Cookies.set("_product_" + $container.data("product"), oldData);
 
-                cartSliderContainer.view.setBadgeQuantity();
+                UtilityContainer.setBadgeQuantity();
                 cartSliderContainer.view.setSubtotal();
                 cartSliderContainer.behaviour.setQuantityCookie();
 
@@ -212,17 +212,6 @@ var cartSliderContainer = {
 
 
         /**
-         * Update the value of #cart_badge when adding or deleting elements.
-         *
-         */
-        setBadgeQuantity : function() {
-            var total = UtilityContainer.getNumberOfProducts();
-
-            $(".cart_badge").text(total);
-        },
-
-
-        /**
          * Update the value of .subtotal when adding or deleting elements.
          *
          */
@@ -238,9 +227,8 @@ var cartSliderContainer = {
 
 
         view.setSubtotal();
-        view.setBadgeQuantity();
         view.slideIn();
-
+        UtilityContainer.setBadgeQuantity();
 
 
         behaviour.buyButtonClick();

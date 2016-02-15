@@ -414,6 +414,14 @@ var UtilityContainer = {
     },
 
     /**
+     * Update the value of #cart_badge when adding or deleting elements.
+     *
+     */
+    setBadgeQuantity : function() {
+        $(".cart_badge").text(UtilityContainer.getNumberOfProducts());
+    },
+
+    /**
      * Retrieves the query parameters from the URL.
      * Courtesy of http://stackoverflow.com/a/1917916
      *

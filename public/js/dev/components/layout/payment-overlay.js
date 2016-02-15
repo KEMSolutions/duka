@@ -203,6 +203,8 @@ var paymentOverlayContainer = {
 
                         // Remove products from cart
                         UtilityContainer.removeAllProducts();
+                        UtilityContainer.setBadgeQuantity();
+
 
                         // Delete the unpaid orders cookie (if any).
                         Cookies.remove('_current_order');
