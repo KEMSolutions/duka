@@ -112,6 +112,17 @@
 
 
                         <div class="ui scrolling dropdown item color-one">
+                            @lang('boukem.health_conditions')
+                            <i class="dropdown icon"></i>
+
+                            <div class="menu">
+                                @foreach(Categories::getAllConditions() as $condition)
+                                    {!! generateMenuItem($condition) !!}
+                                @endforeach
+                            </div><!-- Menu -->
+                        </div><!-- Item (Conditions) -->
+                        
+                        <div class="ui scrolling dropdown item color-one">
                             @lang('boukem.categories')
                             <i class="dropdown icon"></i>
 

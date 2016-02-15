@@ -83,6 +83,7 @@ return [
     "secure_payment"=>"Transaction sécurisée",
     "categories"    =>"Catégories",
     "subcategory"   =>"Sous-Catégorie",
+    "health_conditions"=>"Sujets de santé",
     "buy"           =>"Acheter",
     "about_us"      =>"À propos de la boutique",
     "information"   =>"Information",
