@@ -119,7 +119,7 @@ var UtilityContainer = {
             total += (products[i].price * products[i].quantity);
         }
 
-        return total.toFixed(2);
+        return total;
     },
 
     /**

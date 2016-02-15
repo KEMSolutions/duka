@@ -1,81 +1,70 @@
 var GAEAnalytics = {
+
     /**
-     * Categories
-     *      Action ([Label], [Value])
+     * Steps:
      *
-     * Products
-     *      add_to_cart (product-id, price)
-     *
-     * Checkout
-     *      estimate (price)
-     *      checkout_page ()
-     *      checkout_success ()
-     *      checkout_failure ()
-     *
+     * 1. User completes a transaction.
+     * 2. Thank you dimmer with embedded info about the purchase.
+     * 3. Send info to Analytics.
      */
-    events: {
-        addToCart: function () {
-            $("body").on("click", ".buybutton", function() {
-                ga('send', {
-                    hitType: 'event',
-                    eventCategory: 'Products',
-                    eventAction: 'Add to cart',
-                    eventLabel: $(this).data("product"),
-                    eventValue: $(this).data("price")
-                });
-            });
-        },
 
-        estimate: function (price) {
-            ga('send', {
-                hitType: 'event',
-                eventCategory: 'Checkout',
-                eventAction: 'Estimate',
-                eventValue: price
-            });
-        },
 
-        checkout_page: function () {
-            $("#checkout").on("click", function() {
-                ga('send', {
-                    hitType: 'event',
-                    eventCategory: 'Checkout',
-                    eventAction: 'Checkout main page'
-                });
-            });
-        },
+    /**
+     * Get order information to:
+     *      - Create transaction object
+     *      - Populate items in transaction object
+     *
+     * @param order_details
+     */
+    register: function (order_details) {
 
-        checkout_success: function () {
-            if ($(".payment_successful").length > 0)
-            {
-                ga('send', {
-                    hitType: 'event',
-                    eventCategory: 'Checkout',
-                    eventAction: 'Checkout success',
-                    eventValue: UtilityContainer.getProductsPrice()
-                });
-            }
-        },
+        // Create the transaction
+        GAEAnalytics.createTransaction({
+            id: order_details.id,
+            revenue: order_details.payment_details.total,
+            shipping: order_details.payment_details.shipping,
+            tax: order_details.payment_details.taxes
+        });
 
-        checkout_failure: function () {
-            $("body").on("click", "#cancelOrder", function() {
-                var cookie_id = JSON.parse(Cookies.get("_current_order")).id;
 
-                ga('send', {
-                    hitType: 'event',
-                    eventCategory: 'Checkout',
-                    eventAction: 'Checkout failure',
-                    eventLabel: 'Order #' + cookie_id,
-                    eventValue: UtilityContainer.getProductsPrice()
-                });
-            });
-        }
+        // Populate the transaction
+        GAEAnalytics.populateTransaction(order_details.id, order_details.items);
+
+
+        // Send Data
+        ga('ecommerce:send');
     },
 
-    init: function () {
-        GAEAnalytics.events.addToCart();
-        GAEAnalytics.events.checkout_page();
-        GAEAnalytics.events.checkout_failure();
-        GAEAnalytics.events.checkout_success();
+
+
+    /**
+     * Create one transaction.
+     *
+     * @param transaction_details
+     */
+    createTransaction: function (transaction) {
+        ga('ecommerce:addTransaction', {
+            'id': transaction.id,
+            'revenue': transaction.revenue,
+            'shipping': transaction.shipping,
+            'tax': transaction.tax
+        });
+    },
+
+
+    /**
+     * Populate the relevant transaction.
+     *
+     * @param items
+     */
+    populateTransaction: function (transaction_id, items) {
+        $.each(items, function(index, item){
+            ga('ecommerce:addItem', {
+                'id': transaction_id,
+                'name': items[index].id,
+                'price': items[index].price,
+                'quantity': items[index].quantity
+            });
+        });
     }
 };

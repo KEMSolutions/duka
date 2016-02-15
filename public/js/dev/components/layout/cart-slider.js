@@ -227,7 +227,7 @@ var cartSliderContainer = {
          *
          */
         setSubtotal: function () {
-            $(".subtotal").text(UtilityContainer.getProductsPrice());
+            $(".subtotal").text(UtilityContainer.getProductsPrice().toFixed(2));
         }
     },
 

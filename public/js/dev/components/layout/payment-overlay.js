@@ -188,8 +188,18 @@ var paymentOverlayContainer = {
                         this.displayUnpaidOverlay();
                     }
                     else if (order_details.status === 'paid') {
+
                         // Display congratulation dimmer.
                         this.displayCongratulateOverlay(order_details);
+
+
+
+                        // Register data for Google Analytics Ecommerce module (if GAE is available)
+                        if (window.ga && ga.create) {
+                            GAEAnalytics.register(order_details);
+                        }
+
+
 
                         // Remove products from cart
                         UtilityContainer.removeAllProducts();

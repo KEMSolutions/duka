@@ -119,7 +119,7 @@ var UtilityContainer = {
             total += (products[i].price * products[i].quantity);
         }
 
-        return total.toFixed(2);
+        return total;
     },
 
     /**
@@ -851,7 +851,7 @@ var cartSliderContainer = {
          *
          */
         setSubtotal: function () {
-            $(".subtotal").text(UtilityContainer.getProductsPrice());
+            $(".subtotal").text(UtilityContainer.getProductsPrice().toFixed(2));
         }
     },
 
@@ -1065,8 +1065,18 @@ var paymentOverlayContainer = {
                         this.displayUnpaidOverlay();
                     }
                     else if (order_details.status === 'paid') {
+
                         // Display congratulation dimmer.
                         this.displayCongratulateOverlay(order_details);
+
+
+
+                        // Register data for Google Analytics Ecommerce module (if GAE is available)
+                        if (window.ga && ga.create) {
+                            GAEAnalytics.register(order_details);
+                        }
+
+
 
                         // Remove products from cart
                         UtilityContainer.removeAllProducts();
