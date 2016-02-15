@@ -58,10 +58,11 @@ var GAEAnalytics = {
      * @param items
      */
     populateTransaction: function (transaction_id, items) {
-        $.each(items, function(index, item){
+        $.each(items, function(index){
             ga('ecommerce:addItem', {
                 'id': transaction_id,
                 'name': items[index].id,
+                'sku': items[index].id,
                 'price': items[index].price,
                 'quantity': items[index].quantity
             });
