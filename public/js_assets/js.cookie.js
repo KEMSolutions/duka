@@ -147,7 +147,7 @@ Cookies.toObject = function() {
     var _array = document.cookie.split(";"),
         result = {};
 
-    $.each(_array, function(index, item) {
+    $.each(_array, function(index) {
 
         //get individual cookie
         var cookie = _array[index].trim();
