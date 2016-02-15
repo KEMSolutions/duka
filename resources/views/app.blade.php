@@ -81,14 +81,17 @@
 		@include("layout._footer")
 	</div>
 
-	<!-- Scripts -->
+	{{-- Dependencies scripts --}}
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 	<script src="/js_assets/js.cookie.js"></script>
-	<script src="//cdn.kem.guru/boukem/spirit/js/gcc_ressources.js.gz"></script>
 
-	<!-- Semantic ui dependencies -->
+	{{-- Semantic ui dependencies --}}
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
 
+	{{-- Vue.js --}}
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.min.js"></script>
+
+	{{-- Duka.js --}}
 	<script src="/js/prod/duka.js"></script>
 
 	{{-- Tracking scripts initialization --}}
