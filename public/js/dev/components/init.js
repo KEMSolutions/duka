@@ -74,6 +74,12 @@
         productLayoutFavoriteContainer.init();
 
         /**
+         * Initialize card product formats feature.
+         *
+         */
+        productCardFormatContainer.init();
+
+        /**
          * Initialize product formats feature.
          *
          */

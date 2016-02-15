@@ -65,19 +65,17 @@
         <div class="extra content">
             <span>Format</span>
 
-            <span>
-                <select name="product-format" class="product-format">
-                    @foreach($product->formats as $index => $format)
-                        <option value="{{ $product->id . '-' . $format->id }}"
-                                data-format="{{ $format->name }}"
-                                data-price="{{ $format->price }}"
-                                data-reduced="{{ isset($format->reduced_price->price) ? $format->reduced_price->price : $format->reduced_price }}"
-                                data-name="{{ $product->localization->name . " - " . $format->name }}">
-                            {{ $format->name . " -  CAD $ " . $format->price }}
-                        </option>
-                    @endforeach
-                </select>
-            </span>
+            <select name="product-format" class="product-format">
+                @foreach($product->formats as $index => $format)
+                    <option value="{{ $product->id . '-' . $format->id }}"
+                            data-format="{{ $format->name }}"
+                            data-price="{{ $format->price }}"
+                            data-reduced="{{ isset($format->reduced_price->price) ? $format->reduced_price->price : $format->reduced_price }}"
+                            data-name="{{ $product->localization->name . " - " . $format->name }}">
+                        {{ $format->name . " -  CAD $ " . $format->price }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
         {{-- We display by default the first format information. --}}
@@ -85,17 +83,17 @@
                         @if ($format->discontinued)
                         disabled
                         @endif"
-             data-product="{{ $product->id . '-' . $format->id }}"
-             data-price="{{ isset($format->reduced_price) ? $format->reduced_price->price : $format->price }}"
+             data-product="{{ $product->id . '-' . $product->formats[0]->id }}"
+             data-price="{{ isset($product->formats[0]->reduced_price) ? $product->formats[0]->reduced_price->price : $product->formats[0]->price }}"
              data-thumbnail="{{ Products::getImage($product->id, 60, 60, "fit") }}"
              data-thumbnail_lg="{{ Products::getImage($product->id, 70, 110, "fit") }}"
-             data-name="{{ $product->localization->name . " - " . $format->name }}"
+             data-name="{{ $product->localization->name . " - " . $product->formats[0]->name }}"
              data-quantity="1"
              data-description="{{ $product->localization->short_description }}"
              data-link="{{ route('product', ['slug' => $product->slug]) }}">
 
 
-            <div class="meta text-center white"
+            <div class="meta text-center white format-name"
                  style="font-size: 11px;
                     margin-bottom: 0.3rem"
                     >
@@ -104,12 +102,13 @@
 
             <i class="add to cart icon"></i>
 
-            <i class="add to cart icon"></i>
-            {{
-                isset($product->formats[0]->reduced_price) ?
-                    money_format('%n', $product->formats[0]->reduced_price->price) :
-                    money_format('%n', $product->formats[0]->price)
-            }}
+            <span class="format-price">
+                {{
+                 isset($product->formats[0]->reduced_price) ?
+                     money_format('%n', $product->formats[0]->reduced_price->price) :
+                     money_format('%n', $product->formats[0]->price)
+             }}
+            </span>
         </div>
     @endif
 
