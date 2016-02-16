@@ -7,6 +7,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}"/>
 	<meta name="duka-localizations-and-endpoints-url" content="{{ route('localizationsAndEndpoints') }}"/>
+	{{-- Insert meta tags for client side currency localization --}}
+	@if (Utilities::currencyCodeForUser() && Utilities::currencyCodeForUser() !== "CAD")
+		<meta name="user-currency-code" content="{{ Utilities::currencyCodeForUser() }}">
+		<meta name="user-currency-rate" content="{{ Utilities::getAlternateCurrencyRate(Utilities::currencyCodeForUser()) }}">
+	@endif
 	@yield("custom_metas")
 
 	@if(Auth::check())

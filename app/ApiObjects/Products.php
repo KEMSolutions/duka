@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use cebe\markdown\MarkdownExtra;
 
 
+
 class Products extends BaseObject
 {
     public function __construct(MarkdownExtra $parser)
@@ -200,6 +201,5 @@ class Products extends BaseObject
         return round((($format->price - $format->reduced_price->price) * 100) / $format->price);
     }
 
-    
 
 }

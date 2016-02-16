@@ -2,7 +2,12 @@
 
 use Localization;
 
+use Log;
+use Cache;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 
 class Utilities
@@ -37,12 +42,78 @@ class Utilities
     {
         if (is_null($this->userCountryCode))
         {
-            $this->userCountryCode = $this->request->headers->get('CF-IPCountry', 'CA');
+            $this->userCountryCode = $this->request->headers->get('CF-IPCountry', 'FR');
         }
 
         return $this->userCountryCode;
     }
 
+    /**
+     * Will return the curency rate for the specified currency symbol (if available). 
+     *
+     * @param $currency the currency symbol needed for the price
+     * @return string formatted price
+     */
+    public function getAlternateCurrencyRate($currency="EUR") {
+
+        $expires = Carbon::now()->addHours(12);
+        $key = "products_currencies";
+        $rates = Cache::remember($key, $expires, function() {
+            // Create a Guzzle HTTP client instance.
+            $client = new Client();
+            
+            // Attempt to send request.
+            $request = $client->createRequest("GET", "https://api.fixer.io/latest?base=CAD");
+            try {
+                $response = $client->send($request);
+            } catch (ClientException $e) {
+                // Log error.
+                Log::error($e->getMessage());
+                return null;
+            }
+
+            $responseJson = $response->json(['object' => false]);
+            if (isset($responseJson["rates"])){
+                return $responseJson["rates"];
+            }
+            
+            return null;
+
+        });
+        
+        $rate = isset($rates[$currency]) ? $rates[$currency] : null;
+        return $rate;
+
+    }
+
+    public function currencyCodeForUser(){
+        $userCountryCode = $this->getUserCountryCode();
+        
+        // Return a list of currencies for supported countries
+
+        switch ($userCountryCode) {
+            case 'CA':
+                return "CAD";
+            case 'US':
+                return "USD";
+            case 'MX':
+                return "MXN";
+            case 'GB':
+                return "GBP";
+            case 'FR':
+            case 'BE':
+            case 'CH':
+            case 'ES':
+            case 'DE':
+            case 'IT':
+            case 'LU':
+            case 'PT':
+                return "EUR";
+            default:
+                return null;
+        }
+
+    }
 
     /**
      * Returns a color brighter or darker according to a base color (hex formatted).
