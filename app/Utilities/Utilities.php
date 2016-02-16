@@ -42,7 +42,7 @@ class Utilities
     {
         if (is_null($this->userCountryCode))
         {
-            $this->userCountryCode = $this->request->headers->get('CF-IPCountry', 'FR');
+            $this->userCountryCode = $this->request->headers->get('CF-IPCountry', 'CA');
         }
 
         return $this->userCountryCode;
