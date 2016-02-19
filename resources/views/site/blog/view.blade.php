@@ -28,10 +28,19 @@
 				<h1 itemprop="name headline" class="ui header">
 					{{ $blog->title }}
 				</h1>
-				<strong itemprop="description">
+                <aside itemprop="author" itemscope="" itemtype="http://schema.org/Person" class="meta">
+                <span itemprop="name" >
+                        {{ $blog->author->name }}
+                </span>
+               </aside>
+				
+                <strong class="description" itemprop="description">
 					{{ $blog->lead }}
 				</strong>
+
 		    </header>
+
+            <img itemprop="image" src="{{ Utilities::setImageSizeAndMode(640, 480, 'fit', $blog->image->url) }}" class="ui fluid image">
 
 		    <div itemprop="articleBody">
         	{!! $html !!}
