@@ -22,10 +22,10 @@
 
     <section class="ui main text container">
 
-	    <article  itemscope itemtype="http://schema.org/NewsArticle">
+	    <article  itemscope itemtype="http://schema.org/BlogPosting">
 	    <meta itemprop="datePublished" content="{{ $blog->date }}"/>
     		<header>
-				<h1 itemprop="headline" class="ui header">
+				<h1 itemprop="name headline" class="ui header">
 					{{ $blog->title }}
 				</h1>
 				<strong itemprop="description">
