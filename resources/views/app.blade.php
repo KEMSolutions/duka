@@ -94,7 +94,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
 
 	{{-- Vue.js --}}
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.min.js"></script>
 
 	{{-- Duka.js --}}
 	<script src="/js/prod/duka.js"></script>

@@ -251,7 +251,7 @@ return [
     "relevance"         =>"Pertinence",
     "price_range"       =>"Gamme de prix",
     "price_low_to_high" =>"Prix: ordre croissant",
-    "price_high_to_high" =>"Prix: ordre décroissant",
+    "price_high_to_low" =>"Prix: ordre décroissant",
     "total_price"       =>"Prix total",
     "items_per_page"    =>"Articles par page: ",
     "switch_layout"     =>"Vue: ",
