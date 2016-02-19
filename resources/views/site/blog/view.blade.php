@@ -5,6 +5,14 @@
 
 
 @section("content")
+
+{{-- Facebook crawler properties --}}
+<meta property="og:url" content="{{ action('BlogController@show', ["slug"=>$blog->slug]) }}" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{{ $blog->title }}" />
+<meta property="og:description" content="{{ $blog->lead }}" />
+<meta property="og:image" content="{{ Utilities::setImageSizeAndMode(1200, 630, '', $blog->image->url) }}" />
+
 <div class="ui container grid vertically padded">
     <div class="one column row">
         <div class="right floated column">
