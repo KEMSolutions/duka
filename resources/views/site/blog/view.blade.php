@@ -40,7 +40,12 @@
 
 		    </header>
 
-            <img itemprop="image" src="{{ Utilities::setImageSizeAndMode(640, 480, 'fit', $blog->image->url) }}" class="ui fluid image">
+            <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+                <img src="{{ Utilities::setImageSizeAndMode(640, 480, 'fit', $blog->image->url) }}" class="ui fluid image">
+                <meta itemprop="url" content="{{ Utilities::setImageSizeAndMode(800, 800, 'fit,blowup', $blog->image->url) }}">
+                <meta itemprop="width" content="800">
+                <meta itemprop="height" content="800">
+            </div>
 
 		    <div itemprop="articleBody">
         	{!! $html !!}
