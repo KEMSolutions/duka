@@ -23,7 +23,9 @@
     <section class="ui main text container">
 
 	    <article  itemscope itemtype="http://schema.org/BlogPosting">
+        <meta itemscope itemprop="mainEntityOfPage" itemType="https://schema.org/WebPage" itemid="{{ action('BlogController@show', ["slug"=>$blog->slug]) }}"/>
 	    <meta itemprop="datePublished" content="{{ $blog->date }}"/>
+        <meta itemprop="dateModified" content="{{ $blog->date }}"/>
     		<header>
 				<h1 itemprop="name headline" class="ui header">
 					{{ $blog->title }}
@@ -33,13 +35,26 @@
                         {{ $blog->author->name }}
                 </span>
                </aside>
+
+<aside itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+    <span itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+    @if (Store::rectangularLogo())
+        <meta itemprop="url" content="{{ Store::rectangularLogo() }}">
+    @else
+        <meta itemprop="url" content="{{ Store::squareLogo($width = 60, $height = 60, $mode = '', $force_bitmap=true) }}">
+        <meta itemprop="width" content="60">
+        <meta itemprop="height" content="60">
+    @endif
+    </span>
+    <meta itemprop="name" content="{{ Store::info()->name }}">
+</aside>
 				
                 <strong class="description" itemprop="description">
 					{{ $blog->lead }}
 				</strong>
 
 		    </header>
-
+<div class="ui divider"></div>
             <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
                 <img src="{{ Utilities::setImageSizeAndMode(640, 480, 'fit', $blog->image->url) }}" class="ui fluid image">
                 <meta itemprop="url" content="{{ Utilities::setImageSizeAndMode(800, 800, 'fit,blowup', $blog->image->url) }}">
