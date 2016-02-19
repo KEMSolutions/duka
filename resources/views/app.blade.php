@@ -12,6 +12,11 @@
 		<meta name="user-currency-code" content="{{ Utilities::currencyCodeForUser() }}">
 		<meta name="user-currency-rate" content="{{ Utilities::getAlternateCurrencyRate(Utilities::currencyCodeForUser()) }}">
 	@endif
+
+	@if(getenv("FACEBOOK_APP_ID"))
+		<meta property="fb:app_id" content="{{ getenv("FACEBOOK_APP_ID") }}" />
+	@endif
+
 	@yield("custom_metas")
 
 	@if(Auth::check())
