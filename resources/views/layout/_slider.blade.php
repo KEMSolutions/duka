@@ -23,7 +23,7 @@
     <div class="item ">
         <ul class="no-margin">
             <li>
-                @lang('boukem.subtotal'): <b>$ </b><b class="subtotal">0.00</b>
+                @lang('boukem.subtotal'): <b class="subtotal">0.00</b>
             </li>
 
             <br/>

@@ -45,10 +45,20 @@
                                 </span>
                                 <span id="product-price" class="strong text-danger">
                                     CAD ${{ number_format((float)$product->formats[0]->reduced_price->price, 2, '.', '') }}
+
+                                    @if (Utilities::currencyCodeForUser() && Utilities::currencyCodeForUser() !== "CAD")
+                                        ( {{ Utilities::currencyCodeForUser() }}
+                                        {{ Utilities::getAlternateCurrencyRate(Utilities::currencyCodeForUser()) }} )
+                                    @endif
                                 </span>
                             @else
                                 <span id="product-price" class="strong">
                                     CAD ${{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
+
+                                    @if (Utilities::currencyCodeForUser() && Utilities::currencyCodeForUser() !== "CAD")
+                                        ( {{ Utilities::currencyCodeForUser() }}
+                                        {{ Utilities::getAlternateCurrencyRate(Utilities::currencyCodeForUser()) }} )
+                                    @endif
                                 </span>
                             @endif
                         </div>

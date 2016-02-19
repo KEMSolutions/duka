@@ -216,7 +216,15 @@ var cartSliderContainer = {
          *
          */
         setSubtotal: function () {
-            $(".subtotal").text(UtilityContainer.getProductsPrice().toFixed(2));
+            var subtotal = UtilityContainer.getProductsPrice(),
+                subtotal_label = "CAD $" + subtotal.toFixed(2);
+
+            if ($("meta[name='user-currency-code'], meta[name='user-currency-rate']").length > 0) {
+                var currency_price = subtotal * parseFloat($("meta[name='user-currency-rate']").attr("content"));
+
+                subtotal_label += " (" + $("meta[name='user-currency-code']").attr("content") + " " + currency_price + ")" ;
+            }
+            $(".subtotal").text(subtotal_label);
         }
     },
 
