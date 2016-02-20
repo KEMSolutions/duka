@@ -13,6 +13,7 @@
 		<meta name="user-currency-rate" content="{{ Utilities::getAlternateCurrencyRate(Utilities::currencyCodeForUser()) }}">
 	@endif
 
+	<meta property="og:site_name" content="{{ Store::info()->name }}"/>
 	@if(getenv("FACEBOOK_APP_ID"))
 		<meta property="fb:app_id" content="{{ getenv("FACEBOOK_APP_ID") }}" />
 	@endif
