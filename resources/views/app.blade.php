@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ Localization::getCurrentLocale() }}" >
+<html lang="{{ Localization::getCurrentLocale() }}">
 <head>
 
 	<meta charset="utf-8">
@@ -16,6 +16,9 @@
 	<meta property="og:site_name" content="{{ Store::info()->name }}"/>
 	@if(getenv("FACEBOOK_APP_ID"))
 		<meta property="fb:app_id" content="{{ getenv("FACEBOOK_APP_ID") }}" />
+	@endif
+	@if(getenv("FACEBOOK_ADMINS"))
+		<meta property="fb:admins" content="{{ getenv("FACEBOOK_ADMINS") }}" />
 	@endif
 
 	@yield("custom_metas")
