@@ -8,6 +8,12 @@
     @foreach ($product->localization->alt as $localization)
         <link rel="alternate" hreflang="{{ $localization->locale->language }}" href="/{{ $localization->locale->language }}/prod/{{ $localization->slug }}.html" />
     @endforeach
+{{-- Facebook open graph --}}
+<meta property="og:url" content="{{ route('product', ["slug"=>$product->localization->slug]) }}" />
+<meta property="og:type" content="product" />
+<meta property="og:title" content="{{ $product->localization->name }}" />
+<meta property="og:description" content="{{ $product->localization->short_description }}" />
+<meta property="og:image" content="{{ Products::getImage($product->id, 1000, 1000) }}" />
 @endsection
 
 @section("content")
