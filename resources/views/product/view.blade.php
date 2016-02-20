@@ -54,7 +54,7 @@
 
                                     @if (Utilities::currencyCodeForUser() && Utilities::currencyCodeForUser() !== "CAD")
                                         ( {{ Utilities::currencyCodeForUser() }}
-                                        {{ Utilities::getAlternateCurrencyRate(Utilities::currencyCodeForUser()) }} )
+                                        {{ number_format((float)$product->formats[0]->price * Utilities::getAlternateCurrencyRate(Utilities::currencyCodeForUser()), 2, '.', '') }} )
                                     @endif
                                 </span>
                             @else
@@ -63,7 +63,7 @@
 
                                     @if (Utilities::currencyCodeForUser() && Utilities::currencyCodeForUser() !== "CAD")
                                         ( {{ Utilities::currencyCodeForUser() }}
-                                        {{ Utilities::getAlternateCurrencyRate(Utilities::currencyCodeForUser()) }} )
+                                        {{ number_format((float)$product->formats[0]->price * Utilities::getAlternateCurrencyRate(Utilities::currencyCodeForUser()), 2, '.', '') }} )
                                     @endif
                                 </span>
                             @endif

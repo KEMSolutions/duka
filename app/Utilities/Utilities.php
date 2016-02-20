@@ -40,6 +40,7 @@ class Utilities
      */
     public function getUserCountryCode()
     {
+        return "FR";
         if (is_null($this->userCountryCode))
         {
             $this->userCountryCode = $this->request->headers->get('CF-IPCountry', 'CA');
