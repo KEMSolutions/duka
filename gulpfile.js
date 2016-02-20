@@ -43,5 +43,4 @@ gulp.task("watch", function () {
 });
 
 // Default task.
-gulp.task('semantic', ['semantic-css']);
-gulp.task('default', ['js', 'css', 'semantic']);
+gulp.task('default', ['js', 'css']);

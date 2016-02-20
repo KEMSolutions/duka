@@ -1502,7 +1502,7 @@ var cartSliderContainer = {
                 subtotal_label = "CAD $" + subtotal.toFixed(2);
 
             if ($("meta[name='user-currency-code'], meta[name='user-currency-rate']").length > 0) {
-                var currency_price = subtotal * parseFloat($("meta[name='user-currency-rate']").attr("content"));
+                var currency_price = (subtotal * parseFloat($("meta[name='user-currency-rate']").attr("content"))).toFixed(2);
 
                 subtotal_label += " (" + $("meta[name='user-currency-code']").attr("content") + " " + currency_price + ")" ;
             }
