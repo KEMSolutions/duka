@@ -2,7 +2,7 @@
 
 Duka is a fully functional eCommerce application built on the [KEM API](http://docs.kem.guru). Duka is open source and released under the [MIT license](http://opensource.org/licenses/MIT).
 
-# Setup
+## Setup
 
 Duka is built on the popular PHP framework [Laravel](http://laravel.com). To get started, make sure
 [composer is installed](https://getcomposer.org/).
@@ -15,18 +15,20 @@ Since running composer doesn't require root access, Duka can be deployed on almo
 
 E.g. on Cpanel: ```ln -s my-duka-fork/public public_html```
 
-Duka source code contains a Procfile, allowing it to run on Heroku on apache2, out of the box. At this moment, nginx is not supported.
+Duka source code contains a Procfile, allowing it to run on Heroku on apache2, out of the box. We highly recommend using [Laravel Forge](https://forge.laravel.com), since this is what we use internally and Forge is absolutely awesome.
 
-# Quick Reference
+## Quick start
 
-## Javascript
+A frontend quickstart guide is available in French. Head to `[this_repo]/documentation/fr/frontend-development-guide.md`.
+
+### Javascript
 
 Duka makes use of a combination of [Semantic UI](http://semantic-ui.com) features and custom components. We are using Gulp to create a minified, uglified production script.  
 The script entry point is located in `public/js/dev/components/init.js`, where all independant modules should be called. 
 
 
 
-##### File structure (as of 02/12/2015)
+#### File structure
 
 The `/public/js` folder contains 4 subfolders: *analytics*, *data*, *dev*, *prod*.
 
@@ -48,29 +50,29 @@ Some components require more than one file to enable their full feature (eg. car
 -`prod`  
 Should only contain production scripts. Ideally, only one minified script combining all components located in `dev/components` should be here. 
 
-##### Components: Generality 
+#### Components: Generality 
 Every component are created in independent files and are suffixed by the keyword `Container`.
 If a component can stand on its own (eg. with no component dependencies), its last method should be an `init` method that is registered in `public/js/dev/components/init.js`. 
 
-##### Components: Specific Behaviours
+#### Components: Specific Behaviours
  Certain Semantic UI modules have custom attributes allowing more behaviour versatility. Those modules are:  
   - [Dropdown](http://semantic-ui.com/modules/dropdown.html)  
   - [Dimmer](http://semantic-ui.com/modules/dimmer.html)
  
-###### Dropdown  
+##### Dropdown  
 To specify a specific action to occur at click, use the tag `data-action`. The default action is set to 'activate' (to get the full list of actions, refer to [this](http://semantic-ui.com/modules/dropdown.html#/settings) page. 
 
     // Active menu and update input fields, but without changing current text. 
     <div class='ui dropdown' data-action='select'>
 
-###### Dimmer
+##### Dimmer
     // To have an explicit close button for a dimmer.
     <trigger class='close-dimmer'>...</trigger>
 
 
-## Routing
+### Routing
 
-Most named routes are defined in "app/Http/routes.php" and can be used through the [route()](http://laravel.com/docs/5.0/routing#named-routes) shortcut in Laravel:
+Most named routes are defined in "app/Http/routes.php" and can be used through the [route()](http://laravel.com/docs/5.1/routing#named-routes) shortcut in Laravel:
 
 	// Returns something like "https://example.com/en"
 	$url = route( 'home' );
@@ -83,7 +85,7 @@ Most named routes are defined in "app/Http/routes.php" and can be used through t
     
 For a list of all available routes, run `php artisan route:list` from the root folder.
 
-## API Facades
+### API Facades
 
 The `KemAPI` facade is defined in "app/Http/KemApiHttpClient.php" and has two useful methods:
 
@@ -100,4 +102,3 @@ Generally, interactions with the API should be done through the other facades, d
     $product = Products::get( 616 );
     $estimate = Orders::estimate( $products, $address );
 
-That is all.
