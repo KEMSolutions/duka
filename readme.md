@@ -19,7 +19,7 @@ Duka source code contains a Procfile, allowing it to run on Heroku on apache2, o
 
 ## Quick start
 
-A frontend quickstart guide is available in French. Head to `[this_repo]/documentation/fr/frontend-development-guide.md`.
+Quickstart guides are available on the [wiki](https://bitbucket.org/kemsolutions/duka/wiki/).
 
 ### Javascript
 
