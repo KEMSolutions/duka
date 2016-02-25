@@ -1,30 +1,32 @@
-var productCardFormatContainer = {
+Vue.config.debug = true;
 
-    /**
-     * Temporary function to handle the format change on product card.
-     * Until we use Vue.js to fix all this mess...
-     *
-     */
-    syncFormat: function () {
+Vue.component("product-card", {
+    template: '#product-card-template',
 
-        // Change the buybutton data attributes.
-        $(".product-format").on("change", function () {
-            $(this).parent().next().attr({
-                'data-product': $(this).val(),
-                'data-price': $(this).find(":selected").data("price"),
-                'data-name': $(this).find(":selected").data("name"),
-                'data-format': $(this).find(":selected").data("format")
-            });
-
-            // Change buybutton text.
-            $(this).parent().next().find(".format-name").text($(this).find(":selected").data('format'));
-
-            // Change buybutton price
-            $(this).parent().next().find(".format-price").text($(this).find(":selected").data('price'));
-        });
+    props: {
+        name: String,
+        productId: Number,
+        route: String,
+        formatNumber: Number,
+        image: String,
+        thumbnail: String,
+        thumbnailLg: String,
+        description: String,
+        products: Array,
+        firstFormatPrice: Number,
+        firstFormatReducedPrice: Number,
+        firstFormatRebatePercent: String,
+        brandSlug: String,
+        brandName: String
     },
 
-    init: function () {
-        productCardFormatContainer.syncFormat();
+    data: function () {
+        return {
+            productFormat: ""
+        }
     }
-};
+});
+
+new Vue({
+    el: ".duka-container"
+});

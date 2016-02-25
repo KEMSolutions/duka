@@ -77,7 +77,7 @@
          * Initialize card product formats feature.
          *
          */
-        productCardFormatContainer.init();
+        //productCardFormatContainer.init();
 
         /**
          * Initialize product formats feature.
