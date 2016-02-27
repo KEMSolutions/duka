@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ Localization::getCurrentLocale() }}" >
+<html lang="{{ Localization::getCurrentLocale() }}">
 <head>
 
 	<meta charset="utf-8">
@@ -13,8 +13,12 @@
 		<meta name="user-currency-rate" content="{{ Utilities::getAlternateCurrencyRate(Utilities::currencyCodeForUser()) }}">
 	@endif
 
+	<meta property="og:site_name" content="{{ Store::info()->name }}"/>
 	@if(getenv("FACEBOOK_APP_ID"))
 		<meta property="fb:app_id" content="{{ getenv("FACEBOOK_APP_ID") }}" />
+	@endif
+	@if(getenv("FACEBOOK_ADMINS"))
+		<meta property="fb:admins" content="{{ getenv("FACEBOOK_ADMINS") }}" />
 	@endif
 
 	@yield("custom_metas")
@@ -103,7 +107,11 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
 
 	{{-- Vue.js --}}
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.js"></script>
+	@if (config('app.debug'))
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.js"></script>
+	@else
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.min.js"></script>
+	@endif
 
 	{{-- Duka.js --}}
 	<script src="/js/prod/duka.js"></script>
