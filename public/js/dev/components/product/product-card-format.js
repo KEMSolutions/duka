@@ -1,5 +1,3 @@
-Vue.config.debug = true;
-
 Vue.component("product-card", {
     template: '#product-card-template',
 
@@ -25,8 +23,4 @@ Vue.component("product-card", {
             productFormat: ""
         }
     }
-});
-
-new Vue({
-    el: ".duka-container"
 });

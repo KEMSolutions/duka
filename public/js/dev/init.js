@@ -3,7 +3,20 @@
  *
  */
 ; (function(window, document, $) {
+
+    // Temporary for now, until we find a better file structure...
+    Vue.config.debug = true;
+
+
     $(document).ready(function () {
+
+        /**
+         * Sets up Vue.js module on the Duka container.
+         *
+         */
+        new Vue({
+            el: ".duka-container"
+        });
 
         /**
          * Sets up the ajax token for all ajax requests.
