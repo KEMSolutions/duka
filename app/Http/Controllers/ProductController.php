@@ -26,9 +26,20 @@ class ProductController extends Controller
             abort(404);
         }
 
+        // Build a list of alternatives (if any)
+        $alternatives = [];
+        foreach ($product->localization->alt as $localeid => $alt) {
+
+            $alternative = new \stdClass;
+            $alternative->locale = $alt->locale;
+            $alternative->url = Localization::getLocalizedURL($alt->locale->language, route("product", ["slug"=>$alt->slug]));
+            $alternatives[] = $alternative;
+        }
+
         return View::make("product.view")->with([
             "product" => $product,
             "locale" => $locale,
+            "alternatives"=>$alternatives,
             "supported_countries" => ["FR", "DE", "US", "GB", "IT", "BE", "CH", "LU", "ES", "PT", "MX"],
             "country_code" => Utilities::getUserCountryCode()
         ]);
