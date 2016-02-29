@@ -37,7 +37,7 @@ class KemApiHttpClient
     /**
      * @var string  Current locale.
      */
-    private $locale = 'en';
+    public $locale = 'en';
 
     /**
      * The constructor takes the API user and API secrets as strings, as well as other config

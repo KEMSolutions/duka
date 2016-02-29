@@ -41,6 +41,10 @@ class LocalizationServiceProvider extends ServiceProvider
         // Format the store's supported locales for use with Mcamara\LaravelLocalization.
         // We do this silently without caching the results or initializing the KemAPI facade.
         $client = new ApiClient(config('services.kemapi.user'), config('services.kemapi.secret'));
+        /**
+         * We need to set a language that is always accepted in the locale so the API doesn't return 400 when users have a non-accepted language set (eg. 'es').
+         */
+        $client->locale = "en";
         $supportedLocales = $client->get('locales');
 
         $locales = [];
