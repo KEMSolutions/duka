@@ -23,7 +23,6 @@
 
 
                 <div class="six wide column">
-
                     {{-- Search bar --}}
                     <form action="{{ route('search') }}" method="get">
                         <div class="ui fluid action input">
@@ -33,7 +32,6 @@
                             </button>
                         </div>
                     </form>
-
                 </div>
 
 
@@ -54,6 +52,8 @@
                             </div>
                         </div>
                     @endif
+
+                    @include("layout._language_switcher", ["alternatives"=>(isset($alternatives) ? $alternatives : [])])
 
                     @if(Request::route()->getName() != "cart")
                         <div class="view-cart ui labeled button" tabindex="0">

@@ -17,7 +17,7 @@ class Store extends BaseObject
      * @return object   Store details.
      */
     public function info() {
-        return parent::get('', ['embed' => 'blogs']);
+        return parent::get('', ['embed' => 'blogs,locales']);
     }
 
     /**
