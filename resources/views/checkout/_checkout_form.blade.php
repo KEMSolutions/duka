@@ -206,6 +206,13 @@
             </div>
 
             <div class="ui basic segment">
+                <div class="ui checkbox">
+                  <input id="marketing_email_optin" type="checkbox" name="marketing_email_optin">
+                  <label for="marketing_email_optin">@lang("boukem.marketing_email_optin")</label>
+                </div>
+            </div>
+
+            <div class="ui basic segment">
                 <button class="ui inverted red icon button left floated back-contact-info">
                     <i class="left arrow icon"></i>
                     @lang("boukem.back_contact_info")
@@ -216,6 +223,9 @@
                     @lang("boukem.proceed_checkout")
                 </button>
             </div>
+
+            
+            
 
         </div>
     </div>

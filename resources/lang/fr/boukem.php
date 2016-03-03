@@ -289,4 +289,6 @@ return [
     "validation_city_billing"   =>"Veuillez saisir votre ville de facturation",
     "validation_post_billing"   =>"Veuillez saisir votre code postal de facturation",
 
+    "marketing_email_optin"=>   "S'inscrire pour recevoir les dernières nouvelles, mises à jour et offres spéciales, livrées directement dans votre boîte de réception.",
+
 ];
