@@ -237,6 +237,9 @@ class ApiController extends Controller
             new Customer(['email' => Request::input('email')]) :
             new Customer(['id' => Auth::user()->id]);
 
+
+        $customer->marketing_optin = Request::input("marketing_email_optin") ? true : false;
+
         // Retrieve other details.
         $itemList = Request::input('products');
         $shippingDetails = json_decode(utf8_encode(base64_decode(Request::input('shipping'))), true);

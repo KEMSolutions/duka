@@ -23,6 +23,7 @@ class Customer implements AuthenticatableContract, CanResetPasswordContract, Arr
     public $metadata;
     public $addresses = [];
     public $remember_token;
+    public $marketing_optin = false;
 
     /**
      * @param array $details
