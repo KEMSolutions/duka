@@ -171,7 +171,7 @@
                             <div class="menu">
                                 @if (Store::info()->support->phone && Store::info()->support->phone !== "")
                                     <div class="item">
-                                        <i class="fa fa-phone icon"></i>
+                                        <i class="phone icon"></i>
                                         <a href="tel:{{ Store::info()->support->phone->number }}">
                                             {{ Store::info()->support->phone->vanity }}
                                         </a>
@@ -179,7 +179,7 @@
                                 @endif
                                 @if  (Store::info()->support->email && Store::info()->support->email !== "")
                                 <div class="item">
-                                    <i class="fa fa-envelope-o icon"></i>
+                                    <i class="mail outline icon"></i>
                                     <a href="mailto:{{ Store::info()->support->email }}">
                                         {{ Store::info()->support->email }}
                                     </a>

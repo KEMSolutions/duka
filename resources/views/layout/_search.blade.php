@@ -1,9 +1,9 @@
 <!-- SEARCH -->
 <div class="search-wr" id="divSearch">
-    <span class="close" id="cmdCloseSearch" title=""><i class="fa fa-times-circle"></i></span>
+    <span class="close" id="cmdCloseSearch" title=""><i class="remove circle outline icon"></i></span>
     <div class="container">
         <div class="row">
-            <div class="col-md-1 col-xs-2 search-sign">
+            <div class="search icon">
                 <i class="fa fa-search"></i>
             </div>
             <div class="col-md-11 col-xs-10">

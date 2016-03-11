@@ -180,10 +180,10 @@
 
                                     <div class="item">
                                         @if (in_array($country_code, $supported_countries))
-                                            <i class="fa fa-fw"><i class="{{ strtolower($country_code) }} flag"></i></i>
+                                            <i class="{{ strtolower($country_code) }} flag"></i>
                                             {{ Lang::get("boukem.world_shipping") }}
                                         @else
-                                            <i class="fa fa-fw"><i class="ca flag"></i></i>
+                                            <i class="ca flag"></i>
                                             {{ Lang::get("boukem.canadian_shipping") }}
                                         @endif
                                     </div>
@@ -193,19 +193,19 @@
                                         @if($product->formats[0]->inventory->count > 5)
                                             <link itemprop="availability" href="http://schema.org/LimitedAvailability">
                                             <div class="item text-success">
-                                                <i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i>
+                                                <i class="{{ ($country_code === "US" || $country_code === "CA") ? "shipping" : "plane" }} icon"></i>
                                                 {{ Lang::get("boukem.express_shipping") }}
                                             </div>
                                         @elseif($product->formats[0]->inventory->count > 0)
                                             <link itemprop="availability" href="http://schema.org/InStock" >
                                             <div class="item text-warning">
-                                                <i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i>
+                                                <i class="{{ ($country_code === "US" || $country_code === "CA") ? "shipping" : "plane" }} icon"></i>
                                                 {{ Lang::get("boukem.stock_left", array("quantity" => $product->formats[0]->inventory->count)) }}
                                             </div>
                                         @else
                                             <link itemprop="availability" href="http://schema.org/LimitedAvailability" >
                                             <div class="item">
-                                                <i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i>
+                                                <i class="{{ ($country_code === "US" || $country_code === "CA") ? "shipping" : "plane" }} icon"></i>
                                                 {{ Lang::get("boukem.shipping_time") }}
                                             </div>
                                         @endif
