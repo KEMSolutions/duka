@@ -1,0 +1,70 @@
+/*******************************
+          Pagination
+*******************************/
+
+
+/* === Variables === */
+@pagination-padding-vertical: 6px;
+@pagination-padding-horizontal: 12px;
+@pagination-line-height: 1.5rem;
+
+
+/* === Pagination ===*/
+.pagination {
+  display: inline-block;
+  padding-left: 0;
+}
+.pagination > li {
+  display: inline;
+}
+.pagination > li > a,
+.pagination > li > span {
+  float: left;
+  padding: @pagination-padding-vertical @pagination-padding-horizontal;
+  line-height: @pagination-line-height;
+  text-decoration: none;
+  color: #F000FF;
+  background-color: #000EEE;
+
+  border: 1px solid #000FFF;
+  margin-left: -1px;
+}
+
+/* Last element of paginator */
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+  border-bottom-right-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.pagination > li > a:hover,
+.pagination > li > span:hover,
+.pagination > li > a:focus,
+.pagination > li > span:focus {
+  color: #E000EE;
+  background-color: #111FFF;
+  border-color: #000FFF;
+}
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+  z-index: 2;
+  color: #E000EE;
+  background-color: #000FFF;
+  border-color: #111FFF;
+  cursor: default;
+}
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus {
+  color: #777777;
+  background-color: #ffffff;
+  border-color: #dddddd;
+  cursor: not-allowed;
+}

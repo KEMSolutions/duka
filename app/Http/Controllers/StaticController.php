@@ -55,7 +55,7 @@ class StaticController extends Controller
         
         $style = \Cache::remember(\KemAPI::getUser() . 'app_http_controllers_staticcontroller_stylesheet', 0, function() {
             
-            $sheetPath = public_path() . '/css/prod/app.css';
+            $sheetPath = public_path() . '/css/prod/duka.css';
             $sheet = file_get_contents($sheetPath,"r");
 
             $color_one = \Store::info()->colors->color_one;

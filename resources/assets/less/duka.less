@@ -1,0 +1,72 @@
+/**
+DDDDDDDDDDDDD       UUUUUUUU     UUUUUUUUKKKKKKKKK    KKKKKKK               AAA
+D::::::::::::DDD    U::::::U     U::::::UK:::::::K    K:::::K              A:::A
+D:::::::::::::::DD  U::::::U     U::::::UK:::::::K    K:::::K             A:::::A
+DDD:::::DDDDD:::::D UU:::::U     U:::::UUK:::::::K   K::::::K            A:::::::A
+  D:::::D    D:::::D U:::::U     U:::::U KK::::::K  K:::::KKK           A:::::::::A
+  D:::::D     D:::::DU:::::D     D:::::U   K:::::K K:::::K             A:::::A:::::A
+  D:::::D     D:::::DU:::::D     D:::::U   K::::::K:::::K             A:::::A A:::::A
+  D:::::D     D:::::DU:::::D     D:::::U   K:::::::::::K             A:::::A   A:::::A
+  D:::::D     D:::::DU:::::D     D:::::U   K:::::::::::K            A:::::A     A:::::A
+  D:::::D     D:::::DU:::::D     D:::::U   K::::::K:::::K          A:::::AAAAAAAAA:::::A
+  D:::::D     D:::::DU:::::D     D:::::U   K:::::K K:::::K        A:::::::::::::::::::::A
+  D:::::D    D:::::D U::::::U   U::::::U KK::::::K  K:::::KKK    A:::::AAAAAAAAAAAAA:::::A
+DDD:::::DDDDD:::::D  U:::::::UUU:::::::U K:::::::K   K::::::K   A:::::A             A:::::A
+D:::::::::::::::DD    UU:::::::::::::UU  K:::::::K    K:::::K  A:::::A               A:::::A
+D::::::::::::DDD        UU:::::::::UU    K:::::::K    K:::::K A:::::A                 A:::::A
+DDDDDDDDDDDDD             UUUUUUUUU      KKKKKKKKK    KKKKKKKAAAAAAA                   AAAAAAA
+
+
+Main entry less file.
+
+Hierarchy is as follow:
+  elements:  Reusable non binding generic style.
+  globals :  Style applied to all elements and modules.
+  modules :  Style specific to a specific page / modules.
+
+**/
+
+/* Global */
+@import "definitions/globals/color.less";
+@import "definitions/globals/color.variables";
+@import "definitions/globals/layout.less";
+@import "definitions/globals/site.less";
+
+/* Elements */
+@import "definitions/elements/border.less";
+@import "definitions/elements/breadcrumb.less";
+@import "definitions/elements/input.less";
+@import "definitions/elements/pagnination.less";
+@import "definitions/elements/screenreader.less";
+@import "definitions/elements/text.less";
+
+/* Modules */
+@import "definitions/modules/cartslider.less";
+@import "definitions/modules/category.less";
+@import "definitions/modules/dimmer.less";
+@import "definitions/modules/footer.less";
+@import "definitions/modules/header.less";
+@import "definitions/modules/product_card.less";
+
+/* === Theme import === */
+/* Global */
+@import (optional) "site/globals/color.less";
+@import (optional) "site/globals/color.variables";
+@import (optional) "site/globals/layout.less";
+@import (optional) "site/globals/site.less";
+
+/* Elements */
+@import (optional) "site/elements/border.less";
+@import (optional) "site/elements/breadcrumb.less";
+@import (optional) "site/elements/input.less";
+@import (optional) "site/elements/pagnination.less";
+@import (optional) "site/elements/screenreader.less";
+@import (optional) "site/elements/text.less";
+
+/* Modules */
+@import (optional) "site/modules/cartslider.less";
+@import (optional) "site/modules/category.less";
+@import (optional) "site/modules/dimmer.less";
+@import (optional) "site/modules/footer.less";
+@import (optional) "site/modules/header.less";
+@import (optional) "site/modules/product_card.less";

@@ -46,7 +46,7 @@
                 </div>
             </div>
 
-            <button class="ui btn btn-one btn-one-inverted" type="submit">@lang('boukem.log_in')</button>
+            <button class="ui button color-one" type="submit">@lang('boukem.log_in')</button>
 
             <a class="btn btn-link" href="{{ route('auth.reset') }}">@lang('passwords.password_forgotten')</a>
         </form>

@@ -45,12 +45,6 @@
         semanticInitContainer.init();
 
         /**
-         * Initialize responsiveness feature.
-         *
-         */
-        responsiveContainer.init();
-
-        /**
          * Initialize checkout logic.
          *
          */
@@ -75,22 +69,10 @@
         paymentOverlayContainer.init();
 
         /**
-         * Initialize homepage sections.
-         *
-         */
-        homepageContainer.init();
-
-        /**
          * Initialize favorite products feature.
          *
          */
         productLayoutFavoriteContainer.init();
-
-        /**
-         * Initialize card product formats feature.
-         *
-         */
-        //productCardFormatContainer.init();
 
         /**
          * Initialize product formats feature.

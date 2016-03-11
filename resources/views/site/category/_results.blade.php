@@ -1,15 +1,12 @@
-<div class="row">
-    <div class="layout-toggle-container grid-layout">
-        @include(
-        'product.layout._product_card_dense', [
-            'showTag' => false,
-            'locale' => Localization::getCurrentLocale(),
-            'border' => false
-    ])
+<div class="ui padded grid">
+    <div class="ui row four stackable doubling link cards">
+        @foreach($products as $product )
+            @if($product)
+                {!! view("product._card", ["product"=>$product])->render() !!}
+            @endif
+        @endforeach
     </div>
-
 </div>
-
 
 {{--Pagination --}}
 <div class="row text-center">

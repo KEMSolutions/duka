@@ -52,6 +52,7 @@
 
 	<!-- Required -->
 	<link href="//cdn.kem.guru/css/outdatedBrowser.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/css/prod/animate.min.css"/>
 	<link href="{{ url('css/main.css') }}" rel="stylesheet">
 
 	<!-- Custom css -->
