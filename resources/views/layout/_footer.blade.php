@@ -88,7 +88,7 @@
             </div>
 
             <div class="right floated three wide column white">
-                <img src="{{ asset('/img/kem_signature.png') }}" alt="Powered by KEM">
+                <img src="{{ asset('/img/kem_signature.png') }}" alt="Powered by KEM" class="pull-right">
             </div>
         </div>
     </div>
