@@ -1,8 +1,4 @@
-<div class="ui fluid container color-one" style="
-    padding: 5%;
-    border-top: 1px solid #fff;
-    margin-bottom: -14px;"
-        >
+<div class="ui fluid container color-one --empty-cart">
 
     <h2 class="ui center aligned icon header">
         <i class="frown icon"></i>
