@@ -501,6 +501,21 @@ a.text-danger:hover {
   padding: 50px;
 }
 /*******************************
+            Checkout
+*******************************/
+/* Empty cart on checkout and search page */
+.--empty-cart {
+  background-color: #11F1F1;
+  padding: 5%;
+  border-top: 1px solid #fff;
+  margin-bottom: -14px;
+}
+.--empty-cart:hover,
+.--empty-cart:active,
+.--empty-cart:focus {
+  background-color: #11F1F1;
+}
+/*******************************
            Dimmers
 *******************************/
 /* Success dimmer */
@@ -598,9 +613,6 @@ footer ul {
             Overrides
 *******************************/
 /* Modules */
-/*******************************
-            Overrides
-*******************************/
 /*******************************
             Overrides
 *******************************/
