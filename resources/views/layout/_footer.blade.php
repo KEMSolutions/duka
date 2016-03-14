@@ -7,12 +7,12 @@
 
 --}}
 
-<footer class="color-four">
+<footer class="color-four" id="footer">
     <div class="ui grid container stackable vertically padded">
         <div class="row">
 
             {{-- Contract pages --}}
-            <div class="five wide column">
+            <div class="five wide column center aligned">
                 <h3 class="ui header white">
                     @lang("boukem.information")
                 </h3>
@@ -30,7 +30,7 @@
 
 
             {{-- Quick links --}}
-            <div class="five wide column">
+            <div class="five wide column center aligned">
                 <h3 class="ui header white">
                     @lang("boukem.shortcuts")
                 </h3>
@@ -46,7 +46,7 @@
 
 
             {{--User links--}}
-            <div class="five wide column">
+            <div class="five wide column center aligned">
                 <h3 class="ui header white">
                     @lang("boukem.customer_service")
                 </h3>

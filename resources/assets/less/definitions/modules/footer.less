@@ -1,0 +1,32 @@
+/*******************************
+            Footer
+*******************************/
+
+
+footer {
+  padding:30px;
+  margin-top: 1rem;
+
+  a {
+    text-decoration:none;
+    color: @color-five;
+
+    .transition(color 0.1s ease-in);
+
+    &:hover, &:focus, &:active {
+      color: @background-color-five-light;
+    }
+  }
+
+  ul {
+    margin:0;
+    padding:0;
+    list-style:none;
+  }
+}
+
+#footer {
+  &:hover, &:active {
+    background-color: @background-color-four !important;
+  }
+}

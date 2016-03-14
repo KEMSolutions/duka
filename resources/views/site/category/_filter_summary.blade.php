@@ -1,4 +1,4 @@
-<div class="row border-bottom-clear hidden">
+<div class="row hidden">
     <h4 class="ui header">{{ Lang::get("boukem.filter_by") }}: </h4>
 
     <button class="ui button black mini hidden">@lang("boukem.reset")</button>

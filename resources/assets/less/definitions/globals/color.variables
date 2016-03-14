@@ -1,0 +1,64 @@
+/*-----------------------------------*/
+/*-----------------------------------*/
+/*-----------------------------------*/
+/* COLORS */
+/*-----------------------------------*/
+/*-----------------------------------*/
+/*-----------------------------------*/
+
+/*
+Conventions:
+ Base color has only F's and 0's.
+ Color light takes the E and shifts it to an F.
+ Color dark takes the 0 and shifts it to a 1.
+
+  color-one: #00F0F0
+  color-one-light: #00E0E0
+  color-one-dark: #11F1F1
+
+  color-two: #0FFF00
+  color-two-light: #0EEE00
+  color-two-dark: #1FFF11
+
+  color-three: #F000FF
+  color-three-light: #E000EE
+  color-three-dark: #F111FF
+
+  color-four: #000FFF
+  color-four-light: #000EEE
+  color-four-dark: #111FFF
+
+  color-five:#F0FFF0
+  color-five-light: #E0EEE0
+  color-five-dark: #F1FFF1
+*/
+
+
+@background-color-one: #00F0F0;
+@background-color-one-dark: #11F1F1;
+@background-color-one-light: #00E0E0;
+@color-one: #fff;
+
+@background-color-two: #0FFF00;
+@background-color-two-dark: #1FFF11;
+@background-color-two-light: #0EEE00;
+@color-two: #fff;
+
+@background-color-three: #F000FF;
+@background-color-three-dark: #F111FF;
+@background-color-three-light: #E000EE;
+@color-three: #4C4C4C;
+
+@background-color-four: #000FFF;
+@background-color-four-dark: #000EEE;
+@background-color-four-light: #111FFF;
+@color-four: #fff;
+
+@background-color-five: #F0FFF0;
+@background-color-five-dark: #F1FFF1;
+@background-color-five-light: #E0EEE0;
+@color-five: #fff;
+
+@dark: #808080;
+@darker: #333;
+@white: #fff;

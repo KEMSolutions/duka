@@ -36,7 +36,7 @@
                 <input type="password" name="password_confirmation" required />
             </div>
 
-            <button class="ui btn btn-one btn-one-inverted" type="submit">@lang('boukem.sign_up')</button>
+            <button class="ui button color-one" type="submit">@lang('boukem.sign_up')</button>
         </form>
     </div>
 

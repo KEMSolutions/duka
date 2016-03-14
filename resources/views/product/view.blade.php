@@ -8,12 +8,12 @@
     @foreach ($product->localization->alt as $localization)
         <link rel="alternate" hreflang="{{ $localization->locale->language }}" href="/{{ $localization->locale->language }}/prod/{{ $localization->slug }}.html" />
     @endforeach
-{{-- Facebook open graph --}}
-<meta property="og:url" content="{{ route('product', ["slug"=>$product->localization->slug]) }}" />
-<meta property="og:type" content="product" />
-<meta property="og:title" content="{{ $product->localization->name }}" />
-<meta property="og:description" content="{{ $product->localization->short_description }}" />
-<meta property="og:image" content="{{ Products::getImage($product->id, 1000, 1000) }}" />
+    {{-- Facebook open graph --}}
+    <meta property="og:url" content="{{ route('product', ["slug"=>$product->localization->slug]) }}" />
+    <meta property="og:type" content="product" />
+    <meta property="og:title" content="{{ $product->localization->name }}" />
+    <meta property="og:description" content="{{ $product->localization->short_description }}" />
+    <meta property="og:image" content="{{ Products::getImage($product->id, 1000, 1000) }}" />
 @endsection
 
 @section("content")
@@ -177,15 +177,15 @@
 
                                 {{-- Various informative shipping messages. --}}
                                 <div class="ui relaxed list">
-                                    
+
                                     <div class="item">
-                                    @if (in_array($country_code, $supported_countries))
-                                        <i class="fa fa-fw"><i class="{{ strtolower($country_code) }} flag"></i></i>
-                                        {{ Lang::get("boukem.world_shipping") }}
-                                    @else
-                                        <i class="fa fa-fw"><i class="ca flag"></i></i>
-                                        {{ Lang::get("boukem.canadian_shipping") }}
-                                    @endif
+                                        @if (in_array($country_code, $supported_countries))
+                                            <i class="{{ strtolower($country_code) }} flag"></i>
+                                            {{ Lang::get("boukem.world_shipping") }}
+                                        @else
+                                            <i class="ca flag"></i>
+                                            {{ Lang::get("boukem.canadian_shipping") }}
+                                        @endif
                                     </div>
 
 
@@ -193,19 +193,19 @@
                                         @if($product->formats[0]->inventory->count > 5)
                                             <link itemprop="availability" href="http://schema.org/LimitedAvailability">
                                             <div class="item text-success">
-                                                <i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i>
+                                                <i class="{{ ($country_code === "US" || $country_code === "CA") ? "shipping" : "plane" }} icon"></i>
                                                 {{ Lang::get("boukem.express_shipping") }}
                                             </div>
                                         @elseif($product->formats[0]->inventory->count > 0)
                                             <link itemprop="availability" href="http://schema.org/InStock" >
                                             <div class="item text-warning">
-                                                <i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i>
+                                                <i class="{{ ($country_code === "US" || $country_code === "CA") ? "shipping" : "plane" }} icon"></i>
                                                 {{ Lang::get("boukem.stock_left", array("quantity" => $product->formats[0]->inventory->count)) }}
                                             </div>
                                         @else
                                             <link itemprop="availability" href="http://schema.org/LimitedAvailability" >
                                             <div class="item">
-                                                <i class="fa {{ ($country_code === "US" || $country_code === "CA") ? "fa-truck" : "fa-plane" }} fa-fw"></i>
+                                                <i class="{{ ($country_code === "US" || $country_code === "CA") ? "shipping" : "plane" }} icon"></i>
                                                 {{ Lang::get("boukem.shipping_time") }}
                                             </div>
                                         @endif
@@ -220,32 +220,33 @@
 
 
         <div class="ui row">
-            <div class="ui accordion horizontally-padded">
-                <div class="active title">
-                    <h3 class="ui header">
-                        <i class="dropdown icon"></i>
-                        @lang("boukem.product_details")
-                    </h3>
+            <div class="ui padded grid">
+                <div class="ui accordion">
+                    <div class="active title">
+                        <h3 class="ui header">
+                            <i class="dropdown icon"></i>
+                            @lang("boukem.product_details")
+                        </h3>
 
-                </div>
-                <div class="active content">
-                    <span>{!! $product->localization->long_description !!}</span>
-
-                    <div class="ui list text-center">
-                        <div class="item">
-                            <span>{{ Lang::get("boukem.CUP/EAN") }}</span>
-                            <span class="bold" itemprop="gtin13">{{ isset($product->formats[0]->barcode) ? $product->formats[0]->barcode : "—" }}</span>
-                        </div>
-
-                        {{--Some products are without brands. --}}
-                        @if(count($product->brand))
-                            <div class="item" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
-                                <span>{{ Lang::get("boukem.brand") }}</span>
-                                <span class="bold" itemprop="name">{{ $product->brand->name }}</span>
-                            </div>
-                        @endif
                     </div>
+                    <div class="active content">
+                        <span>{!! $product->localization->long_description !!}</span>
 
+                        <div class="ui list text-center">
+                            <div class="item">
+                                <span>{{ Lang::get("boukem.CUP/EAN") }}</span>
+                                <span class="bold" itemprop="gtin13">{{ isset($product->formats[0]->barcode) ? $product->formats[0]->barcode : "—" }}</span>
+                            </div>
+
+                            {{--Some products are without brands. --}}
+                            @if(count($product->brand))
+                                <div class="item" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
+                                    <span>{{ Lang::get("boukem.brand") }}</span>
+                                    <span class="bold" itemprop="name">{{ $product->brand->name }}</span>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -255,21 +256,21 @@
 
                 {{--Videos. --}}
                 @if(isset($product->videos) && count($product->videos) > 0)
-                    @section("custom_css")
-                        <link rel="stylesheet" href="//vjs.zencdn.net/4.8/video-js.css"/>
-                    @endsection
+                @section("custom_css")
+                    <link rel="stylesheet" href="//vjs.zencdn.net/4.8/video-js.css"/>
+                @endsection
 
-                    @section("scripts")
-                        <script src="//vjs.zencdn.net/4.8/video.js"></script>
-                        <script>
-                            //store_video
-                            document.createElement('video');
-                            document.createElement('audio');
-                            document.createElement('track');
-                        </script>
-                    @endsection
+                @section("scripts")
+                    <script src="//vjs.zencdn.net/4.8/video.js"></script>
+                    <script>
+                        //store_video
+                        document.createElement('video');
+                        document.createElement('audio');
+                        document.createElement('track');
+                    </script>
+                @endsection
 
-                    @include("product._product_video", ["videos" => $product->videos ])
+                @include("product._product_video", ["videos" => $product->videos ])
                 @endif
 
                 <?php /*  Reviews.

@@ -1,4 +1,4 @@
-<div class="three wide column hidden-print hidden-xs hidden-sm" id="refine-search-container">
+<div class="three wide column" id="refine-search-container">
     <div class="row">
         <h3 class="ui header center aligned">{{ Lang::get('boukem.results_found', ['total' => $total]) }}</h3>
     </div>
@@ -6,23 +6,20 @@
     <div class="row padded">
         <nav>
             <ul class="nav list-unstyled">
-
                 {{--Only show brands filter on category page --}}
                 @if (!$isBrand)
                     <li>
                         <div class="refine-search-component">
                             <h5 class="ui header">@lang('boukem.brands')</h5>
-                            <ul class="list-unstyled absolute-scrollable" id="refine-by-brand">
-
+                            <div class="ui list" id="refine-by-brand">
                                 @foreach(Brands::getAllBrands() as $brand)
-                                    <li>
+                                    <div class="item">
                                         <label>
                                             <input type="checkbox" class="item" data-name="{{ $brand->name }}" data-filter="{{ $brand->id }}" data-type="brands"/> {{ $brand->name }}
                                         </label>
-                                    </li>
+                                    </div>
                                 @endforeach
-
-                            </ul>
+                            </div>
                         </div>
                     </li>
                 @endif
@@ -52,7 +49,6 @@
                         </div>
                     </div>
                 </li>
-
             </ul>
         </nav>
     </div>

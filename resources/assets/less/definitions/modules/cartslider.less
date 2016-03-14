@@ -1,0 +1,49 @@
+/*******************************
+         Cart Slider
+*******************************/
+
+/* Declare variables. */
+@cart-header-height : 70px;
+@cart-header-width: 100%;
+@cart-header-background: #333;
+@cart-content: 1rem;
+@cart-content-height: 2.958rem;
+
+
+/* Cart header. */
+.cart-header {
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+  cursor: default;
+
+  background-color: @cart-header-background;
+  width: @cart-header-width;
+  height: @cart-header-height;
+}
+
+/* Delete button (trash icon) */
+.close-button {
+  cursor: pointer;
+}
+
+
+
+/* Height of each item in cart drawer */
+.cart-content {
+  margin-top: @cart-content-height;
+}
+
+
+
+/* Used to display the agreement at the bottom of checkout. */
+.cart-content-agreement p{
+  opacity: 0.8;
+  font-size: 0.75em;
+  cursor: default;
+
+  .transition(.25s ease-in-out);
+
+  &:hover {
+    opacity: 1.0;
+  }
+}

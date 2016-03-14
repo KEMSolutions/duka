@@ -1,4 +1,4 @@
-<div class="row sorting-topbar vertically-padded">
+<div class="row sorting-topbar">
     <div class="ui horizontal list full-width">
         <div class="item">
             <span>
@@ -47,22 +47,8 @@
                         <div class="item" data-sort="40">
                             40
                         </div>
-                        <div class="item" data-sort="80">
-                            80
-                        </div>
                     </div>
                 </div>
-            </span>
-        </div>
-
-        <div class="item pull-right">
-            {{-- Grid layout is set by default. --}}
-                <span>
-              @lang("boukem.switch_layout")
-                    <button class="ui labeled icon button tiny" id="category-layout-switcher">
-                        <i class="list layout icon"></i>
-                        @lang("boukem.list")
-                    </button>
             </span>
         </div>
     </div>

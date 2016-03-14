@@ -2,6 +2,9 @@
 
 @section("content")
 
+    <br/>
+    <br/>
+
     <section class="ui padded centered container">
 
         <div class="padded row featured-section">
@@ -24,14 +27,14 @@
                             {!! view("product._card", ["product"=>$product])->render() !!}
                         @endforeach
 
-
                     @endforelse
                 </div>
             </div>
         </div>
     </section>
 
-
+    <br/>
+    <br/>
 
     <section class="ui padded centered container">
         <div class="padded row">
