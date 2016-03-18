@@ -82,6 +82,7 @@ return [
     "add_cart"      =>"Add to cart",
     "secure_payment"=>"Secure payment",
     "categories"    =>"Categories",
+    "category"      =>"Category",
     "subcategory"   =>"Subcategory",
     "health_conditions"=>"Health Conditions",
     "buy"           =>"Buy",

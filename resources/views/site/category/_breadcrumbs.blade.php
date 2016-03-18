@@ -2,7 +2,12 @@
     <div class="row">
         <div class="column">
             <div class="ui breadcrumb">
-                <a>{{ Lang::get("boukem.brands") }}</a>
+                @if(Request::route()->getName() == "category")
+                    <a>@lang("boukem.category")</a>
+                @else
+                    <a>@lang("boukem.brands")</a>
+                @endif
+
                 <i class="right chevron icon divider"></i>
                 <a class="active section" href="/{{ $locale }}/cat/{{ $name }}">{{ $name }}</a>
             </div>

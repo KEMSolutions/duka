@@ -82,6 +82,7 @@ return [
     "add_cart"      =>"Ajouter au panier",
     "secure_payment"=>"Transaction sécurisée",
     "categories"    =>"Catégories",
+    "category"      =>"Catégorie",
     "subcategory"   =>"Sous-Catégorie",
     "health_conditions"=>"Sujets de santé",
     "buy"           =>"Acheter",
