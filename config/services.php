@@ -21,8 +21,4 @@ return [
 
     'mixpanel' => getenv('TRACKING_ID_MIXPANEL'),
     'ganalytics'=> getenv('TRACKING_ID_GOOGLEANALYTICS'),
-    'piwik'=> [
-    	"id"=>getenv('TRACKING_ID_PIWIK'),
-    	"domain"=>getenv('TRACKING_DOMAIN_PIWIK'),
-    	],
 ];

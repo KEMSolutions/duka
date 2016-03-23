@@ -73,7 +73,7 @@
 		@include("analytics.GAE._tracking")
 	@endif
 
-	@if (Config::get('services.piwik.id') && Config::get('services.piwik.domain'))
+	@if (isset(Store::info()->analytics->piwik->id))
 		@include("analytics._piwik")
 	@endif
 
