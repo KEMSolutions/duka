@@ -193,12 +193,16 @@ var paymentOverlayContainer = {
                         this.displayCongratulateOverlay(order_details);
 
 
-
                         // Register data for Google Analytics Ecommerce module (if GAE is available)
                         if (window.ga && ga.create) {
                             GAEAnalytics.register(order_details);
                         }
 
+
+                        // Register data for piwik Ecommerce module (if available)
+                        if (_paq) {
+                            piwikAnalytics.trackEcommerceOrder(order_details);
+                        }
 
 
                         // Remove products from cart

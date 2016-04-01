@@ -587,7 +587,7 @@ var checkoutContainer = {
                     checkoutContainer.view.fetchPayment(data);
 
                     checkoutContainer.view.updatePayment(data);
-                    console.log(data);
+                    //console.log(data);
                 },
                 error: function(e, status) {
                     if (e.status == 403){

@@ -74,7 +74,7 @@
 	@endif
 
 	@if (isset(Store::info()->analytics->piwik->id))
-		@include("analytics._piwik")
+		@include("analytics.piwik._tracking")
 	@endif
 
 
@@ -123,6 +123,10 @@
 
 	@if (Config::get('services.ganalytics'))
 		@include("analytics.GAE._init")
+	@endif
+
+	@if (isset(Store::info()->analytics->piwik->id))
+		@include("analytics.piwik._init")
 	@endif
 
 	@yield("custom_scripts")
