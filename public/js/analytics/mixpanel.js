@@ -49,6 +49,17 @@ var mixpanelAnalytics = {
             {
                 mixpanel.identify($("meta[name=user-login]").attr("content"));
             }
+        },
+
+        /**
+         * Tracks errors thrown during checkout.
+         *
+         * @param e
+         */
+        registerError: function (e) {
+            mixpanel.track("Checkout Error", {
+                "error": JSON.stringify(e)
+            });
         }
 
     },
