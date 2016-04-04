@@ -267,6 +267,9 @@ var checkoutContainer = {
                 // Makes cart items editable.
                 $(".cart-items-list .close-button").fadeIn();
                 $(".cart-items-list .cart-content .input").removeClass("disabled");
+
+                // Remove any errors that could have caused the user to click on back.
+                self.error.removeError();
             });
 
             // When clicked on the next button, we process the payment.
@@ -549,19 +552,24 @@ var checkoutContainer = {
                 data: $("#cart_form").serialize(),
                 cache: false,
                 success: function(data) {
-                    var self = checkoutContainer;
+                    try {
+                        var self = checkoutContainer;
 
-                    self.actions.createOrdersCookie(data);
+                        self.actions.createOrdersCookie(data);
 
-                    //redirect the user to the checkout page if he backs from the payment page
-                    history.pushState({data: data}, "Checkout ","/cart");
+                        //redirect the user to the checkout page if he backs from the payment page
+                        history.pushState({data: data}, "Checkout ","/cart");
 
-                    //Redirect to success url
-                    window.location.replace(data.payment_details.payment_url);
+                        //Redirect to success url
+                        window.location.replace(data.payment_details.payment_url);
+                    }
+                    catch (e) {
+                        checkoutContainer.error.displayError();
+                    }
+
                 },
-                error: function(xhr, e) {
-                    console.log(xhr);
-                    console.log(e);
+                error: function() {
+                    checkoutContainer.error.displayError();
                 }
             });
         },
@@ -583,23 +591,71 @@ var checkoutContainer = {
                     shipping_address: UtilityContainer.getShippingFromForm()
                 },
                 success: function(data) {
-                    checkoutContainer.view.fetchEstimate(data);
-                    checkoutContainer.view.fetchPayment(data);
-
-                    checkoutContainer.view.updatePayment(data);
-                    //console.log(data);
+                    try {
+                        checkoutContainer.view.fetchEstimate(data);
+                        checkoutContainer.view.fetchPayment(data);
+                        checkoutContainer.view.updatePayment(data);
+                        //console.log(data);
+                    }
+                    catch(e) {
+                        checkoutContainer.error.displayError();
+                    }
                 },
                 error: function(e, status) {
-                    if (e.status == 403){
-                        // TODO: replace with an actual link
-                        window.location.replace("/auth/login");
-                        return;
-                    }
-                    $('#estimate').html('<div class="alert alert-danger">Une erreur est survenue. Veuillez vérifier les informations fournies.</div>');
+                    self.error.displayError();
                 }
             });
         }
     },
+
+
+    /**
+     * Handles error during ajax call.
+     *
+     */
+    error: {
+
+        /**
+         * Displays an error message replacing the spinner of shipping Method and Price Information.
+         *
+         */
+        displayError: function () {
+
+            // Delete previously thrown error.
+            checkoutContainer.error.removeError();
+
+            // Delete the spinner, hide the table and populate with an error message.
+            var segments = $(".shippingMethod .loadable-segment, " +
+                ".priceInformation .loadable-segment");
+
+            segments.removeClass("loading");
+
+            segments.find("table").hide();
+
+            segments.prepend(
+                '<div class="error-messages">' +
+                '<h3 class="ui header center aligned red error-message">' + Localization.error_occurred + '</h3>' +
+                '<h5 class="ui header center aligned error-message">' + Localization.error_persist + '</h5>' +
+                '</div>');
+        },
+
+
+        /**
+         * Removes any error messages.
+         *
+         */
+        removeError: function () {
+            var segments = $(".shippingMethod .loadable-segment, " +
+                ".priceInformation .loadable-segment");
+
+            segments.addClass("loading");
+
+            segments.find("table").show();
+
+            segments.find(".error-messages").remove();
+        },
+    },
+
 
     /**
      * Functions meant to be called for default behaviour.
