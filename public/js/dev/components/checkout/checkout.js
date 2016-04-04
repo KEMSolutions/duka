@@ -565,6 +565,10 @@ var checkoutContainer = {
                     }
                     catch (e) {
                         checkoutContainer.error.displayError();
+
+                        // Log the error in Mixpanel (if defined)
+                        if (mixpanel)
+                            mixpanelAnalytics.registerError(e);
                     }
 
                 },
@@ -599,6 +603,10 @@ var checkoutContainer = {
                     }
                     catch(e) {
                         checkoutContainer.error.displayError();
+
+                        // Log the error in Mixpanel (if defined)
+                        if (mixpanel)
+                            mixpanelAnalytics.registerError(e);
                     }
                 },
                 error: function(e, status) {
