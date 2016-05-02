@@ -86,6 +86,22 @@ class Products extends BaseObject
 
 
     /**
+     * Retrives a list of suggested products.Suggested
+     *
+     * @return mixed
+     */
+    public function suggested()
+    {
+        $key = $this->cacheNamespace . "products_featured";
+        $suggestedProducts = Cache::remember($key, Carbon::now()->addHours(1), function() {
+            return $response = KemAPI::get('products/suggested', [], [], false);
+        });
+        $this->extractAndCache($suggestedProducts, $this->getCacheNamespace());
+        return $suggestedProducts;
+    }
+
+
+    /**
      * Retrieves a product by ID or slug.
      *
      * @param mixed $id             ID or slug of product to fetch.
