@@ -80,7 +80,7 @@
                             checked
                             name="use_shipping_address"
                             id="checkboxSuccess"
-                            />
+                    />
                     <label style="color: green">@lang("boukem.ship_billing")</label>
                 </div>
             </div>
@@ -140,6 +140,63 @@
 
             </div>
 
+            @if(Products::suggested() != null)
+                <h4 class="ui sub header">@lang("boukem.suggested_product")</h4>
+                <div class="ui divider"></div>
+                <div class="ui items">
+                    <div class="ui two column grid">
+                        @foreach(Products::suggested() as $suggested)
+                            <div class="ui column">
+                                <div class="item">
+                                    <img class="left floated mini circular ui image" src="{{ str_replace(['{width}', '{height}', '{mode}'], ['80', '80', 'fit'], $suggested->images[0]->url )}}">
+                                    <div class="content">
+                                        <div class="header">
+                                            {{ $suggested->localization->name . " " . $suggested->formats[0]->name}}
+                                        </div>
+                                        <div class="meta">
+                                            <span class="price" style="color:rgba(0,0,0,.6)">$ {{ $suggested->formats[0]->price }}</span>
+                                            <div class="ui buttons right floated">
+                                                <div class="ui basic green button buybutton"
+                                                     data-product="{{ $suggested->id }}-{{ $suggested->formats[0]->id }}"
+                                                     data-price="{{ $suggested->formats[0]->price }}"
+                                                     data-thumbnail="{{ str_replace(['{width}', '{height}', '{mode}'], ['80', '80', 'fit'], $suggested->images[0]->url) }}"
+                                                     data-thumbnail_lg="{{ str_replace(['{width}', '{height}', '{mode}'], ['80', '80', 'fit'], $suggested->images[0]->url) }}"
+                                                     data-name="{{ $suggested->localization->name }}-{{ $suggested->formats[0]->name }}"
+                                                     data-description="{{ (strlen($suggested->localization->short_description) > 200) ? substr($suggested->localization->short_description,0,200).'…' : $suggested->localization->short_description }}"
+                                                     data-link="{{ route('product', ['slug' => $suggested->slug]) }}"
+                                                     data-quantity="1">
+                                                    @lang("boukem.buy")
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            {{--<div class="ui cards">--}}
+            {{--@foreach(Products::suggested() as $suggested)--}}
+            {{--<div class="card">--}}
+            {{--<div class="content">--}}
+            {{--<img class="left floated mini circular ui image" src="{{ str_replace(['{width}', '{height}', '{mode}'], ['80', '80', 'fit'], $suggested->images[0]->url )}}">--}}
+            {{--<div class="header">--}}
+            {{--{{ $suggested->localization->name }}--}}
+            {{--</div>--}}
+            {{--<div class="meta">--}}
+            {{--{{ $suggested->formats[0]->name }}--}}
+            {{--<div class="ui buttons right floated">--}}
+            {{--<div class="ui basic green button">Buy</div>--}}
+            {{--</div>--}}
+            {{--</div>--}}
+            {{--</div>--}}
+            {{--</div>--}}
+            {{--@endforeach--}}
+            {{--</div>--}}
+
+
             <button class="ui right labeled green icon button right floated shipment-trigger submit">
                 <i class="right arrow icon"></i>
                 @lang("boukem.next")
@@ -165,7 +222,7 @@
                     </tr>
                     </thead>
                     <tbody id="shippingMethod-table-tbody">
-                        {{-- Populated with checkoutContainer.fetchEstimate(data) --}}
+                    {{-- Populated with checkoutContainer.fetchEstimate(data) --}}
                     </tbody>
                 </table>
             </div>
@@ -182,33 +239,33 @@
                 <table class="ui padded celled table priceInformation-table">
 
                     <tbody id="priceInformation-table-tbody">
-                        <tr>
-                            <td>@lang("boukem.subtotal")</td>
-                            <td class="center aligned" id="price_subtotal"></td>
-                        </tr>
+                    <tr>
+                        <td>@lang("boukem.subtotal")</td>
+                        <td class="center aligned" id="price_subtotal"></td>
+                    </tr>
 
-                        <tr>
-                            <td>@lang("boukem.shipping_methods")</td>
-                            <td class="center aligned" id="price_transport"></td>
-                        </tr>
+                    <tr>
+                        <td>@lang("boukem.shipping_methods")</td>
+                        <td class="center aligned" id="price_transport"></td>
+                    </tr>
 
-                        <tr>
-                            <td>@lang("boukem.taxes")</td>
-                            <td class="center aligned" id="price_taxes"></td>
-                        </tr>
+                    <tr>
+                        <td>@lang("boukem.taxes")</td>
+                        <td class="center aligned" id="price_taxes"></td>
+                    </tr>
 
-                        <tr>
-                            <td><h3>@lang("boukem.total")</h3></td>
-                            <td class="center aligned"><h3 id="price_total"></h3></td>
-                        </tr>
+                    <tr>
+                        <td><h3>@lang("boukem.total")</h3></td>
+                        <td class="center aligned"><h3 id="price_total"></h3></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
 
             <div class="ui basic segment">
                 <div class="ui checkbox">
-                  <input id="marketing_email_optin" type="checkbox" name="marketing_email_optin">
-                  <label for="marketing_email_optin">@lang("boukem.marketing_email_optin")</label>
+                    <input id="marketing_email_optin" type="checkbox" name="marketing_email_optin">
+                    <label for="marketing_email_optin">@lang("boukem.marketing_email_optin")</label>
                 </div>
             </div>
 
@@ -224,8 +281,8 @@
                 </button>
             </div>
 
-            
-            
+
+
 
         </div>
     </div>
