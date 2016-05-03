@@ -156,7 +156,7 @@
                                         <div class="meta">
                                             <span class="price" style="color:rgba(0,0,0,.6)">$ {{ $suggested->formats[0]->price }}</span>
                                             <div class="ui buttons right floated">
-                                                <div class="ui basic green button buybutton"
+                                                <div class="ui basic green button buybutton_impulse"
                                                      data-product="{{ $suggested->id }}-{{ $suggested->formats[0]->id }}"
                                                      data-price="{{ $suggested->formats[0]->price }}"
                                                      data-thumbnail="{{ str_replace(['{width}', '{height}', '{mode}'], ['80', '80', 'fit'], $suggested->images[0]->url) }}"
@@ -177,25 +177,7 @@
                 </div>
             @endif
 
-            {{--<div class="ui cards">--}}
-            {{--@foreach(Products::suggested() as $suggested)--}}
-            {{--<div class="card">--}}
-            {{--<div class="content">--}}
-            {{--<img class="left floated mini circular ui image" src="{{ str_replace(['{width}', '{height}', '{mode}'], ['80', '80', 'fit'], $suggested->images[0]->url )}}">--}}
-            {{--<div class="header">--}}
-            {{--{{ $suggested->localization->name }}--}}
-            {{--</div>--}}
-            {{--<div class="meta">--}}
-            {{--{{ $suggested->formats[0]->name }}--}}
-            {{--<div class="ui buttons right floated">--}}
-            {{--<div class="ui basic green button">Buy</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--@endforeach--}}
-            {{--</div>--}}
-
+            <div class="ui divider"></div>
 
             <button class="ui right labeled green icon button right floated shipment-trigger submit">
                 <i class="right arrow icon"></i>

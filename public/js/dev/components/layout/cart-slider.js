@@ -11,7 +11,7 @@ var cartSliderContainer = {
          *
          */
         buyButtonClick : function () {
-            $("body").on("click", ".buybutton", function() {
+            $("body").on("click", ".buybutton, .buybutton_impulse", function() {
 
                 cartSliderContainer.behaviour.addItem(UtilityContainer.buyButton_to_Json($(this)));
                 cartSliderContainer.behaviour.storeItem(UtilityContainer.buyButton_to_Json($(this)));
