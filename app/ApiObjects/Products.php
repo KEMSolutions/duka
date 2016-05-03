@@ -92,7 +92,7 @@ class Products extends BaseObject
      */
     public function suggested()
     {
-        $key = $this->cacheNamespace . "products_featured";
+        $key = $this->cacheNamespace . "products_suggested";
         $suggestedProducts = Cache::remember($key, Carbon::now()->addHours(1), function() {
             return $response = KemAPI::get('products/suggested', [], [], false);
         });
