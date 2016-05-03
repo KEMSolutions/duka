@@ -11,3 +11,12 @@
         @endif
     @endsection
 
+    @section("custom_scripts")
+        {{-- We only need one cart-drawer on the checkout page, so we'll recklessly
+             delete the cart-drawer from the dom on the checkout page.
+         --}}
+        <script>
+            $(".cart-drawer").remove();
+        </script>
+    @endsection
+
