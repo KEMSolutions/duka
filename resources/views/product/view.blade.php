@@ -45,7 +45,9 @@
                                 {{ $product->formats[0]->name }}
                             </span>
                             -
-                            @if(isset($product->formats[0]->reduced_price))
+{{--                            {{ dd($product->formats) }}--}}
+
+                        @if(isset($product->formats[0]->reduced_price))
                                 <span class="text-strikethrough">
                                     CAD ${{ number_format((float)$product->formats[0]->price, 2, '.', '') }}
                                 </span>
@@ -106,9 +108,13 @@
                                                     <option value="{{ $product->id . '-' . $format->id }}"
                                                             data-format="{{ $format->name }}"
                                                             data-price="{{ $format->price }}"
-                                                            data-reduced="{{ isset($format->reduced_price->price) ? $format->reduced_price->price : $format->reduced_price }}"
+                                                            data-reduced="{{ isset($format->reduced_price->price) ? number_format($format->reduced_price->price, 2, '.', '') : "undef" }}"
                                                             data-name="{{ $product->localization->name . " - " . $format->name }}">
-                                                        {{ $format->name . " -  CAD $ " . $format->price }}
+                                                        @if(isset($format->reduced_price->price))
+                                                            {{ $format->name . " -  CAD $ " . number_format($format->reduced_price->price, 2, '.', '') }}
+                                                        @else
+                                                            {{ $format->name . " -  CAD $ " . number_format($format->price, 2, '.', '') }}
+                                                        @endif
                                                     </option>
                                                 @endforeach
                                             </select>

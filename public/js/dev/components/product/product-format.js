@@ -11,14 +11,30 @@ var productFormatContainer = {
      * @param option
      */
     productWithFormat: function(option) {
-        var price = '<span class="text-strikethrough">' +
-            'CAD $ ' + option.find(":selected").data("price") +
-            '</span>' +
-            '<span id="product-price" class="strong text-danger">' +
-            'CAD $ ' + option.find(":selected").data("reduced") +
-            '</span>';
+        if (option.find(":selected").data("reduced") != "undef") {
+            var price = '<span id="product-format-name">' +
+                option.find(":selected").data("format") +
+                '</span>' +
+                ' - ' +
+                '<span class="text-strikethrough">' +
+                ' CAD $ ' + option.find(":selected").data("price") +
+                '</span>' +
+                '<span id="product-price" class="strong text-danger">' +
+                ' CAD $ ' + option.find(":selected").data("reduced") +
+                '</span>';
+        }
+        else {
+            var price = '<span id="product-format-name">' +
+                option.find(":selected").data("format") +
+                '</span>' +
+                ' - ' +
+                '<span id="product-price" class="strong">' +
+                ' CAD $ ' + option.find(":selected").data("price") +
+                '</span>';
+        }
 
-        $(".sub.header").text(price);
+
+        $(".sub.header").html(price);
     },
 
 
@@ -42,7 +58,7 @@ var productFormatContainer = {
     updateBuybuttonAttributes: function (option) {
         $(".buybutton").attr({
             'data-product': option.val(),
-            'data-price': option.find(":selected").data("price"),
+            'data-price': option.find(":selected").data("reduced") === "undef" ? option.find(":selected").data("price") : option.find(":selected").data("reduced"),
             'data-name': option.find(":selected").data("name"),
             'data-format': option.find(":selected").data("format")
         });
@@ -58,7 +74,7 @@ var productFormatContainer = {
 
         $("#product-format").on("change", function () {
 
-            if ($(this).find(":selected").data("reduced")) {
+            if ($(this).find(":selected").data("reduced") != "null") {
                 // Add discounted price for a product with different formats.
                 self.productWithFormat($(this));
             }
