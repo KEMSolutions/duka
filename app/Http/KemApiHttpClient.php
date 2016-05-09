@@ -6,6 +6,7 @@ use KemAPI;
 use Localization;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
 
 class KemApiHttpClient
 {
@@ -171,6 +172,14 @@ class KemApiHttpClient
         {
             // Log error.
             Log::error($e->getMessage());
+            // Log::error((string) $response);
+            return $returnResponse ? null : (object) [
+                'status' => $e->getCode(),
+                'error' => $e->getMessage()
+            ];
+        } catch (RequestException $e){
+            // Log error.
+            Log::error($e->getResponse()->getBody()->getContents());
             // Log::error((string) $response);
             return $returnResponse ? null : (object) [
                 'status' => $e->getCode(),
