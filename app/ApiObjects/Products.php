@@ -118,7 +118,24 @@ class Products extends BaseObject
         }
 
         // Parse description.
-        $product->localization->long_description = $this->markdown->parse($product->localization->long_description);
+        if (isset($product->localization->long_description)) {
+            $product->localization->long_description = $this->markdown->parse($product->localization->long_description);
+        }
+
+        // Parse usage.
+        if (isset($product->localization->usage)) {
+            $product->localization->usage = $this->markdown->parse($product->localization->usage);
+        }
+
+        // Parse warning.
+        if (isset($product->localization->warning)) {
+            $product->localization->warning = $this->markdown->parse($product->localization->warning);
+        }
+
+        // Parse content (list of ingredients).
+        if (isset($product->localization->content)) {
+            $product->localization->content = $this->markdown->parse($product->localization->content);
+        }
 
         // Set images size.
         if (count($product->images) > 0) {
