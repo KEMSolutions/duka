@@ -82,6 +82,7 @@
 <body class="duka-container">
 
 	@include("layout._slider")
+	@include("layout._header_mobile")
 
 	<div class="pusher">
 		@include("layout._header")

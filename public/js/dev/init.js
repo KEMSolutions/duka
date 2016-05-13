@@ -63,6 +63,12 @@
         categoryContainer.init();
 
         /**
+         * Initialize header.
+         *
+         */
+        headerContainer.init();
+
+        /**
          * Initialize overlay plugin.
          *
          */

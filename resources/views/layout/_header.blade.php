@@ -1,8 +1,6 @@
 {{-- HEADER. --}}
 
 
-@include("layout._header_helpers")
-
 
 {{-- First row of header --}}
 <nav class="supertop">
@@ -53,6 +51,10 @@
                         </div>
                     @endif
 
+                    <div class="ui button color-one mobile-only mobile-main-menu-trigger">
+                        Menu
+                    </div>
+
                     @include("layout._language_switcher", ["alternatives"=>(isset($alternatives) ? $alternatives : [])])
 
                     @if(Request::route()->getName() != "cart")
@@ -102,7 +104,7 @@
                 </div>
                 
                 {{-- Right menu. --}}
-                <div class="thirteen wide bottom aligned column">
+                <div class="thirteen wide bottom aligned column tablet-and-up">
                     <div class="ui secondary stackable menu">
 
 
