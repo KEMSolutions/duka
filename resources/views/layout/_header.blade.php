@@ -166,7 +166,7 @@
                         @endif
 
 
-                        <div class="ui top right pointing dropdown item color-one" style="margin-left: 5px !important">
+                        <div class="ui dropdown item color-one" style="margin-left: 5px !important">
                             @lang('boukem.contact')
                             <i class="dropdown icon"></i>
 
