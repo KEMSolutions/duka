@@ -45,7 +45,6 @@
                                 {{ $product->formats[0]->name }}
                             </span>
                             -
-{{--                            {{ dd($product->formats) }}--}}
 
                         @if(isset($product->formats[0]->reduced_price))
                                 <span class="text-strikethrough">
