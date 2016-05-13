@@ -228,34 +228,80 @@
         <div class="ui row">
             <div class="ui padded grid">
                 <div class="ui accordion">
-                    <div class="active title">
-                        <h3 class="ui header">
-                            <i class="dropdown icon"></i>
-                            @lang("boukem.product_details")
-                        </h3>
 
-                    </div>
-                    <div class="active content">
-                        <span>{!! $product->localization->long_description !!}</span>
-
-                        <div class="ui list text-center">
-                            <div class="item">
-                                <span>{{ Lang::get("boukem.CUP/EAN") }}</span>
-                                <span class="bold" itemprop="gtin13">{{ isset($product->formats[0]->barcode) ? $product->formats[0]->barcode : "—" }}</span>
-                            </div>
-
-                            {{--Some products are without brands. --}}
-                            @if(count($product->brand))
-                                <div class="item" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
-                                    <span>{{ Lang::get("boukem.brand") }}</span>
-                                    <span class="bold" itemprop="name">{{ $product->brand->name }}</span>
-                                </div>
-                            @endif
+                    {{-- Long description. --}}
+                    @if(isset($product->localization->long_description))
+                        <div class="active title">
+                            <h3 class="ui header">
+                                <i class="dropdown icon"></i>
+                                @lang("boukem.product_details")
+                            </h3>
                         </div>
-                    </div>
+
+                        <div class="active content">
+                            <span>{!! $product->localization->long_description !!}</span>
+                            <div class="ui divider"></div>
+                        </div>
+
+                    @endif
+
+
+                    {{-- We'll eventually put the content section here (list of ingredients) --}}
+
+
+                    {{-- Usage section. --}}
+                    @if(isset($product->localization->usage))
+                        <div class="title">
+                            <h3 class="ui header">
+                                <i class="dropdown icon"></i>
+                                @lang("boukem.product_usage")
+                            </h3>
+                        </div>
+
+                        <div class="content">
+                            <span>{!! $product->localization->usage !!}</span>
+                            <div class="ui divider"></div>
+                        </div>
+                    @endif
+
+
+                    {{-- Warning section. --}}
+                    @if(isset($product->localization->warning))
+                        <div class="title">
+                            <h3 class="ui red header">
+                                <i class="dropdown icon"></i>
+                                @lang("boukem.product_warning")
+                            </h3>
+                        </div>
+
+                        <div class="content">
+                            <span>{!! $product->localization->warning !!}</span>
+                            <div class="ui divider"></div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
+
+
+        {{-- Brands / BarCode / Misc. information. --}}
+        <div class="ui row text centered">
+            <div class="ui list">
+                <div class="item">
+                    <span>{{ Lang::get("boukem.CUP/EAN") }}</span>
+                    <span class="bold" itemprop="gtin13">{{ isset($product->formats[0]->barcode) ? $product->formats[0]->barcode : "—" }}</span>
+                </div>
+
+                {{--Some products are without brands. --}}
+                @if(count($product->brand))
+                    <div class="item" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
+                        <span>{{ Lang::get("boukem.brand") }}</span>
+                        <span class="bold" itemprop="name">{{ $product->brand->name }}</span>
+                    </div>
+                @endif
+            </div>
+        </div>
+
 
         <div class="ui row">
             <div class="row sixteen wide column">

@@ -57,7 +57,9 @@ var semanticInitContainer = {
          *
          */
         initAccordionModule: function() {
-            $('.ui.accordion').accordion();
+            $('.ui.accordion').accordion({
+                exclusive: false
+            });
         }
     },
 

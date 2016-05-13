@@ -101,6 +101,8 @@ return [
     "products"      =>"Produits",
     "product_name_brand_condition" => "Nom du produit, marque ou usage",
     "product_details"=>"Détails du produit",
+    "product_usage" => "Usage",
+    "product_warning"=> "Avertissement d'utilisation",
     "show_more"     =>"En savoir plus",
     "show_less"     =>"Réduire",
     "featured"      =>"En vedette",
