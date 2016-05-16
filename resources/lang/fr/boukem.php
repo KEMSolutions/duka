@@ -15,7 +15,7 @@ return [
 
     'home'          =>'Accueil',
     'search'        =>'Rechercher',
-    "results_for"   => ":displayed résultats sur :total pour: ':term'",
+    "results_for"   => "Résultats pour: ':term'",
     'search_in'     =>'Rechercher dans: ',
     'handpick'      =>'Notre recommandation pour vous.',
     'toggle_nav'    =>'Afficher le menu',

@@ -22,7 +22,7 @@
     <div class="ui container equal width grid vertically padded">
         <div class="row">
             <div class="column" style="padding-top: 2rem">
-                <h3 class="ui header">@lang('boukem.results_for', ["displayed" => $displayed, "total" => $total, "term" => $query])</h3>
+                <h3 class="ui header">@lang('boukem.results_for', ["term" => $query])</h3>
             </div>
         </div>
 
