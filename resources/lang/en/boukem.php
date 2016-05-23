@@ -15,7 +15,7 @@ return [
 
     'home'          => 'Home',
     "search"        => 'Search',
-    "results_for"   => "Displaying :displayed results of :total for: ':term'",
+    "results_for"   => "Results for: ':term'",
     'search_in'     =>'Search in: ',
     'handpick'      =>'Our hand picked selection for you.',
     'toggle_nav'    =>'Toggle navigation',

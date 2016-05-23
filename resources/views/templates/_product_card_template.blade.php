@@ -59,20 +59,9 @@
             </div>
 
             {{-- If the product is discontinued. --}}
-            <div class="ui bottom attached button color-one discontinued" v-else>
-                <div class="meta text-center white"
-                     style="font-size: 11px;
-                            margin-bottom: 0.3rem"
-                     v-if="products[0].name != null"   >
-                    @{{ products[0].name }}
-                </div>
-
-                <i class="add to cart icon"></i>
-                <span v-if="products[0].reduced_price != null">
-                    $ @{{ products[0].reduced_price.price }}
-                </span>
-                <span v-else>
-                    $ @{{ products[0].price }}
+            <div class="ui bottom attached button color-one discontinued disabled" v-else>
+                <span>
+                    @lang("boukem.product_unavailable")
                 </span>
             </div>
         </template>
@@ -140,7 +129,7 @@
             </div>
 
             {{-- If the product is discontinued. --}}
-            <div class="ui bottom attached button color-one discontinued" v-else>
+            <div class="ui bottom attached button color-one discontinued disabled" v-else>
                 <div class="meta text-center white"
                      style="font-size: 11px;
                             margin-bottom: 0.3rem"
