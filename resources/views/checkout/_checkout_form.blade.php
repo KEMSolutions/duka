@@ -154,7 +154,7 @@
                                             {{ $suggested->localization->name . " " . $suggested->formats[0]->name}}
                                         </div>
                                         <div class="meta">
-                                            <span class="price" style="color:rgba(0,0,0,.6)">$ {{ $suggested->formats[0]->price }}</span>
+                                            <span class="price" style="color:rgba(0,0,0,.6)">$ {{ money_format('%i', $suggested->formats[0]->price) }}</span>
                                             <div class="ui buttons right floated">
                                                 <div class="ui basic green button buybutton_impulse"
                                                      data-product="{{ $suggested->id }}-{{ $suggested->formats[0]->id }}"
