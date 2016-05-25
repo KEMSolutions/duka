@@ -1,23 +1,20 @@
-<div class="ui stackable grid layout-toggle-container grid-layout">
+
     @if (isset($results->tags) && count($results->tags))
-        <div class="ui container grid vertically padded">
-            <div class="row">
-                <div class="column" style="padding-top: 2rem">
-                    <h3 class="ui header">@lang("boukem.handpick")</h3>
-                </div>
-            </div>
-
-            @include(
-            'product.layout._product_card_dense', [
-            'showTag' => false,
-            'locale' => Localization::getCurrentLocale(),
-            'products' => $results->tags[0]->products
-        ])
-
-        </div>
-        <hr style="width: 100%"/>
+    <div class="ui container">
+    <h5 class="ui top attached header">
+  @lang("boukem.handpick")
+</h5>
+<div class="ui attached piled segment">
+  <div class="ui four stackable cards">
+    @foreach($results->tags[0]->products as $product)
+                    {!! view("product._card", ["product"=>$product])->render() !!}
+                @endforeach
+    </div>
+</div>
+</div>
     @endif
 
+<div class="ui stackable grid layout-toggle-container grid-layout">
 
     <div class="ui container equal width grid vertically padded">
         <div class="row">
