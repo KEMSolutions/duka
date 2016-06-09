@@ -146,6 +146,7 @@
                 <div class="ui items">
                     <div class="ui two column grid">
                         @foreach(Products::suggested() as $suggested)
+                        @if ($suggested)
                             <div class="ui column">
                                 <div class="item">
                                     <img class="left floated mini circular ui image" src="{{ str_replace(['{width}', '{height}', '{mode}'], ['80', '80', 'fit'], $suggested->images[0]->url )}}">
@@ -172,6 +173,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         @endforeach
                     </div>
                 </div>
