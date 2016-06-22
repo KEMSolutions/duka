@@ -2,7 +2,6 @@
 
 use Blogs;
 use Lang;
-use Feed;
 use Store;
 use Localization;
 use URL;
@@ -36,7 +35,7 @@ class BlogController extends Controller
         
 
         // create new feed
-        $feed = Feed::make();
+        $feed = \App::make("feed");
 
         
         // cache the feed for 60 minutes (second parameter is optional)
