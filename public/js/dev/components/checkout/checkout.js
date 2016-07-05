@@ -675,7 +675,7 @@ var checkoutContainer = {
          *
          */
         selectDefaultShipmentMethod : function() {
-            var defaultShipment = ["DOM.EP", "USA.TP", "INT.TP"],
+            var defaultShipment = ["DOM.EP", "USA.TP", "INT.TP", "PURO.GROUND", "PURO.EXPRESSINTL"],
                 availableShipment = $("input[name=shipping]");
 
             for(var i= 0, length = availableShipment.length; i<length; i++)
