@@ -77,9 +77,11 @@ class BlogController extends Controller
            $feed->icon = url('/favicon.png');
            $feed->description = null;
            $feed->setDateFormat('datetime'); // 'datetime', 'timestamp' or 'carbon'
+
            if (count($blogs) > 0){
             $feed->pubdate = $blogs[0]->date;
            }
+
            $feed->lang = Localization::getCurrentLocale();
            $feed->setShortening(false);
 
@@ -87,7 +89,8 @@ class BlogController extends Controller
            {
                // set item's title, author, url, pubdate, description and content
                $authorName = $this->cleanString(urldecode($blog->author->name));
-               $feed->add($blog->title, htmlspecialchars(strip_tags($authorName), ENT_COMPAT, 'UTF-8'), URL::action('BlogController@show', ["slug"=>$blog->slug]), $blog->date, $blog->lead, $this->parser->parse($blog->content));
+               $articleName = $this->cleanString(urldecode($blog->title));
+               $feed->add($articleName, htmlspecialchars(strip_tags($authorName), ENT_COMPAT, 'UTF-8'), URL::action('BlogController@show', ["slug"=>$blog->slug]), $blog->date, $blog->lead, $this->parser->parse($blog->content));
            }
 
         }
