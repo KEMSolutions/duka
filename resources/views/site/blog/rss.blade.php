@@ -17,7 +17,7 @@
                 <name><![CDATA[{!! $blog->author->name !!}]]></name>
             </author>
             @if (isset($blog->image->url))
-            <enclosure length="1234" type="image/jpeg" url="{{ Utilities::setImageSizeAndMode(600, 600, 'fit', $blog->image->url) }}" />
+            <enclosure length="51385" type="image/jpeg" url="{{ Utilities::setImageSizeAndMode(600, 600, 'fit', $blog->image->url) }}" title="{!! $blog->title !!}"/>
             @endif
             <title type="text"><![CDATA[{!! $blog->title !!}}]]></title>
             <link rel="alternate" type="text/html" href="{{ URL::action('BlogController@show', ["slug"=>$blog->slug]) }}"></link>
