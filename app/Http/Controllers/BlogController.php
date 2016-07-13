@@ -31,13 +31,13 @@ class BlogController extends Controller
      */
     public function getFeed()
     {
-        
-        
+
+
 
         // create new feed
         $feed = \App::make("feed");
 
-        
+
         // cache the feed for 60 minutes (second parameter is optional)
         $feed->setCache(60, intval(\KemAPI::getUser()) . 'app_http_controllers_blogcontroller_feed');
 
@@ -46,19 +46,19 @@ class BlogController extends Controller
         {
 
             $blogs = Blogs::all();
-            if (count($blogs) == 0){
-                abort(404, Lang::get('boukem.error_occurred'));
-            }
+
 
            // set your feed's title, description, link, pubdate and language
            $feed->title = Store::info()->name . " - " . Lang::get("boukem.blog");
            $feed->icon = url('/favicon.png');
            $feed->description = null;
            $feed->setDateFormat('datetime'); // 'datetime', 'timestamp' or 'carbon'
-           $feed->pubdate = $blogs[0]->date;
+           if (count($blogs) > 0){
+            $feed->pubdate = $blogs[0]->date;
+           }
            $feed->lang = Localization::getCurrentLocale();
            $feed->setShortening(false);
-           
+
            foreach ($blogs as $blog)
            {
                // set item's title, author, url, pubdate, description and content
@@ -94,7 +94,7 @@ class BlogController extends Controller
 
     }
 
-   
+
 
     /**
      * Display the specified resource.
@@ -119,5 +119,5 @@ class BlogController extends Controller
 
     }
 
-   
+
 }
