@@ -12,30 +12,6 @@ use cebe\markdown\MarkdownExtra;
 
 class BlogController extends Controller
 {
-    function cleanString($text) {
-        $utf8 = array(
-            '/[áàâãªä]/u'   =>   'a',
-            '/[ÁÀÂÃÄ]/u'    =>   'A',
-            '/[ÍÌÎÏ]/u'     =>   'I',
-            '/[íìîï]/u'     =>   'i',
-            '/[éèêë]/u'     =>   'e',
-            '/[ÉÈÊË]/u'     =>   'E',
-            '/[óòôõºö]/u'   =>   'o',
-            '/[ÓÒÔÕÖ]/u'    =>   'O',
-            '/[úùûü]/u'     =>   'u',
-            '/[ÚÙÛÜ]/u'     =>   'U',
-            '/ç/'           =>   'c',
-            '/Ç/'           =>   'C',
-            '/ñ/'           =>   'n',
-            '/Ñ/'           =>   'N',
-            '/–/'           =>   '-', // UTF-8 hyphen to "normal" hyphen
-            '/[’‘‹›‚]/u'    =>   ' ', // Literally a single quote
-            '/[“”«»„]/u'    =>   ' ', // Double quote
-            '/ /'           =>   ' ', // nonbreaking space (equiv. to 0x160)
-        );
-        return preg_replace(array_keys($utf8), array_values($utf8), $text);
-    }
-
     /**
      * @var MarkdownExtra   Markdown parser.
      */
@@ -56,51 +32,8 @@ class BlogController extends Controller
      */
     public function getFeed()
     {
-
-
-        // create new feed
-        $feed = \App::make("feed");
-
-
-        // cache the feed for 60 minutes (second parameter is optional)
-        $feed->setCache(60, intval(\KemAPI::getUser()) . 'app_http_controllers_blogcontroller_feed' . App::getLocale());
-
-        // check if there is cached feed and build new only if is not
-        if (!$feed->isCached())
-        {
-
-            $blogs = Blogs::all();
-
-
-           // set your feed's title, description, link, pubdate and language
-           $feed->title = Store::info()->name . " - " . Lang::get("boukem.blog");
-           $feed->icon = url('/favicon.png');
-           $feed->description = null;
-           $feed->setDateFormat('datetime'); // 'datetime', 'timestamp' or 'carbon'
-
-           if (count($blogs) > 0){
-            $feed->pubdate = $blogs[0]->date;
-           }
-
-           $feed->lang = Localization::getCurrentLocale();
-           $feed->setShortening(false);
-
-           foreach ($blogs as $blog)
-           {
-               // set item's title, author, url, pubdate, description and content
-               $authorName = $this->cleanString(urldecode($blog->author->name));
-               $articleName = $this->cleanString(urldecode($blog->title));
-               $feed->add($articleName, htmlspecialchars(strip_tags($authorName), ENT_COMPAT, 'UTF-8'), URL::action('BlogController@show', ["slug"=>$blog->slug]), $blog->date, $blog->lead, $this->parser->parse($blog->content));
-           }
-
-        }
-
-        // first param is the feed format
-        // optional: second param is cache duration (value of 0 turns off caching)
-        // optional: you can set custom cache key with 3rd param as string
-        return $feed->render('atom');
-
-
+        $blogs = Blogs::all();
+        return response()->view('site.blog.rss', ["blogs"=>$blogs, "parser"=>$this->parser])->header('Content-Type', "application/rss+xml");
     }
 
     /**

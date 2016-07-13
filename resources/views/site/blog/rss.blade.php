@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title type="text">{{ Store::info()->name . " - " . Lang::get("boukem.blog") }}</title>
+    <link href="http://duka.local:8000/fr/blog/rss"></link>
+    <id>{{ action('BlogController@getFeed') }}</id>
+    <language>{{ App::getLocale() }}</language>
+    <link rel="self" type="application/atom+xml" href="{{ action('BlogController@getFeed') }}" ></link>
+    <icon>{{ url('/favicon.png') }}</icon>
+        @if (count($blogs) > 0)
+        <updated>{{ $blogs[0]->date }}</updated>
+        @endif
+        @foreach ($blogs as $blog)
+        <entry>
+            <author>
+                <name><![CDATA[{!! $blog->author->name !!}]]></name>
+            </author>
+            @if (isset($blog->image->url))
+            <enclosure type="image/jpeg" url="{{ Utilities::setImageSizeAndMode(600, 600, 'fit', $blog->image->url) }}"/>
+            @endif
+            <title type="text"><![CDATA[{!! $blog->title !!}}]]></title>
+            <link rel="alternate" type="text/html" href="{{ URL::action('BlogController@show', ["slug"=>$blog->slug]) }}"></link>
+            <id>{{ URL::action('BlogController@show', ["slug"=>$blog->slug]) }}</id>
+            <summary type="html"><![CDATA[{!! $blog->lead !!}]]></summary>
+            <content type="html"><![CDATA[{!!$parser->parse($blog->content)!!}]]></content>
+            <updated>{{ $blog->date }}</updated>
+        </entry>
+        @endforeach
+</feed>
