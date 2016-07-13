@@ -5,6 +5,7 @@ use Lang;
 use Store;
 use Localization;
 use URL;
+use App;
 
 use Illuminate\Support\Arr;
 use cebe\markdown\MarkdownExtra;
@@ -39,7 +40,7 @@ class BlogController extends Controller
 
 
         // cache the feed for 60 minutes (second parameter is optional)
-        $feed->setCache(60, intval(\KemAPI::getUser()) . 'app_http_controllers_blogcontroller_feed');
+        $feed->setCache(60, intval(\KemAPI::getUser()) . 'app_http_controllers_blogcontroller_feed' . App::getLocale());
 
         // check if there is cached feed and build new only if is not
         if (!$feed->isCached())
