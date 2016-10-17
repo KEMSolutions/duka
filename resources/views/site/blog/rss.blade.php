@@ -9,7 +9,7 @@
   <lastBuildDate>{{ Carbon\Carbon::now() }}</lastBuildDate>
   <atom:link href="{{ url("/") }}" rel="self" type="application/rss+xml"/>
   @foreach ($blogs as $blog)<item>
-   <title><![CDATA[{!! $blog->author->name !!}]]></title>
+   <title><![CDATA[{!! $blog->title !!}]]></title>
    <enclosure length="256354" type="image/jpeg" url="{{ Utilities::setImageSizeAndMode(600, 600, 'fit', $blog->image->url) }}" />
    <link><![CDATA[{{ URL::action('BlogController@show', ["slug"=>$blog->slug]) }}]]></link>
    <guid isPermaLink="true">{{ URL::action('BlogController@show', ["slug"=>$blog->slug]) }}</guid>
