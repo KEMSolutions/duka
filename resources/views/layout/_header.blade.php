@@ -92,7 +92,7 @@
 
 
                 {{-- Logo --}}
-                
+
                 <div class="three wide column">
                     <a href="/">
                     @if (Store::rectangularLogo())
@@ -102,7 +102,7 @@
                     @endif
                     </a>
                 </div>
-                
+
                 {{-- Right menu. --}}
                 <div class="thirteen wide bottom aligned column tablet-and-up">
                     <div class="ui secondary stackable menu">
@@ -123,7 +123,7 @@
                                 @endforeach
                             </div><!-- Menu -->
                         </div><!-- Item (Conditions) -->
-                        
+
                         <div class="ui scrolling dropdown item color-one">
                             @lang('boukem.categories')
                             <i class="dropdown icon"></i>
@@ -171,14 +171,6 @@
                             <i class="dropdown icon"></i>
 
                             <div class="menu">
-                                @if (Store::info()->support->phone && Store::info()->support->phone !== "")
-                                    <div class="item">
-                                        <i class="phone icon"></i>
-                                        <a href="tel:{{ Store::info()->support->phone->number }}">
-                                            {{ Store::info()->support->phone->vanity }}
-                                        </a>
-                                    </div>
-                                @endif
                                 @if  (Store::info()->support->email && Store::info()->support->email !== "")
                                 <div class="item">
                                     <i class="mail outline icon"></i>
